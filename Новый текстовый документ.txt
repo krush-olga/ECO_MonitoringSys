@@ -1,0 +1,6 @@
+USE experts;
+''INSERT INTO formulas(name_of_formula, description_of_formula, formulas.id_of_expert, measurement_of_formula)
+SELECT name_of_parameter, description_of_parameter, formula_parameters.id_of_expert, measurement_of_parameter
+FROM formula_parameters, formulas
+WHERE NOT formula_parameters.name_of_parameter = formulas.name_of_formula
+AND formula_parameters.id_of_expert = formulas.id_of_expert and formulas.id_of_expert=1;
