@@ -12,49 +12,152 @@ namespace oprForm
     public partial class LookEventsForm : Form
     {
         private DBManager db = new DBManager();
-        AddIssueForm issueForm;
-        Int32 coun, lastcoun;
+        private AddIssueForm issueForm;
+        private int issueCounter;
 
-        private List<Event> events = new List<Event>();
-        private Dictionary<int, int> expertOfUser = new Dictionary<int, int>();
+        private List<Event> events;
+        private List<Issue> issues;
+        private Dictionary<int, int> expertOfUser;
 
         public LookEventsForm()
         {
             InitializeComponent();
+            db = new DBManager();
+
+            events = new List<Event>();
+            issues = new List<Issue>();
+            expertOfUser = new Dictionary<int, int>();
+
+            UpdateIssues();
         }
 
-        private void LookEventsForm_Load(object sender, EventArgs e)
+        private void UpdateIssues()
         {
             try
             {
-                coun = 0;
                 db.Connect();
-                //var obj = db.GetRows("event", "*", "");
-                //var events = new List<Event>();
-                //foreach (var row in obj)
-                //{
-                //    events.Add(EventMapper.Map(row));
-                //}
+
                 var obj = db.GetRows("issues", "*", "");
-                var issues = new List<Issue>();
+
+                issues.Clear();
+
                 foreach (var row in obj)
                 {
                     issues.Add(IssueMapper.Map(row));
                 }
-                issuesLB.Items.Clear();
-                issuesLB.Items.AddRange(issues.ToArray());
 
-                issueTB.Text = db.GetValue("issues", "name", "").ToString();
-                issueDescTB.Text = db.GetValue("issues", "description", "").ToString();
-                textBox2.Text = db.GetValue("issues", "Tema", "").ToString();
-                lastcoun = issues.Count() - 1;
-                db.Disconnect();
-                button7.Enabled = true;
+                UpdateApproveGroupBoxComponent();
+
+                issueCounter = 0;
+
             }
             catch (Exception ex)
             {
-                button6.Enabled = false;
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                db.Disconnect();
+            }
+        }
+
+        private void UpdateEvents()
+        {
+            try
+            {
+                eventsLB.Items.Clear();
+
+                db.Connect();
+
+                var obj = db.GetRows("event", "*", "dm_verification is NULL");
+                var events = new List<Event>();
+
+                foreach (var row in obj)
+                {
+                    events.Add(EventMapper.Map(row));
+                }
+
+                eventsLB.Items.AddRange(events.ToArray());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                db.Disconnect();
+            }
+        }
+
+        private void UpdateApproveGroupBoxComponent()
+        {
+            if (issues.Count != 0)
+            {
+                issueTB.Text = issues[0].name;
+                issueDescTB.Text = issues[0].description;
+                textBox2.Text = issues[0].tema;
+
+                nextIssueBtn.Enabled = true;
+                previousBtn.Enabled = true;
+            }
+            else
+            {
+                issueTB.Text = "";
+                issueDescTB.Text = "";
+                textBox2.Text = "";
+
+                nextIssueBtn.Enabled = false;
+                previousBtn.Enabled = false;
+            }
+        }
+
+        private void OpenAddIssueForm()
+        {
+            if (issueForm == null)
+            {
+                issueForm = new AddIssueForm();
+                issueForm.FormClosed += (_sender, _event) =>
+                {
+                    issueForm.Dispose();
+                    issueForm = null;
+
+                    UpdateIssues();
+                };
+
+                issueForm.Show();
+            }
+            issueForm.BringToFront();
+        }
+
+        private void SetApproved(bool approved)
+        {
+            if (eventsLB.SelectedItem != null && eventsLB.SelectedItem is Event ev)
+            {
+                try
+                {
+                    db.Connect();
+
+                    ev.dmVer = approved ? "1" : "0";
+
+                    updateEvent(ev);
+
+                    string[] cols = { "event_id", "dm_verification" };
+                    string[] values = { ev.id.ToString(), approved.ToString() };
+
+                    db.UpdateRecord("event", cols, values);
+
+                    MessageBox.Show($"Захід \"{ev.name}\" було {(approved ? "підтверджено" : "відхилено")}", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    UpdateEvents();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    db.Disconnect();
+                }
             }
         }
 
@@ -103,7 +206,7 @@ namespace oprForm
 
         private bool ukrToBool(string str)
         {
-            if(ukrBool(str) == "Ні")
+            if (ukrBool(str) == "ні")
             {
                 return false;
             }
@@ -141,19 +244,6 @@ namespace oprForm
             SetApproved(true);
         }
 
-        private void SetApproved(bool approved)
-        {
-            db.Connect();
-            Event ev = eventsLB.SelectedItem as Event;
-            ev.dmVer = approved ? "1" : "0";
-            updateEvent(ev);
-
-            string[] cols = { "event_id", "dm_verification" };
-            string[] values = { ev.id.ToString(), approved.ToString() };
-            db.UpdateRecord("event", cols, values);
-            db.Disconnect();
-        }
-
         private void disaproveBtn_Click(object sender, EventArgs e)
         {
             SetApproved(false);
@@ -163,22 +253,12 @@ namespace oprForm
         {
             if (onlyDisCB.Checked)
             {
-                eventsLB.Items.Clear();
-                db.Connect();
-                var obj = db.GetRows("event", "*", "dm_verification is NULL");
-                var events = new List<Event>();
-                foreach (var row in obj)
-                {
-                    events.Add(EventMapper.Map(row));
-                }
-
-                eventsLB.Items.AddRange(events.ToArray());
-                db.Disconnect();
+                UpdateEvents();
             }
             else
             {
                 eventsLB.Items.Clear();
-                LookEventsForm_Load(this, e);
+                UpdateApproveGroupBoxComponent();
             }
         }
 
@@ -190,10 +270,6 @@ namespace oprForm
                 var child = new DocumentViewForm(doc.document_code);
                 child.ShowDialog(this);
             }
-        }
-
-        private void approveGB_Enter(object sender, EventArgs e)
-        {
         }
 
         private void expertsLB_SelectedIndexChanged(object sender, EventArgs e)
@@ -294,90 +370,63 @@ namespace oprForm
                     }
                     expertsLB.Items.AddRange(experts.ToArray());
                 }
-                    issueDescTB.Text = db.GetValue("issues", "description", "name='" + issuesLB.SelectedItem +"'").ToString();
-                    textBox2.Text = db.GetValue("issues", "Tema", "name='" + issuesLB.SelectedItem +"'").ToString();
+                issueDescTB.Text = db.GetValue("issues", "description", "name='" + issuesLB.SelectedItem + "'").ToString();
+                textBox2.Text = db.GetValue("issues", "Tema", "name='" + issuesLB.SelectedItem + "'").ToString();
                 db.Disconnect();
             }
 
             issueTB.Text = issuesLB.SelectedItem.ToString();
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void IssueListClick(object sender, EventArgs e)
         {
-
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            if (issueForm == null)
-            {
-                issueForm = new AddIssueForm();
-                issueForm.Show();
-                issueForm.FormClosed += (_sender, _event) =>
-                {
-                    issueForm.Dispose();
-                    issueForm = null;
-                };
-            }
-            issueForm.BringToFront();
+            OpenAddIssueForm();
         }
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            if(textBox1.Text == "")
+            if (findIssueCondTB.Text == "")
             {
-                MessageBox.Show("Поле пошуку пусте");
+                MessageBox.Show("Поле пошуку пусте.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
             else
             {
-                issuesLB.Enabled = true;
-                issuesLB.Visible = true;
-                label10.Enabled = true;
-                label10.Visible = true;
-                button3.Enabled = true;
-                button3.Visible = true;
-                button4.Enabled = true;
-                button4.Visible = true;
-                String con = "";
-                StreamReader objReader = new StreamReader("init.ini");
-                if (!objReader.EndOfStream)
-                    con = objReader.ReadLine();
-                objReader.Close();
-                var obj = db.TakeIssueRows("issues", "*", textBox1.Text, con);
-                var issues = new List<Issue>();
-                if (obj.Count != 0)
+                try
                 {
-                    foreach (var row in obj)
-                    {
-                        issues.Add(IssueMapper.Map(row));
-                    }
-                    issuesLB.Items.Clear();
-                    issuesLB.Items.AddRange(issues.ToArray());
-                }
-                else MessageBox.Show("Результат відсутній");
-            }
-        }
+                    db.Connect();
 
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            db.Connect();
-            var obj = db.GetRows("issues", "*", "");
-            var issues = new List<Issue>();
-            foreach (var row in obj)
-            {
-                issues.Add(IssueMapper.Map(row));
+                    var findIssues = db.GetRows("issues", "*",
+                                                " name LIKE '%" + findIssueCondTB.Text +
+                                                "%' OR description LIKE '%" + findIssueCondTB.Text +
+                                                "%' OR Tema LIKE '%" + findIssueCondTB.Text + "%'");
+
+                    if (findIssues.Count == 0)
+                    {
+                        MessageBox.Show("Результат відсутній.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    issuesLB.Items.Clear();
+
+                    foreach (var row in findIssues)
+                    {
+                        issuesLB.Items.Add(IssueMapper.Map(row));
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    db.Disconnect();
+                }
             }
-            issuesLB.Items.Clear();
-            issuesLB.Items.AddRange(issues.ToArray());
-            db.Disconnect();
-            textBox1.Text = "";
         }
 
         private void Button4_Click(object sender, EventArgs e)
         {
-            var form = new AddIssueForm();
-            form.ShowDialog(this);
+            OpenAddIssueForm();
         }
 
         private void Button5_Click(object sender, EventArgs e)
@@ -386,94 +435,49 @@ namespace oprForm
             child.Show();
         }
 
-        private void Button6_Click(object sender, EventArgs e)
+        private void NextIssueClick(object sender, EventArgs e)
         {
-            try { 
-            db.Connect();
-            var obj = db.GetRows("issues", "*", "");
-            var issues = new List<Issue>();
-            foreach (var row in obj)
+            if (issueCounter < issues.Count - 1)
             {
-                issues.Add(IssueMapper.Map(row));
-            }
-            if(coun < issues.Count() - 1)
-            {
-            coun += 1;
-            issueTB.Text = issues[coun].name.ToString();
-            issueDescTB.Text = issues[coun].description.ToString();
-            textBox2.Text = issues[coun].tema.ToString();
-            }
-            else if(coun == issues.Count - 1)
-            {
-                coun = 0;
-            //foreach (var row in obj)
-            //{
-            //    issues.Add(IssueMapper.Map(row));
-            //}
-            issueTB.Text = issues[coun].name.ToString();
-            issueDescTB.Text = issues[coun].description.ToString();
-            textBox2.Text = issues[coun].tema.ToString();
-            }
-            db.Disconnect();
-                button7.Enabled = true;
-            }
-            catch(Exception exp) {
-                MessageBox.Show(exp.ToString());
-            };
+                issueCounter++;
 
+                issueTB.Text = issues[issueCounter].name;
+                issueDescTB.Text = issues[issueCounter].description;
+                textBox2.Text = issues[issueCounter].tema;
+            }
+            else if (issueCounter == issues.Count - 1)
+            {
+                issueCounter = 0;
+
+                issueTB.Text = issues[issueCounter].name;
+                issueDescTB.Text = issues[issueCounter].description;
+                textBox2.Text = issues[issueCounter].tema;
+            }
         }
 
-        private void tabPage1_Click(object sender, EventArgs e)
+        private void PreviousIssueClick(object sender, EventArgs e)
         {
+            if (issueCounter > 0)
+            {
+                issueCounter--;
 
+                issueTB.Text = issues[issueCounter].name;
+                issueDescTB.Text = issues[issueCounter].description;
+                textBox2.Text = issues[issueCounter].tema;
+            }
+            else if (issueCounter == 0)
+            {
+                issueCounter = issues.Count - 1;
+
+                issueTB.Text = issues[issueCounter].name;
+                issueDescTB.Text = issues[issueCounter].description;
+                textBox2.Text = issues[issueCounter].tema;
+            }
         }
 
-        private void lawyerCheck_CheckedChanged(object sender, EventArgs e)
+        private void updateIssueBtn_Click(object sender, EventArgs e)
         {
-        }
-
-        private void Button7_Click(object sender, EventArgs e)
-        {
-
-            if (coun > 0)
-            {
-                try
-                {
-                    coun -= 1;
-                db.Connect();
-                var obj = db.GetRows("issues", "*", "");
-                var issues = new List<Issue>();
-                foreach (var row in obj)
-                {
-                    issues.Add(IssueMapper.Map(row));
-                }
-                issueTB.Text = issues[coun].name.ToString();
-                issueDescTB.Text = issues[coun].description.ToString();
-                textBox2.Text = issues[coun].tema.ToString();
-                db.Disconnect();
-                }
-                catch (Exception ex) { };
-            }
-            else if(coun == 0)
-            {
-                try
-                {
-                    db.Connect();
-                var obj = db.GetRows("issues", "*", "");
-                var issues = new List<Issue>();
-                foreach (var row in obj)
-                {
-                    issues.Add(IssueMapper.Map(row));
-                }
-                Int32 c = issues.Count() - 1;
-                issueTB.Text = issues[c].name.ToString();
-                issueDescTB.Text = issues[c].description.ToString();
-                textBox2.Text = issues[c].tema.ToString();
-                db.Disconnect();
-                coun = c;
-                }
-                catch (Exception ex) { };
-            }
+            UpdateIssues();
         }
     }
 }

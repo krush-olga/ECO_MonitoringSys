@@ -108,45 +108,17 @@ namespace Data
             if (fields == "")
                 fields = "*";
             String res = "SELECT " + fields + " FROM " + tableName;
-            if (cond != "")
+
+            if (cond != "" && !cond.ToUpper().Contains("ORDER BY"))
             {
                 res += " WHERE " + cond;
             }
-            if(tableName== "calculations_description")
-                res += " ORDER BY calculation_number";
-            if (tableName == "issues" && cond.Contains("issue_id") == false)
-                res += " ORDER BY issue_id";
-            //res+=";";
-            return res;
-        }
-
-
-        private String GetIssueRows(String table, String field, String cond)
-        {
-            String res = "SELECT " + field + " FROM " + table + " WHERE name LIKE '%" + cond + "%' OR description LIKE '%" + cond + "%' OR Tema LIKE '%" + cond + "%';";
-            return res;
-        }
-        public List<List<Object>> TakeIssueRows(String tableName, String fields, String cond,String con)
-        {
-            //try catch
-            var res = new List<List<Object>>();
-            MySqlConnection connection = new MySqlConnection(con);
-            connection.Open();
-            MySqlCommand command = new MySqlCommand(GetIssueRows(tableName, fields, cond), connection);
-
-            using ( var reader = command.ExecuteReader())
+            else
             {
-                while (reader.Read())
-                {
-                    List<Object> row = new List<object>();
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        row.Add(reader[i]);
-                    }
-                    res.Add(row);
-                }
+                res += cond;
             }
-            connection.Close();
+
+            res += ";";
             return res;
         }
 
@@ -167,11 +139,12 @@ namespace Data
                     {
                         row.Add(reader[i]);
                     }
-                        res.Add(row);
+                    res.Add(row);
                 }
             }
             return res;
         }
+
         //Returns list of experts id's which have calculations
         public List<List<Object>> GetId()
         {
@@ -201,7 +174,6 @@ namespace Data
         }
 
         private string GetUpdateStatement(string tableName, string field, string value, string cond)
-
         {
             String res;
             if(cond != "")

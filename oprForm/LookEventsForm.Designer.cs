@@ -44,11 +44,12 @@
             this.dmApprLbl = new System.Windows.Forms.Label();
             this.lawyerApprLbl = new System.Windows.Forms.Label();
             this.approveGB = new System.Windows.Forms.GroupBox();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.updateIssueBtn = new System.Windows.Forms.Button();
+            this.previousBtn = new System.Windows.Forms.Button();
+            this.nextIssueBtn = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.issueListBtn = new System.Windows.Forms.Button();
             this.issueDescTB = new System.Windows.Forms.TextBox();
             this.issueTB = new System.Windows.Forms.TextBox();
             this.issueCostTB = new System.Windows.Forms.TextBox();
@@ -63,14 +64,11 @@
             this.issuesLB = new System.Windows.Forms.ListBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.issueCostLbl = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.findIssueCondTB = new System.Windows.Forms.TextBox();
             this.lawyerCheck = new System.Windows.Forms.CheckBox();
             this.dmCheck = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -142,7 +140,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(349, 281);
+            this.label1.Location = new System.Drawing.Point(356, 281);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(106, 17);
@@ -153,7 +151,7 @@
             // 
             this.eventsLB.FormattingEnabled = true;
             this.eventsLB.ItemHeight = 16;
-            this.eventsLB.Location = new System.Drawing.Point(352, 305);
+            this.eventsLB.Location = new System.Drawing.Point(359, 305);
             this.eventsLB.Margin = new System.Windows.Forms.Padding(4);
             this.eventsLB.Name = "eventsLB";
             this.eventsLB.Size = new System.Drawing.Size(254, 452);
@@ -178,11 +176,10 @@
             this.label3.Size = new System.Drawing.Size(42, 17);
             this.label3.TabIndex = 13;
             this.label3.Text = "Опис";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // approveBtn
             // 
-            this.approveBtn.Location = new System.Drawing.Point(68, 778);
+            this.approveBtn.Location = new System.Drawing.Point(27, 778);
             this.approveBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.approveBtn.Name = "approveBtn";
             this.approveBtn.Size = new System.Drawing.Size(108, 30);
@@ -193,7 +190,7 @@
             // 
             // disaproveBtn
             // 
-            this.disaproveBtn.Location = new System.Drawing.Point(186, 780);
+            this.disaproveBtn.Location = new System.Drawing.Point(141, 778);
             this.disaproveBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.disaproveBtn.Name = "disaproveBtn";
             this.disaproveBtn.Size = new System.Drawing.Size(101, 30);
@@ -222,11 +219,12 @@
             // 
             // approveGB
             // 
-            this.approveGB.Controls.Add(this.button7);
-            this.approveGB.Controls.Add(this.button6);
+            this.approveGB.Controls.Add(this.updateIssueBtn);
+            this.approveGB.Controls.Add(this.previousBtn);
+            this.approveGB.Controls.Add(this.nextIssueBtn);
             this.approveGB.Controls.Add(this.textBox2);
             this.approveGB.Controls.Add(this.label12);
-            this.approveGB.Controls.Add(this.button1);
+            this.approveGB.Controls.Add(this.issueListBtn);
             this.approveGB.Controls.Add(this.issueDescTB);
             this.approveGB.Controls.Add(this.issueTB);
             this.approveGB.Controls.Add(this.issueCostTB);
@@ -242,31 +240,41 @@
             this.approveGB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.approveGB.Name = "approveGB";
             this.approveGB.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.approveGB.Size = new System.Drawing.Size(827, 167);
+            this.approveGB.Size = new System.Drawing.Size(822, 167);
             this.approveGB.TabIndex = 20;
             this.approveGB.TabStop = false;
-            this.approveGB.Enter += new System.EventHandler(this.approveGB_Enter);
             // 
-            // button7
+            // updateIssueBtn
             // 
-            this.button7.Enabled = false;
-            this.button7.Location = new System.Drawing.Point(493, 112);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(91, 28);
-            this.button7.TabIndex = 36;
-            this.button7.Text = "Попередня";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.Button7_Click);
+            this.updateIssueBtn.Location = new System.Drawing.Point(633, 125);
+            this.updateIssueBtn.Margin = new System.Windows.Forms.Padding(4);
+            this.updateIssueBtn.Name = "updateIssueBtn";
+            this.updateIssueBtn.Size = new System.Drawing.Size(157, 26);
+            this.updateIssueBtn.TabIndex = 39;
+            this.updateIssueBtn.Text = "Оновити cписок";
+            this.updateIssueBtn.UseVisualStyleBackColor = true;
+            this.updateIssueBtn.Click += new System.EventHandler(this.updateIssueBtn_Click);
             // 
-            // button6
+            // previousBtn
             // 
-            this.button6.Location = new System.Drawing.Point(389, 112);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(82, 28);
-            this.button6.TabIndex = 35;
-            this.button6.Text = "Наступна";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.Button6_Click);
+            this.previousBtn.Enabled = false;
+            this.previousBtn.Location = new System.Drawing.Point(493, 105);
+            this.previousBtn.Name = "previousBtn";
+            this.previousBtn.Size = new System.Drawing.Size(91, 28);
+            this.previousBtn.TabIndex = 36;
+            this.previousBtn.Text = "Попередня";
+            this.previousBtn.UseVisualStyleBackColor = true;
+            this.previousBtn.Click += new System.EventHandler(this.PreviousIssueClick);
+            // 
+            // nextIssueBtn
+            // 
+            this.nextIssueBtn.Location = new System.Drawing.Point(397, 105);
+            this.nextIssueBtn.Name = "nextIssueBtn";
+            this.nextIssueBtn.Size = new System.Drawing.Size(82, 28);
+            this.nextIssueBtn.TabIndex = 35;
+            this.nextIssueBtn.Text = "Наступна";
+            this.nextIssueBtn.UseVisualStyleBackColor = true;
+            this.nextIssueBtn.Click += new System.EventHandler(this.NextIssueClick);
             // 
             // textBox2
             // 
@@ -287,16 +295,16 @@
             this.label12.TabIndex = 33;
             this.label12.Text = "Тематика";
             // 
-            // button1
+            // issueListBtn
             // 
-            this.button1.Location = new System.Drawing.Point(635, 112);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(157, 28);
-            this.button1.TabIndex = 32;
-            this.button1.Text = "Список задач";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.issueListBtn.Location = new System.Drawing.Point(633, 89);
+            this.issueListBtn.Margin = new System.Windows.Forms.Padding(4);
+            this.issueListBtn.Name = "issueListBtn";
+            this.issueListBtn.Size = new System.Drawing.Size(157, 28);
+            this.issueListBtn.TabIndex = 32;
+            this.issueListBtn.Text = "Список задач";
+            this.issueListBtn.UseVisualStyleBackColor = true;
+            this.issueListBtn.Click += new System.EventHandler(this.IssueListClick);
             // 
             // issueDescTB
             // 
@@ -365,7 +373,7 @@
             // onlyDisCB
             // 
             this.onlyDisCB.AutoSize = true;
-            this.onlyDisCB.Location = new System.Drawing.Point(19, 254);
+            this.onlyDisCB.Location = new System.Drawing.Point(30, 240);
             this.onlyDisCB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.onlyDisCB.Name = "onlyDisCB";
             this.onlyDisCB.Size = new System.Drawing.Size(174, 21);
@@ -378,7 +386,7 @@
             // 
             this.docsLB.FormattingEnabled = true;
             this.docsLB.ItemHeight = 16;
-            this.docsLB.Location = new System.Drawing.Point(614, 305);
+            this.docsLB.Location = new System.Drawing.Point(621, 305);
             this.docsLB.Margin = new System.Windows.Forms.Padding(4);
             this.docsLB.Name = "docsLB";
             this.docsLB.Size = new System.Drawing.Size(254, 452);
@@ -388,7 +396,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(612, 281);
+            this.label7.Location = new System.Drawing.Point(618, 281);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(81, 17);
@@ -408,21 +416,19 @@
             // 
             // issuesLB
             // 
-            this.issuesLB.Enabled = false;
             this.issuesLB.FormattingEnabled = true;
             this.issuesLB.ItemHeight = 16;
-            this.issuesLB.Location = new System.Drawing.Point(932, 148);
+            this.issuesLB.Location = new System.Drawing.Point(924, 143);
             this.issuesLB.Margin = new System.Windows.Forms.Padding(4);
             this.issuesLB.Name = "issuesLB";
-            this.issuesLB.Size = new System.Drawing.Size(174, 196);
+            this.issuesLB.Size = new System.Drawing.Size(207, 196);
             this.issuesLB.TabIndex = 26;
-            this.issuesLB.Visible = false;
             this.issuesLB.SelectedIndexChanged += new System.EventHandler(this.issuesLB_SelectedIndexChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 281);
+            this.label8.Location = new System.Drawing.Point(27, 281);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(122, 17);
@@ -432,23 +438,12 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Enabled = false;
-            this.label10.Location = new System.Drawing.Point(929, 121);
+            this.label10.Location = new System.Drawing.Point(972, 118);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(94, 17);
+            this.label10.Size = new System.Drawing.Size(114, 17);
             this.label10.TabIndex = 28;
-            this.label10.Text = "Пошук задач";
-            this.label10.Visible = false;
-            // 
-            // issueCostLbl
-            // 
-            this.issueCostLbl.AutoSize = true;
-            this.issueCostLbl.Location = new System.Drawing.Point(18, 778);
-            this.issueCostLbl.Name = "issueCostLbl";
-            this.issueCostLbl.Size = new System.Drawing.Size(44, 17);
-            this.issueCostLbl.TabIndex = 30;
-            this.issueCostLbl.Text = "hjkhkj";
+            this.label10.Text = "Знайдені задачі";
             // 
             // tabControl1
             // 
@@ -464,14 +459,11 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.button5);
-            this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.button3);
             this.tabPage1.Controls.Add(this.button2);
-            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.findIssueCondTB);
             this.tabPage1.Controls.Add(this.lawyerCheck);
             this.tabPage1.Controls.Add(this.dmCheck);
             this.tabPage1.Controls.Add(this.eventsLB);
-            this.tabPage1.Controls.Add(this.issueCostLbl);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.label10);
             this.tabPage1.Controls.Add(this.approveGB);
@@ -491,7 +483,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Головна";
             this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // button5
             // 
@@ -504,32 +495,6 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.Button5_Click);
             // 
-            // button4
-            // 
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(1078, 113);
-            this.button4.Margin = new System.Windows.Forms.Padding(4);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(28, 27);
-            this.button4.TabIndex = 37;
-            this.button4.Text = "+";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Visible = false;
-            this.button4.Click += new System.EventHandler(this.Button4_Click);
-            // 
-            // button3
-            // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(1039, 113);
-            this.button3.Margin = new System.Windows.Forms.Padding(4);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(29, 27);
-            this.button3.TabIndex = 36;
-            this.button3.Text = "R";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Visible = false;
-            this.button3.Click += new System.EventHandler(this.Button3_Click);
-            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(429, 192);
@@ -541,30 +506,31 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
-            // textBox1
+            // findIssueCondTB
             // 
-            this.textBox1.Location = new System.Drawing.Point(19, 193);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(401, 23);
-            this.textBox1.TabIndex = 33;
+            this.findIssueCondTB.Location = new System.Drawing.Point(19, 193);
+            this.findIssueCondTB.Margin = new System.Windows.Forms.Padding(4);
+            this.findIssueCondTB.Name = "findIssueCondTB";
+            this.findIssueCondTB.Size = new System.Drawing.Size(401, 23);
+            this.findIssueCondTB.TabIndex = 33;
             // 
             // lawyerCheck
             // 
             this.lawyerCheck.AutoSize = true;
-            this.lawyerCheck.Location = new System.Drawing.Point(219, 254);
+            this.lawyerCheck.Enabled = false;
+            this.lawyerCheck.Location = new System.Drawing.Point(222, 240);
             this.lawyerCheck.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lawyerCheck.Name = "lawyerCheck";
             this.lawyerCheck.Size = new System.Drawing.Size(179, 21);
             this.lawyerCheck.TabIndex = 32;
             this.lawyerCheck.Text = "Підтвердження юриста";
             this.lawyerCheck.UseVisualStyleBackColor = true;
-            this.lawyerCheck.CheckedChanged += new System.EventHandler(this.lawyerCheck_CheckedChanged);
             // 
             // dmCheck
             // 
             this.dmCheck.AutoSize = true;
-            this.dmCheck.Location = new System.Drawing.Point(440, 254);
+            this.dmCheck.Enabled = false;
+            this.dmCheck.Location = new System.Drawing.Point(429, 240);
             this.dmCheck.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dmCheck.Name = "dmCheck";
             this.dmCheck.Size = new System.Drawing.Size(196, 21);
@@ -670,7 +636,6 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "LookEventsForm";
             this.Text = "Перегляд задач";
-            this.Load += new System.EventHandler(this.LookEventsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.eventListGrid)).EndInit();
             this.approveGB.ResumeLayout(false);
             this.approveGB.PerformLayout();
@@ -713,7 +678,6 @@
         private System.Windows.Forms.ListBox issuesLB;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label issueCostLbl;
         private System.Windows.Forms.TextBox issueDescTB;
         private System.Windows.Forms.TextBox issueTB;
         private System.Windows.Forms.TextBox issueCostTB;
@@ -730,15 +694,14 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox lawyerCheck;
         private System.Windows.Forms.CheckBox dmCheck;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button issueListBtn;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TextBox findIssueCondTB;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button previousBtn;
+        private System.Windows.Forms.Button nextIssueBtn;
+        private System.Windows.Forms.Button updateIssueBtn;
     }
 }

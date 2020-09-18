@@ -53,7 +53,7 @@ namespace Maps
                 btnAddMarker.Tag = "0";
 
             }
-            //если включена кнопка "Добавить" на вкладке Полигон
+            //если включена кнопка "Добавить" на вкладке Маркер
             if (btnAddMarker.Enabled == false)
             {
                 btnStartPointPolygon.Tag = "0";
@@ -79,9 +79,10 @@ namespace Maps
         {
             btnAddMarker.Enabled = false;
             btnCancelMarker.Enabled = true;
-            btnDeleteMarker.Enabled = false;
+            btnDeleteMarker.Enabled = true;
             btnClearMarker.Enabled = false;
 
+            btnCancelMarker.Text = "Відміна";
         }
         //кнопка сохранения маркера 
         private void btnSaveMarker_Click(object sender, EventArgs e)
@@ -109,8 +110,11 @@ namespace Maps
         {
             try
             {
-                if (btnDeleteMarker.Enabled == true)
+                if (btnDeleteMarker.Enabled == true && newMap.currentMarker != null)
+                {
                     newMap.currentMarker.Overlay.Clear();
+                }
+
                 btnCancelMarker.Text = "Відміна";
                 btnAddMarker.Enabled = true;
                 btnSaveMarker.Enabled = false;
@@ -129,7 +133,7 @@ namespace Maps
             btnDeleteMarker.Enabled = false;
             btnCancelMarker.Text = "Завершити";
             btnCancelMarker.Enabled = true;
-            btnAddMarker.Enabled = false;
+            btnAddMarker.Enabled = true;
         }
         //кнопка очистки
         private void btnClearMarker_Click(object sender, EventArgs e)
@@ -628,7 +632,6 @@ namespace Maps
         {
             try
             {
-                List<List<Object>> description;
                 List<List<Object>> id;
                 newMap.currentMarker = item;
 
@@ -646,33 +649,35 @@ namespace Maps
                     ///////////////////////////////////////////////////////////////
                 }
 
-                if (btnDeleteMarker.Enabled == false && btnAddMarker.Enabled == false && tabControl1.SelectedIndex == 0)
+                if (btnDeleteMarker.Enabled == false && tabControl1.SelectedIndex == 0)
                 {
                     try
                     {
-                        description = db.GetRows("poi", "Description", "Coord_Lat = " + item.Position.Lat.ToString().Replace(',', '.'));
-                        string nameObject = (string)db.GetValue("poi", "Name_Object", "Coord_Lat = " + item.Position.Lat.ToString().Replace(',', '.'));
-                        var typePoi = (int)db.GetValue("poi", "Type", "Coord_Lat = " + item.Position.Lat.ToString().Replace(',', '.'));
-                        string typeMarker = (string)db.GetValue("type_of_object", "Name", "Id = " + typePoi);
+                        var poiInfo = db.GetRows("poi, type_of_object",
+                                                 "poi.id, poi.Description, poi.Name_Object, poi.Type, poi.id_of_user, " +
+                                                 "type_of_object.Name",
+                                                 " Coord_Lat = " + item.Position.Lat.ToString().Replace(',', '.') +
+                                                 " AND type_of_object.Id = poi.Type");
 
-                        id = db.GetRows("poi", "id_of_user", "Coord_Lat = " + item.Position.Lat.ToString().Replace(',', '.'));
-                        var idPoi = db.GetRows("poi", "id", "Coord_Lat = " + item.Position.Lat.ToString().Replace(',', '.'));
+                        if (poiInfo.Count == 0)
+                        {
+                            return;
+                        }
 
-                        DeleteForm deleteForm = new DeleteForm(description[0][0].ToString(), nameObject, typeMarker);
-                        if (id[0][0].ToString() == id_of_user.ToString())
+                        DeleteForm deleteForm = new DeleteForm(poiInfo[0][0].ToString(), poiInfo[0][2].ToString(), poiInfo[0][5].ToString());
+                        if (poiInfo[0][4].ToString() == id_of_user.ToString())
                         {
                             deleteForm.ShowDialog();
                             if (deleteForm.CloseSelect() == true)
                             {
-
-                                db.DeleteFromDB("emissions_on_map", "idPoi", idPoi.ToString());
+                                db.DeleteFromDB("emissions_on_map", "idPoi", poiInfo[0][0].ToString());
                                 db.DeleteFromDB("poi", "Coord_Lat", item.Position.Lat.ToString().Replace(',', '.'));
                                 newMap.currentMarker.Overlay.Clear();
                             }
                         }
                         else
                         {
-                            MessageBox.Show($"Данний експерт не може видаляти маркери. Маркери може видаляти експерт з ід: {id}");
+                            MessageBox.Show($"Данний експерт не може видаляти маркери. Маркери може видаляти експерт з ід: {poiInfo[0][4]}");
                         }
                         //btnDeleteMarker.Enabled = true;
                     }
@@ -681,7 +686,7 @@ namespace Maps
                         MessageBox.Show("Помилка при видаленні\n" + ex);
                     }
                 }
-                else if (btnDeletePolygon.Enabled == false && btnStartPointPolygon.Enabled == false && tabControl1.SelectedIndex == 1)
+                else if (btnDeletePolygon.Enabled == false && tabControl1.SelectedIndex == 1)
                 {
                     try
                     {
@@ -710,7 +715,7 @@ namespace Maps
                         MessageBox.Show("Помилка при видаленні\n" + ex);
                     }
                 }
-                else if (btnDeleteTube.Enabled == false && btnStartTube.Enabled == false && tabControl1.SelectedIndex == 2)
+                else if (btnDeleteTube.Enabled == false && tabControl1.SelectedIndex == 2)
                 {
                     try
                     {
@@ -961,6 +966,7 @@ namespace Maps
                         btnClearTube.Enabled = true;
                     }
                 }
+
                 btnAddMarker.Enabled = true;
                 btnSaveMarker.Enabled = false;
                 btnCancelMarker.Enabled = false;

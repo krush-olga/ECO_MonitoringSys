@@ -27,7 +27,7 @@ namespace experts_jurist
         {
             listOfFi = SM.SearchLine(textBox1.Text);
 
-			if (listOfFi.Count() < 0)
+			if (listOfFi.Count() == 0)
 			{
 				label1.Text = "Нічого не знайдено";
 			}
