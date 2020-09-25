@@ -24,7 +24,7 @@ namespace oprForm
 
         private void переглядЗаходiвToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LookEventsForm child = new LookEventsForm();
+            LookEventsForm child = new LookEventsForm(userId);
             child.MdiParent = this;
             child.Show();
         }
@@ -66,7 +66,7 @@ namespace oprForm
 
         private void переглядЗаходiвToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            LookEventsForm child = new LookEventsForm();
+            LookEventsForm child = new LookEventsForm(userId);
             child.MdiParent = this;
             child.Show();
         }

@@ -55,7 +55,13 @@ namespace oprForm
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (eventsLB.SelectedItem == null || issuesCB.SelectedItem == null)
+            {
+                return;
+            }
+
             Event ev = eventsLB.SelectedItem as Event;
+            Issue issue = (Issue)issuesCB.SelectedItem;
 
             try
             {
@@ -65,7 +71,7 @@ namespace oprForm
 
                 string[] evFields = new string[] { "name", "description", "id_of_user", "issue_id" };
 
-                string issueId = (issuesCB.SelectedItem as Issue).id.ToString();
+                string issueId = issue.id.ToString();
                 string[] evValues = new string[] { evName, evDesc, user.ToString(), issueId };
 
                 int evId = db.InsertToBD("event", evFields, evValues);

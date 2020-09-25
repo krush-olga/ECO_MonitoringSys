@@ -137,7 +137,7 @@ namespace Experts_Economist
         {
             if (look == null)
             {
-                look = new LookEventsForm();
+                look = new LookEventsForm(id_of_exp);
                 look.MdiParent = this;
                 look.Show();
                 look.FormClosed += (send, ev) => { look.Dispose(); look = null; };
@@ -182,7 +182,7 @@ namespace Experts_Economist
 
         private void переглядЗаходiвToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            LookEventsForm child = new LookEventsForm();
+            LookEventsForm child = new LookEventsForm(id_of_exp);
             child.MdiParent = this;
             child.Show();
         }

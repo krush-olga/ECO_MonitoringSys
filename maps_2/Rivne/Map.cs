@@ -226,11 +226,17 @@ namespace Maps
             try
             {
                 btnCancelPolygon.Text = "Відміна";
+
                 if (btnDeletePolygon.Enabled == true)
                 {
-                    newMap.currentMarker.Overlay.Clear();
+                    if (newMap.currentMarker != null)
+                    {
+                        newMap.currentMarker.Overlay.Clear();
+                    }
+
                     newMap._points.Clear();
                 }
+
                 btnStartPointPolygon.Enabled = true;
                 btnSavePolygon.Enabled = false;
                 btnCancelPolygon.Enabled = false;
@@ -383,7 +389,7 @@ namespace Maps
             btnShowAllTubes.Enabled = false;
             btnShowExpertsTubes.Enabled = false;
             btnClearTube.Enabled = false;
-            btnDeleteTube.Enabled = false;
+            btnDeleteTube.Enabled = true;
         }
         //сохранения трубопровода
         private void btnSaveTube_Click(object sender, EventArgs e)
@@ -414,12 +420,18 @@ namespace Maps
             try
             {
                 btnCancelTube.Text = "Відміна";
+
                 if (btnDeleteTube.Enabled == true)
                 {
-                    newMap.currentMarker.Overlay.Clear();
+                    if (newMap.currentMarker != null)
+                    {
+                        newMap.currentMarker.Overlay.Clear();
+                    }
+
                     newMap._points.Clear();
                     newMap._pointsTube.Clear();
                 }
+
                 btnStartTube.Enabled = true;
                 btnSaveTube.Enabled = false;
                 btnCancelTube.Enabled = false;
@@ -521,12 +533,20 @@ namespace Maps
         //настройка кнопки для удаления трубопровода
         private void btnDeleteTube_Click(object sender, EventArgs e)
         {
+            if (btnStartTube.Enabled == false)
+            {
+                MessageBox.Show("Ви не можете включити режим \"видалення\" поки ввімкнений режим \"створення\".", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             btnCancelTube.Text = "Завершити";
             btnDeleteTube.Enabled = false;
             btnDeletePolygon.Enabled = true;
             btnDeleteMarker.Enabled = true;
             btnCancelTube.Enabled = true;
-            btnStartTube.Enabled = false;
+            btnStartTube.Enabled = true;
+
+            
         }
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -630,6 +650,11 @@ namespace Maps
         //при клике на любой маркер на картке(обычный маркер, полигон, трубы)
         private void gMapControl_OnMarkerClick(GMap.NET.WindowsForms.GMapMarker item, MouseEventArgs e)
         {
+            if (item == null || btnStartTube.Enabled == false) 
+            {
+                return;
+            }
+
             try
             {
                 List<List<Object>> id;
@@ -690,18 +715,18 @@ namespace Maps
                 {
                     try
                     {
-
                         string idPointPoligon = db.GetValue("point_poligon", "Id_of_poligon", "longitude = " + item.Position.Lat.ToString().Replace(',', '.') + " AND order123=" + 1.ToString()).ToString();
                         id = db.GetRows("poligon", "id_of_user", "id_of_poligon = " + idPointPoligon);
                         DeleteForm deleteForm = new DeleteForm("", "", "");
+
                         if (id[0][0].ToString() == id_of_user.ToString())
                         {
                             deleteForm.ShowDialog();
                             if (deleteForm.CloseSelect() == true)
                             {
-                                db.DeleteFromDB("poligon_calculations_description", "id_poligon", idPointPoligon.ToString());
-                                db.DeleteFromDB("point_poligon", "Id_of_poligon", idPointPoligon.ToString());
-                                db.DeleteFromDB("poligon", "id_of_poligon", idPointPoligon.ToString());
+                                db.DeleteFromDB("poligon_calculations_description", "id_poligon", idPointPoligon);
+                                db.DeleteFromDB("point_poligon", "Id_of_poligon", idPointPoligon);
+                                db.DeleteFromDB("poligon", "id_of_poligon", idPointPoligon);
                                 newMap.currentMarker.Overlay.Clear();
                             }
                         }
@@ -721,15 +746,17 @@ namespace Maps
                     {
                         string idPointPoligon = db.GetValue("point_poligon", "Id_of_poligon", "longitude = " + item.Position.Lat.ToString().Replace(',', '.')).ToString();
                         id = db.GetRows("poligon", "id_of_user", "id_of_poligon = " + idPointPoligon);
+                        
                         DeleteForm deleteForm = new DeleteForm("", "", "");
+                        
                         if (id[0][0].ToString() == id_of_user.ToString())
                         {
                             deleteForm.ShowDialog();
                             if (deleteForm.CloseSelect() == true)
                             {
-                                db.DeleteFromDB("emissions_on_map", "idPoligon", idPointPoligon.ToString());
-                                db.DeleteFromDB("point_poligon", "Id_of_poligon", idPointPoligon.ToString());
-                                db.DeleteFromDB("poligon", "id_of_poligon", idPointPoligon.ToString());
+                                db.DeleteFromDB("emissions_on_map", "idPoligon", idPointPoligon);
+                                db.DeleteFromDB("point_poligon", "Id_of_poligon", idPointPoligon);
+                                db.DeleteFromDB("poligon", "id_of_poligon", idPointPoligon);
                                 newMap.currentMarker.Overlay.Clear();
                             }
                         }

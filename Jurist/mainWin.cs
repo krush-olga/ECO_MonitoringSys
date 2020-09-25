@@ -28,7 +28,7 @@ namespace experts_jurist
         public mainWin(int id)
         {
 			//UserLogin uf = new UserLogin();
-				//userId = id;
+				userId = id;
                 GreetMDIChild = new greeting(id);
                 InitializeComponent();
 

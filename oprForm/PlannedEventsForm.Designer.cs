@@ -52,31 +52,27 @@
             this.eventsLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.eventsLB.FormattingEnabled = true;
-            this.eventsLB.ItemHeight = 16;
-            this.eventsLB.Location = new System.Drawing.Point(16, 56);
-            this.eventsLB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.eventsLB.Location = new System.Drawing.Point(12, 46);
             this.eventsLB.Name = "eventsLB";
-            this.eventsLB.Size = new System.Drawing.Size(146, 420);
+            this.eventsLB.Size = new System.Drawing.Size(110, 342);
             this.eventsLB.TabIndex = 0;
             this.eventsLB.SelectedIndexChanged += new System.EventHandler(this.eventsLB_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 28);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(14, 23);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 17);
+            this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Шаблони заходiв";
             // 
             // addBtn
             // 
             this.addBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addBtn.Location = new System.Drawing.Point(922, 484);
-            this.addBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.addBtn.Location = new System.Drawing.Point(698, 393);
             this.addBtn.Name = "addBtn";
-            this.addBtn.Size = new System.Drawing.Size(142, 28);
+            this.addBtn.Size = new System.Drawing.Size(106, 23);
             this.addBtn.TabIndex = 3;
             this.addBtn.Text = "Додати";
             this.addBtn.UseVisualStyleBackColor = true;
@@ -95,10 +91,9 @@
             this.Resource,
             this.Description,
             this.Value});
-            this.eventListGrid.Location = new System.Drawing.Point(347, 56);
-            this.eventListGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.eventListGrid.Location = new System.Drawing.Point(260, 46);
             this.eventListGrid.Name = "eventListGrid";
-            this.eventListGrid.Size = new System.Drawing.Size(726, 420);
+            this.eventListGrid.Size = new System.Drawing.Size(544, 341);
             this.eventListGrid.TabIndex = 4;
             this.eventListGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.commitValue);
             // 
@@ -119,33 +114,28 @@
             // 
             // descTB
             // 
-            this.descTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.descTB.Location = new System.Drawing.Point(296, 18);
-            this.descTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.descTB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.descTB.Location = new System.Drawing.Point(232, 15);
             this.descTB.Name = "descTB";
-            this.descTB.Size = new System.Drawing.Size(469, 22);
+            this.descTB.Size = new System.Drawing.Size(183, 20);
             this.descTB.TabIndex = 5;
             this.descTB.Text = "Опис";
             // 
             // evNameTB
             // 
-            this.evNameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.evNameTB.Location = new System.Drawing.Point(157, 18);
-            this.evNameTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.evNameTB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.evNameTB.Location = new System.Drawing.Point(29, 16);
             this.evNameTB.Name = "evNameTB";
-            this.evNameTB.Size = new System.Drawing.Size(343, 22);
+            this.evNameTB.Size = new System.Drawing.Size(197, 20);
             this.evNameTB.TabIndex = 6;
             this.evNameTB.Text = "Назва заходу";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(344, 29);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(258, 24);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(114, 17);
+            this.label2.Size = new System.Drawing.Size(90, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Список ресурсiв";
             // 
@@ -156,32 +146,31 @@
             this.addGB.Controls.Add(this.issuesCB);
             this.addGB.Controls.Add(this.descTB);
             this.addGB.Controls.Add(this.evNameTB);
-            this.addGB.Location = new System.Drawing.Point(16, 478);
-            this.addGB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.addGB.Location = new System.Drawing.Point(12, 388);
+            this.addGB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.addGB.Name = "addGB";
-            this.addGB.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.addGB.Size = new System.Drawing.Size(897, 80);
+            this.addGB.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.addGB.Size = new System.Drawing.Size(681, 46);
             this.addGB.TabIndex = 8;
             this.addGB.TabStop = false;
             // 
             // issuesCB
             // 
-            this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.issuesCB.FormattingEnabled = true;
-            this.issuesCB.Location = new System.Drawing.Point(560, 18);
-            this.issuesCB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.issuesCB.Location = new System.Drawing.Point(420, 15);
+            this.issuesCB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.issuesCB.Name = "issuesCB";
-            this.issuesCB.Size = new System.Drawing.Size(329, 24);
+            this.issuesCB.Size = new System.Drawing.Size(248, 21);
             this.issuesCB.TabIndex = 7;
             // 
             // onlyExpCB
             // 
             this.onlyExpCB.AutoSize = true;
-            this.onlyExpCB.Location = new System.Drawing.Point(529, 29);
-            this.onlyExpCB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.onlyExpCB.Location = new System.Drawing.Point(397, 24);
+            this.onlyExpCB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.onlyExpCB.Name = "onlyExpCB";
-            this.onlyExpCB.Size = new System.Drawing.Size(217, 21);
+            this.onlyExpCB.Size = new System.Drawing.Size(169, 17);
             this.onlyExpCB.TabIndex = 9;
             this.onlyExpCB.Text = "Тільки есперта користувача";
             this.onlyExpCB.UseVisualStyleBackColor = true;
@@ -190,31 +179,29 @@
             // resLB
             // 
             this.resLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.resLB.FormattingEnabled = true;
-            this.resLB.ItemHeight = 16;
-            this.resLB.Location = new System.Drawing.Point(169, 56);
-            this.resLB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.resLB.Location = new System.Drawing.Point(127, 46);
+            this.resLB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.resLB.Name = "resLB";
-            this.resLB.Size = new System.Drawing.Size(171, 420);
+            this.resLB.Size = new System.Drawing.Size(129, 342);
             this.resLB.TabIndex = 10;
             this.resLB.DoubleClick += new System.EventHandler(this.resLB_DoubleClick);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(166, 28);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(124, 23);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 17);
+            this.label3.Size = new System.Drawing.Size(49, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "Ресурси";
             // 
             // PlannedEventsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1077, 566);
+            this.ClientSize = new System.Drawing.Size(808, 439);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.resLB);
             this.Controls.Add(this.addBtn);
@@ -224,7 +211,6 @@
             this.Controls.Add(this.eventListGrid);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.eventsLB);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "PlannedEventsForm";
             this.Text = "Новий захiд";
             this.Load += new System.EventHandler(this.PlannedEventsForm_Load);

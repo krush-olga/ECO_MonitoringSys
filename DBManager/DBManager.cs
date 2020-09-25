@@ -299,7 +299,7 @@ namespace Data
                 }
                 sqlCommand += fieldValues[fieldNames.Length - 1];
                 sqlCommand += ");";
-                sqlCommand += "select last_insert_id();";
+                sqlCommand += " select last_insert_id();";
                 MySqlCommand insertCmd = new MySqlCommand(sqlCommand, connection);
                 int id = Int32.Parse(insertCmd.ExecuteScalar().ToString());
                 return id;

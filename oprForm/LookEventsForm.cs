@@ -14,12 +14,13 @@ namespace oprForm
         private DBManager db = new DBManager();
         private AddIssueForm issueForm;
         private int issueCounter;
+        private int userId;
 
         private List<Event> events;
         private List<Issue> issues;
         private Dictionary<int, int> expertOfUser;
 
-        public LookEventsForm()
+        public LookEventsForm(int userId)
         {
             InitializeComponent();
             db = new DBManager();
@@ -27,6 +28,8 @@ namespace oprForm
             events = new List<Event>();
             issues = new List<Issue>();
             expertOfUser = new Dictionary<int, int>();
+
+            this.userId = userId;
 
             UpdateIssues();
         }
@@ -431,7 +434,7 @@ namespace oprForm
 
         private void Button5_Click(object sender, EventArgs e)
         {
-            PlannedEventsForm child = new PlannedEventsForm(db.tmpID);
+            PlannedEventsForm child = new PlannedEventsForm(userId);
             child.Show();
         }
 
@@ -480,4 +483,7 @@ namespace oprForm
             UpdateIssues();
         }
     }
+
+
+
 }
