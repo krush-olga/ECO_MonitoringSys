@@ -25,7 +25,7 @@ namespace LawFileBase
 		public addFiles()
 		{
 			InitializeComponent();
-			FBM.SetLocation(@"C:\Users\User\Documents\Visual Studio 2017\Projects\LemmLab\serchProto\bin\Debug\FB");
+			FBM.SetLocation($"{Environment.CurrentDirectory}\\FB");
 		}
 		public addFiles(string location)
 		{

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Data;
 using LawFileBase;
+
 namespace experts_jurist
 {
 	public partial class analisResult : Form

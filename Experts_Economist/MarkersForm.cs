@@ -70,6 +70,12 @@ namespace Experts_Economist
         private void LoadGrid()
         {
             markersList = db.GetRows("type_of_object", "", "");
+
+            if (markersList.Count == 0)
+            {
+                return;
+            }
+
             id = (int)markersList[markersList.Count - 1][0] + 1;
             dataGridView1.Rows.Clear();
             for (int i = 0; i < markersList.Count; i++)

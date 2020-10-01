@@ -119,7 +119,6 @@
     <Compile Include="search.Designer.cs">
       <DependentUpon>search.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="estimate.resx">
       <DependentUpon>estimate.cs</DependentUpon>
@@ -176,9 +175,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBLab\DBLab.csproj">
-      <Project>{767290ad-bd57-4270-8396-ddd3cd4ff913}</Project>
-      <Name>DBLab</Name>
+    <ProjectReference Include="..\..\DBManager\Data.csproj">
+      <Project>{257cd47a-3e26-4817-b689-a01842c2174a}</Project>
+      <Name>Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\LawFileBase\SearchAndBase.csproj">
       <Project>{3153355e-107e-4752-8f30-03ee5e821b34}</Project>
@@ -187,10 +186,6 @@
     <ProjectReference Include="..\oprForm\oprForm.csproj">
       <Project>{608adb6a-0238-40cd-8705-0b11d4663079}</Project>
       <Name>oprForm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UserLoginForm\UserLoginForm.csproj">
-      <Project>{766e3293-9fbf-4ef8-9898-7fbffd31c51b}</Project>
-      <Name>UserLoginForm</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

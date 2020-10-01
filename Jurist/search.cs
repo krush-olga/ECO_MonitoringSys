@@ -60,7 +60,7 @@ namespace experts_jurist
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             var tempList = SM.SearchLine(textBox1.Text);
-			if(tempList.Count()>0)
+			if(tempList.Count() > 0)
 			{
 				listOfFi = tempList;
 				Reload();

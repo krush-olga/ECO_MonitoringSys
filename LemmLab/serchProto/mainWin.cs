@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using UserLoginForm;
 using oprForm;
+using LawFileBase;
+
 namespace experts_jurist
 {
     public partial class mainWin : Form
@@ -18,6 +19,7 @@ namespace experts_jurist
         private search RedaktMDIChild;
         private greeting GreetMDIChild;
 		private issues IssuesMDIChild;
+        private addFiles AddFilesMDIChild;
 
 		private PlannedEventsForm NewEventMDIChild;
 		private AddTemplateForm NewTemplateMDIChild;
@@ -188,5 +190,17 @@ namespace experts_jurist
 			IssuesMDIChild.Dispose();
 			IssuesMDIChild = null;
 		}
-	}
+
+        private void fileBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IssuesMDIChild == null)
+            {
+                AddFilesMDIChild = new addFiles();
+                AddFilesMDIChild.MdiParent = this;
+                AddFilesMDIChild.Show();
+                AddFilesMDIChild.FormClosed += IssuesMDIChild_FormClosed;
+                AddFilesMDIChild.WindowState = FormWindowState.Maximized;
+            }
+        }
+    }
 }

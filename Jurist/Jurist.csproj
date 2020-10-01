@@ -159,6 +159,10 @@
       <Project>{257cd47a-3e26-4817-b689-a01842c2174a}</Project>
       <Name>Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LemmLab\LawFileBase\SearchAndBase.csproj">
+      <Project>{3153355e-107e-4752-8f30-03ee5e821b34}</Project>
+      <Name>SearchAndBase</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

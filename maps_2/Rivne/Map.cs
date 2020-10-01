@@ -566,6 +566,11 @@ namespace Maps
             List<List<Object>> listImg;
             listImg = db.GetRows("type_of_object", "Name", "");
 
+            if (listImg.Count == 0)
+            {
+                return;
+            }
+
             for (int i = 0; i < listImg.Count; i++)
             {
                 comboBox2.Items.Add(listImg[i][0]);
