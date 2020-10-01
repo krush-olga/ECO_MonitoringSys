@@ -20,7 +20,6 @@ namespace Experts_Economist
             InitializeComponent();
             id_of_user = id;
             id_of_exp = (int)db.GetValue("user","id_of_expert",$"id_of_user = '{id_of_user}'");
-            db.GetID(id_of_exp);
         }
 
         private Rozrah RozrahMDIChild;
@@ -212,7 +211,14 @@ namespace Experts_Economist
 
         private void user_redakt_button_Click(object sender, EventArgs e)
         {
-            new User_editor().ShowDialog();
+            try
+            {
+                new User_editor().ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void картаToolStripMenuItem_Click(object sender, EventArgs e)

@@ -9,8 +9,6 @@ namespace Data
     {
         private MySqlConnection connection;                                                 
         public String connectionString; 
-        private int last_id_of_exp;
-        public Int32 tmpID;
         private MySqlTransaction currentTransaction;
 
         //Nikita
@@ -22,11 +20,6 @@ namespace Data
             connection = new MySqlConnection(connectionString);
             objReader.Close();
             Connect();
-        }
-
-        public void GetID(Int32 id)
-        {
-            tmpID = id;
         }
 
         public DBManager(String connectionString)
@@ -244,43 +237,6 @@ namespace Data
             return Int32.Parse(insertCmd.ExecuteScalar().ToString());
         }
 
-        public void GetIdOfLastExp(int exp) {
-            last_id_of_exp = exp;
-        }
-
-        public int InsertToBDExp(string table, string[] fieldNames, string[] fieldValues)
-        {
-            if (fieldNames.Length == fieldValues.Length)
-            {
-                fieldValues = ValidateStrings(fieldValues);
-                int tmp_res = Convert.ToInt32(GetValue("user", "id_of_user", "id_of_user=" + last_id_of_exp));
-                string sqlCommand = "INSERT INTO " + table + "(";
-                for (int i = 0; i < fieldNames.Length - 1; i++)
-                {
-                    sqlCommand += " " + fieldNames[i] + ",";
-                }
-                sqlCommand += fieldNames[fieldNames.Length - 1];
-                sqlCommand += ", id_of_user";
-                sqlCommand += ") VALUES(";
-                for (int i = 0; i < fieldValues.Length - 1; i++)
-                {
-                    sqlCommand += " " + fieldValues[i] + ",";
-                }
-                sqlCommand += fieldValues[fieldNames.Length - 1];
-                sqlCommand += "," + '"';
-                sqlCommand += (tmp_res + 1);
-                sqlCommand += '\"';
-                sqlCommand += ");";
-                sqlCommand += "select last_insert_id();";
-                MySqlCommand insertCmd = new MySqlCommand(sqlCommand, connection);
-                int id = Int32.Parse(insertCmd.ExecuteScalar().ToString());
-                return id;
-            }
-            else
-            {
-                throw new ArgumentException("Field and Value list dont match.");
-            }
-        }
 
         public int InsertToBD(string table, string[] fieldNames, string[] fieldValues)
         {
@@ -370,6 +326,11 @@ namespace Data
 
         private string ValidateString(String str)
         {
+            if (string.IsNullOrEmpty(str))
+            {
+                throw new ArgumentNullException("str");
+            }
+
             if (str[0] == '\'')
                 return '\'' + str.Trim('\'').Replace('\'', '`') + '\'';
             return str.Replace('\'', '`');

@@ -60,6 +60,12 @@ namespace oprForm
                 return;
             }
 
+            if (user == 0)
+            {
+                MessageBox.Show("Адмін не може додавати нові заходи.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             Event ev = eventsLB.SelectedItem as Event;
             Issue issue = (Issue)issuesCB.SelectedItem;
 

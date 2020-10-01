@@ -9,12 +9,15 @@ namespace UserLoginForm
     {
         private DBManager db = new DBManager();
         private string userName;
-        public int id_of_exp_last;
+        private bool isAddingMode;
+        private bool isEditingMode;
 
         public User_editor()
         {
             InitializeComponent();
             RefreshDVG();
+
+            isAddingMode = false;
         }
 
         private void RefreshDVG()
@@ -44,14 +47,125 @@ namespace UserLoginForm
                 this.UsersDGV.Rows.Add(users[i][0].ToString(), users[i][1].ToString(), users[i][2].ToString());
             }
 
-            id_of_exp_last = usersLength;
-            db.GetIdOfLastExp(id_of_exp_last);
-            //MessageBox.Show(id_of_exp_last.ToString());
             db.Disconnect();
         }
 
+        private void OnAddingMode()
+        {
+            UsernameTextBox.Text = "";
+            PasswordTextBox.Text = "";
+            ExperTypeTextBox.Text = "";
+
+            UsernameTextBox.ReadOnly = false;
+            PasswordTextBox.ReadOnly = false;
+            ExperTypeTextBox.ReadOnly = false;
+
+            button1.Enabled = false;
+
+            isAddingMode = true;
+            AddUserButton.Text = "Зберегти";
+            UpdateUserButton.Text = "Відмінити";
+        }
+        private void OffAddingMode()
+        {
+            button1.Enabled = true;
+
+            UsernameTextBox.ReadOnly = true;
+            PasswordTextBox.ReadOnly = true;
+            ExperTypeTextBox.ReadOnly = true;
+
+            isAddingMode = false;
+            AddUserButton.Text = "Додати";
+            UpdateUserButton.Text = "Змінити";
+        }
+
+        private void OnEditingMode()
+        {
+            UsernameTextBox.ReadOnly = false;
+            PasswordTextBox.ReadOnly = false;
+            ExperTypeTextBox.ReadOnly = false;
+
+            button1.Enabled = false;
+
+            isEditingMode = true;
+            AddUserButton.Text = "Зберегти";
+            UpdateUserButton.Text = "Відмінити";
+        }
+        private void OffEditingMode()
+        {
+            button1.Enabled = true;
+
+            UsernameTextBox.ReadOnly = true;
+            PasswordTextBox.ReadOnly = true;
+            ExperTypeTextBox.ReadOnly = true;
+
+            isEditingMode = false;
+            AddUserButton.Text = "Додати";
+            UpdateUserButton.Text = "Змінити";
+        }
+
+        private bool UpdateUser()
+        {
+            if (string.IsNullOrEmpty(UsernameTextBox.Text) || string.IsNullOrEmpty(PasswordTextBox.Text) ||
+                string.IsNullOrEmpty(ExperTypeTextBox.Text))
+            {
+                MessageBox.Show("Заповніть усі поля!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            string userName = DBUtil.AddQuotes(this.UsernameTextBox.Text.Replace('\'', '`'));
+            string userPassword = DBUtil.AddQuotes(this.PasswordTextBox.Text.Replace('\'', '`'));
+            string userType = DBUtil.AddQuotes(this.ExperTypeTextBox.Text.Replace('\'', '`'));
+
+            string[] updateCols = new string[] { "user_name", "user_name", "password", "id_of_expert" };
+            string[] updateVals = new string[] { this.userName, userName, userPassword, userType };
+
+            db.Connect();
+            db.UpdateRecord("user", updateCols, updateVals);
+            db.Disconnect();
+
+            RefreshDVG();
+
+            MessageBox.Show("Дані користувача успішно змінені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return true;
+        }
+        private bool AddUser()
+        {
+            if (string.IsNullOrEmpty(UsernameTextBox.Text) || string.IsNullOrEmpty(PasswordTextBox.Text) ||
+                string.IsNullOrEmpty(ExperTypeTextBox.Text))
+            {
+                MessageBox.Show("Заповніть усі поля!", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            db.Connect();
+
+            string userName = DBUtil.AddQuotes(this.UsernameTextBox.Text.Replace('\'', '`'));
+            string userPassword = DBUtil.AddQuotes(this.PasswordTextBox.Text.Replace('\'', '`'));
+            string userType = DBUtil.AddQuotes(this.ExperTypeTextBox.Text.Replace('\'', '`'));
+            string id_of_user = Convert.ToString(Convert.ToInt32(db.GetValue("user", "max(id_of_user)", "")) + 1);
+
+            string[] fields = new string[] { "user_name", "password", "id_of_expert", "id_of_user" };
+            string[] values = new string[] { userName, userPassword, userType, id_of_user };
+
+            db.InsertToBD("user", fields, values);
+
+            db.Disconnect();
+
+            RefreshDVG();
+
+            MessageBox.Show("Користувач успішно додан.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return true;
+        }
+        
+
         private void EditCurrentUser(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (isAddingMode)
+            {
+                OffAddingMode();
+            }
+
             int currentRow = this.UsersDGV.CurrentCell.RowIndex;
             string userName = this.UsersDGV.Rows[currentRow].Cells[0].Value.ToString();
             string userPassword = this.UsersDGV.Rows[currentRow].Cells[1].Value.ToString();
@@ -66,41 +180,53 @@ namespace UserLoginForm
 
         private void UpdateCurrentUser(object sender, EventArgs e)
         {
-            string userName = DBUtil.AddQuotes(this.UsernameTextBox.Text.Replace('\'', '`'));
-            string userPassword = DBUtil.AddQuotes(this.PasswordTextBox.Text.Replace('\'', '`'));
-            string userType = DBUtil.AddQuotes(this.ExperTypeTextBox.Text.Replace('\'', '`'));
-
-            string[] updateCols = new string[] { "user_name", "user_name", "password", "id_of_expert" };
-            string[] updateVals = new string[] { this.userName, userName, userPassword, userType };
-
-            db.Connect();
-            db.UpdateRecord("user", updateCols, updateVals);
-            db.Disconnect();
-
-            RefreshDVG();
+            if (isAddingMode)
+            {
+                OffAddingMode();
+            }
+            else if (!isEditingMode)
+            {
+                if (UsersDGV.CurrentRow.Index == -1 || string.IsNullOrEmpty(UsernameTextBox.Text) || 
+                   string.IsNullOrEmpty(PasswordTextBox.Text) || string.IsNullOrEmpty(ExperTypeTextBox.Text))
+                {
+                    MessageBox.Show("Ви не вибрали користувача для зміни його даних.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    OnEditingMode();
+                }
+            }
+            else if (isEditingMode)
+            {
+                OffEditingMode();
+            }
         }
 
         private void AddNewUser(object sender, EventArgs e)
         {
-            string userName = DBUtil.AddQuotes(this.UsernameTextBox.Text.Replace('\'', '`'));
-            string userPassword = DBUtil.AddQuotes(this.PasswordTextBox.Text.Replace('\'', '`'));
-            string userType = DBUtil.AddQuotes(this.ExperTypeTextBox.Text.Replace('\'', '`'));
-
-
-            string[] fields = new string[] { "user_name", "password", "id_of_expert" };
-            string[] values = new string[] { userName, userPassword, userType };
-
-            db.Connect();
-
-            db.InsertToBDExp("user", fields, values);
-
-            db.Disconnect();
-
-            RefreshDVG();
+            if (!isAddingMode && !isEditingMode)
+            {
+                OnAddingMode();
+            }
+            else if (isEditingMode && UpdateUser())
+            {
+                OffEditingMode();
+            }
+            else if (isAddingMode && AddUser())
+            {
+                OffAddingMode();
+            }
         }
 
         private void deleteCurrentUser(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(UsernameTextBox.Text) || string.IsNullOrEmpty(PasswordTextBox.Text) || 
+                string.IsNullOrEmpty(ExperTypeTextBox.Text))
+            {
+                MessageBox.Show("Ви не вибрали користувача для його видалення.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string userName = DBUtil.AddQuotes(this.UsernameTextBox.Text.Replace('\'', '`'));
             string userPassword = DBUtil.AddQuotes(this.PasswordTextBox.Text.Replace('\'', '`'));
             string userType = DBUtil.AddQuotes(this.ExperTypeTextBox.Text.Replace('\'', '`'));
