@@ -99,16 +99,21 @@ namespace oprForm
                 issueTB.Text = issues[0].name;
                 issueDescTB.Text = issues[0].description;
                 textBox2.Text = issues[0].tema;
-
-                nextIssueBtn.Enabled = true;
-                previousBtn.Enabled = true;
             }
             else
             {
                 issueTB.Text = "";
                 issueDescTB.Text = "";
                 textBox2.Text = "";
+            }
 
+            if (issues.Count > 1)
+            {
+                nextIssueBtn.Enabled = true;
+                previousBtn.Enabled = true;
+            }
+            else
+            {
                 nextIssueBtn.Enabled = false;
                 previousBtn.Enabled = false;
             }

@@ -268,6 +268,7 @@
             // 
             // nextIssueBtn
             // 
+            this.nextIssueBtn.Enabled = false;
             this.nextIssueBtn.Location = new System.Drawing.Point(397, 105);
             this.nextIssueBtn.Name = "nextIssueBtn";
             this.nextIssueBtn.Size = new System.Drawing.Size(82, 28);

@@ -18,6 +18,34 @@ namespace oprForm
             InitializeComponent();
         }
 
+        private void AddResourceToGrid()
+        {
+            Resource res = resourcesLB.SelectedItem as Resource;
+
+            if (res == null)
+            {
+                return;
+            }
+
+            foreach (DataGridViewRow row in materialListGrid.Rows)
+            {
+                if (row.Cells[0].Value == res)
+                    return;
+            }
+
+            materialListGrid.Rows.Add(res, res.description);
+        }
+        
+        private void RemoveResourceFromGrid()
+        {
+            if (materialListGrid.CurrentRow == null)
+            {
+                return;
+            }
+
+            materialListGrid.Rows.Remove(materialListGrid.CurrentRow);
+        }
+
         private void AddTemplateForm_Load(object sender, EventArgs e)
         {
             db.Connect();
@@ -70,19 +98,17 @@ namespace oprForm
 
         private void resourcesLB_DoubleClick(object sender, EventArgs e)
         {
-            Resource res = resourcesLB.SelectedItem as Resource;
-
-            foreach (DataGridViewRow row in materialListGrid.Rows)
-            {
-                if (row.Cells[0].Value == res)
-                    return;
-            }
-            materialListGrid.Rows.Add(res, res.description);
+            AddResourceToGrid();
         }
 
-        private void descTB_TextChanged(object sender, EventArgs e)
+        private void addButton_Click(object sender, EventArgs e)
         {
+            AddResourceToGrid();
+        }
 
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+            RemoveResourceFromGrid();
         }
     }
 }

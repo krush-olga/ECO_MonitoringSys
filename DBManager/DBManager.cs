@@ -228,15 +228,6 @@ namespace Data
             return Int32.Parse(insertCmd.ExecuteScalar().ToString());
         }
 
-        public int InsertImageToBD(string table, string list, string path)
-        {
-            string sqlCommand = "INSERT INTO " + table + " VALUES(" + list + ");";
-            sqlCommand += "select last_insert_id();";
-            MySqlCommand insertCmd = new MySqlCommand(sqlCommand, connection);
-            insertCmd.Parameters.AddWithValue("@file", File.ReadAllBytes(path));
-            return Int32.Parse(insertCmd.ExecuteScalar().ToString());
-        }
-
 
         public int InsertToBD(string table, string[] fieldNames, string[] fieldValues)
         {

@@ -10,21 +10,23 @@ using System.Windows.Forms;
 using Data;
 using System.IO;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Math.Field;
 
 namespace Experts_Economist
 {
     public partial class MarkersForm : Form
     {
-        ConnectDB connection;
-        DBManager db;
-        List<List<Object>> markersList = null;
-        int id;
-        string fileName;
-        Stream fileStream;
+        private int id;
+        private DBManager db;
+        private ConnectDB connection;
+        private List<List<Object>> markersList;
+
         public MarkersForm(ConnectDB connection, DBManager db)
         {
             InitializeComponent();
+
             this.connection = connection;
+            markersList = null;
             this.db = db;
         }
 
@@ -35,41 +37,25 @@ namespace Experts_Economist
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text == "" || textBox2.Text == "")
-                MessageBox.Show("Всі поля воині бути заповнені");
+            if (string.IsNullOrEmpty(nameTextBox.Text) || string.IsNullOrEmpty(kvedTextBox.Text) || string.IsNullOrEmpty(imageNameTextBox.Text))
+            {
+                MessageBox.Show("Всі поля воині бути заповнені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             else
             {
-                db.InsertImageToBD("type_of_object","'" + id.ToString() + "', '" + textBox1.Text + "',@file, '" + fileName + "'", textBox2.Text);
-                textBox1.Text = "";
-                textBox2.Text = "";
+                string[] field = { "id", "kved", "name", "image_name" };
+                string[] values = { id.ToString(), kvedTextBox.Text, nameTextBox.Text, imageNameTextBox.Text};
+
+                db.InsertToBD("type_of_object", field, values);
+
+                MessageBox.Show("Запис успішно додан.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             LoadGrid();
         }
 
-        private void textBox_TextChanged(object sender, EventArgs e)
-        {
-            if (textBox1.Text != "" && textBox2.Text != "")
-                button2.Enabled = true;
-            else
-                button2.Enabled = false;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-           // openFileDialog1.InitialDirectory = "c:\\";
-            openFileDialog1.Filter = "Image files (*.png, *.btm)|*.png;*.btm";
-            openFileDialog1.FileName = "";
-            openFileDialog1.RestoreDirectory = true;
-            if(openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                textBox2.Text = openFileDialog1.FileName;
-                fileName = openFileDialog1.SafeFileName;
-                fileStream = openFileDialog1.OpenFile();
-            }
-        }
         private void LoadGrid()
         {
-            markersList = db.GetRows("type_of_object", "", "");
+            markersList = db.GetRows("type_of_object", "id, kved, name, image_name", "");
 
             if (markersList.Count == 0)
             {
@@ -77,15 +63,68 @@ namespace Experts_Economist
             }
 
             id = (int)markersList[markersList.Count - 1][0] + 1;
+
             dataGridView1.Rows.Clear();
+
             for (int i = 0; i < markersList.Count; i++)
             {
                 dataGridView1.Rows.Add();
-                dataGridView1.Rows[i].Cells[0].Value = markersList[i][0];
-                dataGridView1.Rows[i].Cells[1].Value = markersList[i][1];
-                dataGridView1.Rows[i].Cells[2].Value = markersList[i][2];
-                dataGridView1.Rows[i].Cells[3].Value = markersList[i][3];
+                for (int j = 0; j < markersList[i].Count; j++)
+                {
+                    dataGridView1.Rows[i].Cells[j].Value = markersList[i][j];
+                }
             }
+        }
+
+        private void deleteFromDBButton_Click(object sender, EventArgs e)
+        {
+            var promptRes = MessageBox.Show($"Ви впевнені, що хочете видалити запис з id {dataGridView1.CurrentRow.Cells[0].Value}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (promptRes == DialogResult.No)
+            {
+                return;
+            }
+
+            db.DeleteFromDB("type_of_object", "id", dataGridView1.CurrentRow.Cells[0].Value.ToString());
+
+            MessageBox.Show("Запис успішно видалений.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            nameTextBox.Text = "";
+            kvedTextBox.Text = "";
+            imageNameTextBox.Text = "";
+
+            LoadGrid();
+        }
+
+        private void editBbutton_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(nameTextBox.Text) || string.IsNullOrEmpty(kvedTextBox.Text) || 
+                string.IsNullOrEmpty(imageNameTextBox.Text))
+            {
+                MessageBox.Show("Всі поля воині бути заповнені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var promptRes = MessageBox.Show($"Ви впевнені, що хочете змінити запис з квед {kvedTextBox.Text}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (promptRes == DialogResult.No)
+            {
+                return;
+            }
+
+            string[] updateFields = { "kved", "name", "image_name" };
+            string[] updateValues = { kvedTextBox.Text, nameTextBox.Text, imageNameTextBox.Text };
+
+            db.UpdateRecord("type_of_object", updateFields, updateValues);
+
+            MessageBox.Show("Запис успішно змінений.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            LoadGrid();
+        }
+
+        private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            nameTextBox.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
+            kvedTextBox.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+            imageNameTextBox.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
         }
     }
 }

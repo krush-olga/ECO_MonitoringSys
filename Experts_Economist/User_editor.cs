@@ -227,6 +227,12 @@ namespace UserLoginForm
                 return;
             }
 
+            var promptRes = MessageBox.Show("Ви впевнені, що хочете видалити користувача?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (promptRes == DialogResult.No)
+            {
+                return;
+            }
+
             string userName = DBUtil.AddQuotes(this.UsernameTextBox.Text.Replace('\'', '`'));
             string userPassword = DBUtil.AddQuotes(this.PasswordTextBox.Text.Replace('\'', '`'));
             string userType = DBUtil.AddQuotes(this.ExperTypeTextBox.Text.Replace('\'', '`'));
@@ -238,6 +244,12 @@ namespace UserLoginForm
             db.Disconnect();
 
             RefreshDVG();
+
+            UsernameTextBox.Text = string.Empty;
+            PasswordTextBox.Text = string.Empty;
+            ExperTypeTextBox.Text = string.Empty;
+
+            MessageBox.Show("Користувач успішно видален.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

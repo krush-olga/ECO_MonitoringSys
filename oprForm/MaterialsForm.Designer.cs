@@ -63,14 +63,13 @@
             this.unitsCol,
             this.descCol});
             this.resDGV.Location = new System.Drawing.Point(8, 219);
-            this.resDGV.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.resDGV.Margin = new System.Windows.Forms.Padding(2);
             this.resDGV.Name = "resDGV";
             this.resDGV.RowTemplate.Height = 28;
             this.resDGV.Size = new System.Drawing.Size(620, 292);
             this.resDGV.TabIndex = 0;
             this.resDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.cacheResFromFirstCol);
             this.resDGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resDGV_CellClick);
-            this.resDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resDGV_CellContentClick);
             this.resDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.commitValue);
             // 
             // nameCol
@@ -95,8 +94,9 @@
             // 
             // saveBtn
             // 
+            this.saveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.saveBtn.Location = new System.Drawing.Point(562, 42);
-            this.saveBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.saveBtn.Margin = new System.Windows.Forms.Padding(2);
             this.saveBtn.Name = "saveBtn";
             this.saveBtn.Size = new System.Drawing.Size(66, 24);
             this.saveBtn.TabIndex = 1;
@@ -106,8 +106,9 @@
             // 
             // delBtn
             // 
+            this.delBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.delBtn.Location = new System.Drawing.Point(562, 76);
-            this.delBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.delBtn.Margin = new System.Windows.Forms.Padding(2);
             this.delBtn.Name = "delBtn";
             this.delBtn.Size = new System.Drawing.Size(66, 24);
             this.delBtn.TabIndex = 2;
@@ -117,8 +118,9 @@
             // 
             // addBtn
             // 
+            this.addBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.addBtn.Location = new System.Drawing.Point(562, 10);
-            this.addBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.addBtn.Margin = new System.Windows.Forms.Padding(2);
             this.addBtn.Name = "addBtn";
             this.addBtn.Size = new System.Drawing.Size(66, 24);
             this.addBtn.TabIndex = 3;
@@ -128,39 +130,47 @@
             // 
             // nameTB
             // 
+            this.nameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.nameTB.Location = new System.Drawing.Point(84, 12);
-            this.nameTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nameTB.Margin = new System.Windows.Forms.Padding(2);
             this.nameTB.Name = "nameTB";
-            this.nameTB.Size = new System.Drawing.Size(434, 20);
+            this.nameTB.Size = new System.Drawing.Size(445, 20);
             this.nameTB.TabIndex = 4;
             // 
             // measureTB
             // 
+            this.measureTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.measureTB.Location = new System.Drawing.Point(84, 63);
-            this.measureTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.measureTB.Margin = new System.Windows.Forms.Padding(2);
             this.measureTB.Name = "measureTB";
-            this.measureTB.Size = new System.Drawing.Size(434, 20);
+            this.measureTB.Size = new System.Drawing.Size(445, 20);
             this.measureTB.TabIndex = 5;
             // 
             // descriptionTB
             // 
+            this.descriptionTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.descriptionTB.Location = new System.Drawing.Point(84, 90);
-            this.descriptionTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.descriptionTB.Margin = new System.Windows.Forms.Padding(2);
             this.descriptionTB.Multiline = true;
             this.descriptionTB.Name = "descriptionTB";
-            this.descriptionTB.Size = new System.Drawing.Size(434, 101);
+            this.descriptionTB.Size = new System.Drawing.Size(445, 101);
             this.descriptionTB.TabIndex = 6;
             // 
             // priceTB
             // 
             this.priceTB.Location = new System.Drawing.Point(84, 39);
-            this.priceTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.priceTB.Margin = new System.Windows.Forms.Padding(2);
             this.priceTB.Name = "priceTB";
             this.priceTB.Size = new System.Drawing.Size(98, 20);
             this.priceTB.TabIndex = 7;
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
@@ -170,7 +180,7 @@
             this.panel1.Controls.Add(this.measureTB);
             this.panel1.Controls.Add(this.descriptionTB);
             this.panel1.Location = new System.Drawing.Point(9, 10);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(539, 205);
             this.panel1.TabIndex = 8;
@@ -214,7 +224,6 @@
             this.label1.Size = new System.Drawing.Size(39, 13);
             this.label1.TabIndex = 8;
             this.label1.Text = "Назва";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // MaterialsForm
             // 
@@ -226,10 +235,9 @@
             this.Controls.Add(this.resDGV);
             this.Controls.Add(this.addBtn);
             this.Controls.Add(this.saveBtn);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MaterialsForm";
             this.Text = "Ресурси";
-            this.Load += new System.EventHandler(this.MaterialsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.resDGV)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

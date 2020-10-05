@@ -166,33 +166,26 @@ namespace oprForm
 
         private void addBtn_Click(object sender, EventArgs e)
         {
-            try
+            if (string.IsNullOrEmpty(nameTB.Text) || string.IsNullOrEmpty(descriptionTB.Text) ||
+                string.IsNullOrEmpty(priceTB.Text) || string.IsNullOrEmpty(measureTB.Text))
             {
-                db.Connect();
-                string[] fields = { "name", "description", "price", "units" };
-                String val1 = DBUtil.AddQuotes(nameTB.Text);
-                String val2 = DBUtil.AddQuotes(descriptionTB.Text);
-                 String val3 = Double.Parse(priceTB.Text).ToString();
-                String val4 = DBUtil.AddQuotes(measureTB.Text);
-                string[] values = { val1, val2, val3,  val4};
-                db.InsertToBD("resource", fields, values);
-                db.Disconnect();
-                getMaterials();
+                MessageBox.Show("Всі поля воині бути заповнені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
-            catch (Exception)
-            {
-                MessageBox.Show("Неправильно введено ціну.");
-            }
-        }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
+            db.Connect();
+            string[] fields = { "name", "description", "price", "units" };
+            String val1 = DBUtil.AddQuotes(nameTB.Text);
+            String val2 = DBUtil.AddQuotes(descriptionTB.Text);
+            String val3 = Double.Parse(priceTB.Text).ToString();
+            String val4 = DBUtil.AddQuotes(measureTB.Text);
+            string[] values = { val1, val2, val3, val4 };
+            db.InsertToBD("resource", fields, values);
+            db.Disconnect();
 
-        }
+            getMaterials();
 
-        private void resDGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
+            MessageBox.Show("Запис був успішно додан.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void resDGV_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -205,11 +198,6 @@ namespace oprForm
             {
                 textBoxes[i].Text = cells[i].Value.ToString();
             }
-        }
-
-        private void MaterialsForm_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
