@@ -73,10 +73,9 @@
             // 
             // del1
             // 
-            this.del1.Location = new System.Drawing.Point(308, 77);
-            this.del1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.del1.Location = new System.Drawing.Point(231, 63);
             this.del1.Name = "del1";
-            this.del1.Size = new System.Drawing.Size(101, 28);
+            this.del1.Size = new System.Drawing.Size(76, 23);
             this.del1.TabIndex = 24;
             this.del1.Text = "Видалити";
             this.del1.UseVisualStyleBackColor = true;
@@ -84,10 +83,9 @@
             // 
             // update1
             // 
-            this.update1.Location = new System.Drawing.Point(435, 77);
-            this.update1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.update1.Location = new System.Drawing.Point(326, 63);
             this.update1.Name = "update1";
-            this.update1.Size = new System.Drawing.Size(101, 28);
+            this.update1.Size = new System.Drawing.Size(76, 23);
             this.update1.TabIndex = 23;
             this.update1.Text = "Змінити";
             this.update1.UseVisualStyleBackColor = true;
@@ -95,10 +93,9 @@
             // 
             // add1
             // 
-            this.add1.Location = new System.Drawing.Point(195, 74);
-            this.add1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.add1.Location = new System.Drawing.Point(146, 60);
             this.add1.Name = "add1";
-            this.add1.Size = new System.Drawing.Size(101, 28);
+            this.add1.Size = new System.Drawing.Size(76, 23);
             this.add1.TabIndex = 22;
             this.add1.Text = "Додати";
             this.add1.UseVisualStyleBackColor = true;
@@ -106,29 +103,25 @@
             // 
             // formula_nameTB
             // 
-            this.formula_nameTB.Location = new System.Drawing.Point(17, 29);
-            this.formula_nameTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.formula_nameTB.Location = new System.Drawing.Point(13, 24);
             this.formula_nameTB.Name = "formula_nameTB";
-            this.formula_nameTB.Size = new System.Drawing.Size(132, 22);
+            this.formula_nameTB.Size = new System.Drawing.Size(100, 20);
             this.formula_nameTB.TabIndex = 21;
             // 
             // formula_explTB
             // 
-            this.formula_explTB.Location = new System.Drawing.Point(17, 122);
-            this.formula_explTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.formula_explTB.Location = new System.Drawing.Point(13, 99);
             this.formula_explTB.Name = "formula_explTB";
-            this.formula_explTB.Size = new System.Drawing.Size(716, 58);
+            this.formula_explTB.Size = new System.Drawing.Size(538, 48);
             this.formula_explTB.TabIndex = 19;
             this.formula_explTB.Text = "";
             // 
             // formulasLB
             // 
             this.formulasLB.FormattingEnabled = true;
-            this.formulasLB.ItemHeight = 16;
-            this.formulasLB.Location = new System.Drawing.Point(16, 69);
-            this.formulasLB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.formulasLB.Location = new System.Drawing.Point(12, 56);
             this.formulasLB.Name = "formulasLB";
-            this.formulasLB.Size = new System.Drawing.Size(260, 276);
+            this.formulasLB.Size = new System.Drawing.Size(196, 225);
             this.formulasLB.TabIndex = 18;
             this.formulasLB.SelectedIndexChanged += new System.EventHandler(this.formulasLB_SelectedIndexChanged);
             this.formulasLB.MouseMove += new System.Windows.Forms.MouseEventHandler(this.formulasLB_MouseMove);
@@ -136,31 +129,27 @@
             // formulas_idLB
             // 
             this.formulas_idLB.FormattingEnabled = true;
-            this.formulas_idLB.ItemHeight = 16;
-            this.formulas_idLB.Location = new System.Drawing.Point(280, 69);
-            this.formulas_idLB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.formulas_idLB.Location = new System.Drawing.Point(210, 56);
             this.formulas_idLB.Name = "formulas_idLB";
-            this.formulas_idLB.Size = new System.Drawing.Size(35, 276);
+            this.formulas_idLB.Size = new System.Drawing.Size(27, 225);
             this.formulas_idLB.TabIndex = 20;
             this.formulas_idLB.Visible = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 9);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(10, 7);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(94, 17);
+            this.label1.Size = new System.Drawing.Size(74, 13);
             this.label1.TabIndex = 25;
             this.label1.Text = "Ім\'я формули";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 103);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(10, 84);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 17);
+            this.label2.Size = new System.Drawing.Size(82, 13);
             this.label2.TabIndex = 26;
             this.label2.Text = "Короткий опис";
             // 
@@ -170,10 +159,9 @@
             // 
             // Bind
             // 
-            this.Bind.Location = new System.Drawing.Point(480, 133);
-            this.Bind.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Bind.Location = new System.Drawing.Point(360, 108);
             this.Bind.Name = "Bind";
-            this.Bind.Size = new System.Drawing.Size(45, 33);
+            this.Bind.Size = new System.Drawing.Size(34, 27);
             this.Bind.TabIndex = 38;
             this.Bind.Text = "←";
             this.toolTip1.SetToolTip(this.Bind, "Пов\'язує параметр з формулою ");
@@ -182,10 +170,9 @@
             // 
             // Unbind
             // 
-            this.Unbind.Location = new System.Drawing.Point(480, 174);
-            this.Unbind.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Unbind.Location = new System.Drawing.Point(360, 141);
             this.Unbind.Name = "Unbind";
-            this.Unbind.Size = new System.Drawing.Size(45, 33);
+            this.Unbind.Size = new System.Drawing.Size(34, 27);
             this.Unbind.TabIndex = 39;
             this.Unbind.Text = "→";
             this.toolTip1.SetToolTip(this.Unbind, "Прибирає зв\'язку параметра та формули");
@@ -195,29 +182,26 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 106);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(13, 86);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(106, 17);
+            this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 35;
             this.label3.Text = "Короткий опис";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(17, 12);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(13, 10);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(107, 17);
+            this.label4.Size = new System.Drawing.Size(84, 13);
             this.label4.TabIndex = 34;
             this.label4.Text = "Ім\'я параметра";
             // 
             // del2
             // 
-            this.del2.Location = new System.Drawing.Point(173, 84);
-            this.del2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.del2.Location = new System.Drawing.Point(130, 68);
             this.del2.Name = "del2";
-            this.del2.Size = new System.Drawing.Size(101, 28);
+            this.del2.Size = new System.Drawing.Size(76, 23);
             this.del2.TabIndex = 33;
             this.del2.Text = "Видалити";
             this.del2.UseVisualStyleBackColor = true;
@@ -225,10 +209,9 @@
             // 
             // update2
             // 
-            this.update2.Location = new System.Drawing.Point(173, 48);
-            this.update2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.update2.Location = new System.Drawing.Point(130, 39);
             this.update2.Name = "update2";
-            this.update2.Size = new System.Drawing.Size(101, 28);
+            this.update2.Size = new System.Drawing.Size(76, 23);
             this.update2.TabIndex = 32;
             this.update2.Text = "Змінити";
             this.update2.UseVisualStyleBackColor = true;
@@ -236,10 +219,9 @@
             // 
             // add2
             // 
-            this.add2.Location = new System.Drawing.Point(173, 12);
-            this.add2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.add2.Location = new System.Drawing.Point(130, 10);
             this.add2.Name = "add2";
-            this.add2.Size = new System.Drawing.Size(101, 28);
+            this.add2.Size = new System.Drawing.Size(76, 23);
             this.add2.TabIndex = 31;
             this.add2.Text = "Додати";
             this.add2.UseVisualStyleBackColor = true;
@@ -247,30 +229,26 @@
             // 
             // component_nameTB
             // 
-            this.component_nameTB.Location = new System.Drawing.Point(21, 32);
-            this.component_nameTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.component_nameTB.Location = new System.Drawing.Point(16, 26);
             this.component_nameTB.Name = "component_nameTB";
-            this.component_nameTB.Size = new System.Drawing.Size(132, 22);
+            this.component_nameTB.Size = new System.Drawing.Size(100, 20);
             this.component_nameTB.TabIndex = 30;
             // 
             // component_explTB
             // 
-            this.component_explTB.Location = new System.Drawing.Point(21, 125);
-            this.component_explTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.component_explTB.Location = new System.Drawing.Point(16, 102);
             this.component_explTB.Name = "component_explTB";
-            this.component_explTB.Size = new System.Drawing.Size(340, 58);
+            this.component_explTB.Size = new System.Drawing.Size(256, 48);
             this.component_explTB.TabIndex = 28;
             this.component_explTB.Text = "";
             // 
             // componentLB
             // 
             this.componentLB.FormattingEnabled = true;
-            this.componentLB.ItemHeight = 16;
-            this.componentLB.Location = new System.Drawing.Point(525, 69);
-            this.componentLB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.componentLB.Location = new System.Drawing.Point(394, 56);
             this.componentLB.MultiColumn = true;
             this.componentLB.Name = "componentLB";
-            this.componentLB.Size = new System.Drawing.Size(340, 276);
+            this.componentLB.Size = new System.Drawing.Size(256, 225);
             this.componentLB.TabIndex = 27;
             this.componentLB.SelectedIndexChanged += new System.EventHandler(this.componentLB_SelectedIndexChanged);
             this.componentLB.MouseMove += new System.Windows.Forms.MouseEventHandler(this.componentLB_MouseMove);
@@ -278,107 +256,94 @@
             // componentidLB
             // 
             this.componentidLB.FormattingEnabled = true;
-            this.componentidLB.ItemHeight = 16;
-            this.componentidLB.Location = new System.Drawing.Point(875, 69);
-            this.componentidLB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.componentidLB.Location = new System.Drawing.Point(656, 56);
             this.componentidLB.Name = "componentidLB";
-            this.componentidLB.Size = new System.Drawing.Size(35, 276);
+            this.componentidLB.Size = new System.Drawing.Size(27, 225);
             this.componentidLB.TabIndex = 29;
             this.componentidLB.Visible = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(17, 60);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(13, 49);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(150, 17);
+            this.label5.Size = new System.Drawing.Size(116, 13);
             this.label5.TabIndex = 37;
             this.label5.Text = "Одиниці вимірювання";
             // 
             // component_measureTB
             // 
-            this.component_measureTB.Location = new System.Drawing.Point(21, 77);
-            this.component_measureTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.component_measureTB.Location = new System.Drawing.Point(16, 63);
             this.component_measureTB.Name = "component_measureTB";
-            this.component_measureTB.Size = new System.Drawing.Size(132, 22);
+            this.component_measureTB.Size = new System.Drawing.Size(100, 20);
             this.component_measureTB.TabIndex = 36;
             // 
             // bind_compLB
             // 
             this.bind_compLB.FormattingEnabled = true;
-            this.bind_compLB.ItemHeight = 16;
-            this.bind_compLB.Location = new System.Drawing.Point(317, 69);
-            this.bind_compLB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bind_compLB.Location = new System.Drawing.Point(238, 56);
             this.bind_compLB.MultiColumn = true;
             this.bind_compLB.Name = "bind_compLB";
-            this.bind_compLB.Size = new System.Drawing.Size(161, 276);
+            this.bind_compLB.Size = new System.Drawing.Size(122, 225);
             this.bind_compLB.TabIndex = 40;
             this.bind_compLB.SelectedIndexChanged += new System.EventHandler(this.bind_compLB_SelectedIndexChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 17);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(12, 14);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(69, 17);
+            this.label6.Size = new System.Drawing.Size(55, 13);
             this.label6.TabIndex = 41;
             this.label6.Text = "Формули";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(521, 11);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(391, 9);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(103, 17);
+            this.label7.Size = new System.Drawing.Size(80, 13);
             this.label7.TabIndex = 42;
             this.label7.Text = "Всі параметри";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(299, 37);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Location = new System.Drawing.Point(224, 30);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(200, 17);
+            this.label8.Size = new System.Drawing.Size(154, 13);
             this.label8.TabIndex = 43;
             this.label8.Text = "Параметри обраної формули";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(181, 12);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Location = new System.Drawing.Point(136, 10);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(150, 17);
+            this.label9.Size = new System.Drawing.Size(116, 13);
             this.label9.TabIndex = 45;
             this.label9.Text = "Одиниці вимірювання";
             // 
             // formula_measureTB
             // 
-            this.formula_measureTB.Location = new System.Drawing.Point(184, 29);
-            this.formula_measureTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.formula_measureTB.Location = new System.Drawing.Point(138, 24);
             this.formula_measureTB.Name = "formula_measureTB";
-            this.formula_measureTB.Size = new System.Drawing.Size(132, 22);
+            this.formula_measureTB.Size = new System.Drawing.Size(100, 20);
             this.formula_measureTB.TabIndex = 44;
             // 
             // search_formula
             // 
-            this.search_formula.Location = new System.Drawing.Point(16, 37);
-            this.search_formula.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.search_formula.Location = new System.Drawing.Point(12, 30);
             this.search_formula.Name = "search_formula";
-            this.search_formula.Size = new System.Drawing.Size(132, 22);
+            this.search_formula.Size = new System.Drawing.Size(100, 20);
             this.search_formula.TabIndex = 46;
             this.search_formula.TextChanged += new System.EventHandler(this.search_formula_TextChanged);
             // 
             // search_parametr
             // 
-            this.search_parametr.Location = new System.Drawing.Point(525, 37);
-            this.search_parametr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.search_parametr.Location = new System.Drawing.Point(394, 30);
             this.search_parametr.Name = "search_parametr";
-            this.search_parametr.Size = new System.Drawing.Size(132, 22);
+            this.search_parametr.Size = new System.Drawing.Size(100, 20);
             this.search_parametr.TabIndex = 47;
             this.search_parametr.TextChanged += new System.EventHandler(this.search_parametr_TextChanged);
             // 
@@ -386,20 +351,18 @@
             // 
             this.experts_CB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.experts_CB.FormattingEnabled = true;
-            this.experts_CB.Location = new System.Drawing.Point(856, 7);
-            this.experts_CB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.experts_CB.Location = new System.Drawing.Point(642, 6);
             this.experts_CB.Name = "experts_CB";
-            this.experts_CB.Size = new System.Drawing.Size(160, 24);
+            this.experts_CB.Size = new System.Drawing.Size(121, 21);
             this.experts_CB.TabIndex = 48;
             this.experts_CB.SelectedIndexChanged += new System.EventHandler(this.experts_CB_SelectedIndexChanged);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(736, 11);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Location = new System.Drawing.Point(552, 9);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(109, 17);
+            this.label10.Size = new System.Drawing.Size(84, 13);
             this.label10.TabIndex = 49;
             this.label10.Text = "Вибір експерта";
             // 
@@ -409,13 +372,13 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.оновитиToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(140, 28);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(123, 26);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // оновитиToolStripMenuItem
             // 
             this.оновитиToolStripMenuItem.Name = "оновитиToolStripMenuItem";
-            this.оновитиToolStripMenuItem.Size = new System.Drawing.Size(139, 24);
+            this.оновитиToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.оновитиToolStripMenuItem.Text = "Оновити";
             this.оновитиToolStripMenuItem.Click += new System.EventHandler(this.оновитиToolStripMenuItem_Click);
             // 
@@ -430,9 +393,10 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.component_measureTB);
             this.panel1.Controls.Add(this.label5);
-            this.panel1.Location = new System.Drawing.Point(789, 352);
+            this.panel1.Location = new System.Drawing.Point(592, 286);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(322, 250);
+            this.panel1.Size = new System.Drawing.Size(242, 203);
             this.panel1.TabIndex = 50;
             this.panel1.Visible = false;
             // 
@@ -447,16 +411,17 @@
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.formula_measureTB);
-            this.panel2.Location = new System.Drawing.Point(19, 352);
+            this.panel2.Location = new System.Drawing.Point(14, 286);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(753, 202);
+            this.panel2.Size = new System.Drawing.Size(565, 164);
             this.panel2.TabIndex = 51;
             // 
             // Redakt
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1029, 567);
+            this.ClientSize = new System.Drawing.Size(777, 448);
             this.ContextMenuStrip = this.contextMenuStrip1;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -475,7 +440,6 @@
             this.Controls.Add(this.formulasLB);
             this.Controls.Add(this.formulas_idLB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Redakt";
             this.Text = "Редактор формул";
             this.Load += new System.EventHandler(this.Redakt_Load);

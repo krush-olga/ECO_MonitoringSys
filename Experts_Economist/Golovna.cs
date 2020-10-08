@@ -48,16 +48,7 @@ namespace Experts_Economist
                 user_redakt_button.Visible = true;
                 базаДанихToolStripMenuItem.Visible = true;
             }
-            
-            //if (MapMDIChild == null)
-            //{
-            //    MapMDIChild = new Map();
-            //    MapMDIChild.id_of_exp = id_of_exp;
-            //    MapMDIChild.MdiParent = this;
-            //    MapMDIChild.Show();
-            //    MapMDIChild.FormClosed += MapMDIChild_FormClosed;
-            //}
-            //MapMDIChild.BringToFront();
+           
         }
 
         private void MapMDIChild_FormClosed(object sender, FormClosedEventArgs e)
@@ -207,8 +198,6 @@ namespace Experts_Economist
             child.Show();
         }
 
-        
-
         private void user_redakt_button_Click(object sender, EventArgs e)
         {
             try
@@ -233,12 +222,6 @@ namespace Experts_Economist
                 MapMDIChild.FormClosed += (send, ev) => { MapMDIChild.Dispose(); MapMDIChild = null; };
             }
             MapMDIChild.BringToFront();
-        }
-
-
-        private void довідникToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void гДКToolStripMenuItem_Click(object sender, EventArgs e)
@@ -341,11 +324,6 @@ namespace Experts_Economist
             exportDB.BringToFront();
         }
 
-        private void exportCSVToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void importSQLToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (importSQL == null)
@@ -378,15 +356,18 @@ namespace Experts_Economist
             connectDB.BringToFront();
         }
 
-        private void ПереглядПроблемToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-
-        }
 
         private void видЕкномічноїДіяльностіToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MarkersForm mk = new MarkersForm(connectDB, db);
-            mk.Show();
+            try
+            {
+                MarkersForm mk = new MarkersForm(connectDB, db);
+                mk.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ставкиПодатківToolStripMenuItem_Click(object sender, EventArgs e)

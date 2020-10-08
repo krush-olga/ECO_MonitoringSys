@@ -118,7 +118,7 @@ namespace UserLoginForm
             string userType = DBUtil.AddQuotes(this.ExperTypeTextBox.Text.Replace('\'', '`'));
 
             string[] updateCols = new string[] { "user_name", "user_name", "password", "id_of_expert" };
-            string[] updateVals = new string[] { this.userName, userName, userPassword, userType };
+            string[] updateVals = new string[] { this.userName, DBUtil.AddQuotes(userName), DBUtil.AddQuotes(userPassword), DBUtil.AddQuotes(userType) };
 
             db.Connect();
             db.UpdateRecord("user", updateCols, updateVals);

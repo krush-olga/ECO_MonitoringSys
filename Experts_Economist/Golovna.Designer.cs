@@ -219,7 +219,6 @@
             this.довідникToolStripMenuItem.Name = "довідникToolStripMenuItem";
             this.довідникToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.довідникToolStripMenuItem.Text = "Довідник";
-            this.довідникToolStripMenuItem.Click += new System.EventHandler(this.довідникToolStripMenuItem_Click);
             // 
             // гДКToolStripMenuItem
             // 
@@ -318,7 +317,6 @@
             this.exportCSVToolStripMenuItem.Name = "exportCSVToolStripMenuItem";
             this.exportCSVToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.exportCSVToolStripMenuItem.Text = "CSV";
-            this.exportCSVToolStripMenuItem.Click += new System.EventHandler(this.exportCSVToolStripMenuItem_Click);
             // 
             // exportSQLToolStripMenuItem2
             // 

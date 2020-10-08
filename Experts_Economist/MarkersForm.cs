@@ -44,7 +44,7 @@ namespace Experts_Economist
             else
             {
                 string[] field = { "id", "kved", "name", "image_name" };
-                string[] values = { id.ToString(), kvedTextBox.Text, nameTextBox.Text, imageNameTextBox.Text};
+                string[] values = { id.ToString(), kvedTextBox.Text, DBUtil.AddQuotes(nameTextBox.Text), DBUtil.AddQuotes(imageNameTextBox.Text) };
 
                 db.InsertToBD("type_of_object", field, values);
 
@@ -78,9 +78,10 @@ namespace Experts_Economist
 
         private void deleteFromDBButton_Click(object sender, EventArgs e)
         {
-            var promptRes = MessageBox.Show($"Ви впевнені, що хочете видалити запис з id {dataGridView1.CurrentRow.Cells[0].Value}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            DialogResult promptRes = MessageBox.Show($"Ви впевнені, що хочете видалити запис з id {dataGridView1.CurrentRow.Cells[0].Value}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2);
             if (promptRes == DialogResult.No)
             {
+                MessageBox.Show("Операція відмінена.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -97,21 +98,29 @@ namespace Experts_Economist
 
         private void editBbutton_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(nameTextBox.Text) || string.IsNullOrEmpty(kvedTextBox.Text) || 
+            if (dataGridView1.CurrentRow == null)
+            {
+                MessageBox.Show("Виберіть запис.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(nameTextBox.Text) || string.IsNullOrEmpty(kvedTextBox.Text) ||
                 string.IsNullOrEmpty(imageNameTextBox.Text))
             {
                 MessageBox.Show("Всі поля воині бути заповнені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var promptRes = MessageBox.Show($"Ви впевнені, що хочете змінити запис з квед {kvedTextBox.Text}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            DialogResult promptRes = MessageBox.Show($"Ви впевнені, що хочете змінити запис з квед {dataGridView1.CurrentRow.Cells[0].Value}?", "Увага", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             if (promptRes == DialogResult.No)
             {
+                MessageBox.Show("Операція відмінена.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            string[] updateFields = { "kved", "name", "image_name" };
-            string[] updateValues = { kvedTextBox.Text, nameTextBox.Text, imageNameTextBox.Text };
+            string[] updateFields = { "id", "kved", "name", "image_name" };
+            string[] updateValues = { dataGridView1.CurrentRow.Cells[0].Value.ToString(), kvedTextBox.Text, DBUtil.AddQuotes(nameTextBox.Text), DBUtil.AddQuotes(imageNameTextBox.Text) };
 
             db.UpdateRecord("type_of_object", updateFields, updateValues);
 
@@ -122,8 +131,8 @@ namespace Experts_Economist
 
         private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            nameTextBox.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-            kvedTextBox.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+            kvedTextBox.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
+            nameTextBox.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
             imageNameTextBox.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
         }
     }

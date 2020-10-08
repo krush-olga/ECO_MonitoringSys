@@ -188,6 +188,7 @@
             // 
             // label4
             // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.Location = new System.Drawing.Point(334, 144);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(377, 66);
