@@ -11,7 +11,6 @@ namespace Maps
     //класс отображения карты и вызова методов для роботы  с ней 
     public partial class Map : Form
     {
-
         private NewMap newMap;
         public int id_of_exp, id_of_user;
         private DBManager db = new DBManager();
@@ -141,8 +140,9 @@ namespace Maps
             try
             {
                 newMap.OverlayClear();
-                btnShowAllMarkers.Enabled = true;
                 btnShowExpertsMarkers.Enabled = true;
+                btnShowAllMarkers.Enabled = true;
+                expertButtonMaker.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -152,12 +152,14 @@ namespace Maps
         //отрисовует все маркеры загрязнения 
         private void btnShowAllMarkers_Click(object sender, EventArgs e)
         {
-            try {
+            try 
+            {
                 newMap.AddObjectFromDB();
                 gMapControl.Zoom += 1;
                 gMapControl.Zoom -= 1;
+                btnShowExpertsMarkers.Enabled = false;
                 btnShowAllMarkers.Enabled = false;
-                btnShowExpertsMarkers.Enabled = true;
+                expertButtonMaker.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -169,11 +171,12 @@ namespace Maps
         {
             try
             {
-                newMap.AddObjectFromDB(id_of_user.ToString());
+                newMap.AddObjectFromDB("id_of_user = " + id_of_user.ToString(), id_of_user);
                 gMapControl.Zoom += 1;
                 gMapControl.Zoom -= 1;
                 btnShowExpertsMarkers.Enabled = false;
-                btnShowAllMarkers.Enabled = true;
+                btnShowAllMarkers.Enabled = false;
+                expertButtonMaker.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -274,7 +277,16 @@ namespace Maps
                 List<List<Object>> listPoligon;
                 List<List<Object>> listPointPoligon;
                 List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
-                listPoligon = db.GetRows("poligon", "Id_of_poligon, brush_color_r, bruch_color_g, brush_color_b, name, id_of_user, description", "type = 'poligon'");
+                listPoligon = db.GetRows("poligon", 
+                                         "Id_of_poligon, brush_color_r, bruch_color_g, brush_color_b, " +
+                                         "name, id_of_user, description",
+                                         "type = 'poligon'");
+
+                if (listPoligon.Count == 0)
+                {
+                    MessageBox.Show("Нема полігонів для зображення.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
                 for (int i = 0; i < listPoligon.Count; i++)
                 {
@@ -330,6 +342,12 @@ namespace Maps
                 List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
                 listPoligon = db.GetRows("poligon", "Id_of_poligon, brush_color_r, bruch_color_g, brush_color_b, name, id_of_user, type", "id_of_user = " + id_of_user.ToString());
 
+                if (listPoligon.Count == 0)
+                {
+                    MessageBox.Show("Полігонів, доданих вами нема.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 for (int i = 0; i < listPoligon.Count; i++)
                 {
                     if (listPoligon[i][6].ToString().ToLower() == "poligon".ToLower())
@@ -371,6 +389,8 @@ namespace Maps
             {
                 newMap.OverlayClear();
                 btnShowAllPolygons.Enabled = true;
+                btnShowExpertsPolygons.Enabled = true;
+                expertButtonPoligon.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -453,7 +473,16 @@ namespace Maps
                 List<List<Object>> listPoligon;
                 List<List<Object>> listPointPoligon;
                 List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
-                listPoligon = db.GetRows("poligon", "Id_of_poligon, name, id_of_user, description", "type = 'tube'");
+                listPoligon = db.GetRows("poligon", 
+                                         "Id_of_poligon, poligon.name, " +
+                                         "id_of_user, description", "" +
+                                         "type = 'tube'");
+
+                if (listPoligon.Count == 0)
+                {
+                    MessageBox.Show("Нема трубопроводів для зображення.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
                 for (int i = 0; i < listPoligon.Count; i++)
                 {
@@ -477,6 +506,10 @@ namespace Maps
                     newMap._points.Clear();
 
                 }
+
+                btnShowAllTubes.Enabled = false;
+                btnShowExpertsTubes.Enabled = false;
+                expertButtonTube.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -492,6 +525,12 @@ namespace Maps
                 List<List<Object>> listPointPoligon;
                 List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
                 listPoligon = db.GetRows("poligon", "Id_of_poligon, name, id_of_user, description", $"type = 'tube' AND id_of_user = {id_of_user}");
+
+                if (listPoligon.Count == 0)
+                {
+                    MessageBox.Show("Ви не додавали трубопроводи.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
 
                 for (int i = 0; i < listPoligon.Count; i++)
                 {
@@ -512,6 +551,10 @@ namespace Maps
                     newMap._pointsTube.Clear();
                     newMap._points.Clear();
                 }
+
+                btnShowAllTubes.Enabled = false;
+                btnShowExpertsTubes.Enabled = false;
+                expertButtonTube.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -524,6 +567,9 @@ namespace Maps
             try
             {
                 newMap.OverlayClear();
+                btnShowAllTubes.Enabled = true;
+                btnShowExpertsTubes.Enabled = true;
+                expertButtonTube.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -824,11 +870,6 @@ namespace Maps
                 MessageBox.Show("Пасхалочка");
             }
         }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
         //отображения выбраной картинки при выборе параметра в комбобоксе2 на вкладке маркеры
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -929,10 +970,6 @@ namespace Maps
             newMap.OverlayClear();
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
         //ввод координат (юзер может ввести только цыфры и ,)
         private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1277,9 +1314,124 @@ namespace Maps
             newMap.ZoomMinus();
         }
 
-        private void btnDeleteMarker_EnabledChanged(object sender, EventArgs e)
+        private void expertButtonMaker_Click(object sender, EventArgs e)
         {
+            try
+            {
+                newMap.AddObjectFromDB($"user.id_of_user = poi.id_of_user AND user.id_of_expert = {id_of_exp}", id_of_user);
+                gMapControl.Zoom += 1;
+                gMapControl.Zoom -= 1;
+                btnShowExpertsMarkers.Enabled = false;
+                btnShowAllMarkers.Enabled = false;
+                expertButtonMaker.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Помилка при зображенні маркерів, доданих даним експертом\n" + ex.Message);
+            }
+        }
 
+        private void expertButtonPoligon_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                List<List<Object>> listPoligon;
+                List<List<Object>> listPointPoligon;
+                List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
+                listPoligon = db.GetRows("poligon, user",
+                                         "poligon.Id_of_poligon, poligon.brush_color_r, poligon.bruch_color_g, poligon.brush_color_b, " +
+                                         "poligon.name, poligon.id_of_user, poligon.description",
+                                         $"type = 'poligon' AND user.id_of_user = poligon.id_of_user AND user.id_of_expert = {id_of_exp}");
+
+                if (listPoligon.Count == 0)
+                {
+                    MessageBox.Show("Данний експертом не додавав полігонів.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                for (int i = 0; i < listPoligon.Count; i++)
+                {
+                    var poligonCount = db.GetRows("point_poligon", "latitude", "Id_of_poligon = " + listPoligon[i][0]);
+                    for (int j = 0; j < poligonCount.Count; j++)
+                    {
+                        listPointPoligon = db.GetRows("point_poligon", "latitude, longitude", "Id_of_poligon = " + listPoligon[i][0] + " AND order123 = " + (j + 1).ToString());
+
+                        if (listPointPoligon.Count != 0)
+                        {
+                            points.Add(new GMap.NET.PointLatLng(Convert.ToDouble(listPointPoligon[0][1]), Convert.ToDouble(listPointPoligon[0][0])));
+                        }
+                    }
+
+                    listPointPoligon = db.GetRows("point_poligon", "latitude, longitude", "Id_of_poligon = " + listPoligon[i][0] + " AND order123 = 1");
+
+                    if (listPointPoligon.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    newMap.AddMarkerOnMap(listPoligon[i][6].ToString(), Convert.ToDouble(listPointPoligon[0][1]), Convert.ToDouble(listPointPoligon[0][0]), listPoligon[i][5].ToString(), null, listPoligon[i][4].ToString());
+                    newMap.DrawPolygon(Convert.ToInt16(listPoligon[i][1]), Convert.ToInt16(listPoligon[i][2]), Convert.ToInt16(listPoligon[i][3]), points);
+                    points.Clear();
+                }
+                btnShowAllPolygons.Enabled = false;
+                btnShowExpertsPolygons.Enabled = false;
+                expertButtonPoligon.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Помилка при зображенні полігонів доданих даним експертом\n" + ex + "\n" + ex);
+            }
+        }
+
+        private void expertButtonTube_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                List<List<Object>> listPoligon;
+                List<List<Object>> listPointPoligon;
+                List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
+                listPoligon = db.GetRows("poligon, user",
+                                         "poligon.Id_of_poligon, poligon.name, " +
+                                         "poligon.id_of_user, poligon.description", "" +
+                                         $"type = 'tube' AND user.id_of_user = poligon.id_of_user AND user.id_of_expert = {id_of_exp}");
+
+                if (listPoligon.Count == 0)
+                {
+                    MessageBox.Show("Данний експерт не додавав трубопроводи.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                for (int i = 0; i < listPoligon.Count; i++)
+                {
+                    var poligonCount = db.GetRows("point_poligon", "latitude", "Id_of_poligon = " + listPoligon[i][0]);
+                    for (int j = 0; j < poligonCount.Count; j++)
+                    {
+                        listPointPoligon = db.GetRows("point_poligon", "latitude, longitude", "Id_of_poligon = " + listPoligon[i][0] + " AND order123 = " + (j + 1).ToString());
+                        points.Add(new GMap.NET.PointLatLng(Convert.ToDouble(listPointPoligon[0][1]), Convert.ToDouble(listPointPoligon[0][0])));
+                        newMap.AddPointTube(Convert.ToDouble(listPointPoligon[0][1]), Convert.ToDouble(listPointPoligon[0][0]), listPoligon[i][2].ToString(), listPoligon[i][1].ToString(), listPoligon[i][3].ToString());
+                        if (points.Count == 2)
+                        {
+                            newMap.DrawTube();
+                            points.RemoveAt(0);
+                            newMap._pointsTube.RemoveAt(0);
+
+
+                        }
+                    }
+                    points.Clear();
+                    newMap._pointsTube.Clear();
+                    newMap._points.Clear();
+
+                }
+
+                btnShowAllTubes.Enabled = false;
+                btnShowExpertsTubes.Enabled = false;
+                expertButtonTube.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Помилка при зображення всіх водопроводів \n" + ex);
+            }
         }
 
         private void btnNormAll_Click(object sender, EventArgs e)

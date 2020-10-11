@@ -60,6 +60,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.expertButtonMaker = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -73,6 +74,7 @@
             this.btnSaveMarker = new System.Windows.Forms.Button();
             this.btnAddMarker = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.expertButtonPoligon = new System.Windows.Forms.Button();
             this.btnDeletePolygon = new System.Windows.Forms.Button();
             this.btnClearPolygons = new System.Windows.Forms.Button();
             this.btnShowExpertsPolygons = new System.Windows.Forms.Button();
@@ -82,6 +84,7 @@
             this.btnColorPolygon = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.expertButtonTube = new System.Windows.Forms.Button();
             this.btnDeleteTube = new System.Windows.Forms.Button();
             this.btnClearTube = new System.Windows.Forms.Button();
             this.btnShowExpertsTubes = new System.Windows.Forms.Button();
@@ -393,7 +396,6 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(72, 20);
             this.textBox2.TabIndex = 65;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox4_KeyPress);
             // 
             // label7
@@ -441,6 +443,7 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(62)))), ((int)(((byte)(155)))));
+            this.tabPage1.Controls.Add(this.expertButtonMaker);
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.label8);
             this.tabPage1.Controls.Add(this.comboBox1);
@@ -461,6 +464,21 @@
             this.tabPage1.Size = new System.Drawing.Size(299, 236);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Маркер";
+            // 
+            // expertButtonMaker
+            // 
+            this.expertButtonMaker.FlatAppearance.BorderSize = 0;
+            this.expertButtonMaker.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.expertButtonMaker.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.expertButtonMaker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.expertButtonMaker.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.expertButtonMaker.Location = new System.Drawing.Point(99, 142);
+            this.expertButtonMaker.Name = "expertButtonMaker";
+            this.expertButtonMaker.Size = new System.Drawing.Size(89, 41);
+            this.expertButtonMaker.TabIndex = 69;
+            this.expertButtonMaker.Text = "Вiдобразити по експерту";
+            this.expertButtonMaker.UseVisualStyleBackColor = true;
+            this.expertButtonMaker.Click += new System.EventHandler(this.expertButtonMaker_Click);
             // 
             // label9
             // 
@@ -512,7 +530,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(71, 71);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // btnClearMarker
             // 
@@ -551,11 +568,11 @@
             this.btnShowExpertsMarkers.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.btnShowExpertsMarkers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnShowExpertsMarkers.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnShowExpertsMarkers.Location = new System.Drawing.Point(140, 189);
+            this.btnShowExpertsMarkers.Location = new System.Drawing.Point(164, 180);
             this.btnShowExpertsMarkers.Name = "btnShowExpertsMarkers";
-            this.btnShowExpertsMarkers.Size = new System.Drawing.Size(150, 23);
+            this.btnShowExpertsMarkers.Size = new System.Drawing.Size(117, 41);
             this.btnShowExpertsMarkers.TabIndex = 62;
-            this.btnShowExpertsMarkers.Text = "Вiдобразити поточний";
+            this.btnShowExpertsMarkers.Text = "Вiдобразити додані вами";
             this.btnShowExpertsMarkers.UseVisualStyleBackColor = true;
             this.btnShowExpertsMarkers.Click += new System.EventHandler(this.btnShowExpertsMarkers_Click);
             // 
@@ -624,6 +641,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(62)))), ((int)(((byte)(155)))));
+            this.tabPage2.Controls.Add(this.expertButtonPoligon);
             this.tabPage2.Controls.Add(this.btnDeletePolygon);
             this.tabPage2.Controls.Add(this.btnClearPolygons);
             this.tabPage2.Controls.Add(this.btnShowExpertsPolygons);
@@ -644,6 +662,21 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Полiгон";
             // 
+            // expertButtonPoligon
+            // 
+            this.expertButtonPoligon.FlatAppearance.BorderSize = 0;
+            this.expertButtonPoligon.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.expertButtonPoligon.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.expertButtonPoligon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.expertButtonPoligon.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.expertButtonPoligon.Location = new System.Drawing.Point(177, 140);
+            this.expertButtonPoligon.Name = "expertButtonPoligon";
+            this.expertButtonPoligon.Size = new System.Drawing.Size(113, 45);
+            this.expertButtonPoligon.TabIndex = 57;
+            this.expertButtonPoligon.Text = "Доданий даним экспертом";
+            this.expertButtonPoligon.UseVisualStyleBackColor = true;
+            this.expertButtonPoligon.Click += new System.EventHandler(this.expertButtonPoligon_Click);
+            // 
             // btnDeletePolygon
             // 
             this.btnDeletePolygon.FlatAppearance.BorderSize = 0;
@@ -651,7 +684,7 @@
             this.btnDeletePolygon.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.btnDeletePolygon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeletePolygon.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnDeletePolygon.Location = new System.Drawing.Point(206, 146);
+            this.btnDeletePolygon.Location = new System.Drawing.Point(168, 197);
             this.btnDeletePolygon.Name = "btnDeletePolygon";
             this.btnDeletePolygon.Size = new System.Drawing.Size(77, 33);
             this.btnDeletePolygon.TabIndex = 56;
@@ -666,7 +699,7 @@
             this.btnClearPolygons.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.btnClearPolygons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearPolygons.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnClearPolygons.Location = new System.Drawing.Point(113, 195);
+            this.btnClearPolygons.Location = new System.Drawing.Point(57, 200);
             this.btnClearPolygons.Name = "btnClearPolygons";
             this.btnClearPolygons.Size = new System.Drawing.Size(77, 33);
             this.btnClearPolygons.TabIndex = 53;
@@ -681,11 +714,11 @@
             this.btnShowExpertsPolygons.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.btnShowExpertsPolygons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnShowExpertsPolygons.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnShowExpertsPolygons.Location = new System.Drawing.Point(206, 86);
+            this.btnShowExpertsPolygons.Location = new System.Drawing.Point(204, 86);
             this.btnShowExpertsPolygons.Name = "btnShowExpertsPolygons";
-            this.btnShowExpertsPolygons.Size = new System.Drawing.Size(77, 33);
+            this.btnShowExpertsPolygons.Size = new System.Drawing.Size(77, 41);
             this.btnShowExpertsPolygons.TabIndex = 52;
-            this.btnShowExpertsPolygons.Text = "Поточний";
+            this.btnShowExpertsPolygons.Text = "Доданий вами";
             this.btnShowExpertsPolygons.UseVisualStyleBackColor = true;
             this.btnShowExpertsPolygons.Click += new System.EventHandler(this.btnShowExpertsPolygons_Click);
             // 
@@ -761,6 +794,7 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(111)))), ((int)(((byte)(62)))), ((int)(((byte)(155)))));
+            this.tabPage3.Controls.Add(this.expertButtonTube);
             this.tabPage3.Controls.Add(this.btnDeleteTube);
             this.tabPage3.Controls.Add(this.btnClearTube);
             this.tabPage3.Controls.Add(this.btnShowExpertsTubes);
@@ -774,6 +808,22 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Водопровід";
             // 
+            // expertButtonTube
+            // 
+            this.expertButtonTube.FlatAppearance.BorderSize = 0;
+            this.expertButtonTube.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.expertButtonTube.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.expertButtonTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.expertButtonTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
+            this.expertButtonTube.ForeColor = System.Drawing.Color.White;
+            this.expertButtonTube.Location = new System.Drawing.Point(37, 157);
+            this.expertButtonTube.Name = "expertButtonTube";
+            this.expertButtonTube.Size = new System.Drawing.Size(97, 39);
+            this.expertButtonTube.TabIndex = 11;
+            this.expertButtonTube.Text = "Додані даним експертом";
+            this.expertButtonTube.UseVisualStyleBackColor = true;
+            this.expertButtonTube.Click += new System.EventHandler(this.expertButtonTube_Click);
+            // 
             // btnDeleteTube
             // 
             this.btnDeleteTube.FlatAppearance.BorderSize = 0;
@@ -782,7 +832,7 @@
             this.btnDeleteTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDeleteTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
             this.btnDeleteTube.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteTube.Location = new System.Drawing.Point(112, 165);
+            this.btnDeleteTube.Location = new System.Drawing.Point(161, 165);
             this.btnDeleteTube.Name = "btnDeleteTube";
             this.btnDeleteTube.Size = new System.Drawing.Size(81, 23);
             this.btnDeleteTube.TabIndex = 10;
@@ -814,11 +864,11 @@
             this.btnShowExpertsTubes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnShowExpertsTubes.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
             this.btnShowExpertsTubes.ForeColor = System.Drawing.Color.White;
-            this.btnShowExpertsTubes.Location = new System.Drawing.Point(112, 111);
+            this.btnShowExpertsTubes.Location = new System.Drawing.Point(100, 111);
             this.btnShowExpertsTubes.Name = "btnShowExpertsTubes";
-            this.btnShowExpertsTubes.Size = new System.Drawing.Size(81, 23);
+            this.btnShowExpertsTubes.Size = new System.Drawing.Size(95, 23);
             this.btnShowExpertsTubes.TabIndex = 8;
-            this.btnShowExpertsTubes.Text = "Поточний";
+            this.btnShowExpertsTubes.Text = "Додані вами";
             this.btnShowExpertsTubes.UseVisualStyleBackColor = true;
             this.btnShowExpertsTubes.Click += new System.EventHandler(this.btnShowExpertsTubes_Click);
             // 
@@ -999,6 +1049,9 @@
         private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.ComboBox cbTownSearch;
         private System.Windows.Forms.Button btnNormAll;
+        private System.Windows.Forms.Button expertButtonMaker;
+        private System.Windows.Forms.Button expertButtonPoligon;
+        private System.Windows.Forms.Button expertButtonTube;
     }
 }
 

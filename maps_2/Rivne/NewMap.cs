@@ -293,8 +293,18 @@ namespace Maps
             {
                 for (i = 0; i < list.Count; i++)
                 {
-                    System.IO.MemoryStream image_stream = new System.IO.MemoryStream((byte[])db.GetValue("type_of_object", "Image", "Id = " + list[i][3]));
-                    Image img = Image.FromStream(image_stream);
+                    var imageObj = db.GetValue("type_of_object", "Image", "Id = " + list[i][3]);
+                    Image img;
+
+                    if (imageObj != null && imageObj != DBNull.Value)
+                    {
+                        System.IO.MemoryStream image_stream = new System.IO.MemoryStream((byte[])imageObj);
+                        img = Image.FromStream(image_stream);
+                    }
+                    else
+                    {
+                        img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\noimage.png");
+                    }
                     AddMarkerOnMap(list[i][2].ToString(), Convert.ToDouble(list[i][0]), Convert.ToDouble(list[i][1]), list[i][4].ToString(), (Bitmap)img, list[i][5].ToString());
                 }
             }
@@ -304,17 +314,31 @@ namespace Maps
             }
         }
         //выгрузка маркеров загрязнения с БД
-        public void AddObjectFromDB(string condition)
+        public void AddObjectFromDB(string condition, int userId)
         {
             List<List<Object>> list;
+
             gMapControl.Overlays.Clear();
             gMapControl.Show();
-            list = db.GetRows("poi", "Coord_Lat, Coord_Lng, Description, Type, Name_Object", "id_of_user = " + condition);
+
+            list = db.GetRows("poi, user", "poi.Coord_Lat, poi.Coord_Lng, poi.Description, poi.Type, poi.Name_Object", condition);
+
             for (int i = 0; i < list.Count; i++)
             {
-                System.IO.MemoryStream image_stream = new System.IO.MemoryStream((byte[])db.GetValue("type_of_object", "Image", "Id = " + list[i][3]));
-                Image img = Image.FromStream(image_stream);
-                AddMarkerOnMap(list[i][2].ToString(), Convert.ToDouble(list[i][0]), Convert.ToDouble(list[i][1]), condition, (Bitmap)img, list[i][4].ToString());
+                var imageObj = db.GetValue("type_of_object", "Image", "Id = " + list[i][3]);
+                Image img;
+
+                if (imageObj != null && imageObj != DBNull.Value)
+                {
+                    System.IO.MemoryStream image_stream = new System.IO.MemoryStream((byte[])imageObj);
+                    img = Image.FromStream(image_stream);
+                }
+                else
+                {
+                    img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\noimage.png");
+                }
+
+                AddMarkerOnMap(list[i][2].ToString(), Convert.ToDouble(list[i][0]), Convert.ToDouble(list[i][1]), userId.ToString(), (Bitmap)img, list[i][4].ToString());
             }
         }
         //очистка карты

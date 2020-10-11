@@ -272,6 +272,9 @@
     <Content Include="c.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\noimage.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="init.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
