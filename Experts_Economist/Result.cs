@@ -25,7 +25,7 @@ namespace Experts_Economist
         private void Result_Load(object sender, EventArgs e)
         {
             experts_CB.Items.Clear();
-            var obj3 = db.GetRows("expert", "*", "id_of_expert>0 AND id_of_expert<4");
+            var obj3 = db.GetRows("expert", "*", "id_of_expert>0 AND id_of_expert != 4 AND id_of_expert != 5");
             var Experts = new List<Expert>();
             foreach (var row in obj3)
             {
