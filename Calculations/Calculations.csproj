@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="EconomistCalculator.cs" />
     <Compile Include="EcologCalculator.cs" />
+    <Compile Include="EnergoCalculator.cs" />
     <Compile Include="MedicalCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

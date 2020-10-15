@@ -16,6 +16,7 @@ namespace Experts_Economist
         private EconomistCalculator calc = new EconomistCalculator();
         private MedicalCalculator medCalc = new MedicalCalculator();
         private EcologCalculator ecoCalc = new EcologCalculator();
+        private EnergoCalculator enegroCalc = new EnergoCalculator();
         private bool normWasPrevious = false;
 
         public int id_of_exp;
@@ -1916,6 +1917,23 @@ namespace Experts_Economist
                 }
                 #endregion
             }
+            else if(id_of_exp == 6)
+            {
+                #region formulas_energo
+                switch (idf)//свитч для подсчета формул, общий вид - несколько параметров беруться из ячеек таблицы и потом передаются в функцию подсчета класс Calculation, потом добавляем в таблицу строку с результатом
+                {
+                    case 175://ОСЕ - обсяги електроенергії
+                        {
+                            float[] values_month = new float[12];
+                            for (int i = 0; i < 12; i++) {                                
+                                values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                            }                           
+                            this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                            break;
+                        }
+                }
+                #endregion
+            }
             else
             {
                 MessageBox.Show("Для цього експерта немає розрахунків");
@@ -1979,6 +1997,7 @@ namespace Experts_Economist
             {
                 
                 fields5 = new[]{ "calculation_number", "date_of_calculation", "id_of_formula", "result", "id_of_expert" };
+              //  if (idf==175 &&id_of_exp==6)//for energetic ОСЕрік
                 values5 = new[]{ calc_numbCB.Text, "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), formulasDGV.Rows[formulasDGV.Rows.Count - 1].Cells[1].Value.ToString().Replace(",", "."), id_of_exp.ToString() };
             }
             try

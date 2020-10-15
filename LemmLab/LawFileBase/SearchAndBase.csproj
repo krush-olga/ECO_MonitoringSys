@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="FileBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FileBase\bin\Debug\FileBase.dll</HintPath>
+      <HintPath>..\FileBase\obj\Debug\FileBase.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,6 +56,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\oprForm\oprForm.csproj">
+      <Project>{608adb6a-0238-40cd-8705-0b11d4663079}</Project>
+      <Name>oprForm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LemmLab\LemmLab.csproj">
       <Project>{101a3e64-1bc3-4a6d-9e4d-b829f6b9842d}</Project>
       <Name>LemmLab</Name>

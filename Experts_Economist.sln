@@ -25,6 +25,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer", "Installer\Installer\Installer.csproj", "{DE52964D-C90E-483A-833D-3FAC6BDB000C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchAndBase", "LemmLab\LawFileBase\SearchAndBase.csproj", "{3153355E-107E-4752-8F30-03EE5E821B34}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0E906CB-F24D-40A3-9D04-8648C896AA54} = {A0E906CB-F24D-40A3-9D04-8648C896AA54}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LemmLab", "LemmLab\LemmLab\LemmLab.csproj", "{101A3E64-1BC3-4A6D-9E4D-B829F6B9842D}"
 EndProject
