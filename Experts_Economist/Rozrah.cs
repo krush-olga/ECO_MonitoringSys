@@ -1922,12 +1922,52 @@ namespace Experts_Economist
                 #region formulas_energo
                 switch (idf)//свитч для подсчета формул, общий вид - несколько параметров беруться из ячеек таблицы и потом передаются в функцию подсчета класс Calculation, потом добавляем в таблицу строку с результатом
                 {
-                    case 175://ОСЕ - обсяги електроенергії
+                    case 175://ОСЕрік - обсяги споживання електроенергії за рік, вводячи цифри за 12 місяців
                         {
                             float[] values_month = new float[12];
                             for (int i = 0; i < 12; i++) {                                
                                 values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
                             }                           
+                            this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                            break;
+                        }
+                    case 177://ОВЕрік - обсяги виробництва електроенергії за рік, вводячи цифри за 12 місяців
+                        {
+                            float[] values_month = new float[12];
+                            for (int i = 0; i < 12; i++)
+                            {
+                                values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                            }
+                            this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                            break;
+                        }
+                    case 179://ОВТЕНПрік - обсяги виробництва теплової енергії на продаж за рік, вводячи цифри за 12 місяців
+                        {
+                            float[] values_month = new float[12];
+                            for (int i = 0; i < 12; i++)
+                            {
+                                values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                            }
+                            this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                            break;
+                        }
+                    case 182://ОСГрік - обсяги споживання газу за рік, вводячи цифри за 12 місяців
+                        {
+                            float[] values_month = new float[12];
+                            for (int i = 0; i < 12; i++)
+                            {
+                                values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                            }
+                            this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                            break;
+                        }
+                    case 184://ОСВрік - обсяги споживання води за рік, вводячи цифри за 12 місяців
+                        {
+                            float[] values_month = new float[12];
+                            for (int i = 0; i < 12; i++)
+                            {
+                                values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                            }
                             this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
                             break;
                         }
