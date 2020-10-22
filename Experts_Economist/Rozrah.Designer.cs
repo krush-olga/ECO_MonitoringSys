@@ -69,6 +69,7 @@
             this.elements_taxes = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.addNewSeriesButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.formulasDGV)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Iterations)).BeginInit();
@@ -265,6 +266,7 @@
             this.issueTB.Name = "issueTB";
             this.issueTB.Size = new System.Drawing.Size(246, 21);
             this.issueTB.TabIndex = 26;
+            this.issueTB.SelectedIndexChanged += new System.EventHandler(this.issueTB_SelectedIndexChanged);
             // 
             // label10
             // 
@@ -292,7 +294,7 @@
             this.name_of_seriesCB.FormattingEnabled = true;
             this.name_of_seriesCB.Location = new System.Drawing.Point(189, 28);
             this.name_of_seriesCB.Name = "name_of_seriesCB";
-            this.name_of_seriesCB.Size = new System.Drawing.Size(281, 21);
+            this.name_of_seriesCB.Size = new System.Drawing.Size(240, 21);
             this.name_of_seriesCB.TabIndex = 54;
             this.name_of_seriesCB.SelectedIndexChanged += new System.EventHandler(this.name_of_seriesCB_SelectedIndexChanged);
             // 
@@ -438,12 +440,22 @@
             this.result.HeaderText = "Результати";
             this.result.Name = "result";
             // 
+            // addNewSeriesButton
+            // 
+            this.addNewSeriesButton.Location = new System.Drawing.Point(435, 28);
+            this.addNewSeriesButton.Name = "addNewSeriesButton";
+            this.addNewSeriesButton.Size = new System.Drawing.Size(35, 21);
+            this.addNewSeriesButton.TabIndex = 64;
+            this.addNewSeriesButton.Text = "+";
+            this.addNewSeriesButton.UseVisualStyleBackColor = true;
+            // 
             // Rozrah
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1107, 461);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.addNewSeriesButton);
             this.Controls.Add(this.normDGV);
             this.Controls.Add(this.Iterations);
             this.Controls.Add(this.label6);
@@ -525,6 +537,7 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn elements_taxes;
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
         private System.Windows.Forms.DataGridViewTextBoxColumn result;
+        private System.Windows.Forms.Button addNewSeriesButton;
     }
 }
 

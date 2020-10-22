@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Data;
 using Data;
-
-
+using Data.Entity;
+using System.Linq;
 
 namespace Experts_Economist
 {
@@ -18,18 +18,18 @@ namespace Experts_Economist
         private EcologCalculator ecoCalc = new EcologCalculator();
         private EnergoCalculator enegroCalc = new EnergoCalculator();
         private bool normWasPrevious = false;
+        private IEnumerable<Issue> Issues;
 
         public int id_of_exp;
 
         public Rozrah()
         {
             InitializeComponent();
-            
         }
 
         private void Rozrah_Load(object sender, EventArgs e)
         {
-            
+
             logTb.Text = "";
             experts_CB.Items.Clear();
             var obj3 = db.GetRows("expert", "*", "id_of_expert > 0 AND id_of_expert != 4 AND id_of_expert != 5");
@@ -88,47 +88,38 @@ namespace Experts_Economist
                 formulas_idLB.Items.Add(item);
                 item = "";
             }
+
             calc_numbCB.Items.Clear();//очищаем список расчётов
             name_of_seriesCB.Items.Clear();
-            //создаём переменную для хранения списка номеров расчётов и забиваем её в список расчётов
-            var obj01 = db.GetRows("calculations_description", "calculation_number, calculation_name", "id_of_expert = " + id_of_exp);
-            for (int i = 0; i < obj01.Count; i++)
-            {
-                calc_numbCB.Items.Add(Convert.ToInt32(obj01[i][0]).ToString());
-                name_of_seriesCB.Items.Add(obj01[i][1].ToString());
-            }
             //функция заполнения таблицы формулами и их параметрами
 
             //находим максимальный номер расчётов и записываем в ячейку с номером расчетов это число + 1, если расчетов нет, ставим номер расчетов 1
-            var obj02 = db.GetRows("calculations_description", "Max(calculation_number)", "id_of_expert = " + id_of_exp);
-            try
-            {
-                calc_numbCB.Text = (Convert.ToInt32(obj02[0][0]) + 1).ToString();
-            }
-            catch { calc_numbCB.Text = "1"; }
+            //var obj02 = db.GetRows("calculations_description", "Max(calculation_number)", "id_of_expert = " + id_of_exp);
+            //try
+            //{
+            //    calc_numbCB.Text = (Convert.ToInt32(obj02[0][0]) + 1).ToString();
+            //}
+            //catch { calc_numbCB.Text = "1"; }
 
             issueTB.Items.Clear();
-            var obj3 = db.GetRows("issues", "*", "");
-            var Issues = new List<Issue>();
-            foreach (var row in obj3)
-            {
-                Issues.Add(IssueMapper.Map(row));
-            }
+            Issues = db.GetRows("issues", "*", "").Select(i => IssueMapper.Map(i))
+                                                    .GroupBy(i => i.name)
+                                                    .Select(g => g.FirstOrDefault());
 
             issueTB.Items.AddRange(Issues.ToArray());
-            try
+
+            if (issueTB.Items.Count == 0)
+            {
+                issueTB.Text = "Не знайдено жодної задачі.";
+            }
+            else
             {
                 issueTB.SelectedIndex = 0;
             }
-            catch (Exception)
-            {
-            }
-            try
+
+            if (formulasLB.Items != null && formulasLB.Items.Count != 0)
             {
                 formulasLB.SelectedIndex = 0;
-            }
-            catch (Exception)
-            {
             }
         }
 
@@ -145,8 +136,28 @@ namespace Experts_Economist
             this.formulasDGV.Rows.Clear();//очищаем таблицу
             formulas_idLB.SelectedIndex = formulasLB.SelectedIndex;//ставим выбранное id в соответствии с выбранной формулой
             string idf = formulas_idLB.SelectedItem.ToString();//переменная для хранения id выбранной формулы
-            form_desc_L.Text = "Опис формули : " + db.GetValue("formulas", "description_of_formula", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp).ToString();
-            if (((Convert.ToInt32(idf) == 4) || (Convert.ToInt32(idf) == 5) || (Convert.ToInt32(idf) == 6) || (Convert.ToInt32(idf) == 11) 
+
+            var formulaDescription = db.GetRows("formulas", "description_of_formula, measurement_of_formula", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp);
+
+            if (formulaDescription != null && formulaDescription.Count != 0)
+            {
+                form_desc_L.Text = $"Опис формули: {formulaDescription[0][0]}.";
+
+                if (string.IsNullOrEmpty(formulaDescription[0][1].ToString()))
+                {
+                    form_desc_L.Text += "\nОдиниці виміру відсутні.";
+                }
+                else
+                {
+                    form_desc_L.Text += "\nОдиниці виміру: " + formulaDescription[0][1] + ".";
+                }
+            }
+            else
+            {
+                form_desc_L.Text = "Опис формули відсутній.";
+            }
+
+            if (((Convert.ToInt32(idf) == 4) || (Convert.ToInt32(idf) == 5) || (Convert.ToInt32(idf) == 6) || (Convert.ToInt32(idf) == 11)
                 || (Convert.ToInt32(idf) == 12) || (Convert.ToInt32(idf) == 13) || (Convert.ToInt32(idf) == 15) || (Convert.ToInt32(idf) == 63)
                 || (Convert.ToInt32(idf) == 71) || (Convert.ToInt32(idf) == 65) || (Convert.ToInt32(idf) == 75) || (Convert.ToInt32(idf) == 66)
                 || (Convert.ToInt32(idf) == 67) || (Convert.ToInt32(idf) == 24) || (Convert.ToInt32(idf) == 44)) & id_of_exp == 1)
@@ -161,11 +172,13 @@ namespace Experts_Economist
                     for_i.Text = "Кількість постраждалих";
                 if (Convert.ToInt32(idf) == 44)
                     for_i.Text = "Кількість установ \n природно-заповідного фонду ";
-                
+
                 for_i.Visible = true;
                 Iterations.Visible = true;
                 //return;
-            }else if( ( (Convert.ToInt32(idf) == 181) || (Convert.ToInt32(idf) == 213) ) && id_of_exp == 2 ){       //блок кода для выпадающего меню еклога
+            }
+            else if (((Convert.ToInt32(idf) == 181) || (Convert.ToInt32(idf) == 213)) && id_of_exp == 2)
+            {       //блок кода для выпадающего меню еклога
                 if (Convert.ToInt32(idf) == 181)
                     for_i.Text = "Кількість забруднюючих речовин";
                 for_i.Visible = true;
@@ -179,9 +192,9 @@ namespace Experts_Economist
                 this.formulasDGV.Rows.Clear();
             }
             var obj = db.GetRows("formula_compound", "id_of_parameter", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp);//переменная для хранения списка параментров привязанных к данной формуле
-            var LetsGetFormulaId = db.GetRows("formulas", "id_of_formula","");
+            var LetsGetFormulaId = db.GetRows("formulas", "id_of_formula", "");
             var obj1 = new List<List<Object>>();//переменная для хранения имени параметра и единиц измерения
-            if(((Convert.ToInt32(idf) == 181) ) && id_of_exp == 2)
+            if (((Convert.ToInt32(idf) == 181)) && id_of_exp == 2)
             {
                 for (int i = 0; i < obj.Count; i++)
                 {
@@ -189,7 +202,7 @@ namespace Experts_Economist
                     this.formulasDGV.Rows.Add(obj1[0][0].ToString(), "0", obj1[0][1].ToString(), obj1[0][2].ToString());
                 }
             }
-            else if(((Convert.ToInt32(idf)) == 171) && id_of_exp == 2)
+            else if (((Convert.ToInt32(idf)) == 171) && id_of_exp == 2)
             {
                 normWasPrevious = true;
                 formulasDGV.Visible = false;
@@ -217,7 +230,7 @@ namespace Experts_Economist
                     connection.Close();
                 }
             }
-            else if(((Convert.ToInt32(idf)) == 172) && id_of_exp == 1)
+            else if (((Convert.ToInt32(idf)) == 172) && id_of_exp == 1)
             {
                 normWasPrevious = true;
                 formulasDGV.Visible = false;
@@ -250,13 +263,13 @@ namespace Experts_Economist
                 for (int i = 0; i < obj.Count; i++)//в цикле записываем в таблицу имена параметров,пустое поле для ввода значения параметра и единици измерения
                 {
                     obj1 = db.GetRows("formulas", "name_of_formula, measurement_of_formula,description_of_formula", "id_of_formula = " + obj[i][0].ToString() + " AND id_of_expert = " + id_of_exp);
-                    object calculatedFormula = db.GetValue("calculations_result","result", $"id_of_formula = {obj[i][0].ToString()} and id_of_expert = {id_of_exp}");
+                    object calculatedFormula = db.GetValue("calculations_result", "result", $"id_of_formula = {obj[i][0].ToString()} and id_of_expert = {id_of_exp}");
                     this.formulasDGV.Rows.Add(obj1[0][0].ToString(), calculatedFormula ?? "0", obj1[0][1].ToString(), obj1[0][2].ToString());
                 }
             }
             help = true;//вспомогательная переменная для проверки наличия строки Result с результатом исчисления
         }
-        
+
         private void Iterations_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (formulas_idLB.SelectedItem != null)
@@ -314,12 +327,17 @@ namespace Experts_Economist
         //событие нажатия на кнопку Зберегти значення та порахувати, смотрит id  формулы и считает по определенным образом, потом записывает в БД значения формулы и параметров если формула ещё не была расчитана в данной серии расчётов
         private void Save_values_Click(object sender, EventArgs e)
         {
+            if (name_of_seriesCB.SelectedItem == null || !(name_of_seriesCB.SelectedItem is CalculationSeries))
+            {
+                return;
+            }
+
             if (help == false && normWasPrevious == false)// проверяем есть ли строка с результатом, если есть - удаляем и сбрасываем переменную
             {
                 formulasDGV.Rows.RemoveAt(formulasDGV.Rows.Count - 1);
                 help = true;
             }
-
+            
             int idf = Convert.ToInt32(formulas_idLB.SelectedItem);//переменная для хранения id формулы
             double[] h = new double[90];
             try
@@ -424,18 +442,20 @@ namespace Experts_Economist
                             double П = Convert.ToInt32(formulasDGV.Rows[1].Cells[1].Value);
 
 
-                            formulasDGV.Rows.Add("Result",calc.Ррек_2(Т, П), "");
+                            formulasDGV.Rows.Add("Result", calc.Ррек_2(Т, П), "");
 
                             break;
                         }
-                    case 48: {
+                    case 48:
+                        {
                             double Пз = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             double Рз = Convert.ToDouble(formulasDGV.Rows[1].Cells[1].Value);
 
                             this.formulasDGV.Rows.Add("Result", calc.Рпзф(Пз, Рз), "");
                             break;
                         }
-                    case 49: {
+                    case 49:
+                        {
                             double Втрр = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             double Вдп = Convert.ToDouble(formulasDGV.Rows[1].Cells[1].Value);
                             double Ввтг = Convert.ToDouble(formulasDGV.Rows[2].Cells[1].Value);
@@ -443,7 +463,8 @@ namespace Experts_Economist
                             this.formulasDGV.Rows.Add("Result", calc.Нр(Втрр, Вдп, Ввтг), "");
                             break;
                         }
-                    case 50: {
+                    case 50:
+                        {
                             double N = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             double Мл = Convert.ToDouble(formulasDGV.Rows[1].Cells[1].Value);
                             double Мт = Convert.ToDouble(formulasDGV.Rows[2].Cells[1].Value);
@@ -453,25 +474,28 @@ namespace Experts_Economist
                             this.formulasDGV.Rows.Add("Result", calc.Втрр(N, Мл, Мт, Мі, Мз), "");
                             break;
                         }
-                    case 51: {
+                    case 51:
+                        {
                             double Мдп = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             double Nз = Convert.ToDouble(formulasDGV.Rows[1].Cells[1].Value);
 
                             this.formulasDGV.Rows.Add("Result", calc.Вдп(Мдп, Nз), "");
                             break;
                         }
-                    case 52: {
+                    case 52:
+                        {
                             double Мвтг = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             double Вд = Convert.ToDouble(formulasDGV.Rows[1].Cells[1].Value);
 
                             this.formulasDGV.Rows.Add("Result", calc.Втг(Мвтг, Вд), "");
                             break;
                         }
-                    case 63: {
+                    case 63:
+                        {
                             int iterations = Convert.ToInt32(Iterations.Text);
                             double[] p = new double[iterations];
                             double[] k = new double[iterations];
-                            double лв = Convert.ToDouble(formulasDGV.Rows[formulasDGV.Rows.Count-1].Cells[1].Value);
+                            double лв = Convert.ToDouble(formulasDGV.Rows[formulasDGV.Rows.Count - 1].Cells[1].Value);
                             for (int i = 0; i <= iterations - 1; i++)
                             {
                                 p[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
@@ -481,14 +505,16 @@ namespace Experts_Economist
                             this.formulasDGV.Rows.Add("Result", calc.Фг(iterations, p, k, лв), "");
                             break;
                         }
-                    case 64: {
+                    case 64:
+                        {
                             double Прп = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             double Прс = Convert.ToDouble(formulasDGV.Rows[1].Cells[1].Value);
 
                             this.formulasDGV.Rows.Add("Result", calc.Пр(Прп, Прс), "");
                             break;
                         }
-                    case 65: {
+                    case 65:
+                        {
                             double m = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             int iterations = Convert.ToInt32(Iterations.Value);
                             double[] S = new double[iterations];
@@ -496,33 +522,35 @@ namespace Experts_Economist
                             double[] У = new double[iterations];
                             double[] Ц = new double[iterations];
                             double[] Здод = new double[iterations];
-                            for (int i = 1; i < iterations-4; i++)
+                            for (int i = 1; i < iterations - 4; i++)
                             {
                                 S[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
-                                k[i] = Convert.ToDouble(formulasDGV.Rows[i+1].Cells[1].Value);
-                                У[i] = Convert.ToDouble(formulasDGV.Rows[i+2].Cells[1].Value);
-                                Ц[i] = Convert.ToDouble(formulasDGV.Rows[i+3].Cells[1].Value);
-                                Здод[i] = Convert.ToDouble(formulasDGV.Rows[i+4].Cells[1].Value);
+                                k[i] = Convert.ToDouble(formulasDGV.Rows[i + 1].Cells[1].Value);
+                                У[i] = Convert.ToDouble(formulasDGV.Rows[i + 2].Cells[1].Value);
+                                Ц[i] = Convert.ToDouble(formulasDGV.Rows[i + 3].Cells[1].Value);
+                                Здод[i] = Convert.ToDouble(formulasDGV.Rows[i + 4].Cells[1].Value);
                             }
 
                             this.formulasDGV.Rows.Add("Result", calc.Пр_с(m, S, k, У, Ц, Здод), "");
                             break;
                         }
-                    case 66: {
+                    case 66:
+                        {
                             double m = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             int iterations = Convert.ToInt32(Iterations.Value);
                             double[] Ц = new double[iterations];
                             double[] q = new double[iterations];
-                            for (int i = 1; i < iterations-1; i++)
+                            for (int i = 1; i < iterations - 1; i++)
                             {
                                 Ц[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
-                                q[i] = Convert.ToDouble(formulasDGV.Rows[i+1].Cells[1].Value);
+                                q[i] = Convert.ToDouble(formulasDGV.Rows[i + 1].Cells[1].Value);
                             }
 
                             this.formulasDGV.Rows.Add("Result", calc.Сн(m, Ц, q), "");
                             break;
                         }
-                    case 67: {
+                    case 67:
+                        {
                             double m = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             int iterations = Convert.ToInt32(Iterations.Value);
                             double[] P = new double[iterations];
@@ -531,42 +559,44 @@ namespace Experts_Economist
                             double[] qорг = new double[iterations];
                             double[] Цср = new double[iterations];
                             double[] qгр = new double[iterations];
-                            for (int i = 1; i < iterations-5; i++)
+                            for (int i = 1; i < iterations - 5; i++)
                             {
                                 P[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
-                                Ka[i] = Convert.ToDouble(formulasDGV.Rows[i+1].Cells[1].Value);
-                                k[i] = Convert.ToDouble(formulasDGV.Rows[i+2].Cells[1].Value);
-                                qорг[i] = Convert.ToDouble(formulasDGV.Rows[i+3].Cells[1].Value);
-                                Цср[i] = Convert.ToDouble(formulasDGV.Rows[i+4].Cells[1].Value);
-                                qгр[i] = Convert.ToDouble(formulasDGV.Rows[i+5].Cells[1].Value);
+                                Ka[i] = Convert.ToDouble(formulasDGV.Rows[i + 1].Cells[1].Value);
+                                k[i] = Convert.ToDouble(formulasDGV.Rows[i + 2].Cells[1].Value);
+                                qорг[i] = Convert.ToDouble(formulasDGV.Rows[i + 3].Cells[1].Value);
+                                Цср[i] = Convert.ToDouble(formulasDGV.Rows[i + 4].Cells[1].Value);
+                                qгр[i] = Convert.ToDouble(formulasDGV.Rows[i + 5].Cells[1].Value);
                             }
 
                             this.formulasDGV.Rows.Add("Result", calc.Мдг(m, P, Ka, k, qорг, Цср, qгр), "");
                             break;
                         }
-                    case 71: {
+                    case 71:
+                        {
                             double n = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             int iterations = Convert.ToInt32(Iterations.Value);
                             double[] C = new double[iterations];
                             double[] q = new double[iterations];
-                            for (int i = 1; i <= iterations-1; i++)
+                            for (int i = 1; i <= iterations - 1; i++)
                             {
                                 C[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
-                                q[i] = Convert.ToDouble(formulasDGV.Rows[i+1].Cells[1].Value);
+                                q[i] = Convert.ToDouble(formulasDGV.Rows[i + 1].Cells[1].Value);
                             }
 
                             this.formulasDGV.Rows.Add("Result", calc.Прп(n, C, q), "");
                             break;
                         }
-                    case 75: {
+                    case 75:
+                        {
                             double n = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             int iterations = Convert.ToInt32(Iterations.Value);
                             double[] Ц = new double[iterations];
                             double[] q = new double[iterations];
-                            for (int i = 0; i < iterations-1; i++)
+                            for (int i = 0; i < iterations - 1; i++)
                             {
                                 Ц[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
-                                q[i] = Convert.ToDouble(formulasDGV.Rows[i+1].Cells[1].Value);
+                                q[i] = Convert.ToDouble(formulasDGV.Rows[i + 1].Cells[1].Value);
                             }
 
                             this.formulasDGV.Rows.Add("Result", calc.Прс(n, Ц, q), "");
@@ -625,7 +655,8 @@ namespace Experts_Economist
                             this.formulasDGV.Rows.Add("Result", calc.Рлг3(Н1, Н2, k, П), "");
                             break;
                         }
-                    case 115: {
+                    case 115:
+                        {
                             double П = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
                             double S = Convert.ToDouble(formulasDGV.Rows[1].Cells[1].Value);
                             double M = Convert.ToDouble(formulasDGV.Rows[2].Cells[1].Value);
@@ -704,7 +735,7 @@ namespace Experts_Economist
                             {
                                 Ii[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
                             }
-                            
+
                             this.formulasDGV.Rows.Add("Result", calc.Пз(Ап, Анс, Ii), "");
                             break;
                         }
@@ -715,8 +746,8 @@ namespace Experts_Economist
                             double[] Q2 = new double[iterations];
                             for (int i = 0; i < iterations; i++)
                             {
-                                Q1[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value); 
-                                Q2[i] = Convert.ToDouble(formulasDGV.Rows[i+1].Cells[1].Value);
+                                Q1[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                                Q2[i] = Convert.ToDouble(formulasDGV.Rows[i + 1].Cells[1].Value);
                             }
                             this.formulasDGV.Rows.Add("Result", calc.Рз(iterations, Q1, Q2), "");
                             break;
@@ -749,7 +780,8 @@ namespace Experts_Economist
                             break;
                         }
 
-                    case 172: {///////
+                    case 172:
+                        {///////
                             double result = 0;
                             foreach (DataGridViewRow row in taxesDataGridView.Rows)
                             {
@@ -770,23 +802,23 @@ namespace Experts_Economist
                                     //Ищем такой же идентификатор в таблице с записями про ГДЗ(гранично допустимые значения) и получаем ОБУВ(уровень опасности)
                                     var element_gdk = db.GetValue("gdk", "tsel", $"code = {element_ID}");
                                     //Считаем налог в зависимости от уровня опасности
-                                    if(Convert.ToDouble(element_gdk) >= 0.1)
+                                    if (Convert.ToDouble(element_gdk) >= 0.1)
                                     {
                                         result = 74.17 * Convert.ToDouble(row.Cells[1].Value);
                                     }
-                                    else if(Convert.ToDouble(element_gdk) < 0.1 && Convert.ToDouble(element_gdk) >= 0.01)
+                                    else if (Convert.ToDouble(element_gdk) < 0.1 && Convert.ToDouble(element_gdk) >= 0.01)
                                     {
                                         result = 1968.65 * Convert.ToDouble(row.Cells[1].Value);
                                     }
-                                    else if(Convert.ToDouble(element_gdk) < 0.01 && Convert.ToDouble(element_gdk) >= 0.001)
+                                    else if (Convert.ToDouble(element_gdk) < 0.01 && Convert.ToDouble(element_gdk) >= 0.001)
                                     {
                                         result = 7015.25 * Convert.ToDouble(row.Cells[1].Value);
                                     }
-                                    else if(Convert.ToDouble(element_gdk) < 0.001 && Convert.ToDouble(element_gdk) >= 0.0001)
+                                    else if (Convert.ToDouble(element_gdk) < 0.001 && Convert.ToDouble(element_gdk) >= 0.0001)
                                     {
                                         result = 50783.62 * Convert.ToDouble(row.Cells[1].Value);
                                     }
-                                    else if(Convert.ToDouble(element_gdk) < 0.0001)
+                                    else if (Convert.ToDouble(element_gdk) < 0.0001)
                                     {
                                         result = 592712.5 * Convert.ToDouble(row.Cells[1].Value);
                                     }
@@ -805,7 +837,7 @@ namespace Experts_Economist
                             break;
                         }
                     default:
-                        { 
+                        {
                             MessageBox.Show("Формулу не знайдено");
                             break;
                         }
@@ -1462,7 +1494,7 @@ namespace Experts_Economist
                 }
                 #endregion formulas_medic
             }
-            else if(id_of_exp==2)
+            else if (id_of_exp == 2)
             {
                 #region formulas_ecolog
                 switch (idf)
@@ -1481,7 +1513,7 @@ namespace Experts_Economist
                                 groundPolutionCoefficient,
                                 polutionSubstanceDangerCoefficient,
                                 ecoAndEconomValue,
-                                EcologCalculator.PonuzuvalnuyKoef.PERELOGI),"");
+                                EcologCalculator.PonuzuvalnuyKoef.PERELOGI), "");
                             break;
                         }
                     /*case 172:
@@ -1498,7 +1530,7 @@ namespace Experts_Economist
                             double mass = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value);
                             double density = Convert.ToDouble(this.formulasDGV.Rows[1].Cells[1].Value);
 
-                            this.formulasDGV.Rows.Add("Result", ecoCalc.Озр(mass, density),"куб.м");
+                            this.formulasDGV.Rows.Add("Result", ecoCalc.Озр(mass, density), "куб.м");
                             break;
                         }
                     case 178:
@@ -1514,13 +1546,13 @@ namespace Experts_Economist
                         {
                             double max = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value);
                             int length = Convert.ToInt32(Iterations.Text);
-                            double[] arr = {0};
+                            double[] arr = { 0 };
                             Array.Resize(ref arr, length);
                             for (int i = 1; i < length; i++)
                             {
-                                arr[i-1] = Convert.ToDouble(this.formulasDGV.Rows[i].Cells[1].Value);
+                                arr[i - 1] = Convert.ToDouble(this.formulasDGV.Rows[i].Cells[1].Value);
                             }
-                            this.formulasDGV.Rows.Add("Result",ecoCalc.Рш_заг(max, arr),"");
+                            this.formulasDGV.Rows.Add("Result", ecoCalc.Рш_заг(max, arr), "");
                             break;
                         }
                     case 50:
@@ -1539,7 +1571,7 @@ namespace Experts_Economist
                                     polutionSubstanceDangerCoefficient,
                                     wasteDangerCoefficient,
                                     ecoAndEconomValue
-                                ), 
+                                ),
                            "");
 
                             break;
@@ -1723,14 +1755,14 @@ namespace Experts_Economist
                         }
                     case 62:
                         {
-                            double atmosphereTemperatureCoefficient = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value); 
-                            double massOfHarmfulSubstance = Convert.ToDouble(this.formulasDGV.Rows[1].Cells[1].Value); 
-                            double speedOfSubstanceSedimentationCoefficient = Convert.ToDouble(this.formulasDGV.Rows[2].Cells[1].Value); 
-                            double firstGasPollutionCondition = Convert.ToDouble(this.formulasDGV.Rows[3].Cells[1].Value); 
-                            double secondGasPollutionCondition = Convert.ToDouble(this.formulasDGV.Rows[4].Cells[1].Value); 
-                            double terrainTopographyCoefficient = Convert.ToDouble(this.formulasDGV.Rows[5].Cells[1].Value); 
-                            double sourceHeight = Convert.ToDouble(this.formulasDGV.Rows[6].Cells[1].Value); 
-                            double fixedCostsOfGasEmission = Convert.ToDouble(this.formulasDGV.Rows[7].Cells[1].Value); 
+                            double atmosphereTemperatureCoefficient = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value);
+                            double massOfHarmfulSubstance = Convert.ToDouble(this.formulasDGV.Rows[1].Cells[1].Value);
+                            double speedOfSubstanceSedimentationCoefficient = Convert.ToDouble(this.formulasDGV.Rows[2].Cells[1].Value);
+                            double firstGasPollutionCondition = Convert.ToDouble(this.formulasDGV.Rows[3].Cells[1].Value);
+                            double secondGasPollutionCondition = Convert.ToDouble(this.formulasDGV.Rows[4].Cells[1].Value);
+                            double terrainTopographyCoefficient = Convert.ToDouble(this.formulasDGV.Rows[5].Cells[1].Value);
+                            double sourceHeight = Convert.ToDouble(this.formulasDGV.Rows[6].Cells[1].Value);
+                            double fixedCostsOfGasEmission = Convert.ToDouble(this.formulasDGV.Rows[7].Cells[1].Value);
                             double temperatureDifference = Convert.ToDouble(this.formulasDGV.Rows[8].Cells[1].Value);
 
                             this.formulasDGV.Rows.Add("Result", ecoCalc.Formula20(
@@ -1824,13 +1856,13 @@ namespace Experts_Economist
                             int length = Convert.ToInt32(Iterations.Text);
 
                             double[] concentrations = new double[length];
-                            double[] maxPermisibbleValue= new double[length];
+                            double[] maxPermisibbleValue = new double[length];
 
                             int i = 0;
-                            for (i = 0; i <= length-1; i++)
+                            for (i = 0; i <= length - 1; i++)
                             {
                                 maxPermisibbleValue[i] = Convert.ToDouble(this.formulasDGV.Rows[i].Cells[1].Value);
-                                concentrations[i] = Convert.ToDouble(this.formulasDGV.Rows[i+1].Cells[1].Value);
+                                concentrations[i] = Convert.ToDouble(this.formulasDGV.Rows[i + 1].Cells[1].Value);
 
                                 //maxPermisibbleValues.Add(Convert.ToDouble(this.formulasDGV.Rows[i].Cells[1].Value));
                                 //concentrations.Add(Convert.ToDouble(this.formulasDGV.Rows[i+1].Cells[1].Value));
@@ -1839,7 +1871,7 @@ namespace Experts_Economist
                             string waterQuality = "";
 
                             this.formulasDGV.Rows.Add("Result", ecoCalc.ІЗВ(
-                                //concentrations.ToArray(),
+                               //concentrations.ToArray(),
                                // maxPermisibbleValues.ToArray(),
                                concentrations,
                                maxPermisibbleValue,
@@ -1848,7 +1880,7 @@ namespace Experts_Economist
                                 ),
                             "");
 
-                            this.formulasDGV.Rows[i+1].Cells[2].Value = waterQuality;
+                            this.formulasDGV.Rows[i + 1].Cells[2].Value = waterQuality;
 
                             break;
                         }
@@ -1906,18 +1938,18 @@ namespace Experts_Economist
                         {
                             break;
                         }
-                    /*case 172:
-                        {
-                            double Taxation = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value);
-                            double Pollution = Convert.ToDouble(this.formulasDGV.Rows[1].Cells[1].Value);
+                        /*case 172:
+                            {
+                                double Taxation = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value);
+                                double Pollution = Convert.ToDouble(this.formulasDGV.Rows[1].Cells[1].Value);
 
-                            this.formulasDGV.Rows.Add("Result", ecoCalc.Под(Taxation, Pollution),"");
-                            break;
-                        }*/
+                                this.formulasDGV.Rows.Add("Result", ecoCalc.Под(Taxation, Pollution),"");
+                                break;
+                            }*/
                 }
                 #endregion
             }
-            else if(id_of_exp == 6)
+            else if (id_of_exp == 6)
             {
                 #region formulas_energo
                 switch (idf)//свитч для подсчета формул, общий вид - несколько параметров беруться из ячеек таблицы и потом передаются в функцию подсчета класс Calculation, потом добавляем в таблицу строку с результатом
@@ -1925,9 +1957,10 @@ namespace Experts_Economist
                     case 175://ОСЕрік - обсяги споживання електроенергії за рік, вводячи цифри за 12 місяців
                         {
                             float[] values_month = new float[12];
-                            for (int i = 0; i < 12; i++) {                                
+                            for (int i = 0; i < 12; i++)
+                            {
                                 values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
-                            }                           
+                            }
                             this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
                             break;
                         }
@@ -1980,15 +2013,16 @@ namespace Experts_Economist
                 help = false;
                 return;
             }
+
             //проверка введён ли корректный номер расчётной серии
-            if (calc_numbCB.Text == "" || calc_numbCB.Text == "0")
-            {
-                var obj2 = db.GetRows("calculations_description", "Max(calculation_number)", "id_of_expert = " + id_of_exp);
-                if (obj2.Count == 1)
-                    calc_numbCB.Text = "1";
-                else
-                    calc_numbCB.Text = (Convert.ToInt32(obj2[0][0]) + 1).ToString();
-            }
+            //if (name_of_seriesCB.SelectedItem != null && name_of_seriesCB.SelectedItem is CalculationSeries)
+            //{
+            //    var obj2 = db.GeVa("calculations_description", "Max(calculation_number)", "id_of_expert = " + id_of_exp);
+            //    if (obj2.Count == 1)
+            //        calc_numbCB.Text = "1";
+            //    else
+            //        calc_numbCB.Text = (Convert.ToInt32(obj2[0][0]) + 1).ToString();
+            //}
 
             if (name_of_seriesCB.Text == "")
             {
@@ -1999,11 +2033,12 @@ namespace Experts_Economist
 
             //создаём переменные для хранения номера расчётной серии, времени расчёта, id формулы и результата и записываем это всё в БД
             DateTime localDate = DateTime.Now;
+            CalculationSeries currentSeries = (CalculationSeries)name_of_seriesCB.SelectedItem;
             string[] fields5 = { };
             string[] values5 = { };
             int issueid = (issueTB.SelectedItem as Issue).id;
             string[] fields4_1 = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
-            string[] values4_1 = { calc_numbCB.Text, "'" + name_of_seriesCB.Text.Replace('\'', '`') + "'", "'" + desc_of_seriesTB.Text.Replace('\'', '`') + "'", issueid.ToString(), id_of_exp.ToString() };
+            string[] values4_1 = { currentSeries.id.ToString(), "'" + name_of_seriesCB.Text.Replace('\'', '`') + "'", "'" + desc_of_seriesTB.Text.Replace('\'', '`') + "'", issueid.ToString(), id_of_exp.ToString() };
 
 
 
@@ -2020,12 +2055,12 @@ namespace Experts_Economist
                     if (tmp.Count == 0)
                     {
                         fields5 = new[] { "Id", "calculation_number", "date_of_calculation", "id_of_formula", "element_name", "value", "result", "id_of_expert" };
-                        values5 = new[] { 0.ToString(), calc_numbCB.Text, "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
+                        values5 = new[] { 0.ToString(), currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
                     }
                     else
                     {
                         fields5 = new[] { "Id", "calculation_number", "date_of_calculation", "id_of_formula", "element_name", "value", "result", "id_of_expert" };
-                        values5 = new[] { (Convert.ToInt32(tmp[tmp.Count - 1][0]) + 1).ToString(), calc_numbCB.Text, "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
+                        values5 = new[] { (Convert.ToInt32(tmp[tmp.Count - 1][0]) + 1).ToString(), currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
                     }
                     db.InsertToBD("calculations_norm", fields5, values5);
                 }
@@ -2035,10 +2070,10 @@ namespace Experts_Economist
             }
             else
             {
-                
-                fields5 = new[]{ "calculation_number", "date_of_calculation", "id_of_formula", "result", "id_of_expert" };
-              //  if (idf==175 &&id_of_exp==6)//for energetic ОСЕрік
-                values5 = new[]{ calc_numbCB.Text, "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), formulasDGV.Rows[formulasDGV.Rows.Count - 1].Cells[1].Value.ToString().Replace(",", "."), id_of_exp.ToString() };
+
+                fields5 = new[] { "calculation_number", "date_of_calculation", "id_of_formula", "result", "id_of_expert" };
+                //  if (idf==175 &&id_of_exp==6)//for energetic ОСЕрік
+                values5 = new[] { currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), formulasDGV.Rows[formulasDGV.Rows.Count - 1].Cells[1].Value.ToString().Replace(",", "."), id_of_exp.ToString() };
             }
             try
             {
@@ -2079,7 +2114,7 @@ namespace Experts_Economist
                 var obj = db.GetRows("formula_compound", "id_of_parameter", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp);
                 //первый параметр i - количество итераций
                 string[] fields5_1 = { "calculation_number", "id_of_parameter", "parameter_value", "index_of_parameter", "id_of_expert", "id_of_formula" };
-                string[] values5_1 = { calc_numbCB.Text, obj[0][0].ToString(), it.ToString(), "0", id_of_exp.ToString(), idf.ToString() };
+                string[] values5_1 = { currentSeries.id.ToString(), obj[0][0].ToString(), it.ToString(), "0", id_of_exp.ToString(), idf.ToString() };
                 db.InsertToBD("parameters_value", fields5_1, values5_1);
                 //переменная для хранения количества параметров у формулы
                 int obj_items = obj.Count;
@@ -2117,7 +2152,7 @@ namespace Experts_Economist
             {
                 var obj = db.GetRows("formula_compound", "id_of_parameter", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp);
                 string[] fields6 = { "calculation_number", "id_of_parameter", "parameter_value", "index_of_parameter", "id_of_expert", "id_of_formula" };
-                string[] values6 = { calc_numbCB.Text, "", "", "0", id_of_exp.ToString(), idf.ToString() };
+                string[] values6 = { currentSeries.id.ToString(), "", "", "0", id_of_exp.ToString(), idf.ToString() };
                 for (int i = 0; i < obj.Count; i++)
                 {
                     values6[1] = obj[i][0].ToString();
@@ -2197,7 +2232,15 @@ namespace Experts_Economist
 
         private void series_over_Click(object sender, EventArgs e)
         {
-            //Сохраняем название и описание серии расчётов
+            if (issueTB.SelectedItem == null || !(issueTB.SelectedItem is Issue) ||
+                name_of_seriesCB.SelectedItem == null || !(name_of_seriesCB.SelectedItem is CalculationSeries))
+            {
+                return;
+            }
+
+            CalculationSeries currentSeries = (CalculationSeries)name_of_seriesCB.SelectedItem;
+
+                //Сохраняем название и описание серии расчётов
             int issueid = (issueTB.SelectedItem as Issue).id;
             if (id_of_exp == 2)
             {
@@ -2213,7 +2256,7 @@ namespace Experts_Economist
             else
             {
                 string[] fields4_1 = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
-                string[] values4_1 = { calc_numbCB.Text, "'" + name_of_seriesCB.Text.Replace('\'', '`') + "'", "'" + desc_of_seriesTB.Text.Replace('\'', '`') + "'", issueid.ToString(), id_of_exp.ToString() };
+                string[] values4_1 = { currentSeries.id.ToString(), "'" + name_of_seriesCB.Text.Replace('\'', '`') + "'", "'" + desc_of_seriesTB.Text.Replace('\'', '`') + "'", issueid.ToString(), id_of_exp.ToString() };
                 try
                 {
                     db.UpdateRecord("calculations_description", fields4_1, values4_1);
@@ -2226,7 +2269,6 @@ namespace Experts_Economist
                     return;
                 }
 
-                calc_numbCB.Text = (Convert.ToInt32(calc_numbCB.Text) + 1).ToString();
                 if (formulasLB.Items.Count > 0)
                 {
                     formulasLB.SelectedIndex = 1;
@@ -2290,18 +2332,18 @@ namespace Experts_Economist
 
         private void name_of_seriesCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            if (!(calc_numbCB.SelectedItem is CalculationSeries) || name_of_seriesCB.SelectedItem == null)
             {
-                var calc = db.GetRows("calculations_description", "calculation_number", "calculation_name = '" + name_of_seriesCB.Text.Replace('\'', '`') + "' AND id_of_expert = " + id_of_exp);
-                if (calc_numbCB.Text == calc[0][0].ToString())
-                {
-                    return;
-                }
-                calc_numbCB.SelectedIndex = calc_numbCB.FindString(calc[0][0].ToString());
+                return;
             }
-            catch (Exception)
+
+            string currentSereies = name_of_seriesCB.SelectedItem.ToString();
+
+            if (((CalculationSeries)calc_numbCB.SelectedItem).name == currentSereies)
             {
+                return;
             }
+            calc_numbCB.SelectedIndex = calc_numbCB.FindString(currentSereies);
         }
 
         private void formulasDGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -2316,7 +2358,7 @@ namespace Experts_Economist
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error"+ex.Message,"Error");
+                MessageBox.Show("Error" + ex.Message, "Error");
             }
         }
 
@@ -2355,10 +2397,10 @@ namespace Experts_Economist
                 {2, "\"Еколог\"" },
                 {3, "\"Медик\"" }
             };
-            int index = name_of_seriesCB.SelectedIndex+1;
+            int index = name_of_seriesCB.SelectedIndex + 1;
             SugestionsForm sugestions = new SugestionsForm("Edit", experts[id_of_exp], series: index, expert_ID: id_of_exp);
             sugestions.showDialog();
-            
+
         }
 
         class SugestionsForm
@@ -2465,9 +2507,9 @@ namespace Experts_Economist
                 {
                     DBManager db = new DBManager();
                     var calc_rows = db.GetRows("calculations_result", "date_of_calculation, id_of_formula, result", $"calculation_number = {series} AND id_of_expert = {expert_ID}");
-                    foreach(var row in calc_rows)
+                    foreach (var row in calc_rows)
                     {
-                        dataGrid.Rows.Add(row[0],db.GetValue("formulas", "name_of_formula", $"id_of_formula = {row[1]} AND id_of_expert = {expert_ID}"), row[2]);
+                        dataGrid.Rows.Add(row[0], db.GetValue("formulas", "name_of_formula", $"id_of_formula = {row[1]} AND id_of_expert = {expert_ID}"), row[2]);
                     }
                 };
 
@@ -2477,7 +2519,7 @@ namespace Experts_Economist
                     Top = 26,
                     AutoSize = true,
                     Text = "Останні розраховані формули",
-                    Font = new System.Drawing.Font("Arial",14)
+                    Font = new System.Drawing.Font("Arial", 14)
                 };
 
                 content = new Label()
@@ -2485,7 +2527,7 @@ namespace Experts_Economist
                     Left = 140,
                     Top = 64,
                     AutoSize = true,
-                    Text = "Формули для розрахунків експерта "+contentText,
+                    Text = "Формули для розрахунків експерта " + contentText,
                     Font = new System.Drawing.Font("Century Gothic", 10)
                 };
 
@@ -2528,10 +2570,10 @@ namespace Experts_Economist
                 {
                     DBManager db = new DBManager();
                     int rowIndex = dataGrid.CurrentCell.RowIndex;
-                    var row_id = db.GetValue("formulas", "id_of_formula",$"name_of_formula = '{dataGrid.Rows[rowIndex].Cells[1].Value.ToString()}' AND id_of_expert = {expert_ID}");
+                    var row_id = db.GetValue("formulas", "id_of_formula", $"name_of_formula = '{dataGrid.Rows[rowIndex].Cells[1].Value.ToString()}' AND id_of_expert = {expert_ID}");
                     var row_name = db.GetValue("calculations_result", "result", $"id_of_formula = {row_id} AND id_of_expert = {expert_ID} AND calculation_number = {series}");
                     Clipboard.SetText(row_name.ToString());
-                    MessageBox.Show("Скопійовано в буфер обміну\n"+ row_name.ToString(),"Виконано!");
+                    MessageBox.Show("Скопійовано в буфер обміну\n" + row_name.ToString(), "Виконано!");
                 };
             }
             private void initDragEvent()
@@ -2572,5 +2614,34 @@ namespace Experts_Economist
                 mainForm.CancelButton = exit_btn;
             }
         }
+
+        private void issueTB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            name_of_seriesCB.Items.Clear();
+
+            //создаём переменную для хранения списка номеров расчётов и забиваем её в список расчётов
+            var calcDescription = db.GetRows("calculations_description", "*", "id_of_expert = " +
+                                    id_of_exp + " and issue_id=" + Issues.ElementAt(issueTB.SelectedIndex).id.ToString());
+
+            IEnumerable<CalculationSeries> calculationSeries = calcDescription.Select(c => CalculatoinSeriesMapper.Map(c))
+                                                                              .GroupBy(calcSer => calcSer.name)
+                                                                              .Select(g => g.FirstOrDefault());
+
+            if (calcDescription.Count != 0)
+            {
+                foreach (var calculation in calculationSeries)
+                {
+                    name_of_seriesCB.Items.Add(calculation);
+                }
+
+                name_of_seriesCB.SelectedIndex = 0;
+            }
+            else
+            {
+                name_of_seriesCB.Text = "Не знайдено жодної серії розрахунків.";
+            }
+
+        }
+
     }
 }
