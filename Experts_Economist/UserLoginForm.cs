@@ -55,6 +55,7 @@ namespace Experts_Economist
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                    this.Close();
                 }
             }
             else
