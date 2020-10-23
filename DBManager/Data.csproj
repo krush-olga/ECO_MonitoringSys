@@ -86,6 +86,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\CalculationSeries.cs" />
+    <Compile Include="Entities\Document.cs" />
+    <Compile Include="Entities\Event.cs" />
+    <Compile Include="Entities\Expert.cs" />
+    <Compile Include="Entities\Formula.cs" />
+    <Compile Include="Entities\Issue.cs" />
+    <Compile Include="Entities\Resource.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ParserToDB.cs" />
     <Compile Include="DBManager.cs" />
