@@ -19,6 +19,7 @@ namespace Experts_Economist
         private EnergoCalculator enegroCalc = new EnergoCalculator();
         private bool normWasPrevious = false;
         private IEnumerable<Issue> Issues;
+        private IEnumerable<Formula> formulas;
 
         public int id_of_exp;
 
@@ -62,55 +63,31 @@ namespace Experts_Economist
             formulasDGV.Rows.Clear();
 
             //создаем переменную для записи в неё имён формулы, в цикле записываем имена формулы в список
-            var obj = db.GetRows("formulas, formula_compound", "distinct name_of_formula",
-                $"formulas.id_of_expert = {id_of_exp} and formulas.id_of_formula IN (select id_of_formula from formula_compound)");
-            string item = "";//вспомогательная переменная для хранения имён
-            for (int i = 0; i < obj.Count; i++)
+            formulas = db.GetRows("formulas", "*",
+                                  $"formulas.id_of_expert = {id_of_exp} and formulas.id_of_formula IN " +
+                                  $"(select id_of_formula from formula_compound)")
+                         .Select(row => FormulaMapper.Map(row));
+
+            foreach (var formula in formulas)
             {
-                for (int j = 0; j < obj[i].Count; j++)
-                {
-                    item += obj[i][j];
-                }
-                formulasLB.Items.Add(item);
-                item = "";
+                formulasLB.Items.Add(formula);
+                formulas_idLB.Items.Add(formula.Id);
             }
 
-            //создаем переменную для записи в неё id формулы, в цикле записываем id формулы в список
-            var obj1 = db.GetRows("formulas", "id_of_formula",
-                $"formulas.id_of_expert = {id_of_exp} and formulas.id_of_formula IN (select id_of_formula from formula_compound)");
-            item = "";//вспомогательная переменная для хранения id
-            for (int i = 0; i < obj1.Count; i++)
-            {
-                for (int j = 0; j < obj1[i].Count; j++)
-                {
-                    item += obj1[i][j];
-                }
-                formulas_idLB.Items.Add(item);
-                item = "";
-            }
-
-            calc_numbCB.Items.Clear();//очищаем список расчётов
             name_of_seriesCB.Items.Clear();
             //функция заполнения таблицы формулами и их параметрами
 
-            //находим максимальный номер расчётов и записываем в ячейку с номером расчетов это число + 1, если расчетов нет, ставим номер расчетов 1
-            //var obj02 = db.GetRows("calculations_description", "Max(calculation_number)", "id_of_expert = " + id_of_exp);
-            //try
-            //{
-            //    calc_numbCB.Text = (Convert.ToInt32(obj02[0][0]) + 1).ToString();
-            //}
-            //catch { calc_numbCB.Text = "1"; }
-
             issueTB.Items.Clear();
-            Issues = db.GetRows("issues", "*", "").Select(i => IssueMapper.Map(i))
-                                                    .GroupBy(i => i.name)
-                                                    .Select(g => g.FirstOrDefault());
+            Issues = db.GetRows("issues", "*", "").Select(row => IssueMapper.Map(row))
+                                                  .GroupBy(i => i.name)
+                                                  .Select(g => g.FirstOrDefault());
 
             issueTB.Items.AddRange(Issues.ToArray());
 
             if (issueTB.Items.Count == 0)
             {
                 issueTB.Text = "Не знайдено жодної задачі.";
+                addNewSeriesButton.Enabled = false;
             }
             else
             {
@@ -329,15 +306,26 @@ namespace Experts_Economist
         {
             if (name_of_seriesCB.SelectedItem == null || !(name_of_seriesCB.SelectedItem is CalculationSeries))
             {
+                MessageBox.Show("Виберіть серію розрахунків.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            object objId = db.GetValue("calculations_description", "Max(calculation_number) + 1", "id_of_expert = " + id_of_exp);
+            string newId = null;
+
+            if (objId == null)
+            {
+                return;
+            }
+
+            newId = objId.ToString();
 
             if (help == false && normWasPrevious == false)// проверяем есть ли строка с результатом, если есть - удаляем и сбрасываем переменную
             {
                 formulasDGV.Rows.RemoveAt(formulasDGV.Rows.Count - 1);
                 help = true;
             }
-            
+
             int idf = Convert.ToInt32(formulas_idLB.SelectedItem);//переменная для хранения id формулы
             double[] h = new double[90];
             try
@@ -2014,19 +2002,9 @@ namespace Experts_Economist
                 return;
             }
 
-            //проверка введён ли корректный номер расчётной серии
-            //if (name_of_seriesCB.SelectedItem != null && name_of_seriesCB.SelectedItem is CalculationSeries)
-            //{
-            //    var obj2 = db.GeVa("calculations_description", "Max(calculation_number)", "id_of_expert = " + id_of_exp);
-            //    if (obj2.Count == 1)
-            //        calc_numbCB.Text = "1";
-            //    else
-            //        calc_numbCB.Text = (Convert.ToInt32(obj2[0][0]) + 1).ToString();
-            //}
-
             if (name_of_seriesCB.Text == "")
             {
-                MessageBox.Show("Введіть ім'я для серії");
+                MessageBox.Show("Виберіть ім'я для серії");
                 help = false;
                 return;
             }
@@ -2037,10 +2015,6 @@ namespace Experts_Economist
             string[] fields5 = { };
             string[] values5 = { };
             int issueid = (issueTB.SelectedItem as Issue).id;
-            string[] fields4_1 = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
-            string[] values4_1 = { currentSeries.id.ToString(), "'" + name_of_seriesCB.Text.Replace('\'', '`') + "'", "'" + desc_of_seriesTB.Text.Replace('\'', '`') + "'", issueid.ToString(), id_of_exp.ToString() };
-
-
 
             if (idf == 171 && id_of_exp == 2)
             {
@@ -2055,7 +2029,7 @@ namespace Experts_Economist
                     if (tmp.Count == 0)
                     {
                         fields5 = new[] { "Id", "calculation_number", "date_of_calculation", "id_of_formula", "element_name", "value", "result", "id_of_expert" };
-                        values5 = new[] { 0.ToString(), currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
+                        values5 = new[] { "0", currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
                     }
                     else
                     {
@@ -2065,26 +2039,18 @@ namespace Experts_Economist
                     db.InsertToBD("calculations_norm", fields5, values5);
                 }
                 return;
-                //normDGV.Rows.
-                //values5 = new[]{ calc_numbCB.Text, "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), normDGV.Rows[normDGV.Rows.Count - 1].Cells[2].Value.ToString().Replace(",", "."), id_of_exp.ToString() };
             }
             else
             {
-
                 fields5 = new[] { "calculation_number", "date_of_calculation", "id_of_formula", "result", "id_of_expert" };
                 //  if (idf==175 &&id_of_exp==6)//for energetic ОСЕрік
                 values5 = new[] { currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), formulasDGV.Rows[formulasDGV.Rows.Count - 1].Cells[1].Value.ToString().Replace(",", "."), id_of_exp.ToString() };
             }
-            try
-            {
-                db.InsertToBD("calculations_description", fields4_1, values4_1);
-            }
-            catch (Exception)
-            {
-            }
+
             try
             {
                 db.InsertToBD("calculations_result", fields5, values5);
+                MessageBox.Show("Результат обрахунків додано до бази даних.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (MySqlException ex)// ловим эксепшн mysql если идёт дупликация ключа
             {
@@ -2175,10 +2141,9 @@ namespace Experts_Economist
             int nIdx = formulasLB.IndexFromPoint(e.Location);
             if ((nIdx >= 0) && (nIdx < formulasLB.Items.Count))
             {
-                string idf = formulas_idLB.Items[nIdx].ToString();
-                var obj2 = db.GetRows("formulas", "description_of_formula", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp);
-                strTip = obj2[0][0].ToString();
+                strTip = ((Formula)formulasLB.Items[nIdx]).Description;
             }
+
             toolTip1.SetToolTip(formulasLB, strTip);
         }
 
@@ -2240,7 +2205,7 @@ namespace Experts_Economist
 
             CalculationSeries currentSeries = (CalculationSeries)name_of_seriesCB.SelectedItem;
 
-                //Сохраняем название и описание серии расчётов
+            //Сохраняем название и описание серии расчётов
             int issueid = (issueTB.SelectedItem as Issue).id;
             if (id_of_exp == 2)
             {
@@ -2280,49 +2245,6 @@ namespace Experts_Economist
 
         }
 
-        private void calc_numbCB_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                desc_of_seriesTB.Clear();// очищаем поле описания расчёта
-                string idc = calc_numbCB.Text;//переменная для хранения id расчёта
-                //переменная для хранения имени и описания расчёта
-                var calc = db.GetRows("calculations_description", "calculation_name,description_of_calculation,issue_id", "calculation_number = " + idc + " AND id_of_expert = " + id_of_exp);
-                //заполняем поля соответственно
-                if (calc.Count > 0)
-                {
-                    name_of_seriesCB.SelectedIndex = name_of_seriesCB.FindString(calc[0][0].ToString());
-                }
-                else
-                {
-                    name_of_seriesCB.Text = "";
-                }
-                desc_of_seriesTB.Text = calc[0][1].ToString();
-                for (int i = 0; i < issueTB.Items.Count; i++)
-                {
-                    if ((issueTB.Items[i] as Issue).id == Convert.ToInt32(calc[0][2]))
-                        issueTB.SelectedIndex = i;
-                }
-            }
-            catch (Exception)
-            {
-            }
-            if (calc_numbCB.Text == "")
-                calc_numbCB.Text = prev_calc_numb;
-        }
-
-        public string prev_calc_numb = "";
-
-        //проверка ввода номера серии расчётов
-        private void calc_numbCB_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            prev_calc_numb = calc_numbCB.Text;
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
-        }
-
         private void experts_CB_SelectedIndexChanged(object sender, EventArgs e)
         {
             id_of_exp = (experts_CB.Items[experts_CB.SelectedIndex] as Expert).id;
@@ -2332,18 +2254,14 @@ namespace Experts_Economist
 
         private void name_of_seriesCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!(calc_numbCB.SelectedItem is CalculationSeries) || name_of_seriesCB.SelectedItem == null)
+            if (name_of_seriesCB.SelectedItem == null)
             {
                 return;
             }
 
-            string currentSereies = name_of_seriesCB.SelectedItem.ToString();
+            string currentSereies = name_of_seriesCB.Text;
 
-            if (((CalculationSeries)calc_numbCB.SelectedItem).name == currentSereies)
-            {
-                return;
-            }
-            calc_numbCB.SelectedIndex = calc_numbCB.FindString(currentSereies);
+            desc_of_seriesTB.Text = ((CalculationSeries)name_of_seriesCB.SelectedItem).description;
         }
 
         private void formulasDGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -2641,6 +2559,54 @@ namespace Experts_Economist
                 name_of_seriesCB.Text = "Не знайдено жодної серії розрахунків.";
             }
 
+        }
+
+        private void addNewSeriesButton_Click(object sender, EventArgs e)
+        {
+
+            AddNewSeriesWindow addNewSeriesWindow = new AddNewSeriesWindow();
+
+            if (addNewSeriesWindow.ShowDialog() == DialogResult.OK)
+            {
+
+                foreach (CalculationSeries item in name_of_seriesCB.Items)
+                {
+                    if (item.name == addNewSeriesWindow.SeriesName)
+                    {
+                        MessageBox.Show("Така серія вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
+                Issue currentIssue = (Issue)issueTB.SelectedItem;
+
+                object objId = db.GetValue("calculations_description", "Max(calculation_number) + 1", "id_of_expert = " + id_of_exp);
+                string newId = null;
+
+                if (objId == null)
+                {
+                    return;
+                }
+
+                newId = objId.ToString();
+
+                name_of_seriesCB.Text = addNewSeriesWindow.SeriesName;
+                desc_of_seriesTB.Text = addNewSeriesWindow.SeriesDescription;
+
+                string[] fields = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
+                string[] values = { newId, DBUtil.AddQuotes(name_of_seriesCB.Text), DBUtil.AddQuotes(desc_of_seriesTB.Text), currentIssue.id.ToString(), id_of_exp.ToString() };
+
+                try
+                {
+                    db.InsertToBD("calculations_description", fields, values);
+                    MessageBox.Show("Нова серій додана.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+            }
         }
 
     }

@@ -40,10 +40,8 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.series_over = new System.Windows.Forms.Button();
             this.showLog = new System.Windows.Forms.Button();
-            this.number_of_calcL = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.calc_numbCB = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.desc_of_seriesTB = new System.Windows.Forms.RichTextBox();
@@ -161,6 +159,7 @@
             this.series_over.Text = "Закінчити серію";
             this.toolTip1.SetToolTip(this.series_over, "Зберігає опис серії, ставить наступний номер серії");
             this.series_over.UseVisualStyleBackColor = true;
+            this.series_over.Visible = false;
             this.series_over.Click += new System.EventHandler(this.series_over_Click);
             // 
             // showLog
@@ -173,16 +172,6 @@
             this.toolTip1.SetToolTip(this.showLog, "Зберігає опис серії, ставить наступний номер серії");
             this.showLog.UseVisualStyleBackColor = true;
             this.showLog.Click += new System.EventHandler(this.showLog_Click);
-            // 
-            // number_of_calcL
-            // 
-            this.number_of_calcL.AutoSize = true;
-            this.number_of_calcL.Location = new System.Drawing.Point(691, 272);
-            this.number_of_calcL.Name = "number_of_calcL";
-            this.number_of_calcL.Size = new System.Drawing.Size(111, 13);
-            this.number_of_calcL.TabIndex = 14;
-            this.number_of_calcL.Text = "Серія розрахунків №";
-            this.number_of_calcL.Visible = false;
             // 
             // label1
             // 
@@ -201,17 +190,6 @@
             this.label2.Size = new System.Drawing.Size(182, 13);
             this.label2.TabIndex = 16;
             this.label2.Text = "Список параметрів даної формули";
-            // 
-            // calc_numbCB
-            // 
-            this.calc_numbCB.FormattingEnabled = true;
-            this.calc_numbCB.Location = new System.Drawing.Point(808, 269);
-            this.calc_numbCB.Name = "calc_numbCB";
-            this.calc_numbCB.Size = new System.Drawing.Size(100, 21);
-            this.calc_numbCB.TabIndex = 18;
-            this.calc_numbCB.Visible = false;
-            this.calc_numbCB.TextChanged += new System.EventHandler(this.calc_numbCB_TextChanged);
-            this.calc_numbCB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.calc_numbCB_KeyPress);
             // 
             // label3
             // 
@@ -235,6 +213,7 @@
             // 
             this.desc_of_seriesTB.Location = new System.Drawing.Point(476, 307);
             this.desc_of_seriesTB.Name = "desc_of_seriesTB";
+            this.desc_of_seriesTB.ReadOnly = true;
             this.desc_of_seriesTB.Size = new System.Drawing.Size(246, 78);
             this.desc_of_seriesTB.TabIndex = 22;
             this.desc_of_seriesTB.Text = "";
@@ -448,6 +427,7 @@
             this.addNewSeriesButton.TabIndex = 64;
             this.addNewSeriesButton.Text = "+";
             this.addNewSeriesButton.UseVisualStyleBackColor = true;
+            this.addNewSeriesButton.Click += new System.EventHandler(this.addNewSeriesButton_Click);
             // 
             // Rozrah
             // 
@@ -473,10 +453,8 @@
             this.Controls.Add(this.desc_of_seriesTB);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.calc_numbCB);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.number_of_calcL);
             this.Controls.Add(this.Save_values);
             this.Controls.Add(this.formulasDGV);
             this.Controls.Add(this.formulasLB);
@@ -502,10 +480,8 @@
         private System.Windows.Forms.Button Save_values;
         private System.Windows.Forms.ListBox formulas_idLB;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Label number_of_calcL;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox calc_numbCB;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RichTextBox desc_of_seriesTB;
