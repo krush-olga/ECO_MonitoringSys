@@ -2590,8 +2590,17 @@ namespace Experts_Economist
 
                 newId = objId.ToString();
 
-                name_of_seriesCB.Text = addNewSeriesWindow.SeriesName;
-                desc_of_seriesTB.Text = addNewSeriesWindow.SeriesDescription;
+                if (newId == "")
+                {
+                    newId = "1";
+                }
+
+                CalculationSeries newCalculationSeries = new CalculationSeries(int.Parse(newId), addNewSeriesWindow.SeriesName, addNewSeriesWindow.SeriesDescription);
+
+                name_of_seriesCB.Items.Add(newCalculationSeries);
+                name_of_seriesCB.SelectedIndex = name_of_seriesCB.Items.Count - 1;
+
+                desc_of_seriesTB.Text = newCalculationSeries.description;
 
                 string[] fields = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
                 string[] values = { newId, DBUtil.AddQuotes(name_of_seriesCB.Text), DBUtil.AddQuotes(desc_of_seriesTB.Text), currentIssue.id.ToString(), id_of_exp.ToString() };
