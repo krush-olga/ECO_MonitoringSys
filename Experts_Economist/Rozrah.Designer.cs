@@ -68,6 +68,7 @@
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.addNewSeriesButton = new System.Windows.Forms.Button();
+            this.AllowPatametrTextCB = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.formulasDGV)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Iterations)).BeginInit();
@@ -295,7 +296,6 @@
             this.розрахованіToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(142, 48);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // оновитиToolStripMenuItem
             // 
@@ -368,7 +368,7 @@
             this.element,
             this.elem_val,
             this.results});
-            this.normDGV.Location = new System.Drawing.Point(476, 26);
+            this.normDGV.Location = new System.Drawing.Point(476, 25);
             this.normDGV.Name = "normDGV";
             this.normDGV.Size = new System.Drawing.Size(619, 238);
             this.normDGV.TabIndex = 62;
@@ -429,12 +429,23 @@
             this.addNewSeriesButton.UseVisualStyleBackColor = true;
             this.addNewSeriesButton.Click += new System.EventHandler(this.addNewSeriesButton_Click);
             // 
+            // AllowPatametrTextCB
+            // 
+            this.AllowPatametrTextCB.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.AllowPatametrTextCB.Location = new System.Drawing.Point(862, 1);
+            this.AllowPatametrTextCB.Name = "AllowPatametrTextCB";
+            this.AllowPatametrTextCB.Size = new System.Drawing.Size(233, 24);
+            this.AllowPatametrTextCB.TabIndex = 65;
+            this.AllowPatametrTextCB.Text = "Дозволити введення строкових значень";
+            this.AllowPatametrTextCB.UseVisualStyleBackColor = true;
+            // 
             // Rozrah
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1107, 461);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.AllowPatametrTextCB);
             this.Controls.Add(this.addNewSeriesButton);
             this.Controls.Add(this.normDGV);
             this.Controls.Add(this.Iterations);
@@ -514,6 +525,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
         private System.Windows.Forms.DataGridViewTextBoxColumn result;
         private System.Windows.Forms.Button addNewSeriesButton;
+        private System.Windows.Forms.CheckBox AllowPatametrTextCB;
     }
 }
 
