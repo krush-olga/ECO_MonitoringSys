@@ -1701,6 +1701,7 @@ namespace Experts_Economist
             #region formulas_energo
             switch (formulaId)//свитч для подсчета формул, общий вид - несколько параметров беруться из ячеек таблицы и потом передаются в функцию подсчета класс Calculation, потом добавляем в таблицу строку с результатом
             {
+                //підрахунок річного значення із введенням значень за кожен місяць
                 case 175://ОСЕрік - обсяги споживання електроенергії за рік, вводячи цифри за 12 місяців
                     {
                         float[] values_month = new float[12];
@@ -1708,7 +1709,7 @@ namespace Experts_Economist
                         {
                             values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
                         }
-                        this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.sum_months(values_month), "");
                         break;
                     }
                 case 177://ОВЕрік - обсяги виробництва електроенергії за рік, вводячи цифри за 12 місяців
@@ -1718,7 +1719,7 @@ namespace Experts_Economist
                         {
                             values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
                         }
-                        this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.sum_months(values_month), "");
                         break;
                     }
                 case 179://ОВТЕНПрік - обсяги виробництва теплової енергії на продаж за рік, вводячи цифри за 12 місяців
@@ -1728,7 +1729,7 @@ namespace Experts_Economist
                         {
                             values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
                         }
-                        this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.sum_months(values_month), "");
                         break;
                     }
                 case 182://ОСГрік - обсяги споживання газу за рік, вводячи цифри за 12 місяців
@@ -1738,7 +1739,7 @@ namespace Experts_Economist
                         {
                             values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
                         }
-                        this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.sum_months(values_month), "");
                         break;
                     }
                 case 184://ОСВрік - обсяги споживання води за рік, вводячи цифри за 12 місяців
@@ -1748,9 +1749,77 @@ namespace Experts_Economist
                         {
                             values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
                         }
-                        this.formulasDGV.Rows.Add("Result", enegroCalc.f(values_month), "");
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.sum_months(values_month), "");
                         break;
                     }
+
+                //підрахунок середньодобового річного значення із введенням значень за кожен місяць
+                case 215://ОСЕср - обсяги споживання електроенергії річне середньодобове значення
+                    {
+                        int year, work_type;
+                        float[] values_month = new float[12];
+                        for (int i = 0; i < 12; i++)
+                        {
+                            values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                        }
+                        year = Convert.ToInt32(formulasDGV.Rows[12].Cells[1].Value);
+                        work_type = Convert.ToInt32(formulasDGV.Rows[13].Cells[1].Value);
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.costs_mid_year(values_month, year, work_type), "");                       
+                        break;
+                    }
+                case 216://ОВТЕНПср - обсяги виробництва теплової енергії річне середньодобове значення
+                    {
+                        int year, work_type;
+                        float[] values_month = new float[12];
+                        for (int i = 0; i < 12; i++)
+                        {
+                            values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                        }
+                        year = Convert.ToInt32(formulasDGV.Rows[12].Cells[1].Value);
+                        work_type = Convert.ToInt32(formulasDGV.Rows[13].Cells[1].Value);
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.costs_mid_year(values_month, year, work_type), "");
+                        break;
+                    }
+                case 217://ОСГср - обсяги споживання газу річне середньодобове значення
+                    {
+                        int year, work_type;
+                        float[] values_month = new float[12];
+                        for (int i = 0; i < 12; i++)
+                        {
+                            values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                        }
+                        year = Convert.ToInt32(formulasDGV.Rows[12].Cells[1].Value);
+                        work_type = Convert.ToInt32(formulasDGV.Rows[13].Cells[1].Value);
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.costs_mid_year(values_month, year, work_type), "");
+                        break;
+                    }
+                case 218://ОСВср - обсяги споживання води річне середньодобове значення
+                    {
+                        int year, work_type;
+                        float[] values_month = new float[12];
+                        for (int i = 0; i < 12; i++)
+                        {
+                            values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                        }
+                        year = Convert.ToInt32(formulasDGV.Rows[12].Cells[1].Value);
+                        work_type = Convert.ToInt32(formulasDGV.Rows[13].Cells[1].Value);
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.costs_mid_year(values_month, year, work_type), "");
+                        break;
+                    }
+                case 222://ОВЕср - обсяги виробництва електроенергії річне середньодобове значення
+                    {
+                        int year, work_type;
+                        float[] values_month = new float[12];
+                        for (int i = 0; i < 12; i++)
+                        {
+                            values_month[i] = (float)Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
+                        }
+                        year = Convert.ToInt32(formulasDGV.Rows[12].Cells[1].Value);
+                        work_type = Convert.ToInt32(formulasDGV.Rows[13].Cells[1].Value);
+                        this.formulasDGV.Rows.Add("Result", enegroCalc.costs_mid_year(values_month, year, work_type), "");
+                        break;
+                    }
+
             }
             #endregion
         }
