@@ -94,35 +94,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddNewSeriesWindow.cs">
+    <Compile Include="AdditionalWindows\AddNewSeriesWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddNewSeriesWindow.Designer.cs">
+    <Compile Include="AdditionalWindows\AddNewSeriesWindow.Designer.cs">
       <DependentUpon>AddNewSeriesWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConnectDB.cs">
+    <Compile Include="Admins\ConnectDB.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ConnectDB.Designer.cs">
+    <Compile Include="Admins\ConnectDB.Designer.cs">
       <DependentUpon>ConnectDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dovidka.cs">
+    <Compile Include="ExpertsWindows\Dovidka.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dovidka.Designer.cs">
+    <Compile Include="ExpertsWindows\Dovidka.Designer.cs">
       <DependentUpon>Dovidka.cs</DependentUpon>
     </Compile>
     <Compile Include="Experts.cs" />
-    <Compile Include="ExportDB.cs">
+    <Compile Include="Admins\ExportDB.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExportDB.Designer.cs">
+    <Compile Include="Admins\ExportDB.Designer.cs">
       <DependentUpon>ExportDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="MarkersForm.cs">
+    <Compile Include="ExpertsWindows\MarkersForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MarkersForm.Designer.cs">
+    <Compile Include="ExpertsWindows\MarkersForm.Designer.cs">
       <DependentUpon>MarkersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Golovna.cs">
@@ -131,41 +131,41 @@
     <Compile Include="Golovna.Designer.cs">
       <DependentUpon>Golovna.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportDB.cs">
+    <Compile Include="Admins\ImportDB.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImportDB.Designer.cs">
+    <Compile Include="Admins\ImportDB.Designer.cs">
       <DependentUpon>ImportDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportSQL.cs">
+    <Compile Include="Admins\ImportSQL.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImportSQL.Designer.cs">
+    <Compile Include="Admins\ImportSQL.Designer.cs">
       <DependentUpon>ImportSQL.cs</DependentUpon>
     </Compile>
     <Compile Include="Issues.cs" />
-    <Compile Include="NormOfCalc.cs">
+    <Compile Include="ExpertsWindows\NormOfCalc.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NormOfCalc.Designer.cs">
+    <Compile Include="ExpertsWindows\NormOfCalc.Designer.cs">
       <DependentUpon>NormOfCalc.cs</DependentUpon>
     </Compile>
-    <Compile Include="Redakt.cs">
+    <Compile Include="ExpertsWindows\Redakt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Redakt.Designer.cs">
+    <Compile Include="ExpertsWindows\Redakt.Designer.cs">
       <DependentUpon>Redakt.cs</DependentUpon>
     </Compile>
-    <Compile Include="Result.cs">
+    <Compile Include="ExpertsWindows\Result.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Result.Designer.cs">
+    <Compile Include="ExpertsWindows\Result.Designer.cs">
       <DependentUpon>Result.cs</DependentUpon>
     </Compile>
-    <Compile Include="Rozrah.cs">
+    <Compile Include="ExpertsWindows\Rozrah.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Rozrah.Designer.cs">
+    <Compile Include="ExpertsWindows\Rozrah.Designer.cs">
       <DependentUpon>Rozrah.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -176,46 +176,46 @@
     <Compile Include="UserLoginForm.Designer.cs">
       <DependentUpon>UserLoginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="User_editor.cs">
+    <Compile Include="Admins\User_editor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="User_editor.Designer.cs">
+    <Compile Include="Admins\User_editor.Designer.cs">
       <DependentUpon>User_editor.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AddNewSeriesWindow.resx">
+    <EmbeddedResource Include="AdditionalWindows\AddNewSeriesWindow.resx">
       <DependentUpon>AddNewSeriesWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConnectDB.resx">
+    <EmbeddedResource Include="Admins\ConnectDB.resx">
       <DependentUpon>ConnectDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dovidka.resx">
+    <EmbeddedResource Include="ExpertsWindows\Dovidka.resx">
       <DependentUpon>Dovidka.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExportDB.resx">
+    <EmbeddedResource Include="Admins\ExportDB.resx">
       <DependentUpon>ExportDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MarkersForm.resx">
+    <EmbeddedResource Include="ExpertsWindows\MarkersForm.resx">
       <DependentUpon>MarkersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Golovna.resx">
       <DependentUpon>Golovna.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportDB.resx">
+    <EmbeddedResource Include="Admins\ImportDB.resx">
       <DependentUpon>ImportDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportSQL.resx">
+    <EmbeddedResource Include="Admins\ImportSQL.resx">
       <DependentUpon>ImportSQL.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NormOfCalc.resx">
+    <EmbeddedResource Include="ExpertsWindows\NormOfCalc.resx">
       <DependentUpon>NormOfCalc.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Redakt.resx">
+    <EmbeddedResource Include="ExpertsWindows\Redakt.resx">
       <DependentUpon>Redakt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Result.resx">
+    <EmbeddedResource Include="ExpertsWindows\Result.resx">
       <DependentUpon>Result.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Rozrah.resx">
+    <EmbeddedResource Include="ExpertsWindows\Rozrah.resx">
       <DependentUpon>Rozrah.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -231,7 +231,7 @@
     <EmbeddedResource Include="UserLoginForm.resx">
       <DependentUpon>UserLoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="User_editor.resx">
+    <EmbeddedResource Include="Admins\User_editor.resx">
       <DependentUpon>User_editor.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
@@ -289,6 +289,7 @@
     </None>
     <None Include="Resources\libs\mysqldump.exe" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

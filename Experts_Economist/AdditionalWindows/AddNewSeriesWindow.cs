@@ -12,18 +12,9 @@ namespace Experts_Economist
 {
     public partial class AddNewSeriesWindow : Form
     {
-        public string SeriesName { get; private set; }
-        public string SeriesDescription { get; private set; }
-
         public AddNewSeriesWindow()
         {
             InitializeComponent();
-        }
-
-        private void OKButton_Click(object sender, EventArgs e)
-        {
-            SeriesName = SeriesTextBox.Text;
-            SeriesDescription = DescriptionTextBox.Text;
         }
     }
 }

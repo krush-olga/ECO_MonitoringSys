@@ -2377,7 +2377,11 @@ namespace Experts_Economist
                 return;
             }
 
-            string currentSereies = name_of_seriesCB.Text;
+            if (help == false && normWasPrevious == false)// проверяем есть ли строка с результатом, если есть - удаляем и сбрасываем переменную
+            {
+                formulasDGV.Rows.RemoveAt(formulasDGV.Rows.Count - 1);
+                help = true;
+            }
 
             desc_of_seriesTB.Text = ((CalculationSeries)name_of_seriesCB.SelectedItem).description;
         }
@@ -2472,7 +2476,7 @@ namespace Experts_Economist
 
                 foreach (CalculationSeries item in name_of_seriesCB.Items)
                 {
-                    if (item.name == addNewSeriesWindow.SeriesName)
+                    if (item.name == addNewSeriesWindow.SeriesTextBox.Text)
                     {
                         MessageBox.Show("Така серія вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -2496,7 +2500,7 @@ namespace Experts_Economist
                     newId = "1";
                 }
 
-                CalculationSeries newCalculationSeries = new CalculationSeries(int.Parse(newId), addNewSeriesWindow.SeriesName, addNewSeriesWindow.SeriesDescription);
+                CalculationSeries newCalculationSeries = new CalculationSeries(int.Parse(newId), addNewSeriesWindow.SeriesTextBox.Text, addNewSeriesWindow.DescriptionTextBox.Text);
 
                 name_of_seriesCB.Items.Add(newCalculationSeries);
                 name_of_seriesCB.SelectedIndex = name_of_seriesCB.Items.Count - 1;

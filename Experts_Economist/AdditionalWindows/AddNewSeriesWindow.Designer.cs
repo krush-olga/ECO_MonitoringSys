@@ -97,7 +97,6 @@
             this.OKButton.TabIndex = 5;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
             // AddNewSeriesWindow
             // 
@@ -120,10 +119,10 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox SeriesTextBox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox DescriptionTextBox;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
+        public System.Windows.Forms.TextBox SeriesTextBox;
+        public System.Windows.Forms.TextBox DescriptionTextBox;
     }
 }
