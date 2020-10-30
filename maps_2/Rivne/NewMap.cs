@@ -18,6 +18,7 @@ namespace Maps
         public GMapOverlay markersOverlay { private set; get; }
         public List<PointLatLng> _points { private set; get; }
         public List<PointLatLng> _pointsTube { private set; get; }
+        public List<string> MarkersName { get; private set; }
 
         private GMapControl gMapControl;
         private double R = 6378.137;
@@ -38,6 +39,8 @@ namespace Maps
         public NewMap(GMapControl gm)
         {
             gMapControl = gm;
+
+            MarkersName = new List<string>();
         }
 
         public void MapInitialize()
@@ -286,8 +289,11 @@ namespace Maps
         {
             List<List<Object>> list;
             gMapControl.Overlays.Clear();
+            MarkersName.Clear();
             gMapControl.Show();
             int i = 0;
+
+
             list = db.GetRows("poi", "Coord_Lat, Coord_Lng, Description, Type, id_of_user, Name_Object", "");
             try
             {
@@ -305,6 +311,9 @@ namespace Maps
                     {
                         img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\noimage.png");
                     }
+
+                    MarkersName.Add(list[i][5].ToString());
+
                     AddMarkerOnMap(list[i][2].ToString(), Convert.ToDouble(list[i][0]), Convert.ToDouble(list[i][1]), list[i][4].ToString(), (Bitmap)img, list[i][5].ToString());
                 }
             }
@@ -336,6 +345,11 @@ namespace Maps
                 else
                 {
                     img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\noimage.png");
+                }
+
+                if (!MarkersName.Contains(list[i][4].ToString()))
+                {
+                    MarkersName.Add(list[i][4].ToString());
                 }
 
                 AddMarkerOnMap(list[i][2].ToString(), Convert.ToDouble(list[i][0]), Convert.ToDouble(list[i][1]), userId.ToString(), (Bitmap)img, list[i][4].ToString());

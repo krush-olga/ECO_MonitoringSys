@@ -5,20 +5,28 @@ using System.Windows.Forms;
 using System.Drawing;
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using System.Text;
+using System.Linq;
 
 namespace Maps
 {
     //класс отображения карты и вызова методов для роботы  с ней 
     public partial class Map : Form
     {
-        private NewMap newMap;
-        public int id_of_exp, id_of_user;
-        private DBManager db = new DBManager();
+        public int id_of_exp;
+        public int id_of_user;
+
         private double[] LatLng;
-        private EmissionsForm emissionsForm;
+
         private List<List<Object>> list_towns;
         private List<List<Object>> list_towns_cord;
+        private List<string> markers;
+
+        private EmissionsForm emissionsForm;
         private NormAllForm normAllForm;
+
+        private DBManager db = new DBManager();
+        private NewMap newMap;
 
         //иниц. карты
         public Map()
@@ -27,7 +35,8 @@ namespace Maps
 
             list_towns = db.GetRows("cities", "Name", "");
             cbTownSearch.Items.Add("");
-            for(int i = 0; i<list_towns.Count; i++)
+
+            for (int i = 0; i < list_towns.Count; i++)
             {
                 if (list_towns[i][0].ToString() == "Камянець-Подільський")
                     list_towns[i][0] = "Кам'янець-Подільський";
@@ -37,8 +46,18 @@ namespace Maps
                     list_towns[i][0] = "Слов'янськ";
                 cbTownSearch.Items.Add(list_towns[i][0].ToString());
             }
+
             newMap = new NewMap(gMapControl);
             newMap.MapInitialize();
+
+            markers = new List<string>();
+
+            YearNumericUpDown.Maximum = DateTime.Now.Year;
+            DayNumericUpDown.Maximum = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+
+            DayNumericUpDown.Value = DateTime.Now.Day;
+            MonthNumericUpDown.Value = DateTime.Now.Month;
+            YearNumericUpDown.Value = DateTime.Now.Year;
         }
 
         //событие двойного нажатия на карту
@@ -152,7 +171,7 @@ namespace Maps
         //отрисовует все маркеры загрязнения 
         private void btnShowAllMarkers_Click(object sender, EventArgs e)
         {
-            try 
+            try
             {
                 newMap.AddObjectFromDB();
                 gMapControl.Zoom += 1;
@@ -277,7 +296,7 @@ namespace Maps
                 List<List<Object>> listPoligon;
                 List<List<Object>> listPointPoligon;
                 List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
-                listPoligon = db.GetRows("poligon", 
+                listPoligon = db.GetRows("poligon",
                                          "Id_of_poligon, brush_color_r, bruch_color_g, brush_color_b, " +
                                          "name, id_of_user, description",
                                          "type = 'poligon'");
@@ -300,7 +319,7 @@ namespace Maps
                             points.Add(new GMap.NET.PointLatLng(Convert.ToDouble(listPointPoligon[0][1]), Convert.ToDouble(listPointPoligon[0][0])));
                         }
                     }
-                    
+
                     listPointPoligon = db.GetRows("point_poligon", "latitude, longitude", "Id_of_poligon = " + listPoligon[i][0] + " AND order123 = 1");
 
                     if (listPointPoligon.Count == 0)
@@ -473,7 +492,7 @@ namespace Maps
                 List<List<Object>> listPoligon;
                 List<List<Object>> listPointPoligon;
                 List<GMap.NET.PointLatLng> points = new List<GMap.NET.PointLatLng>();
-                listPoligon = db.GetRows("poligon", 
+                listPoligon = db.GetRows("poligon",
                                          "Id_of_poligon, poligon.name, " +
                                          "id_of_user, description", "" +
                                          "type = 'tube'");
@@ -592,7 +611,7 @@ namespace Maps
             btnCancelTube.Enabled = true;
             btnStartTube.Enabled = true;
 
-            
+
         }
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -694,14 +713,21 @@ namespace Maps
                 list_towns[cbTownSearch.SelectedIndex - 1][0] = "Камянське";
             if (list_towns[cbTownSearch.SelectedIndex - 1][0].ToString() == "Слов'янськ")
                 list_towns[cbTownSearch.SelectedIndex - 1][0] = "Словянськ";
-            list_towns_cord = db.GetRows("cities", "Latitude, Longitude", "Name = '" + list_towns[cbTownSearch.SelectedIndex -1][0].ToString() + "'");
+            list_towns_cord = db.GetRows("cities", "Latitude, Longitude", "Name = '" + list_towns[cbTownSearch.SelectedIndex - 1][0].ToString() + "'");
             gMapControl.Position = new GMap.NET.PointLatLng(Convert.ToDouble(list_towns_cord[0][1]), Convert.ToDouble(list_towns_cord[0][0]));
         }
 
         //при клике на любой маркер на картке(обычный маркер, полигон, трубы)
         private void gMapControl_OnMarkerClick(GMap.NET.WindowsForms.GMapMarker item, MouseEventArgs e)
         {
-            if (item == null || btnStartTube.Enabled == false) 
+            if (e.Button == MouseButtons.Right)
+            {
+                contextMenuStrip2.Show(this, e.Location);
+                newMap.currentMarker = item;
+                return;
+            }
+
+            if (item == null || btnStartTube.Enabled == false)
             {
                 return;
             }
@@ -711,8 +737,8 @@ namespace Maps
                 List<List<Object>> id;
                 newMap.currentMarker = item;
 
-                if (btnStartPointPolygon.Enabled == true && btnDeleteMarker.Enabled == true && 
-                    btnAddMarker.Enabled == true && btnDeletePolygon.Enabled == true && 
+                if (btnStartPointPolygon.Enabled == true && btnDeleteMarker.Enabled == true &&
+                    btnAddMarker.Enabled == true && btnDeletePolygon.Enabled == true &&
                     btnDeleteTube.Enabled == true && btnStartTube.Enabled == true &&
                     item.ToolTipText != null)
                 {
@@ -797,9 +823,9 @@ namespace Maps
                     {
                         string idPointPoligon = db.GetValue("point_poligon", "Id_of_poligon", "longitude = " + item.Position.Lat.ToString().Replace(',', '.')).ToString();
                         id = db.GetRows("poligon", "id_of_user", "id_of_poligon = " + idPointPoligon);
-                        
+
                         DeleteForm deleteForm = new DeleteForm("", "", "");
-                        
+
                         if (id[0][0].ToString() == id_of_user.ToString())
                         {
                             deleteForm.ShowDialog();
@@ -840,8 +866,9 @@ namespace Maps
                     }
                 }*/
 
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -880,7 +907,7 @@ namespace Maps
                 Image img = Image.FromStream(image_stream);
                 pictureBox1.Image = img;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
@@ -1132,7 +1159,7 @@ namespace Maps
                 if (tabControl1.SelectedIndex == 0)// маркер
                 {
                     list = db.GetRows("poi", "Coord_Lat, Coord_Lng, Description, Type, Id, Name_Object, id_of_user", "Name_Object = '" + tbSearch.Text + "'");
-                    if(list.Count == 0)
+                    if (list.Count == 0)
                         MessageBox.Show("По запиту \"" + tbSearch.Text + "\" нічого не знайдено");
                     for (int i = 0; i < list.Count; i++)
                     {
@@ -1162,7 +1189,7 @@ namespace Maps
                     }
                 }
 
-                if(tabControl1.SelectedIndex == 2)// водопровод
+                if (tabControl1.SelectedIndex == 2)// водопровод
                 {
                     listPoligon = db.GetRows("poligon", "Id_of_poligon, name, id_of_user, description", "type = 'tube' AND name = '" + tbSearch.Text + "'");
                     if (listPoligon.Count == 0)
@@ -1206,7 +1233,7 @@ namespace Maps
                             else if (tabControl1.SelectedIndex == 2)//водопрод
                                 listIdPoligons = db.GetRows("tubes", "id_of_tube", "id_of_issue = '" + listSearch[0][0] + "'");
                         }
-                        if(tbSearch.Text == "")
+                        if (tbSearch.Text == "")
                         {
                             if (tabControl1.SelectedIndex == 0)//маркер
                                 list = db.GetRows("poi", "Coord_Lat, Coord_Lng, Description, Type, Id, Name_Object, id_of_user", "id_of_issue = '0'");
@@ -1228,7 +1255,7 @@ namespace Maps
                             else if (tabControl1.SelectedIndex == 2)//водопрод
                                 listIdPoligons = db.GetRows("tubes", "id_of_tube", "calculations_description_number = '" + listSearch[0][0] + "'");
                         }
-                        if(tbSearch.Text == "")
+                        if (tbSearch.Text == "")
                         {
                             if (tabControl1.SelectedIndex == 0)//маркер
                                 list = db.GetRows("poi", "Coord_Lat, Coord_Lng, Description, Type, Id, Name_Object, id_of_user", "calculations_desription_number '0'");
@@ -1250,7 +1277,7 @@ namespace Maps
                             else if (tabControl1.SelectedIndex == 2)//водопрод
                                 listIdPoligons = db.GetRows("tubes", "id_of_tube", "id_of_formula = '" + listSearch[0][0] + "'");
                         }
-                        if(tbSearch.Text == "")
+                        if (tbSearch.Text == "")
                         {
                             if (tabControl1.SelectedIndex == 0)//маркер
                                 list = db.GetRows("poi", "Coord_Lat, Coord_Lng, Description, Type, Id, Name_Object, id_of_user", "id_of_formula ='0'");
@@ -1269,7 +1296,7 @@ namespace Maps
                             newMap.AddMarkerOnMap(list[i][2].ToString(), Convert.ToDouble(list[i][0]), Convert.ToDouble(list[i][1]), list[i][6].ToString(), (Bitmap)img, list[i][5].ToString());
                         }
                     }
-                    if(tabControl1.SelectedIndex == 1)
+                    if (tabControl1.SelectedIndex == 1)
                     {
                         for (int i = 0; i < listIdPoligons.Count; i++)
                         {
@@ -1438,6 +1465,138 @@ namespace Maps
         {
             normAllForm = new NormAllForm(db);
             normAllForm.ShowDialog();
+        }
+
+        private void DeleteItemButton_Click(object sender, EventArgs e)
+        {
+            if (ComprasionItemsComboBox.SelectedIndex != -1)
+            {
+                markers.RemoveAt(ComprasionItemsComboBox.SelectedIndex);
+
+                ComprasionItemsComboBox.DataSource = null;
+                ComprasionItemsComboBox.DataSource = markers;
+            }
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            if (newMap.currentMarker != null)
+            {
+                foreach (string marker in newMap.MarkersName)
+                {
+                    if (newMap.currentMarker.ToolTipText.Contains(marker) && !markers.Contains(marker))
+                    {
+                        markers.Add(marker);
+                    }
+                }
+
+                ComprasionItemsComboBox.DataSource = null;
+                ComprasionItemsComboBox.DataSource = markers;
+            }
+        }
+
+        private void CompareButton_Click(object sender, EventArgs e)
+        {
+            if (markers != null && markers.Count == 0)
+            {
+                return;
+            }
+
+            try
+            {
+                StringBuilder nameObjectIdCondition = new StringBuilder();
+
+                for (int i = 0; i < markers.Count; i++)
+                {
+                    nameObjectIdCondition.Append("( Name_Object = ");
+                    nameObjectIdCondition.Append(DBUtil.AddQuotes(markers[i]));
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("emissions_on_map.idPoi = poi.Id");
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("emissions_on_map.Year = ");
+                    nameObjectIdCondition.Append(YearNumericUpDown.Value);
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("emissions_on_map.Month = ");
+                    nameObjectIdCondition.Append(MonthNumericUpDown.Value);
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("emissions_on_map.Day = ");
+                    nameObjectIdCondition.Append(DayNumericUpDown.Value);
+                    nameObjectIdCondition.Append(" )");
+
+
+                    if (i != markers.Count - 1)
+                    {
+                        nameObjectIdCondition.Append(" OR ");
+                    }
+                }
+
+                var result = db.GetRows("emissions_on_map, poi",
+                                        "emissions_on_map.ValueAvg, emissions_on_map.ValueMax, " +
+                                        "emissions_on_map.Measure, poi.Name_Object", nameObjectIdCondition.ToString());
+
+                if (result == null || result.Count == 0)
+                {
+                    MessageBox.Show("Результати для порівння відсутні.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<List<object>> values = new List<List<object>>();
+                List<string> names = new List<string>();
+
+                //Записываем данные в  массив горизонтально (таблица растёт в право, а не в низ)
+                //Берём result[0].Count с учётом того, что все последующие массивы одинаковые
+                //Последняя итерация должна быть названиями маркеров (можно изменить, если есть желание)
+                //Т.к. в переменной result последней строкой есть poi.Name_Object
+                for (int i = 0; i < result[0].Count; i++)
+                {
+                    if (i != result[0].Count - 1)
+                    {
+                        List<object> results = new List<object>();
+
+                        for (int j = 0; j < result.Count; j++)
+                        {
+                            results.Add(result[j][i]);
+                        }
+
+                        values.Add(results);
+                    }
+                    else
+                    {
+                        for (int j = 0; j < result.Count; j++)
+                        {
+                            names.Add(result[j][i].ToString()); 
+                        }
+                    }
+                }
+
+                var distinctNames = names.Distinct();
+
+                if (distinctNames.Count() < markers.Count) 
+                {
+                    names.AddRange(markers.Except(distinctNames));
+
+                    foreach (var value in values)
+                    {
+                        for (int i = value.Count; i < names.Count; i++)
+                        {
+                            value.Add("-");
+                        }
+                    }
+                }
+
+                values[0].Insert(0, "Середнє значення");
+                values[1].Insert(0, "Максимальне значення");
+                values[2].Insert(0, "Одиниці виміру значення");
+
+                names.Insert(0, "");
+
+                CompareForm compareForm = new CompareForm(values, names);
+                compareForm.ShowDialog();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Помилка при порівнянні.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

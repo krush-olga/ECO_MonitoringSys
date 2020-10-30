@@ -31,9 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.x = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,14 +42,15 @@
             this.ZoomMinus = new System.Windows.Forms.Button();
             this.btnStartPointPolygon = new System.Windows.Forms.Button();
             this.btnCancelPolygon = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CompareButton = new System.Windows.Forms.Button();
+            this.DeleteItemButton = new System.Windows.Forms.Button();
+            this.ComprasionItemsComboBox = new System.Windows.Forms.ComboBox();
             this.btnNormAll = new System.Windows.Forms.Button();
             this.cbTownSearch = new System.Windows.Forms.ComboBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.cbSearch = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.tbSearch = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -94,6 +93,15 @@
             this.btnStartTube = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.CollapseButton = new System.Windows.Forms.Button();
+            this.YearNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.CityGroupBox = new System.Windows.Forms.GroupBox();
+            this.CoordinatesFindGroupBox = new System.Windows.Forms.GroupBox();
+            this.FindByGroupBox = new System.Windows.Forms.GroupBox();
+            this.MarkersCompareGroupBox = new System.Windows.Forms.GroupBox();
+            this.MonthNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.DayNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -103,6 +111,13 @@
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.YearNumericUpDown)).BeginInit();
+            this.CityGroupBox.SuspendLayout();
+            this.CoordinatesFindGroupBox.SuspendLayout();
+            this.FindByGroupBox.SuspendLayout();
+            this.MarkersCompareGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MonthNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DayNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // gMapControl
@@ -112,7 +127,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gMapControl.Bearing = 0F;
             this.gMapControl.CanDragMap = true;
-            this.gMapControl.ContextMenuStrip = this.contextMenuStrip2;
             this.gMapControl.EmptyTileColor = System.Drawing.Color.Navy;
             this.gMapControl.GrayScaleMode = false;
             this.gMapControl.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
@@ -141,27 +155,16 @@
             // contextMenuStrip2
             // 
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5});
+            this.toolStripMenuItem4});
             this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(141, 70);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(140, 22);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(254, 26);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(140, 22);
-            this.toolStripMenuItem4.Text = "Refresh map";
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(140, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(253, 22);
+            this.toolStripMenuItem4.Text = "Додати до списку з порівнянням";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // x
             // 
@@ -272,18 +275,9 @@
             this.btnCancelPolygon.UseVisualStyleBackColor = false;
             this.btnCancelPolygon.Click += new System.EventHandler(this.btnCancelPolygon_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 13);
-            this.label2.TabIndex = 54;
-            this.label2.Text = "Виберіть назву міста ";
-            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(11, 46);
+            this.button1.Location = new System.Drawing.Point(207, 19);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 56;
@@ -295,31 +289,51 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.btnNormAll);
-            this.panel1.Controls.Add(this.cbTownSearch);
-            this.panel1.Controls.Add(this.btnSearch);
-            this.panel1.Controls.Add(this.cbSearch);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.tbSearch);
-            this.panel1.Controls.Add(this.textBox4);
-            this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.button6);
+            this.panel1.Controls.Add(this.MarkersCompareGroupBox);
+            this.panel1.Controls.Add(this.FindByGroupBox);
+            this.panel1.Controls.Add(this.CoordinatesFindGroupBox);
+            this.panel1.Controls.Add(this.CityGroupBox);
             this.panel1.Controls.Add(this.tabControl1);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(1034, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(346, 536);
+            this.panel1.Size = new System.Drawing.Size(346, 641);
             this.panel1.TabIndex = 57;
             this.panel1.Visible = false;
             // 
+            // CompareButton
+            // 
+            this.CompareButton.Location = new System.Drawing.Point(4, 78);
+            this.CompareButton.Name = "CompareButton";
+            this.CompareButton.Size = new System.Drawing.Size(282, 23);
+            this.CompareButton.TabIndex = 81;
+            this.CompareButton.Text = "Порівняти";
+            this.CompareButton.UseVisualStyleBackColor = true;
+            this.CompareButton.Click += new System.EventHandler(this.CompareButton_Click);
+            // 
+            // DeleteItemButton
+            // 
+            this.DeleteItemButton.Location = new System.Drawing.Point(211, 17);
+            this.DeleteItemButton.Name = "DeleteItemButton";
+            this.DeleteItemButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteItemButton.TabIndex = 79;
+            this.DeleteItemButton.Text = "Видалити";
+            this.DeleteItemButton.UseVisualStyleBackColor = true;
+            this.DeleteItemButton.Click += new System.EventHandler(this.DeleteItemButton_Click);
+            // 
+            // ComprasionItemsComboBox
+            // 
+            this.ComprasionItemsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComprasionItemsComboBox.FormattingEnabled = true;
+            this.ComprasionItemsComboBox.Location = new System.Drawing.Point(65, 19);
+            this.ComprasionItemsComboBox.Name = "ComprasionItemsComboBox";
+            this.ComprasionItemsComboBox.Size = new System.Drawing.Size(133, 21);
+            this.ComprasionItemsComboBox.TabIndex = 78;
+            // 
             // btnNormAll
             // 
-            this.btnNormAll.Location = new System.Drawing.Point(123, 224);
+            this.btnNormAll.Location = new System.Drawing.Point(118, 78);
             this.btnNormAll.Name = "btnNormAll";
-            this.btnNormAll.Size = new System.Drawing.Size(168, 23);
+            this.btnNormAll.Size = new System.Drawing.Size(164, 23);
             this.btnNormAll.TabIndex = 77;
             this.btnNormAll.Text = "Всі результати нормування";
             this.btnNormAll.UseVisualStyleBackColor = true;
@@ -329,9 +343,9 @@
             // 
             this.cbTownSearch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbTownSearch.FormattingEnabled = true;
-            this.cbTownSearch.Location = new System.Drawing.Point(12, 19);
+            this.cbTownSearch.Location = new System.Drawing.Point(3, 19);
             this.cbTownSearch.Name = "cbTownSearch";
-            this.cbTownSearch.Size = new System.Drawing.Size(288, 21);
+            this.cbTownSearch.Size = new System.Drawing.Size(198, 21);
             this.cbTownSearch.TabIndex = 76;
             // 
             // btnSearch
@@ -341,9 +355,9 @@
             this.btnSearch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
             this.btnSearch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.btnSearch.Location = new System.Drawing.Point(12, 224);
+            this.btnSearch.Location = new System.Drawing.Point(6, 76);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnSearch.Size = new System.Drawing.Size(79, 23);
             this.btnSearch.TabIndex = 75;
             this.btnSearch.Text = "Пошук";
             this.btnSearch.UseVisualStyleBackColor = true;
@@ -358,31 +372,22 @@
             "Задачі",
             "Розрахунку",
             "Формулі"});
-            this.cbSearch.Location = new System.Drawing.Point(15, 165);
+            this.cbSearch.Location = new System.Drawing.Point(6, 19);
             this.cbSearch.Name = "cbSearch";
-            this.cbSearch.Size = new System.Drawing.Size(278, 21);
+            this.cbSearch.Size = new System.Drawing.Size(273, 21);
             this.cbSearch.TabIndex = 74;
             this.cbSearch.SelectedIndexChanged += new System.EventHandler(this.cbSearch_SelectedIndexChanged);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 145);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 13);
-            this.label3.TabIndex = 73;
-            this.label3.Text = "Пошук по:";
-            // 
             // tbSearch
             // 
-            this.tbSearch.Location = new System.Drawing.Point(15, 196);
+            this.tbSearch.Location = new System.Drawing.Point(6, 50);
             this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(278, 20);
+            this.tbSearch.Size = new System.Drawing.Size(276, 20);
             this.tbSearch.TabIndex = 72;
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(100, 89);
+            this.textBox4.Location = new System.Drawing.Point(100, 34);
             this.textBox4.MaxLength = 9;
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(72, 20);
@@ -391,7 +396,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(11, 89);
+            this.textBox2.Location = new System.Drawing.Point(6, 35);
             this.textBox2.MaxLength = 9;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(72, 20);
@@ -401,7 +406,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(97, 73);
+            this.label7.Location = new System.Drawing.Point(100, 18);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(47, 13);
             this.label7.TabIndex = 62;
@@ -410,7 +415,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(8, 73);
+            this.label6.Location = new System.Drawing.Point(5, 19);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(44, 13);
             this.label6.TabIndex = 61;
@@ -418,7 +423,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(11, 115);
+            this.button6.Location = new System.Drawing.Point(198, 32);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 58;
@@ -433,7 +438,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tabControl1.Location = new System.Drawing.Point(6, 262);
+            this.tabControl1.Location = new System.Drawing.Point(11, 362);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(307, 267);
@@ -658,7 +663,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 27);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(299, 236);
+            this.tabPage2.Size = new System.Drawing.Size(299, 239);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Полiгон";
             // 
@@ -804,7 +809,7 @@
             this.tabPage3.Controls.Add(this.btnStartTube);
             this.tabPage3.Location = new System.Drawing.Point(4, 27);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(299, 236);
+            this.tabPage3.Size = new System.Drawing.Size(299, 239);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Водопровід";
             // 
@@ -950,13 +955,136 @@
             this.CollapseButton.UseVisualStyleBackColor = true;
             this.CollapseButton.Click += new System.EventHandler(this.CollapseButton_Click);
             // 
+            // YearNumericUpDown
+            // 
+            this.YearNumericUpDown.Location = new System.Drawing.Point(82, 46);
+            this.YearNumericUpDown.Name = "YearNumericUpDown";
+            this.YearNumericUpDown.Size = new System.Drawing.Size(70, 20);
+            this.YearNumericUpDown.TabIndex = 82;
+            // 
+            // CityGroupBox
+            // 
+            this.CityGroupBox.Controls.Add(this.cbTownSearch);
+            this.CityGroupBox.Controls.Add(this.button1);
+            this.CityGroupBox.Location = new System.Drawing.Point(11, 12);
+            this.CityGroupBox.Name = "CityGroupBox";
+            this.CityGroupBox.Size = new System.Drawing.Size(298, 49);
+            this.CityGroupBox.TabIndex = 83;
+            this.CityGroupBox.TabStop = false;
+            this.CityGroupBox.Text = "Пошук по місту";
+            // 
+            // CoordinatesFindGroupBox
+            // 
+            this.CoordinatesFindGroupBox.Controls.Add(this.textBox4);
+            this.CoordinatesFindGroupBox.Controls.Add(this.button6);
+            this.CoordinatesFindGroupBox.Controls.Add(this.label6);
+            this.CoordinatesFindGroupBox.Controls.Add(this.label7);
+            this.CoordinatesFindGroupBox.Controls.Add(this.textBox2);
+            this.CoordinatesFindGroupBox.Location = new System.Drawing.Point(14, 67);
+            this.CoordinatesFindGroupBox.Name = "CoordinatesFindGroupBox";
+            this.CoordinatesFindGroupBox.Size = new System.Drawing.Size(295, 60);
+            this.CoordinatesFindGroupBox.TabIndex = 84;
+            this.CoordinatesFindGroupBox.TabStop = false;
+            this.CoordinatesFindGroupBox.Text = "Пошук по координатам";
+            // 
+            // FindByGroupBox
+            // 
+            this.FindByGroupBox.Controls.Add(this.tbSearch);
+            this.FindByGroupBox.Controls.Add(this.cbSearch);
+            this.FindByGroupBox.Controls.Add(this.btnSearch);
+            this.FindByGroupBox.Controls.Add(this.btnNormAll);
+            this.FindByGroupBox.Location = new System.Drawing.Point(14, 133);
+            this.FindByGroupBox.Name = "FindByGroupBox";
+            this.FindByGroupBox.Size = new System.Drawing.Size(295, 110);
+            this.FindByGroupBox.TabIndex = 85;
+            this.FindByGroupBox.TabStop = false;
+            this.FindByGroupBox.Text = "Пошук по";
+            // 
+            // MarkersCompareGroupBox
+            // 
+            this.MarkersCompareGroupBox.Controls.Add(this.label2);
+            this.MarkersCompareGroupBox.Controls.Add(this.label1);
+            this.MarkersCompareGroupBox.Controls.Add(this.DayNumericUpDown);
+            this.MarkersCompareGroupBox.Controls.Add(this.MonthNumericUpDown);
+            this.MarkersCompareGroupBox.Controls.Add(this.ComprasionItemsComboBox);
+            this.MarkersCompareGroupBox.Controls.Add(this.DeleteItemButton);
+            this.MarkersCompareGroupBox.Controls.Add(this.CompareButton);
+            this.MarkersCompareGroupBox.Controls.Add(this.YearNumericUpDown);
+            this.MarkersCompareGroupBox.Location = new System.Drawing.Point(14, 249);
+            this.MarkersCompareGroupBox.Name = "MarkersCompareGroupBox";
+            this.MarkersCompareGroupBox.Size = new System.Drawing.Size(295, 107);
+            this.MarkersCompareGroupBox.TabIndex = 86;
+            this.MarkersCompareGroupBox.TabStop = false;
+            this.MarkersCompareGroupBox.Text = "Порівняння маркерів";
+            // 
+            // MonthNumericUpDown
+            // 
+            this.MonthNumericUpDown.Location = new System.Drawing.Point(163, 46);
+            this.MonthNumericUpDown.Maximum = new decimal(new int[] {
+            12,
+            0,
+            0,
+            0});
+            this.MonthNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MonthNumericUpDown.Name = "MonthNumericUpDown";
+            this.MonthNumericUpDown.Size = new System.Drawing.Size(50, 20);
+            this.MonthNumericUpDown.TabIndex = 83;
+            this.MonthNumericUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // DayNumericUpDown
+            // 
+            this.DayNumericUpDown.Location = new System.Drawing.Point(224, 46);
+            this.DayNumericUpDown.Maximum = new decimal(new int[] {
+            31,
+            0,
+            0,
+            0});
+            this.DayNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.DayNumericUpDown.Name = "DayNumericUpDown";
+            this.DayNumericUpDown.Size = new System.Drawing.Size(50, 20);
+            this.DayNumericUpDown.TabIndex = 84;
+            this.DayNumericUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.TabIndex = 85;
+            this.label1.Text = "Маркери";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 48);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(65, 13);
+            this.label2.TabIndex = 86;
+            this.label2.Text = "За яку дату";
+            // 
             // Map
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1350, 730);
-            this.ContextMenuStrip = this.contextMenuStrip2;
             this.Controls.Add(this.CollapseButton);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.ZoomMinus);
@@ -965,13 +1093,12 @@
             this.Controls.Add(this.gMapControl);
             this.Name = "Map";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = " ";
+            this.Text = "Коордити";
             this.Load += new System.EventHandler(this.Map_Load);
             this.SizeChanged += new System.EventHandler(this.Map_SizeChanged);
             this.contextMenuStrip2.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -980,6 +1107,16 @@
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.YearNumericUpDown)).EndInit();
+            this.CityGroupBox.ResumeLayout(false);
+            this.CoordinatesFindGroupBox.ResumeLayout(false);
+            this.CoordinatesFindGroupBox.PerformLayout();
+            this.FindByGroupBox.ResumeLayout(false);
+            this.FindByGroupBox.PerformLayout();
+            this.MarkersCompareGroupBox.ResumeLayout(false);
+            this.MarkersCompareGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MonthNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DayNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -994,15 +1131,12 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.Button btnSavePolygon;
         private System.Windows.Forms.Button ZoomAdd;
         private System.Windows.Forms.Button ZoomMinus;
         private System.Windows.Forms.Button btnStartPointPolygon;
         private System.Windows.Forms.Button btnCancelPolygon;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TabControl tabControl1;
@@ -1045,13 +1179,24 @@
         private System.Windows.Forms.Button CollapseButton;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.ComboBox cbSearch;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.ComboBox cbTownSearch;
         private System.Windows.Forms.Button btnNormAll;
         private System.Windows.Forms.Button expertButtonMaker;
         private System.Windows.Forms.Button expertButtonPoligon;
         private System.Windows.Forms.Button expertButtonTube;
+        private System.Windows.Forms.Button DeleteItemButton;
+        private System.Windows.Forms.ComboBox ComprasionItemsComboBox;
+        private System.Windows.Forms.Button CompareButton;
+        private System.Windows.Forms.GroupBox CoordinatesFindGroupBox;
+        private System.Windows.Forms.GroupBox CityGroupBox;
+        private System.Windows.Forms.NumericUpDown YearNumericUpDown;
+        private System.Windows.Forms.GroupBox MarkersCompareGroupBox;
+        private System.Windows.Forms.NumericUpDown DayNumericUpDown;
+        private System.Windows.Forms.NumericUpDown MonthNumericUpDown;
+        private System.Windows.Forms.GroupBox FindByGroupBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -44,12 +44,20 @@ namespace Maps
             dataGridView1.Rows.Clear();
             idPoi = db.GetValue("poi", "id", "Coord_Lat = " + _item.Position.Lat.ToString().Replace(',', '.') + " AND " + "Coord_Lng = " + _item.Position.Lng.ToString().Replace(',', '.'));
             idPoligon = db.GetValue("point_poligon", "Id_of_poligon", "longitude = " + _item.Position.Lat.ToString().Replace(',', '.'));
+            
             if (idPoi != null)
+            {
                 listElements = db.GetRows("emissions_on_map", "idElement, idEnvironment, ValueAvg, ValueMax, id, Year, Month, Day, Measure", "idPoi = " + idPoi);
-            else
+            }
+            else if (idPoligon != null)
             {
                 listElements = db.GetRows("emissions_on_map", "idElement, idEnvironment, ValueAvg, ValueMax, id, Year, Month, Day, Measure", "idPoligon = " + idPoligon);
             }
+            else
+            {
+                return;
+            }
+
             for (int i = 0; i < listElements.Count; i++)
             {
                 string dateParse = ""; 
