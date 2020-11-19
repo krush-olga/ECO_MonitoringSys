@@ -52,12 +52,19 @@ namespace Maps
 
             markers = new List<string>();
 
-            YearNumericUpDown.Maximum = DateTime.Now.Year;
-            DayNumericUpDown.Maximum = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+            var environments = db.GetRows("environment", "id, name", "");
 
-            DayNumericUpDown.Value = DateTime.Now.Day;
-            MonthNumericUpDown.Value = DateTime.Now.Month;
-            YearNumericUpDown.Value = DateTime.Now.Year;
+            if (environments.Count != 0)
+            {
+                MapEnvironmentComboBox.DataSource = environments.Select(e => Data.Entity.EnvironmentMapper.Map(e));
+
+                MapEnvironmentComboBox.DisplayMember = "Name";
+                MapEnvironmentComboBox.ValueMember = "Id";
+            }
+            else
+            {
+                MapEnvironmentComboBox.Text = "Помилка при завантаженні середовищ";
+            }
         }
 
         //событие двойного нажатия на карту
@@ -689,7 +696,6 @@ namespace Maps
             CollapseButton.Location = new Point(gMapControl.Size.Width - 25, 2);
             ZoomAdd.Location = new Point(gMapControl.Size.Width - 25, 31);
             ZoomMinus.Location = new Point(gMapControl.Size.Width - 25, 60);
-            panel1.Size = new Size(346, tabControl1.Size.Height + label2.Location.Y + tabControl1.Location.Y + label2.Location.Y + label6.Location.Y);
         }
 
         //код был до меня
@@ -1475,6 +1481,11 @@ namespace Maps
 
                 ComprasionItemsComboBox.DataSource = null;
                 ComprasionItemsComboBox.DataSource = markers;
+
+                if (markers.Count != 0)
+                {
+                    ComprasionItemsComboBox.SelectedIndex = 0;
+                }
             }
         }
 
@@ -1499,104 +1510,17 @@ namespace Maps
         {
             if (markers != null && markers.Count == 0)
             {
+                MessageBox.Show("Результати для порівння відсутні.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            try
-            {
-                StringBuilder nameObjectIdCondition = new StringBuilder();
+            CompareSettings compareSettings = new CompareSettings(markers);
+            compareSettings.ShowDialog();
+        }
 
-                for (int i = 0; i < markers.Count; i++)
-                {
-                    nameObjectIdCondition.Append("( Name_Object = ");
-                    nameObjectIdCondition.Append(DBUtil.AddQuotes(markers[i]));
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("emissions_on_map.idPoi = poi.Id");
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("emissions_on_map.Year = ");
-                    nameObjectIdCondition.Append(YearNumericUpDown.Value);
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("emissions_on_map.Month = ");
-                    nameObjectIdCondition.Append(MonthNumericUpDown.Value);
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("emissions_on_map.Day = ");
-                    nameObjectIdCondition.Append(DayNumericUpDown.Value);
-                    nameObjectIdCondition.Append(" )");
-
-
-                    if (i != markers.Count - 1)
-                    {
-                        nameObjectIdCondition.Append(" OR ");
-                    }
-                }
-
-                var result = db.GetRows("emissions_on_map, poi",
-                                        "emissions_on_map.ValueAvg, emissions_on_map.ValueMax, " +
-                                        "emissions_on_map.Measure, poi.Name_Object", nameObjectIdCondition.ToString());
-
-                if (result == null || result.Count == 0)
-                {
-                    MessageBox.Show("Результати для порівння відсутні.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                List<List<object>> values = new List<List<object>>();
-                List<string> names = new List<string>();
-
-                //Записываем данные в  массив горизонтально (таблица растёт в право, а не в низ)
-                //Берём result[0].Count с учётом того, что все последующие массивы одинаковые
-                //Последняя итерация должна быть названиями маркеров (можно изменить, если есть желание)
-                //Т.к. в переменной result последней строкой есть poi.Name_Object
-                for (int i = 0; i < result[0].Count; i++)
-                {
-                    if (i != result[0].Count - 1)
-                    {
-                        List<object> results = new List<object>();
-
-                        for (int j = 0; j < result.Count; j++)
-                        {
-                            results.Add(result[j][i]);
-                        }
-
-                        values.Add(results);
-                    }
-                    else
-                    {
-                        for (int j = 0; j < result.Count; j++)
-                        {
-                            names.Add(result[j][i].ToString()); 
-                        }
-                    }
-                }
-
-                var distinctNames = names.Distinct();
-
-                if (distinctNames.Count() < markers.Count) 
-                {
-                    names.AddRange(markers.Except(distinctNames));
-
-                    foreach (var value in values)
-                    {
-                        for (int i = value.Count; i < names.Count; i++)
-                        {
-                            value.Add("-");
-                        }
-                    }
-                }
-
-                values[0].Insert(0, "Середнє значення");
-                values[1].Insert(0, "Максимальне значення");
-                values[2].Insert(0, "Одиниці виміру значення");
-
-                names.Insert(0, "");
-
-                CompareForm compareForm = new CompareForm(values, names);
-                compareForm.ShowDialog();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Помилка при порівнянні.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+        private void MapEnvironmentButton_Click(object sender, EventArgs e)
+        {
+            newMap.AddObjectFromDB("", id_of_user);
         }
     }
 }
