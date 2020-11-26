@@ -100,6 +100,7 @@ namespace LemmLab
         /// <returns>Масив слів.</returns>
         public string[] ToWordsHTML(string str)
         {
+            //??????добавить множества 
             Regex re1 = new Regex("(\\s)|[.,:;\"()]");
             Regex re2 = new Regex("<(.|\\s|&quot)*?>");
             Regex re3 = new Regex("<style>(.|\\s)*?<\\/style>");

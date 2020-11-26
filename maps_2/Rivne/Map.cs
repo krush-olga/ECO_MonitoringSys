@@ -29,7 +29,7 @@ namespace Maps
         private NewMap newMap;
 
         //иниц. карты
-        public Map()
+       /* public Map()
         {
             InitializeComponent();
 
@@ -65,7 +65,7 @@ namespace Maps
             {
                 MapEnvironmentComboBox.Text = "Помилка при завантаженні середовищ";
             }
-        }
+        }*/
 
         //событие двойного нажатия на карту
         private void gMapControl_MouseDoubleClick(object sender, MouseEventArgs e)

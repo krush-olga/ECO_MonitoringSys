@@ -36,7 +36,7 @@ namespace LawFileBase
 		{
 			if (FileOpen.ShowDialog(this) == DialogResult.OK)
 			{
-				var reader = new StreamReader(FileOpen.OpenFile(), Encoding.Default);
+				var reader = new StreamReader(FileOpen.OpenFile(), Encoding.UTF8);
 				var pageText = reader.ReadToEnd();
 				words = new HashSet<string>();
 				choosedLemms = new HashSet<string>();
