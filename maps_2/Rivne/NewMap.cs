@@ -94,6 +94,7 @@ namespace Maps
             double lng = point.Lng;
             double [] pointMarker = { lat, lng};
             var marker = TypeOfMarker(img, point);
+
             currentMarker = marker;
             _points.Add(new PointLatLng(lat, lng));//
             var toolTip = new GMapToolTip(marker);
@@ -102,7 +103,9 @@ namespace Maps
             marker.ToolTip = toolTip;
             markersOverlay.Markers.Add(marker);
             gMapControl.Overlays.Add(markersOverlay);
+
             MapReload();
+
             return pointMarker;
         }
         //добавления маркеров водопровода на карту

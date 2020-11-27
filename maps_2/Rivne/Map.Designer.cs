@@ -45,6 +45,9 @@
             this.btnCancelPolygon = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.MapEnvironmentGroupBox = new System.Windows.Forms.GroupBox();
+            this.MapEnvironmentButton = new System.Windows.Forms.Button();
+            this.MapEnvironmentComboBox = new System.Windows.Forms.ComboBox();
             this.MarkersCompareGroupBox = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ComprasionItemsComboBox = new System.Windows.Forms.ComboBox();
@@ -98,12 +101,11 @@
             this.btnStartTube = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.CollapseButton = new System.Windows.Forms.Button();
-            this.MapEnvironmentGroupBox = new System.Windows.Forms.GroupBox();
-            this.MapEnvironmentComboBox = new System.Windows.Forms.ComboBox();
-            this.MapEnvironmentButton = new System.Windows.Forms.Button();
+            this.DebugButton = new System.Windows.Forms.Button();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.MapEnvironmentGroupBox.SuspendLayout();
             this.MarkersCompareGroupBox.SuspendLayout();
             this.FindByGroupBox.SuspendLayout();
             this.CoordinatesFindGroupBox.SuspendLayout();
@@ -114,7 +116,6 @@
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabPage3.SuspendLayout();
-            this.MapEnvironmentGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // gMapControl
@@ -132,7 +133,7 @@
             this.gMapControl.MarkersEnabled = true;
             this.gMapControl.MaxZoom = 2;
             this.gMapControl.MinZoom = 2;
-            this.gMapControl.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+            this.gMapControl.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionWithoutCenter;
             this.gMapControl.Name = "gMapControl";
             this.gMapControl.NegativeMode = false;
             this.gMapControl.PolygonsEnabled = true;
@@ -297,6 +298,7 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.DebugButton);
             this.panel1.Controls.Add(this.MapEnvironmentGroupBox);
             this.panel1.Controls.Add(this.MarkersCompareGroupBox);
             this.panel1.Controls.Add(this.FindByGroupBox);
@@ -305,9 +307,39 @@
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Location = new System.Drawing.Point(1034, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(346, 653);
+            this.panel1.Size = new System.Drawing.Size(346, 682);
             this.panel1.TabIndex = 57;
             this.panel1.Visible = false;
+            // 
+            // MapEnvironmentGroupBox
+            // 
+            this.MapEnvironmentGroupBox.Controls.Add(this.MapEnvironmentButton);
+            this.MapEnvironmentGroupBox.Controls.Add(this.MapEnvironmentComboBox);
+            this.MapEnvironmentGroupBox.Location = new System.Drawing.Point(16, 330);
+            this.MapEnvironmentGroupBox.Name = "MapEnvironmentGroupBox";
+            this.MapEnvironmentGroupBox.Size = new System.Drawing.Size(293, 46);
+            this.MapEnvironmentGroupBox.TabIndex = 87;
+            this.MapEnvironmentGroupBox.TabStop = false;
+            this.MapEnvironmentGroupBox.Text = "Поточна карта";
+            // 
+            // MapEnvironmentButton
+            // 
+            this.MapEnvironmentButton.Location = new System.Drawing.Point(209, 17);
+            this.MapEnvironmentButton.Name = "MapEnvironmentButton";
+            this.MapEnvironmentButton.Size = new System.Drawing.Size(73, 23);
+            this.MapEnvironmentButton.TabIndex = 1;
+            this.MapEnvironmentButton.Text = "Вибрати";
+            this.MapEnvironmentButton.UseVisualStyleBackColor = true;
+            this.MapEnvironmentButton.Click += new System.EventHandler(this.MapEnvironmentButton_Click);
+            // 
+            // MapEnvironmentComboBox
+            // 
+            this.MapEnvironmentComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MapEnvironmentComboBox.FormattingEnabled = true;
+            this.MapEnvironmentComboBox.Location = new System.Drawing.Point(8, 19);
+            this.MapEnvironmentComboBox.Name = "MapEnvironmentComboBox";
+            this.MapEnvironmentComboBox.Size = new System.Drawing.Size(188, 21);
+            this.MapEnvironmentComboBox.TabIndex = 0;
             // 
             // MarkersCompareGroupBox
             // 
@@ -497,7 +529,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tabControl1.Location = new System.Drawing.Point(11, 382);
+            this.tabControl1.Location = new System.Drawing.Point(11, 412);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(307, 267);
@@ -1014,35 +1046,15 @@
             this.CollapseButton.UseVisualStyleBackColor = true;
             this.CollapseButton.Click += new System.EventHandler(this.CollapseButton_Click);
             // 
-            // MapEnvironmentGroupBox
+            // DebugButton
             // 
-            this.MapEnvironmentGroupBox.Controls.Add(this.MapEnvironmentButton);
-            this.MapEnvironmentGroupBox.Controls.Add(this.MapEnvironmentComboBox);
-            this.MapEnvironmentGroupBox.Location = new System.Drawing.Point(16, 330);
-            this.MapEnvironmentGroupBox.Name = "MapEnvironmentGroupBox";
-            this.MapEnvironmentGroupBox.Size = new System.Drawing.Size(293, 46);
-            this.MapEnvironmentGroupBox.TabIndex = 87;
-            this.MapEnvironmentGroupBox.TabStop = false;
-            this.MapEnvironmentGroupBox.Text = "Поточна карта";
-            // 
-            // MapEnvironmentComboBox
-            // 
-            this.MapEnvironmentComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MapEnvironmentComboBox.FormattingEnabled = true;
-            this.MapEnvironmentComboBox.Location = new System.Drawing.Point(8, 19);
-            this.MapEnvironmentComboBox.Name = "MapEnvironmentComboBox";
-            this.MapEnvironmentComboBox.Size = new System.Drawing.Size(188, 21);
-            this.MapEnvironmentComboBox.TabIndex = 0;
-            // 
-            // MapEnvironmentButton
-            // 
-            this.MapEnvironmentButton.Location = new System.Drawing.Point(209, 17);
-            this.MapEnvironmentButton.Name = "MapEnvironmentButton";
-            this.MapEnvironmentButton.Size = new System.Drawing.Size(73, 23);
-            this.MapEnvironmentButton.TabIndex = 1;
-            this.MapEnvironmentButton.Text = "Вибрати";
-            this.MapEnvironmentButton.UseVisualStyleBackColor = true;
-            this.MapEnvironmentButton.Click += new System.EventHandler(this.MapEnvironmentButton_Click);
+            this.DebugButton.Location = new System.Drawing.Point(14, 383);
+            this.DebugButton.Name = "DebugButton";
+            this.DebugButton.Size = new System.Drawing.Size(295, 23);
+            this.DebugButton.TabIndex = 2;
+            this.DebugButton.Text = "Show debug map";
+            this.DebugButton.UseVisualStyleBackColor = true;
+            this.DebugButton.Click += new System.EventHandler(this.ShowDebugMap);
             // 
             // Map
             // 
@@ -1064,6 +1076,7 @@
             this.contextMenuStrip2.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.MapEnvironmentGroupBox.ResumeLayout(false);
             this.MarkersCompareGroupBox.ResumeLayout(false);
             this.MarkersCompareGroupBox.PerformLayout();
             this.FindByGroupBox.ResumeLayout(false);
@@ -1079,7 +1092,6 @@
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabPage3.ResumeLayout(false);
-            this.MapEnvironmentGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1159,6 +1171,7 @@
         private System.Windows.Forms.GroupBox MapEnvironmentGroupBox;
         private System.Windows.Forms.Button MapEnvironmentButton;
         private System.Windows.Forms.ComboBox MapEnvironmentComboBox;
+        private System.Windows.Forms.Button DebugButton;
     }
 }
 

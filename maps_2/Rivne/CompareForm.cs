@@ -164,6 +164,10 @@ namespace Maps
                 throw new ArgumentNullException("columnNames");
             }
 
+            StringBuilder emptyObject = new StringBuilder();
+
+            
+
             foreach (string columnName in columnNames)
             {
                 DataGridViewTextBoxColumn dataGridViewColumn = new DataGridViewTextBoxColumn();
@@ -196,6 +200,16 @@ namespace Maps
                     }
                     else
                     {
+                        if (i == rowNameAndvalues.Count - 1)
+                        {
+                            emptyObject.Append(columnNames.ElementAtOrDefault(i));
+
+                            if (j != CompareDataGridView.Columns.Count - 2)
+                            {
+                                emptyObject.Append(", ");
+                            }
+                        }
+
                         CompareDataGridView.Rows[i].Cells[j + 1].Value = "-";
                     }
                 }
@@ -250,6 +264,15 @@ namespace Maps
                 FillCompareColorGrid(emissionLimits.Keys.First());
 
                 AcceptColor();
+            }
+
+            if (emptyObject.Length != 0)
+            {
+                emptyObject.Insert(0, "Для наступних об'єктів відстуні дані:\n");
+                emptyObject.Append("\n\nВони не будуть відображені на графіку.");
+
+
+                MessageBox.Show(emptyObject.ToString());
             }
         }
 

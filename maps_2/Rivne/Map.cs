@@ -29,9 +29,10 @@ namespace Maps
         private NewMap newMap;
 
         //иниц. карты
-       /* public Map()
+        public Map()
         {
             InitializeComponent();
+
 
             list_towns = db.GetRows("cities", "Name", "");
             cbTownSearch.Items.Add("");
@@ -56,7 +57,7 @@ namespace Maps
 
             if (environments.Count != 0)
             {
-                MapEnvironmentComboBox.DataSource = environments.Select(e => Data.Entity.EnvironmentMapper.Map(e));
+                MapEnvironmentComboBox.DataSource = environments.Select(e => Data.Entity.EnvironmentMapper.Map(e)).ToList();
 
                 MapEnvironmentComboBox.DisplayMember = "Name";
                 MapEnvironmentComboBox.ValueMember = "Id";
@@ -65,7 +66,13 @@ namespace Maps
             {
                 MapEnvironmentComboBox.Text = "Помилка при завантаженні середовищ";
             }
-        }*/
+        }
+
+        private void ShowDebugMap(object sender, EventArgs e)
+        {
+            TestNewMap testNewMap = new TestNewMap();
+            testNewMap.Show();
+        }
 
         //событие двойного нажатия на карту
         private void gMapControl_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -728,6 +735,7 @@ namespace Maps
         {
             if (e.Button == MouseButtons.Right)
             {
+                
                 contextMenuStrip2.Show(this, e.Location);
                 newMap.currentMarker = item;
                 return;
