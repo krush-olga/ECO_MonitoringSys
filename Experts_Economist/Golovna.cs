@@ -402,6 +402,43 @@ namespace Experts_Economist
             }
             norm.BringToFront();
         }
+
+        private void LayoutWindowMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sender is ToolStripMenuItem)
+            {
+                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+
+                switch (menuItem.Tag?.ToString())
+                {
+                    case "1":
+                        this.LayoutMdi(MdiLayout.Cascade);
+                        break;
+                    case "2":
+                        this.LayoutMdi(MdiLayout.TileVertical);
+                        break;
+                    case "3":
+                        this.LayoutMdi(MdiLayout.TileHorizontal);
+                        break;
+                    default:
+                        this.LayoutMdi(MdiLayout.Cascade);
+                        break;
+                }
+            }
+        }
+
+        private void CloseCurrentWindowMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ActiveMdiChild?.Close();
+        }
+
+        private void CloseAllWindowsMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var children in MdiChildren)
+            {
+                children.Close();
+            }
+        }
     }
     
 }

@@ -15,8 +15,6 @@ namespace Experts_Economist
             Application.SetCompatibleTextRenderingDefault(false);
             Application.EnableVisualStyles();
             Application.Run(new UserLogin());
-
-            
         }
     }
 }

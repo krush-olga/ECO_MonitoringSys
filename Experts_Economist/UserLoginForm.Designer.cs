@@ -89,6 +89,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.passTB);
             this.Controls.Add(this.loginTB);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "UserLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вхід в систему";

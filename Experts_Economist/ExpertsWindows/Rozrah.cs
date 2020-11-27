@@ -810,17 +810,18 @@ namespace Experts_Economist
 
                 CalculationSeries newCalculationSeries = new CalculationSeries(int.Parse(newId), addNewSeriesWindow.SeriesTextBox.Text, addNewSeriesWindow.DescriptionTextBox.Text);
 
-                name_of_seriesCB.Items.Add(newCalculationSeries);
-                name_of_seriesCB.SelectedIndex = name_of_seriesCB.Items.Count - 1;
-
-                desc_of_seriesTB.Text = newCalculationSeries.description;
-
                 string[] fields = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
-                string[] values = { newId, DBUtil.AddQuotes(name_of_seriesCB.Text), DBUtil.AddQuotes(desc_of_seriesTB.Text), currentIssue.id.ToString(), id_of_exp.ToString() };
+                string[] values = { newId, DBUtil.AddQuotes(newCalculationSeries.name), DBUtil.AddQuotes(newCalculationSeries.description), currentIssue.id.ToString(), id_of_exp.ToString() };
 
                 try
                 {
                     db.InsertToBD("calculations_description", fields, values);
+
+                    name_of_seriesCB.Items.Add(newCalculationSeries);
+                    name_of_seriesCB.SelectedIndex = name_of_seriesCB.Items.Count - 1;
+
+                    desc_of_seriesTB.Text = newCalculationSeries.description;
+
                     MessageBox.Show("Нова серій додана.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
