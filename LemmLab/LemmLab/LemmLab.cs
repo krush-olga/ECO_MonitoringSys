@@ -104,7 +104,11 @@ namespace LemmLab
             Regex re1 = new Regex("(\\s)|[.,:;\"()]");
             Regex re2 = new Regex("<(.|\\s|&quot)*?>");
             Regex re3 = new Regex("<style>(.|\\s)*?<\\/style>");
-            return (from a in re1.Split(re2.Replace(re3.Replace(str.ToLower(), ""), "")) where a.Trim() != "" select a.Trim()).ToArray();
+            //Regex re4 = new Regex(@"^\w$");
+            return (from a in re1.Split(re2.Replace(re3.Replace(str.ToLower(), ""), "")) 
+                    where a.Trim() != "" 
+                    select a.Trim())
+                    .ToArray();
         }
     }
 }
