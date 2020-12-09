@@ -24,7 +24,7 @@ namespace Data.Entity
 
     public static class EnvironmentMapper
     {
-        public static Environment Map(List<Object> row)
+        public static Environment Map(IList<Object> row)
         {
             Environment environment = new Environment()
             {

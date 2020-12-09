@@ -44,7 +44,7 @@ namespace Data.Entity
 
     public class IssueMapper
     {
-        public static Issue Map(List<Object> row)
+        public static Issue Map(IList<Object> row)
         {
             var i = new Issue(Int32.Parse(row[0].ToString()))
             {
