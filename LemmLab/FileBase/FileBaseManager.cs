@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+
 
 namespace FileBase
 {
     public class FileBaseManager
     {
+       
         /// <summary>
         /// Шлях до дерикторії бази.
         /// </summary>
@@ -18,7 +21,8 @@ namespace FileBase
         /// Конструктор классу FileBaseManager.
         /// </summary>
         public FileBaseManager()
-        { 
+        {
+            
             location = "";
         }
         /// <summary>
@@ -49,6 +53,7 @@ namespace FileBase
             {
                 this.location = path;
             }
+
         }
         /// <summary>
         /// Отримання змісту файлу.
@@ -57,7 +62,7 @@ namespace FileBase
         /// <returns>Зміст файлу</returns>
         public string[] GetFile(string name)
         {
-            return File.ReadAllLines(location + name, Encoding.Default);
+            return File.ReadAllLines(location + name, Encoding.Unicode);
         }
         /// <summary>
         /// Отримання змісту файлу зі списком документів та їх TF-індексів.
@@ -66,15 +71,18 @@ namespace FileBase
         /// <returns>Зміст файлу.</returns>
         public string[] GetWordFile(string name)
         {
-            return File.ReadAllLines(location + "TF\\" + name, Encoding.Default);
+            return File.ReadAllLines(location + "TF\\" + name, Encoding.Unicode);
         }
         /// <summary>
         /// Отримання словнику всіх доступних слів та їх індексів.
         /// </summary>
         /// <returns>Список індексів та відповідних слів.</returns>
         public string[] GetDictionary()
+
         {
-            return File.ReadAllLines(location + "_dictionary", Encoding.Default);
+           
+            return File.ReadAllLines(location + "_dictionary", Encoding.Unicode);
+            
         }
 		/// <summary>
 		/// Отримання словнику всіх доступних слів та їх індексів.
@@ -82,7 +90,7 @@ namespace FileBase
 		/// <returns>Список індексів та відповідних слів.</returns>
 		public Dictionary<string,int> GetDictionaryInDictionaryForm()
 		{
-			var strM = File.ReadAllLines(location + "_dictionary", Encoding.Default);
+			var strM = File.ReadAllLines(location + "_dictionary", Encoding.Unicode);
 			Dictionary<string, int> res = new Dictionary<string, int>();
 			foreach(var str in strM)
 			{
@@ -101,30 +109,40 @@ namespace FileBase
 			{
 				res.Add(str.Value +" "+ str.Key);
 			}
-			File.WriteAllLines(location + "_dictionary", res, Encoding.Default);
+			File.WriteAllLines(location + "_dictionary", res, Encoding.Unicode);
 		}
 		/// <summary>
-		/// Оголошення кількосты слова в документі
+		/// Оголошення кількості слова в документі
 		/// </summary>
 		/// <param name="dic"></param>
 		public void AddFileToWord(int wordCode, string filename, int amount)
 		{
 			Dictionary<string, int> docs = new Dictionary<string, int>();
-			try
-			{
-				var text = File.ReadAllLines(location + "//TF//" + wordCode);
-				foreach(var line in text)
-				{
-					var temp = line.Split(' ');
-					docs.Add(temp[0], int.Parse(temp[1]));
-				}
-			}
-			catch(Exception) { }
-			if (docs.ContainsKey(filename))
-				docs[filename] = amount;
-			else
-				docs.Add(filename, amount);
-			File.WriteAllLines(location + "//TF//" + wordCode, (from a in docs select a.Key + " " + a.Value).ToArray(), Encoding.Default);
+            ///try
+            //{
+
+            if (File.Exists(location + "//TF//" + wordCode)) // mine
+            { 
+                var text = File.ReadAllLines(location + "//TF//" + wordCode);
+                foreach (var line in text)
+                {
+                    var temp = line.Split(' ');
+
+                    docs.Add(temp[0] + " " + temp[1], int.Parse(temp[2])); // якщо назва скл. з №_імя
+                   // docs.Add(temp[0], int.Parse(temp[1])); // якщо назва скл. з 1 строки
+                }
+                }
+			//}
+			//catch(Exception) { }
+
+            if (docs.ContainsKey(filename))
+                docs[filename] = amount;
+            else
+            {
+                docs.Add(filename, amount);
+                File.WriteAllLines(location + "//TF//" + wordCode, (from a in docs select a.Key + " " + a.Value).ToArray(), Encoding.Unicode);
+
+            }
 		}
 		
 		/// <summary>
@@ -134,7 +152,7 @@ namespace FileBase
 		/// <returns>Зміст файлу.</returns>
 		public string[] GetHtm(string name)
         {
-            return File.ReadAllLines(location + name + ".htm", Encoding.Default);
+            return File.ReadAllLines(location + name + ".htm", Encoding.Unicode); // ".html"
         }
         /// <summary>
         /// Отримання списку імен всіх зареєстрованих файлів.
@@ -142,7 +160,7 @@ namespace FileBase
         /// <returns>Список імен файлів.</returns>
         public string[] GetListOfFiles()
         {
-            return File.ReadAllLines(location + "_listOfFiles", Encoding.Default);
+            return File.ReadAllLines(location + "_listOfFiles", Encoding.Unicode);
         }
 
 		/// <summary>
@@ -150,19 +168,40 @@ namespace FileBase
 		/// </summary>
 		public void AddToListOfFiles(string name, int wordCount)
 		{
-			using (StreamWriter dic = new StreamWriter(location + "_listOfFiles", true))
-			{
-				dic.WriteLine(name.Trim().Replace(".htm","")+" "+ wordCount);
-			}
-		}
-		/// <summary>
-		/// Записує данні в файл з назвою "_out".
-		/// Використовуюється при потребі перевести великі масиви данних до зручної для зміни форми. 
-		/// </summary>
-		/// <param name="st">Масив стрічок, які потрібно записати.</param>
-		public void WriteDef(string[] st)
+            
+            using (StreamWriter dic = new StreamWriter(location + "_listOfFiles", true))
+            {
+                dic.WriteLine(name.Trim().Replace(".html", "") + " " + wordCount);
+            }
+        }
+
+        /// <summary>
+        /// Перевіряє наявність назви документу який добавляється у "_listOfFiles", 
+        /// </summary>
+        public bool CheckForAvailability(string name)
         {
-            File.WriteAllLines(location + "_out", st, Encoding.Default);
+            var text = File.ReadAllLines(location + "_listOfFiles", Encoding.Unicode);
+            foreach (var line in text)
+            {
+                var temp = line.Split(' ');
+
+                if (temp[0] + " " + temp[1] + ".html" == name  )
+                {
+                    MessageBox.Show("Такий документ вже добавлений у базу ", "Помилка !");
+                    return false ; 
+                }
+
+            }
+            return true;
+        }
+        /// <summary>
+        /// Записує данні в файл з назвою "_out".
+        /// Використовуюється при потребі перевести великі масиви данних до зручної для зміни форми. 
+        /// </summary>
+        /// <param name="st">Масив стрічок, які потрібно записати.</param>
+        public void WriteDef(string[] st)
+        {
+            File.WriteAllLines(location + "_out", st, Encoding.Unicode);
         }
 		/// <summary>
 		/// Записує данні в файл.
@@ -171,7 +210,7 @@ namespace FileBase
 		/// <param name="st">Масив стрічок, які потрібно записати.</param>
 		public void WriteToFile(string name ,string[] st)
         {
-            File.WriteAllLines(location + name, st, Encoding.Default);
+            File.WriteAllLines(location + name, st, Encoding.Unicode);
         }
 		/// <summary>
 		/// Записує данні в файл.
@@ -180,7 +219,7 @@ namespace FileBase
 		/// <param name="st">Стрічка, яку потрібно записати.</param>
 		public void WriteToFile(string name, string st)
 		{
-			File.WriteAllLines(location + name, st.Split('\n'), Encoding.Default);
+			File.WriteAllLines(location + name, st.Split('\n'), Encoding.Unicode);
 		}
 		/// <summary>
 		/// Отримання назви законодавчого документу.

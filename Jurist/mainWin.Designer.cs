@@ -60,22 +60,22 @@
             // RozrahTSM
             // 
             this.RozrahTSM.Name = "RozrahTSM";
-            this.RozrahTSM.Size = new System.Drawing.Size(133, 20);
+            this.RozrahTSM.Size = new System.Drawing.Size(132, 20);
             this.RozrahTSM.Text = "Запропонувати захід";
             this.RozrahTSM.Click += new System.EventHandler(this.offer_Click);
             // 
             // ResultTSM
             // 
             this.ResultTSM.Name = "ResultTSM";
-            this.ResultTSM.Size = new System.Drawing.Size(224, 20);
-            this.ResultTSM.Text = "Перегляід та оцінка існуючих заходів";
+            this.ResultTSM.Size = new System.Drawing.Size(165, 20);
+            this.ResultTSM.Text = "Перегляд та оцінка заходів";
             this.ResultTSM.Click += new System.EventHandler(this.estimate_Click);
             // 
             // RedaktTSM
             // 
             this.RedaktTSM.Name = "RedaktTSM";
-            this.RedaktTSM.Size = new System.Drawing.Size(175, 20);
-            this.RedaktTSM.Text = "Пошук по законодавчій базі";
+            this.RedaktTSM.Size = new System.Drawing.Size(61, 20);
+            this.RedaktTSM.Text = "Пошук ";
             this.RedaktTSM.Click += new System.EventHandler(this.search_Click);
             // 
             // toolStripMenuItem2

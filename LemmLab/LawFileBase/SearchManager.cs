@@ -28,7 +28,11 @@ namespace LawFileBase
             string filename = "";
             foreach (string g in li)
             {
-                if ((g.Split(' '))[1] == word) { filename = (g.Split(' '))[0]; break; }
+                if ((g.Split(' '))[1] == word) 
+                { 
+                    filename = (g.Split(' '))[0]; 
+                    break;
+                }
             }
             return LawBaseManager.GetWordFile(filename);
         }
@@ -43,7 +47,11 @@ namespace LawFileBase
             string filename = "";
             foreach (string g in li)
             {
-                if ((g.Split(' '))[1] == word) { filename = (g.Split(' '))[0]; break; }
+                if ((g.Split(' '))[1] == word) 
+                { 
+                    filename = (g.Split(' '))[0]; 
+                    break; 
+                }
             }
             var res = new Dictionary<string, double>();
             if (filename != "")
@@ -53,7 +61,14 @@ namespace LawFileBase
 
                 foreach (var g in li)
                 {
-                    res.Add(g.Split(' ')[0], Convert.ToDouble(g.Split(' ')[1]));
+                    try // mine
+                    { 
+                      res.Add(g.Split(' ')[0], Convert.ToDouble(g.Split(' ')[1]));
+                    }
+                    catch (FormatException) // mine
+                    {
+                        break;
+                    }
                 }
                 foreach (var g in all)
                 {
