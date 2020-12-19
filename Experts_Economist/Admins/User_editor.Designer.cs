@@ -55,7 +55,7 @@
             this.UsersDGV.Location = new System.Drawing.Point(12, 12);
             this.UsersDGV.Name = "UsersDGV";
             this.UsersDGV.ReadOnly = true;
-            this.UsersDGV.Size = new System.Drawing.Size(366, 192);
+            this.UsersDGV.Size = new System.Drawing.Size(366, 181);
             this.UsersDGV.TabIndex = 0;
             this.UsersDGV.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.EditCurrentUser);
             // 
@@ -174,6 +174,7 @@
             this.Controls.Add(this.AddUserButton);
             this.Controls.Add(this.UpdateUserButton);
             this.Controls.Add(this.UsersDGV);
+            this.MaximumSize = new System.Drawing.Size(760, 2000);
             this.MinimumSize = new System.Drawing.Size(760, 250);
             this.Name = "User_editor";
             this.Text = "Редагування користувачів";

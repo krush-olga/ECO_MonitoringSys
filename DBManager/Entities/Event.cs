@@ -21,7 +21,7 @@ namespace Data.Entity
 
     public class EventMapper
     {
-        public static Event Map(List<Object> row)
+        public static Event Map(IList<Object> row)
         {
             var e = new Event
             {

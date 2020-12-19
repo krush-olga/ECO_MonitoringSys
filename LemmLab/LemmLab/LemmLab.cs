@@ -100,11 +100,15 @@ namespace LemmLab
         /// <returns>ћасив сл≥в.</returns>
         public string[] ToWordsHTML(string str)
         {
-            Regex re1 = new Regex("(\\s)|[.,:;\"()]"); // \\w(?!Т\\w)    Т    
-            Regex re2 = new Regex("<(.|\\s|&quot)*?>|[A-Za-z|!|[|=|\\||&|_|$|^|{|}|'{2}|Е|Ч|Ђ|ї|Ф|У|?|%||/+|>+|<+|Х]+|\\]|\\-(?=\\d)|\\-(?=\\s)|\\-$|\\-{2,5}");
-             Regex re3 = new Regex("<style>(.|\\s)*?<\\/style>");
-
-            return (from a in re1.Split(re2.Replace(re3.Replace(str.ToLower(), ""), "")) where a.Trim() != "" select a.Trim()).ToArray();
+            //??????добавить множества 
+            Regex re1 = new Regex("(\\s)|[.,:;\"()]");
+            Regex re2 = new Regex("<(.|\\s|&quot)*?>");
+            Regex re3 = new Regex("<style>(.|\\s)*?<\\/style>");
+            //Regex re4 = new Regex(@"^\w$");
+            return (from a in re1.Split(re2.Replace(re3.Replace(str.ToLower(), ""), "")) 
+                    where a.Trim() != "" 
+                    select a.Trim())
+                    .ToArray();
         }
     }
 }

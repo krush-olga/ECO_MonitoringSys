@@ -8,7 +8,6 @@ using experts_jurist;
 namespace Experts_Economist
 {
     public partial class UserLogin : Form
-       
     {
         public UserLogin()
         {
@@ -20,31 +19,29 @@ namespace Experts_Economist
 
         private void loginBtn_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(loginTB.Text) || string.IsNullOrEmpty(loginTB.Text))
+            {
+                MessageBox.Show("Поля з даними не можуть бути пустими.", "Помилка", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string login = "'" + loginTB.Text + "'";
             string pass = "'" + passTB.Text + "'";
 
             List<List<Object>> user = new List<List<Object>>();
+
             try
             {
-                user = db.GetRows("user", "*", "user_name=" + login +
-                    " AND password=" + pass);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                MessageBox.Show("Помилка, перевірте правильність вводу");
-                return;
-            }
+                user = db.GetRows("user", "*", $"user_name = {login} AND password = {pass}");
 
-            if(user.Count > 0 && user[0][0].ToString() == "4")
-            {
-                mainWin gol = new mainWin(Int32.Parse(user[0][3].ToString()));
-                gol.ShowDialog();
-                gol = null;
-            }
-            else if (user.Count > 0 && user[0][0].ToString() != "4")
-            {
-                try
+                if (user.Count > 0 && user[0][0].ToString() == "4")
+                {
+                    mainWin gol = new mainWin(Int32.Parse(user[0][3].ToString()));
+                    gol.ShowDialog();
+                    gol = null;
+                }
+                else if (user.Count > 0 && user[0][0].ToString() != "4")
                 {
                     Hide();
                     Golovna gol = new Golovna(Int32.Parse(user[0][3].ToString()));
@@ -52,17 +49,28 @@ namespace Experts_Economist
                     gol = null;
                     Show();
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
-                    this.Close();
+                    MessageBox.Show("Помилка, перевірте правильність вводу", "Помилка",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DialogResult = DialogResult.None;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Помилка, перевірте правильність вводу");
-                DialogResult = DialogResult.None;
+#if DEBUG
+                MessageBox.Show($"{ex.Message}\n\n----------------------\n\n{ex.StackTrace}",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else 
+                MessageBox.Show("Сталась не передбачена помилка.", "Помилка", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
             }
+            finally
+            {
+                Show();
+            }
+
         }
 
         private void UserLogin_Leave(object sender, EventArgs e)

@@ -64,6 +64,12 @@
             this.новийШаблонToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.змінитиШаблонToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ресурсиToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.WindowsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CascadeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.VerticalMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.HorizontalMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CloseCurrentWindowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CloseAllWindowsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.user_redakt_button = new System.Windows.Forms.Button();
@@ -80,9 +86,11 @@
             this.аналізToolStripMenuItem,
             this.картаToolStripMenuItem,
             this.довідникToolStripMenuItem,
+            this.WindowsMenuItem,
             this.базаДанихToolStripMenuItem,
             this.ресурсиToolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.MdiWindowListItem = this.WindowsMenuItem;
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1370, 24);
             this.menuStrip1.TabIndex = 1;
@@ -366,6 +374,59 @@
             this.ресурсиToolStripMenuItem2.Text = "Ресурси";
             this.ресурсиToolStripMenuItem2.Click += new System.EventHandler(this.ресурсиToolStripMenuItem_Click);
             // 
+            // WindowsMenuItem
+            // 
+            this.WindowsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CascadeMenuItem,
+            this.VerticalMenuItem,
+            this.HorizontalMenuItem,
+            this.CloseCurrentWindowMenuItem,
+            this.CloseAllWindowsMenuItem});
+            this.WindowsMenuItem.Name = "WindowsMenuItem";
+            this.WindowsMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.WindowsMenuItem.Text = "Вікна";
+            // 
+            // CascadeMenuItem
+            // 
+            this.CascadeMenuItem.Name = "CascadeMenuItem";
+            this.CascadeMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.K)));
+            this.CascadeMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.CascadeMenuItem.Tag = "1";
+            this.CascadeMenuItem.Text = "Каскадом";
+            this.CascadeMenuItem.Click += new System.EventHandler(this.LayoutWindowMenuItem_Click);
+            // 
+            // VerticalMenuItem
+            // 
+            this.VerticalMenuItem.Name = "VerticalMenuItem";
+            this.VerticalMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.V)));
+            this.VerticalMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.VerticalMenuItem.Tag = "2";
+            this.VerticalMenuItem.Text = "Вертикально";
+            this.VerticalMenuItem.Click += new System.EventHandler(this.LayoutWindowMenuItem_Click);
+            // 
+            // HorizontalMenuItem
+            // 
+            this.HorizontalMenuItem.Name = "HorizontalMenuItem";
+            this.HorizontalMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
+            this.HorizontalMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.HorizontalMenuItem.Tag = "3";
+            this.HorizontalMenuItem.Text = "Горизонтально";
+            this.HorizontalMenuItem.Click += new System.EventHandler(this.LayoutWindowMenuItem_Click);
+            // 
+            // CloseCurrentWindowMenuItem
+            // 
+            this.CloseCurrentWindowMenuItem.Name = "CloseCurrentWindowMenuItem";
+            this.CloseCurrentWindowMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.CloseCurrentWindowMenuItem.Text = "Закрити поточне вікно";
+            this.CloseCurrentWindowMenuItem.Click += new System.EventHandler(this.CloseCurrentWindowMenuItem_Click);
+            // 
+            // CloseAllWindowsMenuItem
+            // 
+            this.CloseAllWindowsMenuItem.Name = "CloseAllWindowsMenuItem";
+            this.CloseAllWindowsMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.CloseAllWindowsMenuItem.Text = "Закрити всі вікна";
+            this.CloseAllWindowsMenuItem.Click += new System.EventHandler(this.CloseAllWindowsMenuItem_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -468,5 +529,11 @@
         private System.Windows.Forms.ToolStripMenuItem ставкиПодатківToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem результатиНормуванняToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem WindowsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem CascadeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem VerticalMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem HorizontalMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem CloseCurrentWindowMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem CloseAllWindowsMenuItem;
     }
 }

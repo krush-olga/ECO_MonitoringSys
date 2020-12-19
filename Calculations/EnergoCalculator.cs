@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -47,8 +48,26 @@ public class EnergoCalculator
         }
         return -1;
     }
-         
-        
-    
+
+    public float[] mid_months(float[] monthscosts, int year, int work_type)//вводяться помісячно витрати за кожен місяць і повертає масив середньомісячних значень
+    {//work_type 0 - 7/7 all days in year, 1 - 5/7 work with daysoff
+
+        float[] res = new float[12];
+        float count_day = 0;
+        for (int i = 0; i < count_years; i++)
+        {
+            if (year_month_daysoff[i, 0] == year)
+            {
+                for (int j = 1; j <= 12; j++)
+                {
+                    if (monthscosts[j - 1] > 0)
+                        count_day = DateTime.DaysInMonth(year, j) - year_month_daysoff[i, j] * work_type;
+                    res[j - 1] = monthscosts[j - 1] / count_day;
+                }
+            }            
+        }
+        return res;
+    }
+
 }
 

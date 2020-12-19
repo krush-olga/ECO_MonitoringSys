@@ -109,6 +109,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.SeriesTextBox);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "AddNewSeriesWindow";
             this.Text = "Додавання нової серії";
             this.ResumeLayout(false);

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Data;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
+using System.Text;
 
 namespace Experts_Economist
 {
@@ -207,59 +208,81 @@ namespace Experts_Economist
             {
                 case "searchRadio":
                     {
-                        //doneBtn.Text = "Виконати";
-                        //var categorys = db.GetRows("elements", "distinct category", "");     //отримуємо унікальні категорії з БД
-                        //var names = db.GetRows("elements","name","");
-                        //ComboBox categoryFilter = new ComboBox();
-                        //ComboBox nameFilter = new ComboBox();
+                        doneBtn.Text = "Виконати";
 
-                        //foreach (var subList in categorys)                                      //заповнюємо сам комбобокс значеннями поля "category" з таблиці "elements"
-                        //{
-                        //    subList.ForEach(record => categoryFilter.Items.Add(record));
-                        //}
-                        //foreach (var subList in names)                                      //заповнюємо сам комбобокс значеннями поля "name" з таблиці "elements"
-                        //{
-                        //    subList.ForEach(record => nameFilter.Items.Add(record));
-                        //}
+                        controls = new List<Control>                                               //формуємо набір компонентів
+                            {
+                                createAutoSizedLabel("Code"), new TextBox(){Name="code"},
+                                createAutoSizedLabel("Name"), new TextBox(){Name="name"},
+                                createAutoSizedLabel("Short"), new TextBox(){Name="short"},
+                                createAutoSizedLabel("Measure"), new TextBox(){Name="measure"},
+                                createAutoSizedLabel("Formula"), new TextBox(){Name="formual"},
+                                createAutoSizedLabel("CAS"), new TextBox(){Name="cas"}, createAutoSizedLabel(""),
+                                new CheckBox(){Name="rigid", Text="rigid",AutoSize = true},
+                                new CheckBox(){Name="voc", Text="voc",AutoSize = true},
+                                new CheckBox(){Name="hydro",Text="hydro", AutoSize = true},
+                            };
 
-                        ////додаємо надписи та комбобокси
-                        //controls = new List<Control> {
-                        //    createAutoSizedLabel("Фільтрація за ім'ям"), nameFilter,
-                        //    createAutoSizedLabel("Фільтрація за категорією: "), categoryFilter
-                        //};
+                        lambda = () =>                  //створюємо подію для цього режиму роботи
+                        {
+                            if (gdkDataGrid.DataSource == null && !(gdkDataGrid.DataSource is DataTable))
+                            {
+                                MessageBox.Show($"Неможливо виконати пошук.\nТаблиця порожня", "Помилка!", 
+                                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
 
-                        //lambda = () =>
-                        //{
-                        //    gdkDataGrid.Rows.Clear();
-                        //    List<List<object>> records = new List<List<object>>();
+                            //отримуємо всі поля вводу
+                            var textBoxes = flowLayoutPanel1.Controls.OfType<TextBox>().ToArray();
 
-                        //    string categoryText = categoryFilter.Text.Trim();
-                        //    string nameText = nameFilter.Text.Trim();
+                            //отримуємо всі чекбокси вводу
+                            var checkBoxes = flowLayoutPanel1.Controls.OfType<CheckBox>().ToArray();
 
-                        //    if (categoryText != "" && nameText != "")
-                        //    {
-                        //        records = db.GetRows("elements", "*", $"category = '{categoryText}' AND  name = '{nameText}'");
-                        //    }
-                        //    else if (categoryText != "" && nameText == "")
-                        //    {
-                        //        records = db.GetRows("elements", "*", $"category ='{categoryText }'");
-                        //    }
-                        //    else if (categoryText == "" && nameText != "")
-                        //    {
-                        //        records = db.GetRows("elements", "*", $"name ='{ nameText }'");
-                        //    }
-                        //    else
-                        //    {
-                        //        loadDataToTable();
-                        //        return;
-                        //    }
+                            //вказуємо поля, які потрібно доти
+                            string[] fieldNames = { "code", "name", "short_name", "measure", "rigid", "voc", "hydrocarbon", "formula", "cas" };
 
-                        //    foreach (var record in records)
-                        //    {
-                        //        gdkDataGrid.Rows.Add(record[0], record[1], record[2], record[3], record[4], record[5], record[6]);
-                        //    }
+                            //вказуємо відповідне значення цих полів
+                            string[] fieldValues = {$"{textBoxes[0].Text}",$"'{textBoxes[1].Text}'",$"'{textBoxes[2].Text}'",
+                                $"'{textBoxes[3].Text}'",$"{checkBoxes[0].Checked}",$"{checkBoxes[1].Checked}",
+                                $"{checkBoxes[2].Checked}",$"'{textBoxes[4].Text}'",$"'{textBoxes[5].Text}'" };
+                            try
+                            {
+                                var result = db.GetRows("elements", "*", 
+                                                        $"({string.IsNullOrEmpty(textBoxes[0].Text)} OR code = '{textBoxes[0].Text}' OR code LIKE '{textBoxes[0].Text}') AND " +
+                                                        $"({string.IsNullOrEmpty(textBoxes[1].Text)} OR name = '{textBoxes[1].Text}' OR name LIKE '{textBoxes[1].Text}') AND " +
+                                                        $"({string.IsNullOrEmpty(textBoxes[2].Text)} OR short_name = '{textBoxes[2].Text}' OR short_name LIKE '{textBoxes[2].Text}') AND " +
+                                                        $"({string.IsNullOrEmpty(textBoxes[3].Text)} OR measure = '{textBoxes[3].Text}' OR measure LIKE '{textBoxes[3].Text}') AND " +
+                                                        $"({checkBoxes[0].Checked} OR true) AND " +
+                                                        $"({checkBoxes[1].Checked} OR true) AND " +
+                                                        $"({checkBoxes[2].Checked} OR true) AND " +
+                                                        $"({string.IsNullOrEmpty(textBoxes[4].Text)} OR formula = '{textBoxes[4].Text}' OR formula LIKE '{textBoxes[4].Text}') AND " +
+                                                        $"({string.IsNullOrEmpty(textBoxes[5].Text)} OR cas = '{textBoxes[5].Text}') OR cas LIKE '{textBoxes[5].Text}'");
 
-                        //};
+                                if (result.Count == 0)
+                                {
+                                    MessageBox.Show("Дані відсутні. Введіть більш корректні дані.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return;
+                                }
+
+                                DataTable data = (DataTable)gdkDataGrid.DataSource;
+                                data.Rows.Clear();
+                                object[] tempArr = new object[result[0].Count];
+
+                                for (int i = 0; i < result.Count; i++)
+                                {
+                                    for (int j = 0; j < result[i].Count; j++)
+                                    {
+                                        tempArr[j] = result[i][j];
+                                    }
+
+                                    data.Rows.Add(tempArr);
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show($"Неможливо виконати пошук\n{exception.Message}", "Помилка!");
+                            }
+                        };
 
                         break;
                     }
@@ -307,7 +330,8 @@ namespace Experts_Economist
                                     MessageBox.Show($"Неможливо створити запис\n{exception.Message}", "Помилка!");
                                 }
                             };
-                        }else if(tableName == "gdk")
+                        }
+                        else if(tableName == "gdk")
                         {
                             ComboBox code_combo = new ComboBox() { Name="code"};
                             populateComboBox(ref code_combo, db.connectionString,"elements", "code");
@@ -708,7 +732,7 @@ namespace Experts_Economist
             if (lambda != null)
             {
                 //якщо не обрано "пошук" та "видалення" то перевірити поля вводу на помилки
-                if (!searchRadio.Checked || !deleteRadio.Checked)
+                if (!searchRadio.Checked && !deleteRadio.Checked)
                 {
                     //якщо є помилки, то вийти з функції
                     if (checkTextBoxesForAnError())

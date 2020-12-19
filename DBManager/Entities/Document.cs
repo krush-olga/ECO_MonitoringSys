@@ -17,7 +17,7 @@ namespace Data.Entity
 
     public class DocumentMapper
     {
-        public static Document Map(List<Object> row)
+        public static Document Map(IList<Object> row)
         {
             var d = new Document
             {
