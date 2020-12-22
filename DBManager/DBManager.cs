@@ -1,15 +1,26 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
+using System.Text;
 
 namespace Data
 {
-    public class DBManager
+    public enum JoinType : Byte
     {
-        private MySqlConnection connection;                                                 
-        public String connectionString; 
+        LEFT = 0,
+        RIGHT,
+        INNER,
+    }
+
+    public class DBManager : IDisposable
+    {
+        public String connectionString;
+        private MySqlConnection connection;
         private MySqlTransaction currentTransaction;
+
+        private bool disposed;
 
         //Nikita
         public DBManager()
@@ -20,6 +31,8 @@ namespace Data
             connection = new MySqlConnection(connectionString);
             objReader.Close();
             Connect();
+
+            disposed = false;
         }
 
         public DBManager(String connectionString)
@@ -31,14 +44,14 @@ namespace Data
 
         ~DBManager()
         {
-            Disconnect();
+            Dispose();
         }
 
         public void Connect()
         {
             try
             {
-                if(!connection.Ping())
+                if (!connection.Ping())
                     connection.Open();
             }
             catch (Exception e)
@@ -69,6 +82,7 @@ namespace Data
             if (currentTransaction != null)
             {
                 currentTransaction.Commit();
+                currentTransaction = null;
             }
         }
 
@@ -77,6 +91,7 @@ namespace Data
             if (currentTransaction != null)
             {
                 currentTransaction.Rollback();
+                currentTransaction = null;
             }
         }
 
@@ -166,38 +181,142 @@ namespace Data
             return command.ExecuteNonQuery();
         }
 
-        private string GetUpdateStatement(string tableName, string field, string value, string cond)
+        private String GetUpdateStatement(String tableName, String field, String value, String cond)
         {
             String res;
-            if(cond != "")
-            res = "UPDATE " + tableName + " SET " + field + " = " + value + " WHERE " + cond + " ;";
-            else res = "UPDATE " + tableName + " SET " + field + " = " + value +" ;";
+            if (cond != "")
+                res = "UPDATE " + tableName + " SET " + field + " = " + value + " WHERE " + cond + " ;";
+            else res = "UPDATE " + tableName + " SET " + field + " = " + value + " ;";
             return res;
+        }
+
+        public List<List<Object>> GetRowsUsingJoin(String tables, String columns, String joinConditions,
+                                                   String condition, JoinType joinType)
+        {
+            if (string.IsNullOrEmpty(tables) ||
+                string.IsNullOrEmpty(columns) ||
+                string.IsNullOrEmpty(joinConditions) ||
+                condition == null)
+            {
+                return default(List<List<Object>>);
+            }
+
+            Char[] separators = new[] { ',', ';' };
+            String[] _tables = tables.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            String[] _columns = columns.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            String[] _joinConditions = joinConditions.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            return GetRowsUsingJoin(_tables, _columns, _joinConditions, condition, joinType);
+        }
+        public List<List<Object>> GetRowsUsingJoin(IList<String> tables, IEnumerable<String> columns, IList<String> joinConditions,
+                                                   String condition, JoinType joinType)
+        {
+            if (tables == null || tables.Count == 0 ||
+                columns == null || columns.Count() == 0 ||
+                condition == null || joinConditions == null ||
+                joinConditions.Count < tables.Count - 1)
+            {
+                return default(List<List<Object>>);
+            }
+
+            String firstTable = tables.First();
+            StringBuilder query = new StringBuilder("SELECT ");
+
+            foreach (var column in columns)
+            {
+                query.Append(column.Trim());
+                query.Append(", ");
+            }
+            query.Remove(query.Length - 2, 1);
+
+            query.Append("FROM ");
+            query.Append(firstTable);
+
+            for (int i = 1; i < tables.Count; i++)
+            {
+                query.AppendFormat(" {0} JOIN {1} ON {2}", joinType, tables[i], joinConditions[i - 1]);
+            }
+
+            if (condition != "" && !condition.ToUpper().Contains("WHERE"))
+            {
+                query.Append(" WHERE ");
+            }
+
+            query.AppendFormat(" {0}", condition);
+
+            return GetRows(query.ToString());
+        }
+
+        public List<List<Object>> GetRows(String query)
+        {
+            List<List<Object>> result = new List<List<object>>();
+
+            MySqlCommand command = new MySqlCommand(query, connection);
+            MySqlDataReader reader = null;
+
+            try
+            {
+                reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    List<Object> row = new List<object>();
+
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        row.Add(reader[i]);
+                    }
+
+                    result.Add(row);
+                }
+            }
+            catch (Exception ex)
+            {
+                var newLine = Environment.NewLine;
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("ERROR!");
+                Console.ResetColor();
+
+                Console.WriteLine($"{newLine}{newLine}Error message: {ex.Message}" +
+                                  $"{newLine}{newLine}Stack trace: {ex.StackTrace}{newLine}{newLine}");
+
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Dispose();
+                }
+            }
+
+            return result;
         }
 
         /// --IVAN
 
-        public void DeleteFromDB(string table, string colName, string colValue)
+        public void DeleteFromDB(String table, String colName, String colValue)
         {
             try
             {
-                string sqlCommand = "DELETE FROM " + table + " WHERE " + colName + " = " + colValue + " ";
+                String sqlCommand = "DELETE FROM " + table + " WHERE " + colName + " = " + colValue + " ";
                 MySqlCommand deleteCmd = new MySqlCommand(sqlCommand, connection);
                 deleteCmd.ExecuteNonQuery();
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
 
-        public void DeleteFromDB(string table, string[] colName, string[] colValue)
+        public void DeleteFromDB(String table, String[] colName, String[] colValue)
         {
             if (colName.Length == colValue.Length)
             {
                 if (colName.Length > 1)
                 {
-                    string sqlCommand = "";
-                    string res = "Deleted";
+                    String sqlCommand = "";
+                    String res = "Deleted";
                     try
                     {
                         sqlCommand = "DELETE FROM " + table + " WHERE ";
@@ -213,27 +332,27 @@ namespace Data
                 }
                 else
                 {
-                    string colname = colName[0];
-                    string colvalue = colValue[0];
+                    String colname = colName[0];
+                    String colvalue = colValue[0];
                 }
             }
             else { throw new ArgumentException("Field and Value list dont match."); }
         }
 
-        public int InsertToBD(string table, string list)
+        public int InsertToBD(String table, String list)
         {
-            string sqlCommand = "INSERT INTO " + table + " VALUES(" + list + ");";
+            String sqlCommand = "INSERT INTO " + table + " VALUES(" + list + ");";
             sqlCommand += "select last_insert_id();";
             MySqlCommand insertCmd = new MySqlCommand(sqlCommand, connection);
             return Int32.Parse(insertCmd.ExecuteScalar().ToString());
         }
 
 
-        public int InsertToBD(string table, string[] fieldNames, string[] fieldValues)
+        public int InsertToBD(String table, String[] fieldNames, String[] fieldValues)
         {
             if (fieldNames.Length == fieldValues.Length)
             {
-                string sqlCommand = "INSERT INTO " + table + "(";
+                String sqlCommand = "INSERT INTO " + table + "(";
                 for (int i = 0; i < fieldNames.Length - 1; i++)
                 {
                     sqlCommand += " " + fieldNames[i] + ",";
@@ -257,14 +376,14 @@ namespace Data
             }
         }
 
-        public void InsertToBDWithoutId(string table, string[] fieldNames, string[] fieldValues)
+        public void InsertToBDWithoutId(String table, String[] fieldNames, String[] fieldValues)
         {
             if (fieldNames.Length == fieldValues.Length)
             {
                 try
                 {
                     fieldValues = ValidateStrings(fieldValues);
-                    string sqlCommand = "INSERT INTO " + table + "(";
+                    String sqlCommand = "INSERT INTO " + table + "(";
                     for (int i = 0; i < fieldNames.Length - 1; i++)
                     {
                         sqlCommand += " " + fieldNames[i] + ",";
@@ -279,9 +398,9 @@ namespace Data
                     sqlCommand += ");";
                     new MySqlCommand(sqlCommand, connection).ExecuteNonQuery();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    throw new Exception(ex.Message); 
+                    throw new Exception(ex.Message);
                 }
             }
             else
@@ -292,13 +411,13 @@ namespace Data
 
         //"INSERT INTO " + table + "(" + fieldNames[i] + "
 
-        public int UpdateRecord(string tableName, string[] colNames, string[] colValues)
+        public int UpdateRecord(String tableName, String[] colNames, String[] colValues)
         {
             if (colNames.Length == colValues.Length)
             {
                 colValues = ValidateStrings(colValues);
 
-                string sqlCommand = "UPDATE " + tableName + " SET ";
+                String sqlCommand = "UPDATE " + tableName + " SET ";
 
                 for (int i = 1; i < colValues.Length - 1; i++)
                 {
@@ -315,9 +434,9 @@ namespace Data
             }
         }
 
-        private string ValidateString(String str)
+        private String ValidateString(String str)
         {
-            if (string.IsNullOrEmpty(str))
+            if (String.IsNullOrEmpty(str))
             {
                 throw new ArgumentNullException("str");
             }
@@ -327,9 +446,9 @@ namespace Data
             return str.Replace('\'', '`');
         }
 
-        private string[] ValidateStrings(string[] strs)
+        private String[] ValidateStrings(String[] strs)
         {
-            string[] res = new string[strs.Length];
+            String[] res = new String[strs.Length];
 
             for (int i = 0; i < strs.Length; i++)
             {
@@ -337,6 +456,30 @@ namespace Data
             }
 
             return res;
+        }
+
+        public void Dispose()
+        {
+            if (!disposed)
+            {
+                Disconnect();
+
+                connectionString = null;
+
+                if (connection != null)
+                {
+                    connection.Dispose();
+                    connection = null;
+                }
+
+                if (currentTransaction != null)
+                {
+                    currentTransaction.Dispose();
+                    currentTransaction = null;
+                }
+
+                disposed = true;
+            }
         }
     }
 }
