@@ -1,4 +1,4 @@
-﻿namespace Maps
+﻿namespace Maps.OldMap
 {
     partial class EmissionsForm
     {

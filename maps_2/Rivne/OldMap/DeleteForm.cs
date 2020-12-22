@@ -5,7 +5,7 @@ using Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Maps
+namespace Maps.OldMap
 {
     public partial class DeleteForm : Form
     {

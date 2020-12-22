@@ -8,7 +8,7 @@ using GMap.NET.WindowsForms;
 using System.Text;
 using System.Linq;
 
-namespace Maps
+namespace Maps.OldMap
 {
     //класс отображения карты и вызова методов для роботы  с ней 
     public partial class Map : Form
@@ -70,8 +70,9 @@ namespace Maps
 
         private void ShowDebugMap(object sender, EventArgs e)
         {
-            TestNewMap testNewMap = new TestNewMap();
+            MapWindow testNewMap = new MapWindow((Role)id_of_exp, id_of_user);
             testNewMap.Show();
+            testNewMap.FormClosed += (s, arg) => testNewMap.Dispose();
         }
 
         //событие двойного нажатия на карту

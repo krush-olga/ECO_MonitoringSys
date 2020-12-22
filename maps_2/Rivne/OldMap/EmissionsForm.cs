@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Maps
+namespace Maps.OldMap
 {
     public partial class EmissionsForm : Form
     {

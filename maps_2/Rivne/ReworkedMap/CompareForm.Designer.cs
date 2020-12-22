@@ -53,7 +53,7 @@
             this.CompareDataGridView.AllowUserToAddRows = false;
             this.CompareDataGridView.AllowUserToDeleteRows = false;
             this.CompareDataGridView.AllowUserToOrderColumns = true;
-            this.CompareDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.CompareDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CompareDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.CompareDataGridView.Location = new System.Drawing.Point(12, 44);
@@ -105,7 +105,7 @@
             // 
             // ColorUpdateButton
             // 
-            this.ColorUpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.ColorUpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ColorUpdateButton.Location = new System.Drawing.Point(9, 216);
             this.ColorUpdateButton.Name = "ColorUpdateButton";
@@ -119,8 +119,8 @@
             // 
             this.CompareColorDataGridView.AllowUserToAddRows = false;
             this.CompareColorDataGridView.AllowUserToDeleteRows = false;
-            this.CompareColorDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.CompareColorDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CompareColorDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.CompareColorDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -150,8 +150,8 @@
             // 
             // CompareChart
             // 
-            this.CompareChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.CompareChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             chartArea1.AxisX.IsLabelAutoFit = false;
             chartArea1.AxisX.LabelStyle.Angle = -45;

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
-using GMap.NET.MapProviders;
+using Maps.Helpers;
 
-namespace Maps
+namespace Maps.Core
 {
     public abstract class DrawContext : IDisposable
     {
@@ -82,7 +80,7 @@ namespace Maps
         {
             pointCoords.Add(coord);
 
-            GMapMarker marker = MapHelper.CreateMarker(coord, polygonPointsType, null);
+            GMapMarker marker = MapHelper.CreateMarker(coord, polygonPointsType, string.Empty, null, null);
 
             Overlay.Markers.Add(marker);
             polygonMarkers.Add(marker);
@@ -119,14 +117,15 @@ namespace Maps
             }
         }
 
-        public virtual void ClearFigure()
+        public void ClearFigure()
         {
             MapHelper.DisposeElements(polygonMarkers);
-            MapHelper.DisposeElements(Overlay.Markers);
+            MapHelper.DisposeElements(Overlay.Polygons);
+            MapHelper.DisposeElements(Overlay.Routes);
 
             pointCoords.Clear();
             polygonMarkers.Clear();
-            Overlay.Markers.Clear();
+            Overlay.Clear();
         }
 
         public void Dispose()
@@ -134,16 +133,18 @@ namespace Maps
             Dispose(true);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
             {
                 if (disposing)
                 {
-                    ClearFigure();
-                }
+                    MapHelper.DisposeElements(polygonMarkers);
 
-                Overlay = null;
+                    pointCoords.Clear();
+                    polygonMarkers.Clear();
+                    Overlay.Markers.Clear();
+                }
 
                 disposed = true;
             }
@@ -183,7 +184,7 @@ namespace Maps
 
                 foreach (var pointCoord in pointCoords)
                 {
-                    MapHelper.CreateMarker(pointCoord, markerType, null);
+                    MapHelper.CreateMarker(pointCoord, markerType, string.Empty, null, null);
                 }
 
                 DrawFigure();
@@ -230,13 +231,17 @@ namespace Maps
                 currentPolygon.Name = name;
             }
         }
-        public override void ClearFigure()
+
+        protected override void Dispose(bool disposing)
         {
-            base.ClearFigure();
+            base.Dispose(disposing);
 
-            MapHelper.DisposeElements(Overlay.Polygons);
-
-            Overlay.Polygons.Clear();
+            if (Overlay != null)
+            {
+                MapHelper.DisposeElements(Overlay.Routes);
+                Overlay.Routes.Clear();
+                Overlay = null;
+            }
         }
 
         protected override void DrawFigure()
@@ -253,11 +258,16 @@ namespace Maps
                 Overlay.Polygons.Remove(currentPolygon);
             }
 
+            if (pointCoords.Count == 0)
+            {
+                return;
+            }
+
             currentPolygon = new GMapPolygon(pointCoords, GetFigureName());
             currentPolygon.Fill = brush;
             currentPolygon.Stroke = stroke;
 
-            Overlay.Polygons.Add(currentPolygon);
+            Overlay.Polygons.Insert(0, currentPolygon);
         }
     }
 
@@ -277,7 +287,7 @@ namespace Maps
                             Color routeStroke, GMarkerGoogleType markerType)
             : base(overlay, routeName, markerType)
         {
-            stroke = new Pen(new SolidBrush(routeStroke));
+            stroke = new Pen(new SolidBrush(routeStroke), 2);
 
             if (overlay.Routes.Count != 0)
             {
@@ -285,7 +295,7 @@ namespace Maps
 
                 foreach (var pointCoord in pointCoords)
                 {
-                    MapHelper.CreateMarker(pointCoord, markerType, null);
+                    MapHelper.CreateMarker(pointCoord, markerType, string.Empty, null, null);
                 }
 
                 DrawFigure();
@@ -310,13 +320,16 @@ namespace Maps
                 currentRoute.Name = name;
             }
         }
-        public override void ClearFigure()
+        protected override void Dispose(bool disposing)
         {
-            base.ClearFigure();
+            base.Dispose(disposing);
 
-            MapHelper.DisposeElements(Overlay.Routes);
-
-            Overlay.Routes.Clear();
+            if (Overlay != null)
+            {
+                MapHelper.DisposeElements(Overlay.Polygons);
+                Overlay.Polygons.Clear();
+                Overlay = null;
+            }
         }
 
         protected override void DrawFigure()
@@ -333,10 +346,15 @@ namespace Maps
                 Overlay.Routes.Remove(currentRoute);
             }
 
+            if (pointCoords.Count == 0)
+            {
+                return;
+            }
+
             currentRoute = new GMapRoute(pointCoords, GetFigureName());
             currentRoute.Stroke = stroke;
 
-            Overlay.Routes.Add(currentRoute);
+            Overlay.Routes.Insert(0, currentRoute);
         }
     }
 }

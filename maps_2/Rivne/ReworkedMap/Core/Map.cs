@@ -5,110 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
-using GMap.NET.MapProviders;
+using Maps.Helpers;
 
-
-namespace Maps
+namespace Maps.Core
 {
-    internal static class MapHelper
-    {
-        private static readonly SolidBrush solidColorBlack;
-        private static readonly SolidBrush solidColorWhite;
-
-        static MapHelper()
-        {
-            solidColorBlack = new SolidBrush(Color.Black);
-            solidColorWhite = new SolidBrush(Color.White);
-        }
-
-        public static GMapMarker CreateMarker(PointLatLng coords, Bitmap img, string description)
-        {
-            GMapMarker marker = new GMarkerGoogle(coords, img);
-
-            if (description != null)
-            {
-                GMapToolTip toolTip = new GMapToolTip(marker)
-                {
-                    Fill = solidColorBlack,
-                    Foreground = solidColorWhite,
-                };
-
-                marker.ToolTip = toolTip;
-                marker.ToolTipText = description;
-            }
-
-            return marker;
-        }
-        public static GMapMarker CreateMarker(PointLatLng coords, GMarkerGoogleType markerType, string description)
-        {
-            GMapMarker marker = new GMarkerGoogle(coords, markerType);
-
-            if (description != null)
-            {
-                GMapToolTip toolTip = new GMapToolTip(marker)
-                {
-                    Fill = solidColorBlack,
-                    Foreground = solidColorWhite,
-                };
-
-                marker.ToolTip = toolTip;
-                marker.ToolTipText = description;
-            }
-
-            return marker;
-        }
-        public static GMapPolygon CreatePolygon(List<PointLatLng> coords, Color fill, 
-                                                int opacity, string polygonName)
-        {
-            GMapPolygon polygon = new GMapPolygon(coords, polygonName)
-            {
-                Fill = new SolidBrush(Color.FromArgb(opacity, fill)),
-                Stroke = new Pen(solidColorBlack)
-            };
-
-            return polygon;
-        }
-        public static GMapPolygon CreatePolygon(List<PointLatLng> coords, Color fill, 
-                                                int opacity, Pen pen, string polygonName)
-        {
-            GMapPolygon polygon = new GMapPolygon(coords, polygonName)
-            {
-                Fill = new SolidBrush(Color.FromArgb(opacity, fill)),
-                Stroke = pen
-            };
-
-            return polygon;
-        }
-        public static GMapRoute CreateRoute(List<PointLatLng> coords, string routeName)
-        {
-            GMapRoute route = new GMapRoute(coords, routeName)
-            {
-                Stroke = new Pen(solidColorBlack)
-            };
-
-            return route;
-        }
-        public static GMapRoute CreateRoute(List<PointLatLng> coords, Pen pen, string routeName)
-        {
-            GMapRoute route = new GMapRoute(coords, routeName)
-            {
-                Stroke = pen
-            };
-
-            return route;
-        }
-
-        public static void DisposeElements(IEnumerable<IDisposable> disposables)
-        {
-            foreach (IDisposable disposable in disposables)
-            {
-                disposable.Dispose();
-            }
-        }
-    }
-
-    public class ReworkedMap : IDisposable
+    public class Map : IDisposable
     {
         private static readonly string defaultOverlayName;
         private static readonly int defaultOpacity;
@@ -122,7 +23,7 @@ namespace Maps
         private PolygonContext polygonContext;
         private RouteContext routeContext;
 
-        static ReworkedMap()
+        static Map()
         {
             defaultOverlayName = "default";
             defaultOpacity = 30;
@@ -132,28 +33,28 @@ namespace Maps
             routesComparator = new RoutesComparator();
         }
 
-        public ReworkedMap() : this(null)
+        public Map() : this(null)
         { }
-        public ReworkedMap(GMapControl gMapControl)
+        public Map(GMapControl gMapControl)
         {
             if (gMapControl == null)
             {
-                Map = new GMapControl();
-                Map.Name = "MainMap";
+                MapObject = new GMapControl();
+                MapObject.Name = "MainMap";
             }
             else
             {
-                Map = gMapControl;
+                MapObject = gMapControl;
             }
 
             polygonContext = null;
 
             defaultOverlay = new GMapOverlay(defaultOverlayName);
 
-            Map.Overlays.Add(defaultOverlay);
+            MapObject.Overlays.Add(defaultOverlay);
         }
 
-        public GMapControl Map { get; private set; }
+        public GMapControl MapObject { get; private set; }
 
         public GMapMarker SelectedMarker { get; set; }
         public GMapPolygon SelectedPolygon { get; set; }
@@ -166,25 +67,35 @@ namespace Maps
                 throw new ArgumentNullException("marker");
             }
 
-            return AddMarker(MapHelper.CreateMarker(Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y), img, null));
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), img, string.Empty, null, null));
         }
-        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string description)
+        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string layoutId)
         {
             if (img == null)
             {
                 throw new ArgumentNullException("marker");
             }
 
-            return AddMarker(MapHelper.CreateMarker(Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y), img, description));
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), 
+                                                    img, string.Empty, null, null), layoutId);
         }
-        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string description, string layoutId)
+        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string format, string name, string description)
         {
             if (img == null)
             {
                 throw new ArgumentNullException("marker");
             }
 
-            return AddMarker(MapHelper.CreateMarker(Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y), img, description), layoutId);
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), img, format, name, description));
+        }
+        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string layoutId, string format, string name, string description)
+        {
+            if (img == null)
+            {
+                throw new ArgumentNullException("marker");
+            }
+
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), img, format, name, description), layoutId);
         }
         public GMapMarker AddMarker(PointLatLng coords, Bitmap img)
         {
@@ -193,55 +104,73 @@ namespace Maps
                 throw new ArgumentNullException("marker");
             }
 
-            return AddMarker(MapHelper.CreateMarker(coords, img, null));
+            return AddMarker(new NamedGoogleMarker(coords, img, string.Empty, null, null));
         }
-        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string description)
+        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string layoutId)
         {
             if (img == null)
             {
                 throw new ArgumentNullException("marker");
             }
 
-            return AddMarker(MapHelper.CreateMarker(coords, img, description));
+            return AddMarker(new NamedGoogleMarker(coords, img, string.Empty, null, null), layoutId);
         }
-        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string description, string layoutId)
+        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string format, string name, string description)
         {
             if (img == null)
             {
                 throw new ArgumentNullException("marker");
             }
 
-            return AddMarker(MapHelper.CreateMarker(coords, img, description), layoutId);
+            return AddMarker(new NamedGoogleMarker(coords, img, format, name, description));
+        }
+        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string layoutId, string format, string name, string description)
+        {
+            if (img == null)
+            {
+                throw new ArgumentNullException("marker");
+            }
+
+            return AddMarker(new NamedGoogleMarker(coords, img, format, name, description), layoutId);
         }
         public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType)
         {
 
-            return AddMarker(MapHelper.CreateMarker(Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y), markerType, null));
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), markerType, string.Empty, null, null));
         }
-        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string description)
+        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string layoutId)
+        {
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), 
+                                                    markerType, string.Empty, null, null), layoutId);
+        }
+        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string format, string name, string description)
         {
 
-            return AddMarker(MapHelper.CreateMarker(Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y), markerType, description));
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), markerType, format, name, description));
         }
-        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string description, string layoutId)
+        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string layoutId, string format, string name, string description)
         {
 
-            return AddMarker(MapHelper.CreateMarker(Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y), markerType, description), layoutId);
+            return AddMarker(new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), markerType, format, name, description), layoutId);
         }
         public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType)
         {
 
-            return AddMarker(MapHelper.CreateMarker(coords, markerType, null));
+            return AddMarker(new NamedGoogleMarker(coords, markerType, string.Empty, null, null));
         }
-        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string description)
+        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string layoutId)
+        {
+            return AddMarker(new NamedGoogleMarker(coords, markerType, string.Empty, null, null), layoutId);
+        }
+        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string format, string name, string description)
         {
 
-            return AddMarker(MapHelper.CreateMarker(coords, markerType, description));
+            return AddMarker(new NamedGoogleMarker(coords, markerType, format, name, description));
         }
-        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string description, string layoutId)
+        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string layoutId, string format, string name, string description)
         {
 
-            return AddMarker(MapHelper.CreateMarker(coords, markerType, description), layoutId);
+            return AddMarker(new NamedGoogleMarker(coords, markerType, format, name, description), layoutId);
         }
         public GMapMarker AddMarker(GMapMarker marker)
         {
@@ -279,7 +208,7 @@ namespace Maps
                 overlay = new GMapOverlay(layoutId);
                 overlay.Markers.Add(marker);
 
-                Map.Overlays.Add(overlay);
+                MapObject.Overlays.Add(overlay);
 
                 ZoomPlus();
                 ZoomMinus();
@@ -292,50 +221,64 @@ namespace Maps
 
         public GMapPolygon AddPolygon(IEnumerable<Point> points, Color fill, string polygonName)
         {
-            return AddPolygon(points, fill, defaultOverlayName, defaultOpacity, polygonName);
+            return AddPolygon(points, fill, defaultOpacity, defaultOverlayName, polygonName);
         }
-        public GMapPolygon AddPolygon(IEnumerable<Point> points, Color fill, string polygonName, int opacity)
+        public GMapPolygon AddPolygon(IEnumerable<Point> points, Color fill, int opacity, string polygonName)
         {
-            return AddPolygon(points, fill, defaultOverlayName, opacity, polygonName);
+            return AddPolygon(points, fill, opacity, defaultOverlayName, polygonName);
         }
-        public GMapPolygon AddPolygon(IEnumerable<Point> points, Color fill, string polygonName, int opacity, string layoutId)
+        public GMapPolygon AddPolygon(IEnumerable<Point> points, Color fill, int opacity, string polygonName, string layoutId)
         {
-            List<PointLatLng> coords = points.Select(p => Map.FromLocalToLatLng(p.X, p.Y)).ToList();
+            List<PointLatLng> coords = points.Select(p => MapObject.FromLocalToLatLng(p.X, p.Y)).ToList();
 
             return AddPolygon(MapHelper.CreatePolygon(coords, fill, opacity, polygonName), layoutId);
         }
+        public GMapPolygon AddPolygon(IEnumerable<Point> points, Color fill, int opacity, Color stroke, string polygonName, string layoutId)
+        {
+            List<PointLatLng> coords = points.Select(p => MapObject.FromLocalToLatLng(p.X, p.Y)).ToList();
+
+            return AddPolygon(MapHelper.CreatePolygon(coords, fill, opacity, stroke, polygonName), layoutId);
+        }
         public GMapPolygon AddPolygon(IEnumerable<PointLatLng> coords, Color fill, string polygonName)
         {
-            return AddPolygon(coords, fill, defaultOverlayName, defaultOpacity, polygonName);
+            return AddPolygon(coords, fill, defaultOpacity, defaultOverlayName, polygonName);
         }
-        public GMapPolygon AddPolygon(IEnumerable<PointLatLng> coords, Color fill, string polygonName, int opacity)
+        public GMapPolygon AddPolygon(IEnumerable<PointLatLng> coords, Color fill, int opacity, string polygonName)
         {
-            return AddPolygon(coords, fill, defaultOverlayName, opacity, polygonName);
+            return AddPolygon(coords, fill, opacity, defaultOverlayName, polygonName);
         }
-        public GMapPolygon AddPolygon(IEnumerable<PointLatLng> coords, Color fill, string polygonName, int opacity, string layoutId)
+        public GMapPolygon AddPolygon(IEnumerable<PointLatLng> coords, Color fill, int opacity, string polygonName, string layoutId)
         {
             return AddPolygon(MapHelper.CreatePolygon(coords.ToList(), fill, opacity, polygonName), layoutId);
         }
+        public GMapPolygon AddPolygon(IEnumerable<PointLatLng> coords, Color fill, int opacity, Color stroke, string polygonName, string layoutId)
+        {
+            return AddPolygon(MapHelper.CreatePolygon(coords.ToList(), fill, opacity, stroke, polygonName), layoutId);
+        }
         public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, string polygonName)
         {
-            return AddPolygon(markers, fill, defaultOverlayName, defaultOpacity, polygonName);
+            return AddPolygon(markers, fill, defaultOpacity, defaultOverlayName, polygonName);
         }
-        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, string polygonName, int opacity)
+        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, int opacity, string polygonName)
         {
-            return AddPolygon(markers, fill, defaultOverlayName, opacity, polygonName);
+            return AddPolygon(markers, fill, opacity, defaultOverlayName, polygonName);
         }
-        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, string polygonName, int opacity, string layoutId)
+        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, int opacity, string polygonName, string layoutId)
+        {
+            return AddPolygon(markers, fill, opacity, Color.Red, polygonName, layoutId);
+        }
+        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, int opacity, Color stroke, string polygonName, string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
             List<PointLatLng> markersCoord = markers.Select(m =>
-                                                            {
-                                                                overlay.Markers.Add(m);
-                                                                return m.Position;
-                                                            })
+                                                    {
+                                                        overlay.Markers.Add(m);
+                                                        return m.Position;
+                                                    })
                                                     .ToList();
 
-            return AddPolygon(MapHelper.CreatePolygon(markersCoord, fill, opacity, polygonName), layoutId);
+            return AddPolygon(MapHelper.CreatePolygon(markersCoord, fill, opacity, stroke, polygonName), layoutId);
         }
         public GMapPolygon AddPolygon(GMapPolygon polygon)
         {
@@ -372,7 +315,7 @@ namespace Maps
                 overlay = new GMapOverlay(layoutId);
                 overlay.Polygons.Add(polygon);
 
-                Map.Overlays.Add(overlay);
+                MapObject.Overlays.Add(overlay);
             }
 
             SelectedPolygon = polygon;
@@ -380,29 +323,29 @@ namespace Maps
             return polygon;
         }
 
-        public GMapRoute AddRoute(IEnumerable<Point> points, Pen stroke, string routeName)
+        public GMapRoute AddRoute(IEnumerable<Point> points, Color stroke, string routeName)
         {
             return AddRoute(points, stroke, defaultOverlayName, routeName);
         }
-        public GMapRoute AddRoute(IEnumerable<Point> points, Pen stroke, string routeName, string layoutId)
+        public GMapRoute AddRoute(IEnumerable<Point> points, Color stroke, string routeName, string layoutId)
         {
-            List<PointLatLng> coords = points.Select(p => Map.FromLocalToLatLng(p.X, p.Y)).ToList();
+            List<PointLatLng> coords = points.Select(p => MapObject.FromLocalToLatLng(p.X, p.Y)).ToList();
 
             return AddRoute(MapHelper.CreateRoute(coords, stroke, routeName), layoutId);
         }
-        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Pen stroke, string polygonName)
+        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Color stroke, string polygonName)
         {
             return AddRoute(coords, stroke, defaultOverlayName, polygonName);
         }
-        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Pen stroke, string polygonName, string layoutId)
+        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Color stroke, string polygonName, string layoutId)
         {
             return AddRoute(MapHelper.CreateRoute(coords.ToList(), stroke, polygonName), layoutId);
         }
-        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Pen stroke, string polygonName)
+        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string polygonName)
         {
             return AddRoute(markers, stroke, defaultOverlayName, polygonName);
         }
-        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Pen stroke, string polygonName, string layoutId)
+        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string polygonName, string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
@@ -450,7 +393,7 @@ namespace Maps
                 overlay = new GMapOverlay(layoutId);
                 overlay.Routes.Add(route);
 
-                Map.Overlays.Add(overlay);
+                MapObject.Overlays.Add(overlay);
             }
 
             SelectedRoute = route;
@@ -460,14 +403,14 @@ namespace Maps
 
         public void HideAllLayout() 
         {
-            foreach (GMapOverlay overlay in Map.Overlays)
+            foreach (GMapOverlay overlay in MapObject.Overlays)
             {
                 overlay.IsVisibile = false;
             }
         }
         public void ShowAllLayout()
         {
-            foreach (GMapOverlay overlay in Map.Overlays)
+            foreach (GMapOverlay overlay in MapObject.Overlays)
             {
                 overlay.IsVisibile = true;
             }
@@ -532,7 +475,7 @@ namespace Maps
                     overlay.Polygons.Add(existingPolygon);
                 }
 
-                Map.Overlays.Add(overlay);
+                MapObject.Overlays.Add(overlay);
 
                 polygonContext = new PolygonContext(overlay, fill, opacity, polygonName, markerType);
             }
@@ -547,7 +490,7 @@ namespace Maps
             }
 
             GMapOverlay overlay = polygonContext.Overlay;
-            Map.Overlays.Remove(overlay);
+            MapObject.Overlays.Remove(overlay);
 
             polygonContext.Dispose();
             polygonContext = null;
@@ -561,7 +504,7 @@ namespace Maps
 
             GMapOverlay overlay = polygonContext.Overlay;
 
-            Map.Overlays.Remove(overlay);
+            MapObject.Overlays.Remove(overlay);
 
             overlay.Id = overlay.Id.Remove(0, 2);
             overlay.Id = overlay.Id.Remove(overlay.Id.Length - 2);
@@ -570,7 +513,7 @@ namespace Maps
 
             if (existingOverlay == null)
             {
-                Map.Overlays.Add(overlay);
+                MapObject.Overlays.Add(overlay);
             }
             else
             {
@@ -606,7 +549,7 @@ namespace Maps
                     overlay.Routes.Add(existingRoute);
                 }
 
-                Map.Overlays.Add(overlay);
+                MapObject.Overlays.Add(overlay);
 
                 routeContext = new RouteContext(overlay, routeName, stroke, markerType);
             }
@@ -621,7 +564,7 @@ namespace Maps
             }
 
             GMapOverlay overlay = routeContext.Overlay;
-            Map.Overlays.Remove(overlay);
+            MapObject.Overlays.Remove(overlay);
 
             routeContext.Dispose();
             routeContext = null;
@@ -635,7 +578,7 @@ namespace Maps
 
             GMapOverlay overlay = routeContext.Overlay;
 
-            Map.Overlays.Remove(overlay);
+            MapObject.Overlays.Remove(overlay);
 
             overlay.Id = overlay.Id.Remove(0, 2);
             overlay.Id = overlay.Id.Remove(overlay.Id.Length - 2);
@@ -644,7 +587,7 @@ namespace Maps
 
             if (existingOverlay == null)
             {
-                Map.Overlays.Add(overlay);
+                MapObject.Overlays.Add(overlay);
             }
             else
             {
@@ -662,7 +605,7 @@ namespace Maps
 
         public void RemoveMarker(Point screenPoint)
         {
-            PointLatLng coords = Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y);
+            PointLatLng coords = MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y);
 
             RemoveMarker(GetMarkerByCoordsOrNull(coords));
         }
@@ -677,7 +620,7 @@ namespace Maps
                 SelectedMarker = null;
             }
 
-            foreach (var overlay in Map.Overlays)
+            foreach (var overlay in MapObject.Overlays)
             {
                 overlay.Markers.Remove(marker);
             }
@@ -685,19 +628,121 @@ namespace Maps
         
         public void RemovePolygon(string polygonName)
         {
-            RemovePolygon(GetPolygonByNameOrNull(polygonName));
+            foreach (var overlay in MapObject.Overlays)
+            {
+                GMapPolygon _polygon = null;
+                foreach (var polygon in overlay.Polygons)
+                {
+                    if (polygon.Name == polygonName)
+                    {
+                        _polygon = polygon;
+                        break;
+                    }
+                }
+
+                overlay.Polygons.Remove(_polygon);
+
+                if (object.ReferenceEquals(_polygon, SelectedPolygon))
+                {
+                    SelectedPolygon = null;
+                }
+            }
         }
         public void RemovePolygon(GMapPolygon polygon)
         {
-            foreach (var overlay in Map.Overlays)
+            if (object.ReferenceEquals(polygon, SelectedPolygon))
+            {
+                SelectedPolygon = null;
+            }
+
+            foreach (var overlay in MapObject.Overlays)
+            {
+                overlay.Polygons.Remove(polygon);
+            }
+
+            polygon.Dispose();
+        }
+
+        public void RemoveRoute(string routeName)
+        {
+            foreach (var overlay in MapObject.Overlays)
+            {
+                GMapRoute _route = null;
+                foreach (var route in overlay.Routes)
+                {
+                    if (route.Name == routeName)
+                    {
+                        _route = route;
+                        break;
+                    }
+                }
+
+                overlay.Routes.Remove(_route);
+
+                if (object.ReferenceEquals(_route, SelectedRoute))
+                {
+                    SelectedRoute = null;
+                }
+            }
+        }
+        public void RemoveRoute(GMapRoute route)
+        {
+            if (object.ReferenceEquals(route, SelectedRoute))
+            {
+                SelectedRoute = null;
+            }
+
+            foreach (var overlay in MapObject.Overlays)
+            {
+                overlay.Routes.Remove(route);
+            }
+
+            route.Dispose();
+        }
+
+        public void RemoveMarkerFromLayout(Point screenPoint, string layoutId = "default")
+        {
+            PointLatLng coords = MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y);
+
+            RemoveMarkerFromLayout(GetMarkerByCoordsOrNull(coords), layoutId);
+        }
+        public void RemoveMarkerFromLayout(PointLatLng coords, string layoutId = "default")
+        {
+            RemoveMarkerFromLayout(GetMarkerByCoordsOrNull(coords), layoutId);
+        }
+        public void RemoveMarkerFromLayout(GMapMarker marker, string layoutId = "default")
+        {
+            if (object.ReferenceEquals(marker, SelectedMarker))
+            {
+                SelectedMarker = null;
+            }
+
+            GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
+
+            if (overlay != null)
+            {
+                overlay.Markers.Remove(marker);
+            }
+        }
+
+        public void RemovePolygonFromLayout(string polygonName, string layoutId = "default")
+        {
+            RemovePolygonFromLayout(GetPolygonByNameOrNull(polygonName), layoutId);
+        }
+        public void RemovePolygonFromLayout(GMapPolygon polygon, string layoutId = "default")
+        {
+            if (object.ReferenceEquals(polygon, SelectedPolygon))
+            {
+                SelectedPolygon = null;
+            }
+
+            GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
+
+            if (overlay != null)
             {
                 int polygonIndex = overlay.Polygons.IndexOf(polygon);
                 if (polygonIndex != -1)
                 {
-                    if (object.ReferenceEquals(overlay.Polygons[polygonIndex], SelectedPolygon))
-                    {
-                        SelectedPolygon = null;
-                    }
 
                     overlay.Polygons[polygonIndex].Dispose();
                     overlay.Polygons.RemoveAt(polygonIndex);
@@ -705,21 +750,24 @@ namespace Maps
             }
         }
 
-        public void RemoveRoute(string routeName)
+        public void RemoveRouteFromLayout(string routeName, string layoutId = "default")
         {
-            RemovePolygon(GetPolygonByNameOrNull(routeName));
+            RemoveRouteFromLayout(GetRouteByNameOrNull(routeName), layoutId);
         }
-        public void RemovePolygon(GMapRoute route)
+        public void RemoveRouteFromLayout(GMapRoute route, string layoutId = "default")
         {
-            foreach (var overlay in Map.Overlays)
+            if (object.ReferenceEquals(route, SelectedPolygon))
+            {
+                SelectedRoute = null;
+            }
+
+            GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
+
+            if (overlay != null)
             {
                 int routeIndex = overlay.Routes.IndexOf(route);
                 if (routeIndex != -1)
                 {
-                    if (object.ReferenceEquals(overlay.Routes[routeIndex], SelectedRoute))
-                    {
-                        SelectedRoute = null;
-                    }
 
                     overlay.Routes[routeIndex].Dispose();
                     overlay.Routes.RemoveAt(routeIndex);
@@ -727,56 +775,75 @@ namespace Maps
             }
         }
 
-        public IEnumerable<GMapMarker> GetMarkersByLayoutOrNull(string layoutId = "default")
+        public ICollection<GMapMarker> GetMarkersByLayoutOrNull(string layoutId = "default")
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
             return overlay != null ? overlay.Markers : null;
         }
-        public IEnumerable<GMapPolygon> GetPolygonsByLayoutOrNull(string layoutId = "default")
+        public ICollection<GMapPolygon> GetPolygonsByLayoutOrNull(string layoutId = "default")
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
             return overlay != null ? overlay.Polygons : null;
         }
+        public ICollection<GMapRoute> GetRoutesByLayoutOrNull(string layoutId = "default")
+        {
+            GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
+
+            return overlay != null ? overlay.Routes : null;
+        }
 
         public GMapMarker GetMarkerByCoordsOrNull(Point screenPoint)
         {
-            return GetMarkerByCoordsOrNull(Map.FromLocalToLatLng(screenPoint.X, screenPoint.Y));
+            return GetMarkerByCoordsOrNull(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y));
         }
         public GMapMarker GetMarkerByCoordsOrNull(PointLatLng coords)
         {
-            double offsetLat = 0.0001;
-            double offsetLng = 0.00009;
+            return GetMarkerByCoordsInLayoutOrNull(coords, null);
+        }
+        public GMapMarker GetMarkerByCoordsInLayoutOrNull(Point screenPoint, string layoutId)
+        {
+            return GetMarkerByCoordsInLayoutOrNull(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), layoutId);
+        }
+        public GMapMarker GetMarkerByCoordsInLayoutOrNull(PointLatLng coords, string layoutId)
+        {
+            double offsetLat = 0.004;
+            double offsetLng = 0.002;
 
-            if (Map.Zoom >= 0 && Map.Zoom <= 3)
+            if (MapObject.Zoom >= 0 && MapObject.Zoom <= 3)
             {
                 offsetLat = 2.5;
                 offsetLng = 2.4;
             }
-            else if (Map.Zoom > 3 && Map.Zoom <= 5)
+            else if (MapObject.Zoom > 3 && MapObject.Zoom <= 5)
             {
                 offsetLat = 0.9;
                 offsetLng = 0.8;
             }
-            else if (Map.Zoom > 5 && Map.Zoom <= 8)
+            else if (MapObject.Zoom > 5 && MapObject.Zoom <= 8)
             {
                 offsetLat = 0.35;
                 offsetLng = 0.2;
             }
-            else if (Map.Zoom > 8 && Map.Zoom <= 11)
+            else if (MapObject.Zoom > 8 && MapObject.Zoom <= 11)
             {
                 offsetLat = 0.05;
                 offsetLng = 0.04;
             }
-            else if (Map.Zoom > 11 && Map.Zoom <= 14)
+            else if (MapObject.Zoom > 11 && MapObject.Zoom <= 14)
             {
                 offsetLat = 0.008;
                 offsetLng = 0.005;
             }
 
-            foreach (var overlay in Map.Overlays)
+            foreach (var overlay in MapObject.Overlays)
             {
+                if (layoutId != null && overlay.Id != layoutId)
+                {
+                    continue;
+                }
+
                 foreach (var marker in overlay.Markers)
                 {
                     if (coords.Lat > marker.Position.Lat - offsetLat && coords.Lat < marker.Position.Lat + offsetLat &&
@@ -791,7 +858,7 @@ namespace Maps
         }
         public GMapPolygon GetPolygonByNameOrNull(string polygonName)
         {
-            foreach (var overlay in Map.Overlays)
+            foreach (var overlay in MapObject.Overlays)
             {
                 foreach (var polygon in overlay.Polygons)
                 {
@@ -806,7 +873,7 @@ namespace Maps
         }
         public GMapRoute GetRouteByNameOrNull(string routeName)
         {
-            foreach (var overlay in Map.Overlays)
+            foreach (var overlay in MapObject.Overlays)
             {
                 foreach (var route in overlay.Routes)
                 {
@@ -820,6 +887,7 @@ namespace Maps
             return null;
         }
 
+
         public void ClearMap()
         {
             EndPolygonDraw();
@@ -828,14 +896,14 @@ namespace Maps
             MapHelper.DisposeElements(defaultOverlay.Polygons);
             MapHelper.DisposeElements(defaultOverlay.Routes);
 
-            foreach (GMapOverlay overlay in Map.Overlays)
+            foreach (GMapOverlay overlay in MapObject.Overlays)
             {
                 overlay.Clear();
             }
 
-            Map.Overlays.Clear();
+            MapObject.Overlays.Clear();
 
-            Map.Overlays.Add(defaultOverlay);
+            MapObject.Overlays.Add(defaultOverlay);
         }
         public void ClearLayout(string layoutId)
         {
@@ -852,21 +920,32 @@ namespace Maps
         }
         public void ClearAllMarkers()
         {
-            foreach (var overlay in Map.Overlays)
+            var demendentMarkers = (from overlay in MapObject.Overlays
+                                    from marker in overlay.Markers
+                                    where ((NamedGoogleMarker)marker).IsDependent
+                                    select new { Marker = marker, OverlayId = overlay.Id })
+                                    .ToArray();
+
+            foreach (var overlay in MapObject.Overlays)
             {
                 overlay.Markers.Clear();
+            }
+
+            foreach (var dependetMarker in demendentMarkers)
+            {
+                AddMarker(dependetMarker.Marker, dependetMarker.OverlayId);
             }
         }
         public void ClearAllPolygons()
         {
-            foreach (var overlay in Map.Overlays)
+            foreach (var overlay in MapObject.Overlays)
             {
                 overlay.Polygons.Clear();
             }
         }
         public void ClearAllRoutes()
         {
-            foreach (var overlay in Map.Overlays)
+            foreach (var overlay in MapObject.Overlays)
             {
                 overlay.Routes.Clear();
             }
@@ -875,7 +954,7 @@ namespace Maps
         public void AddLayout(string layoutId)
         {
             GMapOverlay overlay = new GMapOverlay(layoutId);
-            Map.Overlays.Add(overlay);
+            MapObject.Overlays.Add(overlay);
         }
         public void RemoveLayout(string layoutId)
         {
@@ -886,7 +965,7 @@ namespace Maps
                 return;
             }
 
-            Map.Overlays.Remove(overlay);
+            MapObject.Overlays.Remove(overlay);
 
             MapHelper.DisposeElements(overlay.Polygons);
             MapHelper.DisposeElements(overlay.Routes);
@@ -901,21 +980,21 @@ namespace Maps
 
         public void ZoomPlus()
         {
-            Map.Zoom++;
+            MapObject.Zoom++;
         }
         public void ZoomMinus()
         {
-            Map.Zoom--;
+            MapObject.Zoom--;
         }
 
         public void Dispose()
         {
-            Map.Dispose();
+            MapObject.Dispose();
         }
 
         private GMapOverlay GetOverlayByIdOrNull(string overlayId)
         {
-            foreach (var overlay in Map.Overlays)
+            foreach (var overlay in MapObject.Overlays)
             {
                 if (overlay.Id.Equals(overlayId, StringComparison.Ordinal))
                 {

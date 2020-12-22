@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Data;
 
-namespace Maps
+namespace Maps.OldMap
 {
     public partial class NormAllForm : Form
     {

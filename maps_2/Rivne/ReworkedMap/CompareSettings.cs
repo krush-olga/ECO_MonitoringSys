@@ -15,12 +15,12 @@ namespace Maps
     {
         private DBManager db;
 
-        private List<string> markers;
-        private List<string> elements;
+        private IList<string> markers;
+        private IList<string> elements;
 
         private object locker;
 
-        public CompareSettings(List<string> markers)
+        public CompareSettings(IList<string> markers)
         {
             locker = new object();
 
@@ -32,7 +32,7 @@ namespace Maps
             UpdateListBox();
         }
 
-        public List<string> Markers
+        public IList<string> Markers
         {
             get { return markers; }
             set
@@ -135,36 +135,30 @@ namespace Maps
             try
             {
                 StringBuilder nameObjectIdCondition = new StringBuilder();
-                string startCondition = "(Name_Object = ";
-                string and = " AND ";
-                string or = " OR ";
-                string idPoiEquality = "emissions_on_map.idPoi = poi.Id";
-                string idElementEquality = "emissions_on_map.idElement = ";
-                string dateEquality = "STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')";
 
                 for (int i = 0; i < Markers.Count; i++)
                 {
-                    nameObjectIdCondition.Append(startCondition);
+                    nameObjectIdCondition.Append("(Name_Object = ");
                     nameObjectIdCondition.Append(DBUtil.AddQuotes(markers[i]));
-                    nameObjectIdCondition.Append(and);
-                    nameObjectIdCondition.Append(idPoiEquality);
-                    nameObjectIdCondition.Append(and);
-                    nameObjectIdCondition.Append(idElementEquality);
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("emissions_on_map.idPoi = poi.Id");
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("emissions_on_map.idElement = ");
                     nameObjectIdCondition.Append(ElementsСomboBox.SelectedValue);
-                    nameObjectIdCondition.Append(and);
-                    nameObjectIdCondition.Append(dateEquality);
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
                     nameObjectIdCondition.Append(" >= '");
                     nameObjectIdCondition.Append(StartDateDTPicker.Value.ToString("yyyy-MM-dd"));
                     nameObjectIdCondition.Append("'");
-                    nameObjectIdCondition.Append(and);
-                    nameObjectIdCondition.Append(dateEquality);
+                    nameObjectIdCondition.Append(" AND ");
+                    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
                     nameObjectIdCondition.Append(" <= '");
                     nameObjectIdCondition.Append(EndDateDTPicker.Value.ToString("yyyy-MM-dd"));
                     nameObjectIdCondition.Append("')");
 
                     if (i != Markers.Count - 1)
                     {
-                        nameObjectIdCondition.Append(or);
+                        nameObjectIdCondition.Append(" OR ");
                     }
                 }
 

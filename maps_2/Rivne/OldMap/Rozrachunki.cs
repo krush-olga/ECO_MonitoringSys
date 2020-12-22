@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Data;
 
 
-namespace Maps
+namespace Maps.OldMap
 {
     public partial class Calculations : Form
     {

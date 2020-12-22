@@ -336,5 +336,24 @@ namespace Maps.HelpWindows
             name = ObjectNameTextBox.Text;
             description = ObjectDescriptionTextBox.Text;
         }
+
+        private void ItemConfigurationWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (string.IsNullOrEmpty(ObjectNameTextBox.Text))
+            {
+                MessageBox.Show("Ви не заповнили усі необхідні поля.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;
+                return;
+            }
+        }
+
+        private void m_CancelButton_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(oldObjName))
+            {
+                MessageBox.Show("Ви не можете вимкнути вікно не зберігвши необхідні поля.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
     }
 }

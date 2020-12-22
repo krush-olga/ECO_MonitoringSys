@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 
-namespace Maps
+namespace Maps.OldMap
 {
 
     public partial class Elements : Form

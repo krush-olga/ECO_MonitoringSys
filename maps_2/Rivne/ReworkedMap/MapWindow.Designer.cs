@@ -1,6 +1,6 @@
 ﻿namespace Maps
 {
-    partial class TestNewMap
+    partial class MapWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -19,6 +19,7 @@
             }
 
             Helpers.ImageCache.Clear();
+            dBManager.Dispose();
 
             base.Dispose(disposing);
         }
@@ -35,18 +36,6 @@
             this.MapObjectContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.DeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PanelSideMenu = new System.Windows.Forms.Panel();
-            this._ElementsSideMenuPanel = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.PolygonNameTextBox = new System.Windows.Forms.TextBox();
-            this.MarkerButton = new System.Windows.Forms.Button();
-            this.TubeButton = new System.Windows.Forms.Button();
-            this.PolygonButton = new System.Windows.Forms.Button();
-            this.ShowButton = new System.Windows.Forms.Button();
-            this.LoadButton = new System.Windows.Forms.Button();
-            this.HideButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ClearButton = new System.Windows.Forms.Button();
-            this.LayoutTextBox = new System.Windows.Forms.TextBox();
             this.ElementsSideMenuPanel = new System.Windows.Forms.Panel();
             this.AddItemTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -63,6 +52,10 @@
             this.SaveMarkerButton = new System.Windows.Forms.Button();
             this.AddMarkerButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ShowCurrentExpertPolygonsButton = new System.Windows.Forms.Button();
+            this.ClearAllPolygons = new System.Windows.Forms.Button();
+            this.ShowCurrentUserPolygonsButton = new System.Windows.Forms.Button();
+            this.ShowAllPolygonsButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.PolygonColorTypeComboBox = new System.Windows.Forms.ComboBox();
             this.PolygonColorPictureBox = new System.Windows.Forms.PictureBox();
@@ -72,14 +65,13 @@
             this.PolygonSaveButton = new System.Windows.Forms.Button();
             this.PolygonDrawButton = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.expertButtonTube = new System.Windows.Forms.Button();
-            this.btnDeleteTube = new System.Windows.Forms.Button();
-            this.btnClearTube = new System.Windows.Forms.Button();
-            this.btnShowExpertsTubes = new System.Windows.Forms.Button();
-            this.btnShowAllTubes = new System.Windows.Forms.Button();
-            this.btnCancelTube = new System.Windows.Forms.Button();
-            this.btnSaveTube = new System.Windows.Forms.Button();
-            this.btnStartTube = new System.Windows.Forms.Button();
+            this.ShowCurrentExpertTubesButton = new System.Windows.Forms.Button();
+            this.ClearAllTubesButton = new System.Windows.Forms.Button();
+            this.ShowCurrentUserTubesButton = new System.Windows.Forms.Button();
+            this.ShowAllTubesButton = new System.Windows.Forms.Button();
+            this.TubeSettingsButton = new System.Windows.Forms.Button();
+            this.TubeSaveButton = new System.Windows.Forms.Button();
+            this.TubeDrawButton = new System.Windows.Forms.Button();
             this.ElementsSideMenuButton = new System.Windows.Forms.Button();
             this.FiltrationSideMenuPanel = new System.Windows.Forms.Panel();
             this.ShowAllLayoutButton = new System.Windows.Forms.Button();
@@ -123,9 +115,10 @@
             this.ZoomMinus = new System.Windows.Forms.Button();
             this.CollapseButton = new System.Windows.Forms.Button();
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
+            this.PolylineToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.ComparsionSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MapObjectContextMenuStrip.SuspendLayout();
             this.PanelSideMenu.SuspendLayout();
-            this._ElementsSideMenuPanel.SuspendLayout();
             this.ElementsSideMenuPanel.SuspendLayout();
             this.AddItemTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -148,21 +141,21 @@
             // MapObjectContextMenuStrip
             // 
             this.MapObjectContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ComparsionSelectToolStripMenuItem,
             this.DeleteToolStripMenuItem});
             this.MapObjectContextMenuStrip.Name = "contextMenuStrip1";
-            this.MapObjectContextMenuStrip.Size = new System.Drawing.Size(119, 26);
+            this.MapObjectContextMenuStrip.Size = new System.Drawing.Size(209, 48);
             // 
             // DeleteToolStripMenuItem
             // 
             this.DeleteToolStripMenuItem.Name = "DeleteToolStripMenuItem";
-            this.DeleteToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
+            this.DeleteToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.DeleteToolStripMenuItem.Text = "Удалить";
             this.DeleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
             // 
             // PanelSideMenu
             // 
             this.PanelSideMenu.AutoScroll = true;
-            this.PanelSideMenu.Controls.Add(this._ElementsSideMenuPanel);
             this.PanelSideMenu.Controls.Add(this.ElementsSideMenuPanel);
             this.PanelSideMenu.Controls.Add(this.ElementsSideMenuButton);
             this.PanelSideMenu.Controls.Add(this.FiltrationSideMenuPanel);
@@ -177,133 +170,11 @@
             this.PanelSideMenu.Size = new System.Drawing.Size(310, 679);
             this.PanelSideMenu.TabIndex = 12;
             // 
-            // _ElementsSideMenuPanel
-            // 
-            this._ElementsSideMenuPanel.Controls.Add(this.label5);
-            this._ElementsSideMenuPanel.Controls.Add(this.PolygonNameTextBox);
-            this._ElementsSideMenuPanel.Controls.Add(this.MarkerButton);
-            this._ElementsSideMenuPanel.Controls.Add(this.TubeButton);
-            this._ElementsSideMenuPanel.Controls.Add(this.PolygonButton);
-            this._ElementsSideMenuPanel.Controls.Add(this.ShowButton);
-            this._ElementsSideMenuPanel.Controls.Add(this.LoadButton);
-            this._ElementsSideMenuPanel.Controls.Add(this.HideButton);
-            this._ElementsSideMenuPanel.Controls.Add(this.label1);
-            this._ElementsSideMenuPanel.Controls.Add(this.ClearButton);
-            this._ElementsSideMenuPanel.Controls.Add(this.LayoutTextBox);
-            this._ElementsSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this._ElementsSideMenuPanel.Location = new System.Drawing.Point(0, 929);
-            this._ElementsSideMenuPanel.Name = "_ElementsSideMenuPanel";
-            this._ElementsSideMenuPanel.Size = new System.Drawing.Size(293, 228);
-            this._ElementsSideMenuPanel.TabIndex = 11;
-            // 
-            // label5
-            // 
-            this.label5.Location = new System.Drawing.Point(133, 58);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(132, 29);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Название полигона/трубопровода";
-            this.label5.Visible = false;
-            // 
-            // PolygonNameTextBox
-            // 
-            this.PolygonNameTextBox.Location = new System.Drawing.Point(147, 90);
-            this.PolygonNameTextBox.Name = "PolygonNameTextBox";
-            this.PolygonNameTextBox.Size = new System.Drawing.Size(97, 20);
-            this.PolygonNameTextBox.TabIndex = 11;
-            this.PolygonNameTextBox.Visible = false;
-            // 
-            // MarkerButton
-            // 
-            this.MarkerButton.Location = new System.Drawing.Point(9, 6);
-            this.MarkerButton.Name = "MarkerButton";
-            this.MarkerButton.Size = new System.Drawing.Size(97, 23);
-            this.MarkerButton.TabIndex = 2;
-            this.MarkerButton.Text = "Маркер";
-            this.MarkerButton.UseVisualStyleBackColor = true;
-            this.MarkerButton.Click += new System.EventHandler(this.MarkerButton_Click);
-            // 
-            // TubeButton
-            // 
-            this.TubeButton.Location = new System.Drawing.Point(9, 64);
-            this.TubeButton.Name = "TubeButton";
-            this.TubeButton.Size = new System.Drawing.Size(97, 23);
-            this.TubeButton.TabIndex = 4;
-            this.TubeButton.Text = "Трубопровод";
-            this.TubeButton.UseVisualStyleBackColor = true;
-            this.TubeButton.Click += new System.EventHandler(this.TubeButton_Click);
-            // 
-            // PolygonButton
-            // 
-            this.PolygonButton.Location = new System.Drawing.Point(9, 35);
-            this.PolygonButton.Name = "PolygonButton";
-            this.PolygonButton.Size = new System.Drawing.Size(97, 23);
-            this.PolygonButton.TabIndex = 3;
-            this.PolygonButton.Text = "Полигон";
-            this.PolygonButton.UseVisualStyleBackColor = true;
-            this.PolygonButton.Click += new System.EventHandler(this.PolygonButton_Click);
-            // 
-            // ShowButton
-            // 
-            this.ShowButton.Location = new System.Drawing.Point(147, 145);
-            this.ShowButton.Name = "ShowButton";
-            this.ShowButton.Size = new System.Drawing.Size(97, 23);
-            this.ShowButton.TabIndex = 10;
-            this.ShowButton.Text = "Показать";
-            this.ShowButton.UseVisualStyleBackColor = true;
-            this.ShowButton.Click += new System.EventHandler(this.ShowButton_Click);
-            // 
-            // LoadButton
-            // 
-            this.LoadButton.Location = new System.Drawing.Point(9, 93);
-            this.LoadButton.Name = "LoadButton";
-            this.LoadButton.Size = new System.Drawing.Size(97, 23);
-            this.LoadButton.TabIndex = 5;
-            this.LoadButton.Text = "Загрузить";
-            this.LoadButton.UseVisualStyleBackColor = true;
-            this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
-            // 
-            // HideButton
-            // 
-            this.HideButton.Location = new System.Drawing.Point(147, 116);
-            this.HideButton.Name = "HideButton";
-            this.HideButton.Size = new System.Drawing.Size(97, 23);
-            this.HideButton.TabIndex = 9;
-            this.HideButton.Text = "Скрыть";
-            this.HideButton.UseVisualStyleBackColor = true;
-            this.HideButton.Click += new System.EventHandler(this.HideButton_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(147, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(32, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Слой";
-            // 
-            // ClearButton
-            // 
-            this.ClearButton.Location = new System.Drawing.Point(147, 174);
-            this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(97, 23);
-            this.ClearButton.TabIndex = 6;
-            this.ClearButton.Text = "Очистить всё";
-            this.ClearButton.UseVisualStyleBackColor = true;
-            this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
-            // 
-            // LayoutTextBox
-            // 
-            this.LayoutTextBox.Location = new System.Drawing.Point(147, 25);
-            this.LayoutTextBox.Name = "LayoutTextBox";
-            this.LayoutTextBox.Size = new System.Drawing.Size(97, 20);
-            this.LayoutTextBox.TabIndex = 7;
-            // 
             // ElementsSideMenuPanel
             // 
             this.ElementsSideMenuPanel.Controls.Add(this.AddItemTabControl);
             this.ElementsSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ElementsSideMenuPanel.Location = new System.Drawing.Point(0, 648);
+            this.ElementsSideMenuPanel.Location = new System.Drawing.Point(0, 687);
             this.ElementsSideMenuPanel.Name = "ElementsSideMenuPanel";
             this.ElementsSideMenuPanel.Size = new System.Drawing.Size(293, 281);
             this.ElementsSideMenuPanel.TabIndex = 10;
@@ -371,7 +242,7 @@
             this.ShowAllExpertMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ShowAllExpertMarkerButton.Location = new System.Drawing.Point(9, 142);
             this.ShowAllExpertMarkerButton.Name = "ShowAllExpertMarkerButton";
-            this.ShowAllExpertMarkerButton.Size = new System.Drawing.Size(93, 41);
+            this.ShowAllExpertMarkerButton.Size = new System.Drawing.Size(88, 41);
             this.ShowAllExpertMarkerButton.TabIndex = 69;
             this.ShowAllExpertMarkerButton.Text = "Вiдобразити по експерту";
             this.ShowAllExpertMarkerButton.UseVisualStyleBackColor = true;
@@ -450,9 +321,9 @@
             this.ShowCurrentUserMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.ShowCurrentUserMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowCurrentUserMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowCurrentUserMarkerButton.Location = new System.Drawing.Point(86, 142);
+            this.ShowCurrentUserMarkerButton.Location = new System.Drawing.Point(96, 142);
             this.ShowCurrentUserMarkerButton.Name = "ShowCurrentUserMarkerButton";
-            this.ShowCurrentUserMarkerButton.Size = new System.Drawing.Size(117, 41);
+            this.ShowCurrentUserMarkerButton.Size = new System.Drawing.Size(96, 41);
             this.ShowCurrentUserMarkerButton.TabIndex = 62;
             this.ShowCurrentUserMarkerButton.Text = "Вiдобразити додані вами";
             this.ShowCurrentUserMarkerButton.UseVisualStyleBackColor = true;
@@ -465,7 +336,7 @@
             this.ShowAllMarkersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.ShowAllMarkersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowAllMarkersButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowAllMarkersButton.Location = new System.Drawing.Point(197, 142);
+            this.ShowAllMarkersButton.Location = new System.Drawing.Point(191, 142);
             this.ShowAllMarkersButton.Name = "ShowAllMarkersButton";
             this.ShowAllMarkersButton.Size = new System.Drawing.Size(85, 41);
             this.ShowAllMarkersButton.TabIndex = 61;
@@ -507,6 +378,10 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Highlight;
+            this.tabPage2.Controls.Add(this.ShowCurrentExpertPolygonsButton);
+            this.tabPage2.Controls.Add(this.ClearAllPolygons);
+            this.tabPage2.Controls.Add(this.ShowCurrentUserPolygonsButton);
+            this.tabPage2.Controls.Add(this.ShowAllPolygonsButton);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.PolygonColorTypeComboBox);
             this.tabPage2.Controls.Add(this.PolygonColorPictureBox);
@@ -523,6 +398,66 @@
             this.tabPage2.Size = new System.Drawing.Size(282, 236);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Полiгон";
+            // 
+            // ShowCurrentExpertPolygonsButton
+            // 
+            this.ShowCurrentExpertPolygonsButton.FlatAppearance.BorderSize = 0;
+            this.ShowCurrentExpertPolygonsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowCurrentExpertPolygonsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowCurrentExpertPolygonsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowCurrentExpertPolygonsButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowCurrentExpertPolygonsButton.Location = new System.Drawing.Point(185, 134);
+            this.ShowCurrentExpertPolygonsButton.Name = "ShowCurrentExpertPolygonsButton";
+            this.ShowCurrentExpertPolygonsButton.Size = new System.Drawing.Size(93, 41);
+            this.ShowCurrentExpertPolygonsButton.TabIndex = 74;
+            this.ShowCurrentExpertPolygonsButton.Text = "Вiдобразити по експерту";
+            this.ShowCurrentExpertPolygonsButton.UseVisualStyleBackColor = true;
+            this.ShowCurrentExpertPolygonsButton.Click += new System.EventHandler(this.ShowAllExpertPolygonsButton_Click);
+            // 
+            // ClearAllPolygons
+            // 
+            this.ClearAllPolygons.FlatAppearance.BorderSize = 0;
+            this.ClearAllPolygons.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ClearAllPolygons.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ClearAllPolygons.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ClearAllPolygons.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ClearAllPolygons.Location = new System.Drawing.Point(143, 181);
+            this.ClearAllPolygons.Name = "ClearAllPolygons";
+            this.ClearAllPolygons.Size = new System.Drawing.Size(96, 41);
+            this.ClearAllPolygons.TabIndex = 73;
+            this.ClearAllPolygons.Text = "Очистити всі";
+            this.ClearAllPolygons.UseVisualStyleBackColor = true;
+            this.ClearAllPolygons.Click += new System.EventHandler(this.ClearAllPolygons_Click);
+            // 
+            // ShowCurrentUserPolygonsButton
+            // 
+            this.ShowCurrentUserPolygonsButton.FlatAppearance.BorderSize = 0;
+            this.ShowCurrentUserPolygonsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowCurrentUserPolygonsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowCurrentUserPolygonsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowCurrentUserPolygonsButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowCurrentUserPolygonsButton.Location = new System.Drawing.Point(90, 134);
+            this.ShowCurrentUserPolygonsButton.Name = "ShowCurrentUserPolygonsButton";
+            this.ShowCurrentUserPolygonsButton.Size = new System.Drawing.Size(96, 41);
+            this.ShowCurrentUserPolygonsButton.TabIndex = 72;
+            this.ShowCurrentUserPolygonsButton.Text = "Вiдобразити додані вами";
+            this.ShowCurrentUserPolygonsButton.UseVisualStyleBackColor = true;
+            this.ShowCurrentUserPolygonsButton.Click += new System.EventHandler(this.ShowCurrentUserPolygonsButton_Click);
+            // 
+            // ShowAllPolygonsButton
+            // 
+            this.ShowAllPolygonsButton.FlatAppearance.BorderSize = 0;
+            this.ShowAllPolygonsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowAllPolygonsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowAllPolygonsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowAllPolygonsButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowAllPolygonsButton.Location = new System.Drawing.Point(52, 181);
+            this.ShowAllPolygonsButton.Name = "ShowAllPolygonsButton";
+            this.ShowAllPolygonsButton.Size = new System.Drawing.Size(85, 41);
+            this.ShowAllPolygonsButton.TabIndex = 71;
+            this.ShowAllPolygonsButton.Text = "Вiдобразити всi";
+            this.ShowAllPolygonsButton.UseVisualStyleBackColor = true;
+            this.ShowAllPolygonsButton.Click += new System.EventHandler(this.ShowAllPolygonsButton_Click);
             // 
             // label4
             // 
@@ -562,7 +497,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 134);
+            this.label3.Location = new System.Drawing.Point(14, 127);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(70, 15);
             this.label3.TabIndex = 50;
@@ -570,7 +505,7 @@
             // 
             // TransparentNumericUpDown
             // 
-            this.TransparentNumericUpDown.Location = new System.Drawing.Point(12, 152);
+            this.TransparentNumericUpDown.Location = new System.Drawing.Point(12, 145);
             this.TransparentNumericUpDown.Maximum = new decimal(new int[] {
             255,
             0,
@@ -614,6 +549,7 @@
             this.PolygonSaveButton.TabIndex = 46;
             this.PolygonSaveButton.Text = "Зберегти";
             this.PolygonSaveButton.UseVisualStyleBackColor = false;
+            this.PolygonSaveButton.Click += new System.EventHandler(this.PolygonSaveButton_Click);
             // 
             // PolygonDrawButton
             // 
@@ -635,147 +571,143 @@
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Highlight;
-            this.tabPage3.Controls.Add(this.expertButtonTube);
-            this.tabPage3.Controls.Add(this.btnDeleteTube);
-            this.tabPage3.Controls.Add(this.btnClearTube);
-            this.tabPage3.Controls.Add(this.btnShowExpertsTubes);
-            this.tabPage3.Controls.Add(this.btnShowAllTubes);
-            this.tabPage3.Controls.Add(this.btnCancelTube);
-            this.tabPage3.Controls.Add(this.btnSaveTube);
-            this.tabPage3.Controls.Add(this.btnStartTube);
+            this.tabPage3.Controls.Add(this.ShowCurrentExpertTubesButton);
+            this.tabPage3.Controls.Add(this.ClearAllTubesButton);
+            this.tabPage3.Controls.Add(this.ShowCurrentUserTubesButton);
+            this.tabPage3.Controls.Add(this.ShowAllTubesButton);
+            this.tabPage3.Controls.Add(this.TubeSettingsButton);
+            this.tabPage3.Controls.Add(this.TubeSaveButton);
+            this.tabPage3.Controls.Add(this.TubeDrawButton);
             this.tabPage3.Location = new System.Drawing.Point(4, 27);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(282, 236);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Водопровід";
             // 
-            // expertButtonTube
+            // ShowCurrentExpertTubesButton
             // 
-            this.expertButtonTube.FlatAppearance.BorderSize = 0;
-            this.expertButtonTube.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.expertButtonTube.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.expertButtonTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.expertButtonTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.expertButtonTube.ForeColor = System.Drawing.Color.White;
-            this.expertButtonTube.Location = new System.Drawing.Point(37, 157);
-            this.expertButtonTube.Name = "expertButtonTube";
-            this.expertButtonTube.Size = new System.Drawing.Size(97, 39);
-            this.expertButtonTube.TabIndex = 11;
-            this.expertButtonTube.Text = "Додані даним експертом";
-            this.expertButtonTube.UseVisualStyleBackColor = true;
+            this.ShowCurrentExpertTubesButton.FlatAppearance.BorderSize = 0;
+            this.ShowCurrentExpertTubesButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowCurrentExpertTubesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowCurrentExpertTubesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowCurrentExpertTubesButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowCurrentExpertTubesButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ShowCurrentExpertTubesButton.Location = new System.Drawing.Point(99, 91);
+            this.ShowCurrentExpertTubesButton.Name = "ShowCurrentExpertTubesButton";
+            this.ShowCurrentExpertTubesButton.Size = new System.Drawing.Size(93, 41);
+            this.ShowCurrentExpertTubesButton.TabIndex = 81;
+            this.ShowCurrentExpertTubesButton.Text = "Вiдобразити по експерту";
+            this.ShowCurrentExpertTubesButton.UseVisualStyleBackColor = true;
+            this.ShowCurrentExpertTubesButton.Click += new System.EventHandler(this.ShowCurrentExpertTubesButton_Click);
             // 
-            // btnDeleteTube
+            // ClearAllTubesButton
             // 
-            this.btnDeleteTube.FlatAppearance.BorderSize = 0;
-            this.btnDeleteTube.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnDeleteTube.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnDeleteTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnDeleteTube.ForeColor = System.Drawing.Color.White;
-            this.btnDeleteTube.Location = new System.Drawing.Point(161, 165);
-            this.btnDeleteTube.Name = "btnDeleteTube";
-            this.btnDeleteTube.Size = new System.Drawing.Size(81, 23);
-            this.btnDeleteTube.TabIndex = 10;
-            this.btnDeleteTube.Text = "Видалити";
-            this.btnDeleteTube.UseVisualStyleBackColor = true;
+            this.ClearAllTubesButton.FlatAppearance.BorderSize = 0;
+            this.ClearAllTubesButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ClearAllTubesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ClearAllTubesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ClearAllTubesButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ClearAllTubesButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClearAllTubesButton.Location = new System.Drawing.Point(96, 149);
+            this.ClearAllTubesButton.Name = "ClearAllTubesButton";
+            this.ClearAllTubesButton.Size = new System.Drawing.Size(96, 41);
+            this.ClearAllTubesButton.TabIndex = 80;
+            this.ClearAllTubesButton.Text = "Очистити всі";
+            this.ClearAllTubesButton.UseVisualStyleBackColor = true;
+            this.ClearAllTubesButton.Click += new System.EventHandler(this.ClearAllTubesButton_Click);
             // 
-            // btnClearTube
+            // ShowCurrentUserTubesButton
             // 
-            this.btnClearTube.FlatAppearance.BorderSize = 0;
-            this.btnClearTube.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnClearTube.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnClearTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClearTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnClearTube.ForeColor = System.Drawing.Color.White;
-            this.btnClearTube.Location = new System.Drawing.Point(201, 111);
-            this.btnClearTube.Name = "btnClearTube";
-            this.btnClearTube.Size = new System.Drawing.Size(75, 23);
-            this.btnClearTube.TabIndex = 9;
-            this.btnClearTube.Text = "Очистити";
-            this.btnClearTube.UseVisualStyleBackColor = true;
+            this.ShowCurrentUserTubesButton.FlatAppearance.BorderSize = 0;
+            this.ShowCurrentUserTubesButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowCurrentUserTubesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowCurrentUserTubesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowCurrentUserTubesButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowCurrentUserTubesButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ShowCurrentUserTubesButton.Location = new System.Drawing.Point(5, 91);
+            this.ShowCurrentUserTubesButton.Name = "ShowCurrentUserTubesButton";
+            this.ShowCurrentUserTubesButton.Size = new System.Drawing.Size(96, 41);
+            this.ShowCurrentUserTubesButton.TabIndex = 79;
+            this.ShowCurrentUserTubesButton.Text = "Вiдобразити додані вами";
+            this.ShowCurrentUserTubesButton.UseVisualStyleBackColor = true;
+            this.ShowCurrentUserTubesButton.Click += new System.EventHandler(this.ShowCurrentUserTubesButton_Click);
             // 
-            // btnShowExpertsTubes
+            // ShowAllTubesButton
             // 
-            this.btnShowExpertsTubes.FlatAppearance.BorderSize = 0;
-            this.btnShowExpertsTubes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnShowExpertsTubes.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnShowExpertsTubes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnShowExpertsTubes.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnShowExpertsTubes.ForeColor = System.Drawing.Color.White;
-            this.btnShowExpertsTubes.Location = new System.Drawing.Point(100, 111);
-            this.btnShowExpertsTubes.Name = "btnShowExpertsTubes";
-            this.btnShowExpertsTubes.Size = new System.Drawing.Size(95, 23);
-            this.btnShowExpertsTubes.TabIndex = 8;
-            this.btnShowExpertsTubes.Text = "Додані вами";
-            this.btnShowExpertsTubes.UseVisualStyleBackColor = true;
+            this.ShowAllTubesButton.FlatAppearance.BorderSize = 0;
+            this.ShowAllTubesButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowAllTubesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowAllTubesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowAllTubesButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowAllTubesButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ShowAllTubesButton.Location = new System.Drawing.Point(188, 91);
+            this.ShowAllTubesButton.Name = "ShowAllTubesButton";
+            this.ShowAllTubesButton.Size = new System.Drawing.Size(85, 41);
+            this.ShowAllTubesButton.TabIndex = 78;
+            this.ShowAllTubesButton.Text = "Вiдобразити всi";
+            this.ShowAllTubesButton.UseVisualStyleBackColor = true;
+            this.ShowAllTubesButton.Click += new System.EventHandler(this.ShowAllTubesButton_Click);
             // 
-            // btnShowAllTubes
+            // TubeSettingsButton
             // 
-            this.btnShowAllTubes.FlatAppearance.BorderSize = 0;
-            this.btnShowAllTubes.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnShowAllTubes.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnShowAllTubes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnShowAllTubes.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnShowAllTubes.ForeColor = System.Drawing.Color.White;
-            this.btnShowAllTubes.Location = new System.Drawing.Point(17, 111);
-            this.btnShowAllTubes.Name = "btnShowAllTubes";
-            this.btnShowAllTubes.Size = new System.Drawing.Size(75, 23);
-            this.btnShowAllTubes.TabIndex = 3;
-            this.btnShowAllTubes.Text = "Всі";
-            this.btnShowAllTubes.UseVisualStyleBackColor = true;
+            this.TubeSettingsButton.BackColor = System.Drawing.SystemColors.Highlight;
+            this.TubeSettingsButton.Enabled = false;
+            this.TubeSettingsButton.FlatAppearance.BorderSize = 0;
+            this.TubeSettingsButton.FlatAppearance.CheckedBackColor = System.Drawing.Color.Fuchsia;
+            this.TubeSettingsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.TubeSettingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.TubeSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.TubeSettingsButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TubeSettingsButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.TubeSettingsButton.Location = new System.Drawing.Point(181, 27);
+            this.TubeSettingsButton.Name = "TubeSettingsButton";
+            this.TubeSettingsButton.Size = new System.Drawing.Size(98, 47);
+            this.TubeSettingsButton.TabIndex = 77;
+            this.TubeSettingsButton.Text = "Налаштування трубопроводу";
+            this.TubeSettingsButton.UseVisualStyleBackColor = false;
+            this.TubeSettingsButton.Click += new System.EventHandler(this.PolygonSettingsButton_Click);
             // 
-            // btnCancelTube
+            // TubeSaveButton
             // 
-            this.btnCancelTube.Enabled = false;
-            this.btnCancelTube.FlatAppearance.BorderSize = 0;
-            this.btnCancelTube.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnCancelTube.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnCancelTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancelTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnCancelTube.ForeColor = System.Drawing.Color.White;
-            this.btnCancelTube.Location = new System.Drawing.Point(194, 47);
-            this.btnCancelTube.Name = "btnCancelTube";
-            this.btnCancelTube.Size = new System.Drawing.Size(96, 23);
-            this.btnCancelTube.TabIndex = 2;
-            this.btnCancelTube.Text = "Відміна";
-            this.btnCancelTube.UseVisualStyleBackColor = true;
+            this.TubeSaveButton.BackColor = System.Drawing.SystemColors.Highlight;
+            this.TubeSaveButton.FlatAppearance.BorderSize = 0;
+            this.TubeSaveButton.FlatAppearance.CheckedBackColor = System.Drawing.Color.Fuchsia;
+            this.TubeSaveButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.TubeSaveButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.TubeSaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.TubeSaveButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TubeSaveButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.TubeSaveButton.Location = new System.Drawing.Point(107, 34);
+            this.TubeSaveButton.Name = "TubeSaveButton";
+            this.TubeSaveButton.Size = new System.Drawing.Size(77, 33);
+            this.TubeSaveButton.TabIndex = 76;
+            this.TubeSaveButton.Text = "Зберегти";
+            this.TubeSaveButton.UseVisualStyleBackColor = false;
+            this.TubeSaveButton.Click += new System.EventHandler(this.TubeSaveButton_Click);
             // 
-            // btnSaveTube
+            // TubeDrawButton
             // 
-            this.btnSaveTube.Enabled = false;
-            this.btnSaveTube.FlatAppearance.BorderSize = 0;
-            this.btnSaveTube.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnSaveTube.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnSaveTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSaveTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnSaveTube.ForeColor = System.Drawing.Color.White;
-            this.btnSaveTube.Location = new System.Drawing.Point(112, 47);
-            this.btnSaveTube.Name = "btnSaveTube";
-            this.btnSaveTube.Size = new System.Drawing.Size(75, 23);
-            this.btnSaveTube.TabIndex = 1;
-            this.btnSaveTube.Text = "Зберегти";
-            this.btnSaveTube.UseVisualStyleBackColor = true;
-            // 
-            // btnStartTube
-            // 
-            this.btnStartTube.FlatAppearance.BorderSize = 0;
-            this.btnStartTube.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnStartTube.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnStartTube.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStartTube.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold);
-            this.btnStartTube.ForeColor = System.Drawing.Color.White;
-            this.btnStartTube.Location = new System.Drawing.Point(17, 47);
-            this.btnStartTube.Name = "btnStartTube";
-            this.btnStartTube.Size = new System.Drawing.Size(75, 23);
-            this.btnStartTube.TabIndex = 0;
-            this.btnStartTube.Text = "Почати";
-            this.btnStartTube.UseVisualStyleBackColor = true;
+            this.TubeDrawButton.BackColor = System.Drawing.SystemColors.Highlight;
+            this.TubeDrawButton.FlatAppearance.BorderSize = 0;
+            this.TubeDrawButton.FlatAppearance.CheckedBackColor = System.Drawing.Color.Fuchsia;
+            this.TubeDrawButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.TubeDrawButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.TubeDrawButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.TubeDrawButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TubeDrawButton.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.TubeDrawButton.Location = new System.Drawing.Point(24, 34);
+            this.TubeDrawButton.Name = "TubeDrawButton";
+            this.TubeDrawButton.Size = new System.Drawing.Size(77, 33);
+            this.TubeDrawButton.TabIndex = 75;
+            this.TubeDrawButton.Text = "Почати";
+            this.TubeDrawButton.UseVisualStyleBackColor = false;
+            this.TubeDrawButton.Click += new System.EventHandler(this.TubeDrawButton_Click);
             // 
             // ElementsSideMenuButton
             // 
             this.ElementsSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.ElementsSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ElementsSideMenuButton.Location = new System.Drawing.Point(0, 618);
+            this.ElementsSideMenuButton.Location = new System.Drawing.Point(0, 657);
             this.ElementsSideMenuButton.Name = "ElementsSideMenuButton";
             this.ElementsSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.ElementsSideMenuButton.TabIndex = 9;
@@ -794,7 +726,7 @@
             this.FiltrationSideMenuPanel.Controls.Add(this.EnvironmentsGroupBox);
             this.FiltrationSideMenuPanel.Controls.Add(this.ShowLayoutButton);
             this.FiltrationSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.FiltrationSideMenuPanel.Location = new System.Drawing.Point(0, 397);
+            this.FiltrationSideMenuPanel.Location = new System.Drawing.Point(0, 436);
             this.FiltrationSideMenuPanel.Name = "FiltrationSideMenuPanel";
             this.FiltrationSideMenuPanel.Size = new System.Drawing.Size(293, 221);
             this.FiltrationSideMenuPanel.TabIndex = 8;
@@ -892,7 +824,7 @@
             // 
             this.FiltrationSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.FiltrationSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.FiltrationSideMenuButton.Location = new System.Drawing.Point(0, 367);
+            this.FiltrationSideMenuButton.Location = new System.Drawing.Point(0, 406);
             this.FiltrationSideMenuButton.Name = "FiltrationSideMenuButton";
             this.FiltrationSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.FiltrationSideMenuButton.TabIndex = 7;
@@ -910,7 +842,7 @@
             this.CompareSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.CompareSideMenuPanel.Location = new System.Drawing.Point(0, 299);
             this.CompareSideMenuPanel.Name = "CompareSideMenuPanel";
-            this.CompareSideMenuPanel.Size = new System.Drawing.Size(293, 68);
+            this.CompareSideMenuPanel.Size = new System.Drawing.Size(293, 107);
             this.CompareSideMenuPanel.TabIndex = 5;
             // 
             // label2
@@ -918,36 +850,38 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 14);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(52, 13);
+            this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 89;
-            this.label2.Text = "Маркери";
+            this.label2.Text = "Об\'єкти";
             // 
             // ComprasionItemsComboBox
             // 
             this.ComprasionItemsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComprasionItemsComboBox.FormattingEnabled = true;
-            this.ComprasionItemsComboBox.Location = new System.Drawing.Point(66, 11);
+            this.ComprasionItemsComboBox.Location = new System.Drawing.Point(56, 11);
             this.ComprasionItemsComboBox.Name = "ComprasionItemsComboBox";
-            this.ComprasionItemsComboBox.Size = new System.Drawing.Size(133, 21);
+            this.ComprasionItemsComboBox.Size = new System.Drawing.Size(229, 21);
             this.ComprasionItemsComboBox.TabIndex = 86;
             // 
             // DeleteCompareItemButton
             // 
-            this.DeleteCompareItemButton.Location = new System.Drawing.Point(212, 9);
+            this.DeleteCompareItemButton.Location = new System.Drawing.Point(7, 38);
             this.DeleteCompareItemButton.Name = "DeleteCompareItemButton";
-            this.DeleteCompareItemButton.Size = new System.Drawing.Size(73, 23);
+            this.DeleteCompareItemButton.Size = new System.Drawing.Size(278, 23);
             this.DeleteCompareItemButton.TabIndex = 87;
-            this.DeleteCompareItemButton.Text = "Видалити";
+            this.DeleteCompareItemButton.Text = "Видалити поточний об\'єкт";
             this.DeleteCompareItemButton.UseVisualStyleBackColor = true;
+            this.DeleteCompareItemButton.Click += new System.EventHandler(this.DeleteCompareItemButton_Click);
             // 
             // CompareButton
             // 
-            this.CompareButton.Location = new System.Drawing.Point(6, 38);
+            this.CompareButton.Location = new System.Drawing.Point(6, 78);
             this.CompareButton.Name = "CompareButton";
             this.CompareButton.Size = new System.Drawing.Size(279, 23);
             this.CompareButton.TabIndex = 88;
             this.CompareButton.Text = "Порівняти";
             this.CompareButton.UseVisualStyleBackColor = true;
+            this.CompareButton.Click += new System.EventHandler(this.CompareButton_Click);
             // 
             // CompareSideMenuButton
             // 
@@ -985,6 +919,7 @@
             this.FindByGroupBox.TabIndex = 88;
             this.FindByGroupBox.TabStop = false;
             this.FindByGroupBox.Text = "Пошук по";
+            this.FindByGroupBox.Visible = false;
             // 
             // tbSearch
             // 
@@ -1167,9 +1102,10 @@
             // 
             // HelpStatusLabel
             // 
-            this.HelpStatusLabel.Margin = new System.Windows.Forms.Padding(350, 3, 0, 2);
+            this.HelpStatusLabel.Margin = new System.Windows.Forms.Padding(150, 3, 0, 2);
             this.HelpStatusLabel.Name = "HelpStatusLabel";
-            this.HelpStatusLabel.Size = new System.Drawing.Size(0, 17);
+            this.HelpStatusLabel.Size = new System.Drawing.Size(16, 17);
+            this.HelpStatusLabel.Text = "...";
             // 
             // ZoomPlus
             // 
@@ -1232,8 +1168,6 @@
             this.gMapControl.TabIndex = 1;
             this.gMapControl.Zoom = 0D;
             this.gMapControl.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gMapControl_OnMarkerClick);
-            this.gMapControl.OnPolygonClick += new GMap.NET.WindowsForms.PolygonClick(this.gMapControl_OnPolygonClick);
-            this.gMapControl.OnRouteClick += new GMap.NET.WindowsForms.RouteClick(this.gMapControl_OnRouteClick);
             this.gMapControl.DoubleClick += new System.EventHandler(this.gMapControl_DoubleClick);
             this.gMapControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gMapControl_KeyDown);
             this.gMapControl.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gMapControl_KeyUp);
@@ -1241,7 +1175,20 @@
             this.gMapControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gMapControl_MouseMove);
             this.gMapControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gMapControl_MouseUp);
             // 
-            // TestNewMap
+            // PolylineToolTip
+            // 
+            this.PolylineToolTip.AutoPopDelay = 5000;
+            this.PolylineToolTip.InitialDelay = 400;
+            this.PolylineToolTip.ReshowDelay = 100;
+            // 
+            // ComparsionSelectToolStripMenuItem
+            // 
+            this.ComparsionSelectToolStripMenuItem.Name = "ComparsionSelectToolStripMenuItem";
+            this.ComparsionSelectToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.ComparsionSelectToolStripMenuItem.Text = "Вибрати для порівняння";
+            this.ComparsionSelectToolStripMenuItem.Click += new System.EventHandler(this.ComparsionSelectToolStripMenuItem_Click);
+            // 
+            // MapWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1253,12 +1200,10 @@
             this.Controls.Add(this.MainStatusStrip);
             this.Controls.Add(this.gMapControl);
             this.MinimumSize = new System.Drawing.Size(700, 540);
-            this.Name = "TestNewMap";
+            this.Name = "MapWindow";
             this.Text = "Карта";
             this.MapObjectContextMenuStrip.ResumeLayout(false);
             this.PanelSideMenu.ResumeLayout(false);
-            this._ElementsSideMenuPanel.ResumeLayout(false);
-            this._ElementsSideMenuPanel.PerformLayout();
             this.ElementsSideMenuPanel.ResumeLayout(false);
             this.AddItemTabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -1318,16 +1263,6 @@
         private System.Windows.Forms.Button DeleteCompareItemButton;
         private System.Windows.Forms.Button CompareButton;
         private System.Windows.Forms.ComboBox EnvironmentComboBox;
-        private System.Windows.Forms.Panel _ElementsSideMenuPanel;
-        private System.Windows.Forms.Button MarkerButton;
-        private System.Windows.Forms.Button TubeButton;
-        private System.Windows.Forms.Button PolygonButton;
-        private System.Windows.Forms.Button ShowButton;
-        private System.Windows.Forms.Button LoadButton;
-        private System.Windows.Forms.Button HideButton;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button ClearButton;
-        private System.Windows.Forms.TextBox LayoutTextBox;
         private System.Windows.Forms.Panel ElementsSideMenuPanel;
         private System.Windows.Forms.TabControl AddItemTabControl;
         private System.Windows.Forms.TabPage tabPage1;
@@ -1345,16 +1280,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button PolygonDrawButton;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button expertButtonTube;
-        private System.Windows.Forms.Button btnDeleteTube;
-        private System.Windows.Forms.Button btnClearTube;
-        private System.Windows.Forms.Button btnShowExpertsTubes;
-        private System.Windows.Forms.Button btnShowAllTubes;
-        private System.Windows.Forms.Button btnCancelTube;
-        private System.Windows.Forms.Button btnSaveTube;
-        private System.Windows.Forms.Button btnStartTube;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox PolygonNameTextBox;
         private System.Windows.Forms.GroupBox EnvironmentsGroupBox;
         private System.Windows.Forms.CheckBox EnvironmentsCheckBox;
         private System.Windows.Forms.Button ShowAllLayoutButton;
@@ -1380,5 +1305,18 @@
         private System.Windows.Forms.Button PolygonSaveButton;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox PolygonColorTypeComboBox;
+        private System.Windows.Forms.Button ShowCurrentExpertPolygonsButton;
+        private System.Windows.Forms.Button ClearAllPolygons;
+        private System.Windows.Forms.Button ShowCurrentUserPolygonsButton;
+        private System.Windows.Forms.Button ShowAllPolygonsButton;
+        private System.Windows.Forms.ToolTip PolylineToolTip;
+        private System.Windows.Forms.Button ShowCurrentExpertTubesButton;
+        private System.Windows.Forms.Button ClearAllTubesButton;
+        private System.Windows.Forms.Button ShowCurrentUserTubesButton;
+        private System.Windows.Forms.Button ShowAllTubesButton;
+        private System.Windows.Forms.Button TubeSettingsButton;
+        private System.Windows.Forms.Button TubeSaveButton;
+        private System.Windows.Forms.Button TubeDrawButton;
+        private System.Windows.Forms.ToolStripMenuItem ComparsionSelectToolStripMenuItem;
     }
 }

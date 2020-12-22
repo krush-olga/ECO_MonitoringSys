@@ -101,6 +101,7 @@ namespace Maps.HelpWindows
             this.m_CancelButton.TabIndex = 4;
             this.m_CancelButton.Text = "Відміна";
             this.m_CancelButton.UseVisualStyleBackColor = true;
+            this.m_CancelButton.Click += new System.EventHandler(this.m_CancelButton_Click);
             // 
             // label5
             // 
@@ -233,6 +234,7 @@ namespace Maps.HelpWindows
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ItemConfigurationWindow";
             this.Text = "Налаштування маркеру";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ItemConfigurationWindow_FormClosing);
             this.Load += new System.EventHandler(this.ItemConfigurationWindow_Load);
             this.EnvironmentGroupBox.ResumeLayout(false);
             this.IssueGroupBox.ResumeLayout(false);

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using GMap.NET.MapProviders;
 
 
-namespace Maps
+namespace Maps.OldMap
 {
     public class NewMap
     {
@@ -22,7 +22,7 @@ namespace Maps
 
         private GMapControl gMapControl;
         private double R = 6378.137;
-        private DBManager db = new DBManager();
+        private Data.DBManager db = new Data.DBManager();
 
 
         //public void ForTest(NumericUpDown numericUpDown1, ColorDialog colorDialog1)
@@ -312,7 +312,7 @@ namespace Maps
                     }
                     else
                     {
-                        img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\noimage.png");
+                        img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\Images\noimage.png");
                     }
 
                     MarkersName.Add(list[i][5].ToString());
@@ -347,7 +347,7 @@ namespace Maps
                 }
                 else
                 {
-                    img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\noimage.png");
+                    img = Image.FromFile($@"{System.Environment.CurrentDirectory}\Resources\Images\noimage.png");
                 }
 
                 if (!MarkersName.Contains(list[i][4].ToString()))
