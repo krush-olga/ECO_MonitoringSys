@@ -89,8 +89,6 @@
             this.DGV.Name = "DGV";
             this.DGV.Size = new System.Drawing.Size(448, 338);
             this.DGV.TabIndex = 1;
-            this.DGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellClick);
-            this.DGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellContentClick);
             this.DGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_CellEndEdit);
             this.DGV.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DGV_CellFormatting);
             this.DGV.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.DGV_EditingControlShowing);
@@ -145,7 +143,7 @@
             // number_of_calcL
             // 
             this.number_of_calcL.AutoSize = true;
-            this.number_of_calcL.Location = new System.Drawing.Point(642, 406);
+            this.number_of_calcL.Location = new System.Drawing.Point(642, 399);
             this.number_of_calcL.Name = "number_of_calcL";
             this.number_of_calcL.Size = new System.Drawing.Size(111, 13);
             this.number_of_calcL.TabIndex = 16;
@@ -155,7 +153,7 @@
             // calc_numbCB
             // 
             this.calc_numbCB.FormattingEnabled = true;
-            this.calc_numbCB.Location = new System.Drawing.Point(642, 422);
+            this.calc_numbCB.Location = new System.Drawing.Point(638, 415);
             this.calc_numbCB.Name = "calc_numbCB";
             this.calc_numbCB.Size = new System.Drawing.Size(121, 21);
             this.calc_numbCB.TabIndex = 17;

@@ -198,9 +198,15 @@ namespace experts_jurist
                 AddFilesMDIChild = new addFiles();
                 AddFilesMDIChild.MdiParent = this;
                 AddFilesMDIChild.Show();
-                AddFilesMDIChild.FormClosed += IssuesMDIChild_FormClosed;
+                AddFilesMDIChild.FormClosed += (s, arg) => 
+                {
+                    AddFilesMDIChild?.Dispose();
+                    AddFilesMDIChild = null;
+                };
+
                 AddFilesMDIChild.WindowState = FormWindowState.Maximized;
             }
+            AddFilesMDIChild.BringToFront();
         }
     }
 }

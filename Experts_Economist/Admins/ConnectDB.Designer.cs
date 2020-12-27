@@ -45,27 +45,30 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(29, 27);
+            this.label3.Location = new System.Drawing.Point(22, 22);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(79, 25);
+            this.label3.Size = new System.Drawing.Size(65, 20);
             this.label3.TabIndex = 10;
             this.label3.Text = "Сервер";
             // 
             // serverTB
             // 
             this.serverTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.serverTB.Location = new System.Drawing.Point(34, 68);
+            this.serverTB.Location = new System.Drawing.Point(26, 55);
+            this.serverTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.serverTB.Name = "serverTB";
-            this.serverTB.Size = new System.Drawing.Size(398, 28);
+            this.serverTB.Size = new System.Drawing.Size(300, 24);
             this.serverTB.TabIndex = 9;
             // 
             // passwordLB
             // 
             this.passwordLB.AutoSize = true;
             this.passwordLB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.passwordLB.Location = new System.Drawing.Point(31, 283);
+            this.passwordLB.Location = new System.Drawing.Point(23, 230);
+            this.passwordLB.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.passwordLB.Name = "passwordLB";
-            this.passwordLB.Size = new System.Drawing.Size(80, 25);
+            this.passwordLB.Size = new System.Drawing.Size(67, 20);
             this.passwordLB.TabIndex = 19;
             this.passwordLB.Text = "Пароль";
             // 
@@ -73,36 +76,40 @@
             // 
             this.loginLB.AutoSize = true;
             this.loginLB.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.loginLB.Location = new System.Drawing.Point(31, 205);
+            this.loginLB.Location = new System.Drawing.Point(23, 167);
+            this.loginLB.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.loginLB.Name = "loginLB";
-            this.loginLB.Size = new System.Drawing.Size(61, 25);
+            this.loginLB.Size = new System.Drawing.Size(49, 20);
             this.loginLB.TabIndex = 18;
             this.loginLB.Text = "Логін";
             // 
             // passwordTB
             // 
             this.passwordTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.passwordTB.Location = new System.Drawing.Point(34, 312);
+            this.passwordTB.Location = new System.Drawing.Point(26, 254);
+            this.passwordTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.passwordTB.Name = "passwordTB";
-            this.passwordTB.Size = new System.Drawing.Size(398, 28);
+            this.passwordTB.Size = new System.Drawing.Size(300, 24);
             this.passwordTB.TabIndex = 17;
             this.passwordTB.UseSystemPasswordChar = true;
             // 
             // loginTB
             // 
             this.loginTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.loginTB.Location = new System.Drawing.Point(34, 236);
+            this.loginTB.Location = new System.Drawing.Point(26, 192);
+            this.loginTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.loginTB.Name = "loginTB";
-            this.loginTB.Size = new System.Drawing.Size(398, 28);
+            this.loginTB.Size = new System.Drawing.Size(300, 24);
             this.loginTB.TabIndex = 16;
             // 
             // connectBtn
             // 
             this.connectBtn.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.connectBtn.Font = new System.Drawing.Font("Arial Narrow", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.connectBtn.Location = new System.Drawing.Point(0, 411);
+            this.connectBtn.Location = new System.Drawing.Point(0, 334);
+            this.connectBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.connectBtn.Name = "connectBtn";
-            this.connectBtn.Size = new System.Drawing.Size(461, 50);
+            this.connectBtn.Size = new System.Drawing.Size(346, 41);
             this.connectBtn.TabIndex = 20;
             this.connectBtn.Text = "Підключитися";
             this.connectBtn.UseVisualStyleBackColor = true;
@@ -114,25 +121,27 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(31, 113);
+            this.label1.Location = new System.Drawing.Point(23, 92);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(114, 25);
+            this.label1.Size = new System.Drawing.Size(95, 20);
             this.label1.TabIndex = 22;
             this.label1.Text = "База даних";
             // 
             // databaseTB
             // 
             this.databaseTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.databaseTB.Location = new System.Drawing.Point(36, 154);
+            this.databaseTB.Location = new System.Drawing.Point(27, 125);
+            this.databaseTB.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.databaseTB.Name = "databaseTB";
-            this.databaseTB.Size = new System.Drawing.Size(396, 28);
+            this.databaseTB.Size = new System.Drawing.Size(298, 24);
             this.databaseTB.TabIndex = 21;
             // 
             // ConnectDB
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(461, 461);
+            this.ClientSize = new System.Drawing.Size(346, 375);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.databaseTB);
             this.Controls.Add(this.connectBtn);
@@ -142,6 +151,8 @@
             this.Controls.Add(this.loginTB);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.serverTB);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ConnectDB";
             this.Text = "ConnectDB";
             this.ResumeLayout(false);

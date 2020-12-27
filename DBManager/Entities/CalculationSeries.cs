@@ -28,7 +28,7 @@ namespace Data.Entity
 
     public class CalculatoinSeriesMapper
     {
-        public static CalculationSeries Map(List<Object> row)
+        public static CalculationSeries Map(IList<Object> row)
         {
             var calc = new CalculationSeries();
             calc.id = Int32.Parse(row[0].ToString());

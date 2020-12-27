@@ -30,7 +30,7 @@ namespace Data.Entity
 
     public class FormulaMapper
     {
-        public static Formula Map(List<Object> row)
+        public static Formula Map(IList<Object> row)
         {
             Formula formula = new Formula()
             {

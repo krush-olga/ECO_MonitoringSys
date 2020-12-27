@@ -258,9 +258,9 @@
             // previousBtn
             // 
             this.previousBtn.Enabled = false;
-            this.previousBtn.Location = new System.Drawing.Point(493, 105);
+            this.previousBtn.Location = new System.Drawing.Point(388, 106);
             this.previousBtn.Name = "previousBtn";
-            this.previousBtn.Size = new System.Drawing.Size(91, 28);
+            this.previousBtn.Size = new System.Drawing.Size(90, 28);
             this.previousBtn.TabIndex = 36;
             this.previousBtn.Text = "Попередня";
             this.previousBtn.UseVisualStyleBackColor = true;
@@ -269,9 +269,9 @@
             // nextIssueBtn
             // 
             this.nextIssueBtn.Enabled = false;
-            this.nextIssueBtn.Location = new System.Drawing.Point(397, 105);
+            this.nextIssueBtn.Location = new System.Drawing.Point(485, 106);
             this.nextIssueBtn.Name = "nextIssueBtn";
-            this.nextIssueBtn.Size = new System.Drawing.Size(82, 28);
+            this.nextIssueBtn.Size = new System.Drawing.Size(90, 28);
             this.nextIssueBtn.TabIndex = 35;
             this.nextIssueBtn.Text = "Наступна";
             this.nextIssueBtn.UseVisualStyleBackColor = true;

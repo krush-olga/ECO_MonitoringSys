@@ -87,17 +87,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\CalculationSeries.cs" />
+    <Compile Include="Entities\Cities.cs" />
     <Compile Include="Entities\Document.cs" />
+    <Compile Include="Entities\Environment.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Expert.cs" />
     <Compile Include="Entities\Formula.cs" />
+    <Compile Include="Helpers\Mapper.cs" />
     <Compile Include="Entities\Issue.cs" />
+    <Compile Include="Entities\Poi.cs" />
     <Compile Include="Entities\Resource.cs" />
+    <Compile Include="Entities\TypeOfObject.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ParserToDB.cs" />
     <Compile Include="DBManager.cs" />
-    <Compile Include="DBUtil.cs" />
+    <Compile Include="Helpers\DBUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Role.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

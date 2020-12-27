@@ -32,7 +32,7 @@ namespace Data.Entity
 
     public class ResourceMapper
     {
-        public static Resource Map(List<Object> row)
+        public static Resource Map(IList<Object> row)
         {
             var r = new Resource();
             r.id = Int32.Parse(row[0].ToString());

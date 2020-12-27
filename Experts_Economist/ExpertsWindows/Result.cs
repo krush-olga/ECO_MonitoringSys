@@ -4,15 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Calculations;
 
 namespace Experts_Economist
 {
     public partial class Result : Form
-    {  //используем библиотеки работы с БД и формулами
+    {  
+        //используем библиотеки работы с БД и формулами
         private DBManager db = new DBManager();
+
+        //объект для подсчёта формул для експертов
+        Case_Of_Calc calculation = new Case_Of_Calc();
+
         private EconomistCalculator calc = new EconomistCalculator();
         private MedicalCalculator medCalc = new MedicalCalculator();
         private EcologCalculator ecoCalc = new EcologCalculator();
+        private EnergoCalculator enegroCalc = new EnergoCalculator();
 
         public int id_of_exp;
         public int idOfViewedExpert;
@@ -1572,6 +1579,34 @@ namespace Experts_Economist
             }));
         }
 
+        private void EconomistCalculation(int formulaId, int cur_row)
+        {
+            #region formulas_ekonomist
+            calculation.case_of_formulas(id_of_exp, formulaId, DGV, cur_row, Convert.ToInt32(DGV.Rows[cur_row].Cells[2].Value.ToString()));
+            #endregion formulas_ekonomist
+        }
+
+        private void MedicCalculation(int formulaId, int cur_row)
+        {
+            #region formulas_medic
+            calculation.case_of_formulas(id_of_exp, formulaId, DGV, cur_row, Convert.ToInt32(DGV.Rows[cur_row].Cells[2].Value.ToString()));
+            #endregion formulas_medic
+        }
+
+        private void EcologCalculation(int formulaId, int cur_row)
+        {
+            #region formulas_ecolog
+            calculation.case_of_formulas(id_of_exp, formulaId, DGV, cur_row, Convert.ToInt32(DGV.Rows[cur_row].Cells[2].Value.ToString()));
+            #endregion
+        }
+
+        private void EnergeticCalculation(int formulaId, int cur_row)
+        {
+            #region formulas_energo
+            calculation.case_of_formulas(id_of_exp, formulaId, DGV, cur_row, Convert.ToInt32(DGV.Rows[cur_row].Cells[2].Value.ToString()));
+            #endregion
+        }
+
         private void updateDB(int idf, double calcResult)
         {
             string[] fields2_1 = { "id_of_formula", "result" };
@@ -1793,14 +1828,5 @@ namespace Experts_Economist
             }
         }
 
-        private void DGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void DGV_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
     }
 }
