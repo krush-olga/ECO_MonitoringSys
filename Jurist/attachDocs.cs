@@ -24,6 +24,8 @@ namespace experts_jurist
 		private SearchManager SM = new SearchManager();
 
 		protected int currentEventID;
+
+		
 		
 		/// <summary>
 		/// Змінна для збереження списку прикріплених до поточного заходу файлів.
@@ -53,7 +55,8 @@ namespace experts_jurist
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-			if(listBox1.SelectedIndex>-1)
+			
+			if (listBox1.SelectedIndex>-1)
 			{
 				button3.Enabled = true;
 				listBox2.ClearSelected();
@@ -68,7 +71,8 @@ namespace experts_jurist
 
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
+		{
+			
 			if (listBox2.SelectedIndex > -1)
 			{
 				button5.Enabled = true;
@@ -85,6 +89,7 @@ namespace experts_jurist
 
 		private void button6_Click(object sender, EventArgs e)
 		{
+			
 			var listOfFi = SM.SearchAll();
 			if (listOfFi.Count() == 0)
 			{
@@ -182,6 +187,7 @@ namespace experts_jurist
 		}
 		private void ReloadLists()
 		{
+		
 			listBox2.Items.Clear();
 			foreach (var a in listOfAttachedFi)
 			{
@@ -201,7 +207,7 @@ namespace experts_jurist
 		}
 		private void button4_Click(object sender, EventArgs e)
 		{
-
+		
 			var listOfFi = SM.SearchLine(textBox2.Text);
 			if (listOfFi.Count() == 0)
 			{

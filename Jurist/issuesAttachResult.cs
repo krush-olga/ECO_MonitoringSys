@@ -21,6 +21,7 @@ namespace experts_jurist
 		private Dictionary<string, int> listOfAll = new Dictionary<string, int>();
 		private List<List<object>> listOfAttachedRaws = new List<List<object>>();
 		private List<string> listOfDelate = new List<string>();
+		
 		public issuesAttachResult()
 		{
 			db.Connect();
@@ -87,6 +88,7 @@ namespace experts_jurist
 
 		private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
 		{
+		
 			if (listBox2.SelectedIndex > -1)
 			{
 				textBox3.Text = (string)listOfAttachedRaws[listBox2.SelectedIndex][2];
@@ -112,6 +114,7 @@ namespace experts_jurist
 
 		private void issuesAttachResult_Load(object sender, EventArgs e)
 		{
+			
 			foreach (var a in listOfAll)
 			{
 				if (a.Value == 2)

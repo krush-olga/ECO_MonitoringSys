@@ -13,6 +13,7 @@ namespace experts_jurist
 {
 	public partial class issues : Form
 	{
+		
 
 		/// <summary>
 		/// Екземпляр классу DBManager, що використовується для доступу до бази данних.
@@ -102,6 +103,7 @@ namespace experts_jurist
 
 		private void ReloadAttached()
 		{
+			
 			textBox3.Text = "";
 			listBox2.Items.Clear();
 			if ( listBox1.SelectedIndex >= 0)
@@ -123,6 +125,7 @@ namespace experts_jurist
 		}
 		private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			
 			if (listBox2.SelectedIndex >= 0)
 			{
 				textBox3.Text = listOfAttachedFi[listBox2.SelectedIndex][2].ToString();

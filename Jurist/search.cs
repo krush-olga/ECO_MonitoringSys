@@ -15,7 +15,7 @@ namespace experts_jurist
 
         SearchManager SM;
         string[] listOfFi = { };
-        
+
 
         public search()
         {
@@ -25,6 +25,7 @@ namespace experts_jurist
 
         private void button1_Click(object sender, EventArgs e)
         {
+    
             listOfFi = SM.SearchLine(textBox1.Text);
 
 			if (listOfFi.Count() == 0)
@@ -40,6 +41,7 @@ namespace experts_jurist
 
         private void Reload()
         {
+        
             listBox1.Items.Clear();
             foreach (var g in listOfFi)
             {
@@ -54,11 +56,20 @@ namespace experts_jurist
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            SuppressScriptErrorsOnly(webBrowser1); // Mine
             webBrowser1.DocumentText = SM.GetPage(listOfFi[listBox1.SelectedIndex]);
+          
+        }
+
+        // для ігнорування помилок, які відкриваються у діалогових вікнах
+        private void SuppressScriptErrorsOnly(WebBrowser browser) //Mine 
+        {
+            browser.ScriptErrorsSuppressed = true;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+          
             var tempList = SM.SearchLine(textBox1.Text);
 			if(tempList.Count() > 0)
 			{
@@ -70,7 +81,8 @@ namespace experts_jurist
 
 		private void search_Load(object sender, EventArgs e)
 		{
-			listOfFi = SM.SearchAll();
+  
+            listOfFi = SM.SearchAll();
 			if (listOfFi.Count() < 0)
 			{
 				label1.Text = "Не знайдено документів в базі";

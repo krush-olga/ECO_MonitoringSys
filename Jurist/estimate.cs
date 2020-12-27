@@ -52,6 +52,8 @@ namespace experts_jurist
 		/// <summary>
 		/// Конструктор.
 		/// </summary>
+        /// 
+      
 		public estimate()
         {
             InitializeComponent();
@@ -151,7 +153,8 @@ namespace experts_jurist
         
         private void ReloadAttached()
         {
-			textBox3.Text = "";
+         
+            textBox3.Text = "";
 			listBox2.Items.Clear();
 			if (currentIssue != "" && listBox1.SelectedIndex > 0)
             {
@@ -173,7 +176,8 @@ namespace experts_jurist
         }
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(listBox2.SelectedIndex >= 0)
+           
+            if (listBox2.SelectedIndex >= 0)
 			{
 				textBox3.Text = listOfAttachedFi[listBox2.SelectedIndex][2].ToString();
                 webBrowser1.DocumentText = SM.GetPage(listOfAttachedFi[listBox2.SelectedIndex][1].ToString());

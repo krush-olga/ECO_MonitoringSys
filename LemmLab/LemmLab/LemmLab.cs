@@ -1,4 +1,4 @@
-п»їusing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +11,10 @@ namespace LemmLab
     {
         List<Regex> lemmListEnd;
         /// <summary>
-        /// РџРµСЂРµС‚РІРѕСЂСЋС” СЃС‚СЂС–С‡РєСѓ РІ СЂРµРіСѓР»СЏСЂРЅРёР№ РІРёСЂР°Р· С‚Р° РґРѕРґР°С” СѓРјРѕРІСѓ Р·РЅР°С…РѕРґР¶РµРЅРЅСЏ РІ РєС–РЅС†С– С‚РµРєСЃС‚Сѓ.
+        /// Перетворює стрічку в регулярний вираз та додає умову знаходження в кінці тексту.
         /// </summary>
-        /// <param name="end">РЎС‚СЂС–С‡РєР°, С‰Рѕ РїРµСЂРµС‚РІРѕСЂСЋС”С‚СЊСЃСЏ.</param>
-        /// <returns>Р РµРіСѓР»СЏСЂРЅРёР№ РІРёСЂР°Р·.</returns>
+        /// <param name="end">Стрічка, що перетворюється.</param>
+        /// <returns>Регулярний вираз.</returns>
         private Regex RegExEnd(string end)
         {
             return new Regex( end +"$");
@@ -24,53 +24,53 @@ namespace LemmLab
 			return new Regex("^" + begin);
 		}
 		/// <summary>
-		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ.
+		/// Конструктор.
 		/// </summary>
 		public LemmManager()
         {
             lemmListEnd = new List<Regex>();
-            lemmListEnd.Add(RegExEnd("СЃСЊРєРѕРјСѓ"));
-            lemmListEnd.Add(RegExEnd("СЃСЊРєРёРјРё"));
-            lemmListEnd.Add(RegExEnd("СЃСЊРєРѕС—"));
-            lemmListEnd.Add(RegExEnd("СЃСЊРєРѕСЋ"));
-            lemmListEnd.Add(RegExEnd("СЃСЊРєРёРј"));
-            lemmListEnd.Add(RegExEnd("СЃСЊРєР°"));
-            lemmListEnd.Add(RegExEnd("С‚РёСЃСЊ"));
-            lemmListEnd.Add(RegExEnd("С‚РёСЃСЏ"));
-            lemmListEnd.Add(RegExEnd("РѕРіРѕ"));
-            lemmListEnd.Add(RegExEnd("РёС‚Рё"));
-            lemmListEnd.Add(RegExEnd("РёСЃСЊ"));
-            lemmListEnd.Add(RegExEnd("РѕСЋ"));
-            lemmListEnd.Add(RegExEnd("Р°Рј"));
-            lemmListEnd.Add(RegExEnd("РѕРј"));
-            lemmListEnd.Add(RegExEnd("Р°РјРё"));
-            lemmListEnd.Add(RegExEnd("Р°С…"));
-            lemmListEnd.Add(RegExEnd("РѕС—"));
-            lemmListEnd.Add(RegExEnd("С–С—"));
-            lemmListEnd.Add(RegExEnd("С–СЏ"));
-            lemmListEnd.Add(RegExEnd("С–Р№"));
-            lemmListEnd.Add(RegExEnd("С‚Рё"));
-            lemmListEnd.Add(RegExEnd("С‚СЊ"));
-            lemmListEnd.Add(RegExEnd("С–РІ"));
-            lemmListEnd.Add(RegExEnd("РёРј"));
-            lemmListEnd.Add(RegExEnd("Р°"));
-            lemmListEnd.Add(RegExEnd("Рё"));
-            lemmListEnd.Add(RegExEnd("С–"));
-            lemmListEnd.Add(RegExEnd("Сѓ"));
-            lemmListEnd.Add(RegExEnd("Рѕ"));
-            lemmListEnd.Add(RegExEnd("СЏ"));
-            lemmListEnd.Add(RegExEnd("СЊ"));
-            lemmListEnd.Add(RegExEnd("С”"));
-			lemmListEnd.Add(RegExBegin("РїСЂРµ"));
-			lemmListEnd.Add(RegExBegin("РІСЃРµ"));
-			lemmListEnd.Add(RegExBegin("РґРѕ"));
-			lemmListEnd.Add(RegExBegin("РїРѕ"));
+            lemmListEnd.Add(RegExEnd("ському"));
+            lemmListEnd.Add(RegExEnd("ськими"));
+            lemmListEnd.Add(RegExEnd("ської"));
+            lemmListEnd.Add(RegExEnd("ською"));
+            lemmListEnd.Add(RegExEnd("ським"));
+            lemmListEnd.Add(RegExEnd("ська"));
+            lemmListEnd.Add(RegExEnd("тись"));
+            lemmListEnd.Add(RegExEnd("тися"));
+            lemmListEnd.Add(RegExEnd("ого"));
+            lemmListEnd.Add(RegExEnd("ити"));
+            lemmListEnd.Add(RegExEnd("ись"));
+            lemmListEnd.Add(RegExEnd("ою"));
+            lemmListEnd.Add(RegExEnd("ам"));
+            lemmListEnd.Add(RegExEnd("ом"));
+            lemmListEnd.Add(RegExEnd("ами"));
+            lemmListEnd.Add(RegExEnd("ах"));
+            lemmListEnd.Add(RegExEnd("ої"));
+            lemmListEnd.Add(RegExEnd("ії"));
+            lemmListEnd.Add(RegExEnd("ія"));
+            lemmListEnd.Add(RegExEnd("ій"));
+            lemmListEnd.Add(RegExEnd("ти"));
+            lemmListEnd.Add(RegExEnd("ть"));
+            lemmListEnd.Add(RegExEnd("ів"));
+            lemmListEnd.Add(RegExEnd("им"));
+            lemmListEnd.Add(RegExEnd("а"));
+            lemmListEnd.Add(RegExEnd("и"));
+            lemmListEnd.Add(RegExEnd("і"));
+            lemmListEnd.Add(RegExEnd("у"));
+            lemmListEnd.Add(RegExEnd("о"));
+            lemmListEnd.Add(RegExEnd("я"));
+            lemmListEnd.Add(RegExEnd("ь"));
+            lemmListEnd.Add(RegExEnd("є"));
+			lemmListEnd.Add(RegExBegin("пре"));
+			lemmListEnd.Add(RegExBegin("все"));
+			lemmListEnd.Add(RegExBegin("до"));
+			lemmListEnd.Add(RegExBegin("по"));
 		}
         /// <summary>
-        /// РќРѕСЂРјР°Р»С–Р·СѓС” СЃР»РѕРІРѕ.
+        /// Нормалізує слово.
         /// </summary>
-        /// <param name="str">РЎР»РѕРІРѕ, С‰Рѕ РїРѕС‚СЂРµР±СѓС” РЅРѕСЂРјР°Р»С–Р·Р°С†С–С—.</param>
-        /// <returns>РќРѕСЂРјР°Р»С–Р·РѕРІР°РЅРµ СЃР»РѕРІРѕ.</returns>
+        /// <param name="str">Слово, що потребує нормалізації.</param>
+        /// <returns>Нормалізоване слово.</returns>
         public string ToLemm(string str)
         {
             foreach( Regex re in lemmListEnd)
@@ -83,10 +83,10 @@ namespace LemmLab
             return str;
         }
         /// <summary>
-        /// РџРµСЂРµС‚РІРѕСЂСЋС” СЃС‚СЂС–С‡РєСѓ РІ РјР°СЃРёРІ СЃР»С–РІ.
+        /// Перетворює стрічку в масив слів.
         /// </summary>
-        /// <param name="str">РЎС‚СЂС–С‡РєР°, С‰Рѕ РїРѕС‚СЂРµР±СѓС” РїРµСЂРµС‚РІРѕСЂРµРЅРЅСЏ.</param>
-        /// <returns>РЎРїРёСЃРѕРє СЃР»С–РІ.</returns>
+        /// <param name="str">Стрічка, що потребує перетворення.</param>
+        /// <returns>Список слів.</returns>
         public string[] ToWords(string str)
         {
             
@@ -94,16 +94,19 @@ namespace LemmLab
             return re.Split(str.ToLower());
         }
         /// <summary>
-        /// РџРµСЂРµС‚РІРѕСЂСЋС” Р·РјС–СЃС‚ html-СЃС‚РѕСЂС–РЅРєРё РІ РјР°СЃРёРІ СЃР»С–РІ. Р—РјС–СЃС‚ html-С‚РµРіС–РІ РїСЂРё С†СЊРѕРјСѓ С–РіРЅРѕСЂСѓС”С‚СЊСЃСЏ.
+        /// Перетворює зміст html-сторінки в масив слів. Зміст html-тегів при цьому ігнорується.
         /// </summary>
-        /// <param name="str">Р—РјС–СЃС‚ html-СЃС‚РѕСЂС–РЅРєРё.</param>
-        /// <returns>РњР°СЃРёРІ СЃР»С–РІ.</returns>
+        /// <param name="str">Зміст html-сторінки.</param>
+        /// <returns>Масив слів.</returns>
         public string[] ToWordsHTML(string str)
         {
             Regex re1 = new Regex("(\\s)|[.,:;\"()]");
-            Regex re2 = new Regex("<(.|\\s|&quot)*?>");
+            Regex re2 = new Regex("<(.|\\s|&quot)*?>|[A-Za-z|!|[|=|\\||&|_|$|^|'{2}|…|—|«|»|”|“|?||©|%|/+|>+|<+|•]+|\\]|\\-(?=\\d)|\\-(?=\\s)|\\-$|\\-{2,5}");
             Regex re3 = new Regex("<style>(.|\\s)*?<\\/style>");
+            //{[^{}].[\\w\\W]*}|  шоб видалити все між фігурними дужками
+
             return (from a in re1.Split(re2.Replace(re3.Replace(str.ToLower(), ""), "")) where a.Trim() != "" select a.Trim()).ToArray();
         }
     }
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     

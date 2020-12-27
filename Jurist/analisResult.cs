@@ -21,6 +21,7 @@ namespace experts_jurist
 		private Dictionary<string, int> listOfAll = new Dictionary<string, int>();
 		private List<List<object>> listOfAttachedRaws = new List<List<object>>();
 		private List<string> listOfDelate = new List<string>();
+		
 		public analisResult()
 		{
 			db.Connect();
@@ -97,7 +98,7 @@ namespace experts_jurist
 					case 1:
 						db.SetValue("event_documents", "description", DBUtil.ValidateForSQL(a[2]),
 							"(event_id=" +
-							a[0] +
+							a[0] + 
 							" AND document_code=" +
 							DBUtil.ValidateForSQL(a[1])+")");//я исправил сетвальюе в либе дб
 						break;
@@ -107,7 +108,8 @@ namespace experts_jurist
 
 		private void Form2_Load(object sender, EventArgs e)
 		{
-			foreach(var a in listOfAll)
+			
+			foreach (var a in listOfAll)
 			{
 				if(a.Value==2)
 				{
@@ -122,7 +124,7 @@ namespace experts_jurist
 			{
 				if (listOfAll[a] == 3 || listOfAll[a] == 1)
 				{
-					temp[1] = a;
+					temp[1] = a; 
 					if(listOfAll[a] == 1)
 					{
 						temp[2] = db.GetValue("event_documents", "description", "event_id = " + currentEventID + " AND document_code = " + DBUtil.ValidateForSQL(a));
@@ -145,6 +147,7 @@ namespace experts_jurist
 
 		private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
 		{
+			
 			if (listBox2.SelectedIndex > -1)
 			{
 				textBox3.Text = (string)listOfAttachedRaws[listBox2.SelectedIndex][2];
