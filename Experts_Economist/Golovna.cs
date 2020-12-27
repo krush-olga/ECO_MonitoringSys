@@ -34,7 +34,7 @@ namespace Experts_Economist
         private ImportSQL importSQL;
         private ExportDB exportDB;
         private ConnectDB connectDB;
-        private Map MapMDIChild;
+        private MapWindow MapMDIChild;
         private LookEventsForm look;
         private NormOfCalc norm;
 
@@ -214,9 +214,7 @@ namespace Experts_Economist
         {
             if (MapMDIChild == null)
             {
-                MapMDIChild = new Map();
-                MapMDIChild.id_of_exp = id_of_exp;
-                MapMDIChild.id_of_user = id_of_user;
+                MapMDIChild = new MapWindow((Role)id_of_exp, id_of_user);
                 MapMDIChild.MdiParent = this;
                 MapMDIChild.Show();
                 MapMDIChild.FormClosed += (send, ev) => { MapMDIChild.Dispose(); MapMDIChild = null; };
