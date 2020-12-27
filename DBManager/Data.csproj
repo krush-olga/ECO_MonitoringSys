@@ -89,6 +89,8 @@
     <Compile Include="Entities\CalculationSeries.cs" />
     <Compile Include="Entities\Cities.cs" />
     <Compile Include="Entities\Document.cs" />
+    <Compile Include="Entities\Element.cs" />
+    <Compile Include="Entities\Emission.cs" />
     <Compile Include="Entities\Environment.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Expert.cs" />

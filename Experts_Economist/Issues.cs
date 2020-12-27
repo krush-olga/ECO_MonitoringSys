@@ -5,10 +5,10 @@ namespace Experts_Economist
 {
     public class Issue
     {
-        public int id;
-        public string name;
-        public string description;
-        public DateTime creationDate;
+        public int id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public DateTime creationDate { get; set; }
 
         public Issue(int id)
         {

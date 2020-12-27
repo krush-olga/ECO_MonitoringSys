@@ -5,11 +5,11 @@ namespace Data.Entity
 {
     public class Issue
     {
-        public int id;
-        public string name;
-        public string description;
-        public string tema;
-        public DateTime creationDate;
+        public int id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public string tema { get; set; }
+        public DateTime creationDate { get; set; }
 
         public Issue(int id)
         {
