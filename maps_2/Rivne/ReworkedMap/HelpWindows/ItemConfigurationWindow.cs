@@ -17,6 +17,7 @@ namespace Maps.HelpWindows
 
         private int oldIssueIndex;
         private int oldEnvironmentIndex;
+        private int oldSeriesIndex;
         private string oldObjName;
         private string oldObjDescription;
 
@@ -25,6 +26,7 @@ namespace Maps.HelpWindows
 
         private IList<Data.Entity.Issue> issues;
         private IList<Data.Entity.Environment> environments;
+        private IList<Data.Entity.Element> elements;
         private IDictionary<int, IList<Data.Entity.CalculationSeries>> series;
         private DBManager dbManager;
 
@@ -41,12 +43,12 @@ namespace Maps.HelpWindows
 
         public ItemConfigurationWindow(Role expert) : this(expert, null, null)
         { }
-        public ItemConfigurationWindow(Role expert, IList<Data.Entity.Issue> issues, IList<Data.Entity.Environment> environments)
+        public ItemConfigurationWindow(Role expert, IList<Data.Entity.Issue> issues, 
+                                       IList<Data.Entity.Environment> environments)
         {
             _lock = new object();
 
             InitializeComponent();
-            InitializeAdditionalComponent();
 
             this.expert = expert;
             this.issues = issues;
@@ -61,6 +63,8 @@ namespace Maps.HelpWindows
             oldEnvironmentIndex = 0;
             oldObjName = string.Empty;
             oldObjDescription = string.Empty;
+
+            InitializeAdditionalComponent();
         }
 
         public string GetObjName()
@@ -83,17 +87,138 @@ namespace Maps.HelpWindows
         {
             return SeriesComboBox.SelectedItem as Data.Entity.CalculationSeries;
         }
+        public Data.Entity.Emission GetEmission()
+        {
+            return new Data.Entity.Emission()
+            {
+                MaxValue = double.Parse(MaxEmissionValueTextBox.Text),
+                AvgValue = double.Parse(AvgEmissionValueTextBox.Text),
+                Year = (int)YearNumericUpDown.Value,
+                Day = (int)DayNumericUpDown.Value,
+                Month = (int)MonthNumericUpDown.Value,
+            };
+        }
 
         private void InitializeAdditionalComponent()
         {
             Binding envCheckBinding = new Binding("Enabled", EnvironmentCheckBox, "Checked");
             Binding issuesCheckBinding = new Binding("Enabled", IssueCheckBox, "Checked");
+            Binding emissionCheckBinding = new Binding("Enabled", EmissionCheckBox, "Checked");
 
             EnvironmentGroupBox.DataBindings.Add(envCheckBinding);
             IssueGroupBox.DataBindings.Add(issuesCheckBinding);
+            EmissionGroupBox.DataBindings.Add(emissionCheckBinding);
+
+            ElementsComboBox.FormatString = "Name (Measure)";
 
             IssuesComboBox.DataSource = issues;
             EnvironmentsComboBox.DataSource = environments;
+
+            IssuesComboBox.DisplayMember = "name";
+            EnvironmentsComboBox.DisplayMember = "Name";
+
+            DateTime dateTime = DateTime.Now;
+
+            YearNumericUpDown.Maximum = dateTime.Year;
+            DayNumericUpDown.Maximum = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
+        }
+
+        public void SetIssueIndex(int index)
+        {
+            IssueCheckBox.Checked = true;
+
+            SetComboBoxIndex<Data.Entity.Issue>(IssuesComboBox, index, ref oldIssueIndex);
+        }
+        public void SetEnvironmentIndex(int index)
+        {
+            EnvironmentCheckBox.Checked = true;
+
+            SetComboBoxIndex<Data.Entity.Environment>(EnvironmentsComboBox, index, ref oldEnvironmentIndex);
+        }
+        public void SetSeriesIndex(int index)
+        {
+            if (IssuesComboBox.SelectedIndex != -1)
+            {
+                SetComboBoxIndex<Data.Entity.CalculationSeries>(SeriesComboBox, index, ref oldSeriesIndex);
+                SetSeries();
+            }
+        }
+        public void SetIssue(Data.Entity.Issue issue)
+        {
+            if (issue != null && issues != null)
+            {
+                SetIssueIndex(issues.IndexOf(issue));
+            }
+            else
+            {
+                SetIssueIndex(0);
+            }
+        }
+        public void SetEnvironment(Data.Entity.Environment environment)
+        {
+            if (environment != null && environments != null)
+            {
+                SetEnvironmentIndex(environments.IndexOf(environment));
+            }
+            else
+            {
+                SetEnvironmentIndex(0);
+            }
+        }
+        public void SetSeries(int index)
+        {
+            if (IssuesComboBox.SelectedIndex != -1)
+            {
+                SetComboBoxIndex<Data.Entity.CalculationSeries>(SeriesComboBox, index, ref oldSeriesIndex);
+                SetSeries();
+            }
+        }
+
+        private void SetComboBoxIndex<T>(ComboBox comboBox, int index, ref int oldIndex)
+        {
+            if (comboBox.DataSource != null)
+            {
+                var dataSource = (IList<T>)comboBox.DataSource;
+
+                if (index < 0)
+                {
+                    oldIndex = 0;
+                }
+                else if (index >= dataSource.Count)
+                {
+                    oldIndex = dataSource.Count - 1;
+                }
+                else
+                {
+                    oldIndex = index;
+                }
+
+                comboBox.SelectedIndex = oldIndex;
+            }
+        }
+
+        private async void SetSeries()
+        {
+            if (IssuesComboBox.DataSource != null && IssuesComboBox.SelectedItem != null &&
+                IssuesComboBox.SelectedItem is Data.Entity.Issue)
+            {
+                Data.Entity.Issue issue = (Data.Entity.Issue)IssuesComboBox.SelectedValue;
+
+                if (!series.ContainsKey(issue.id))
+                {
+                    var loadSeries = await LoadSeriesByIssue(issue.id);
+
+                    if (loadSeries.Count == 0)
+                    {
+                        loadSeries.Add(missingSeries);
+                    }
+
+                    series[issue.id] = loadSeries;
+                }
+
+                SeriesComboBox.DataSource = null;
+                SeriesComboBox.DataSource = series[issue.id];
+            }
         }
 
         private async void LoadIssues()
@@ -190,7 +315,7 @@ namespace Maps.HelpWindows
                 if (environments.Count != 0)
                 {
                     EnvironmentsComboBox.DataSource = environments;
-                    EnvironmentsComboBox.DisplayMember = "name";
+                    EnvironmentsComboBox.DisplayMember = "Name";
                 }
                 else
                 {
@@ -214,6 +339,42 @@ namespace Maps.HelpWindows
             finally
             {
                 isLoading = false;
+            }
+        }
+        private async Task LoadElements()
+        {
+            ElementsComboBox.Items.Add("Йде завантаження...");
+            ElementsComboBox.SelectedIndex = 0;
+
+            try
+            {
+                elements = (await dbManager.GetRowsAsync("elements", "*", ""))
+                                           .Select(r => Data.Helpers.Mapper<Data.Entity.Element>.Map(r))
+                                           .ToList();
+
+                if (elements.Count != 0)
+                {
+                    ElementsComboBox.DataSource = elements;
+                    ElementsComboBox.DisplayMember = "Name";
+                }
+                else
+                {
+                    ElementsComboBox.Items.Add("Помилка при завантаженні елементів");
+                    ElementsComboBox.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                ElementsComboBox.Items.Clear();
+                ElementsComboBox.DataSource = null;
+
+                ElementsComboBox.Items.Add("Помилка при завантаженні середовищ");
+                ElementsComboBox.SelectedIndex = 0;
+
+#if DEBUG
+                MessageBox.Show($"Message:\n{ex.Message}\n\nStack trace: \n{ex.StackTrace}",
+                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
             }
         }
 
@@ -262,28 +423,9 @@ namespace Maps.HelpWindows
             ObjectDescriptionTextBox.Text = oldObjDescription;
         }
 
-        private async void IssuesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void IssuesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (IssuesComboBox.DataSource != null && IssuesComboBox.SelectedItem != null &&
-                IssuesComboBox.SelectedItem is Data.Entity.Issue)
-            {
-                Data.Entity.Issue issue = (Data.Entity.Issue)IssuesComboBox.SelectedValue;
-
-                if (!series.ContainsKey(issue.id))
-                {
-                    var loadSeries = await LoadSeriesByIssue(issue.id);
-
-                    if (loadSeries.Count == 0)
-                    {
-                        loadSeries.Add(missingSeries);
-                    }
-
-                    series.Add(issue.id, loadSeries);
-                }
-
-                SeriesComboBox.DataSource = null;
-                SeriesComboBox.DataSource = series[issue.id];
-            }
+            SetSeries();
         }
 
         private void IssueCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -298,6 +440,13 @@ namespace Maps.HelpWindows
             if (environments == null || environments.Count == 0)
             {
                 LoadEnvironments();
+            }
+        }
+        private async void EmissionCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (elements == null || elements.Count == 0)
+            {
+                await LoadElements();
             }
         }
 
@@ -337,22 +486,40 @@ namespace Maps.HelpWindows
             description = ObjectDescriptionTextBox.Text;
         }
 
-        private void ItemConfigurationWindow_FormClosing(object sender, FormClosingEventArgs e)
+        private void ElementsComboBox_Format(object sender, ListControlConvertEventArgs e)
         {
-            if (string.IsNullOrEmpty(ObjectNameTextBox.Text))
+            Data.Entity.Element element = e.ListItem as Data.Entity.Element;
+
+            if (element != null)
             {
-                MessageBox.Show("Ви не заповнили усі необхідні поля.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true;
-                return;
+                e.Value = element.ToString("NM");
             }
         }
 
-        private void m_CancelButton_Click(object sender, EventArgs e)
+        private void EmissionValueTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (string.IsNullOrEmpty(oldObjName))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != '-') && (e.KeyChar != ' '))
             {
-                MessageBox.Show("Ви не можете вимкнути вікно не зберігвши необхідні поля.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
+            {
+                e.Handled = true;
+            }
+            if ((e.KeyChar == '-') && ((sender as TextBox).Text.IndexOf('-') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+        private void EmissionValueTextBox_Leave(object sender, EventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                if (string.IsNullOrEmpty(textBox.Text))
+                {
+                    textBox.Text = "0";
+                }
             }
         }
     }

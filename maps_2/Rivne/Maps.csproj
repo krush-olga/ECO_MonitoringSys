@@ -250,6 +250,7 @@
       <DependentUpon>Taxes.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Data.Entity.Element.datasource" />
     <None Include="Properties\DataSources\Maps.TestNewMap.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

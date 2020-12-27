@@ -794,6 +794,30 @@ namespace Maps.Core
             return overlay != null ? overlay.Routes : null;
         }
 
+
+        //public ICollection<string> GetMarkerLayouts(Point screenPoint)
+        //{
+        //    PointLatLng coords = MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y);
+
+        //    return GetMarkerLayouts(coords);
+        //}
+        //public ICollection<string> GetMarkerLayouts(PointLatLng coord)
+        //{
+        //    List<string> layouts = new List<string>();
+
+        //    foreach (var overlay in MapObject.Overlays)
+        //    {
+        //        foreach (var marker in overlay.Markers) 
+        //        {
+        //            markersComparator.Equals(marker);
+        //        }
+        //    }
+        //}
+        //public ICollection<string> GetMarkerLayouts(GMapMarker marker) 
+        //{
+        //    return GetMarkerLayouts(marker.Position);
+        //}
+
         public GMapMarker GetMarkerByCoordsOrNull(Point screenPoint)
         {
             return GetMarkerByCoordsOrNull(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y));

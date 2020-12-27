@@ -34,6 +34,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.MapObjectContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ComparsionSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PanelSideMenu = new System.Windows.Forms.Panel();
             this.ElementsSideMenuPanel = new System.Windows.Forms.Panel();
@@ -116,7 +117,7 @@
             this.CollapseButton = new System.Windows.Forms.Button();
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.PolylineToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.ComparsionSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FiltrationInfoStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.MapObjectContextMenuStrip.SuspendLayout();
             this.PanelSideMenu.SuspendLayout();
             this.ElementsSideMenuPanel.SuspendLayout();
@@ -146,11 +147,19 @@
             this.MapObjectContextMenuStrip.Name = "contextMenuStrip1";
             this.MapObjectContextMenuStrip.Size = new System.Drawing.Size(209, 48);
             // 
+            // ComparsionSelectToolStripMenuItem
+            // 
+            this.ComparsionSelectToolStripMenuItem.Name = "ComparsionSelectToolStripMenuItem";
+            this.ComparsionSelectToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.ComparsionSelectToolStripMenuItem.Text = "Вибрати для порівняння";
+            this.ComparsionSelectToolStripMenuItem.Click += new System.EventHandler(this.ComparsionSelectToolStripMenuItem_Click);
+            // 
             // DeleteToolStripMenuItem
             // 
             this.DeleteToolStripMenuItem.Name = "DeleteToolStripMenuItem";
             this.DeleteToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.DeleteToolStripMenuItem.Text = "Удалить";
+            this.DeleteToolStripMenuItem.Visible = false;
             this.DeleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
             // 
             // PanelSideMenu
@@ -1086,6 +1095,7 @@
             this.CurrentActionStatusLabel,
             this.MainToolStripProgressBar,
             this.DebugToolStripStatusLabel,
+            this.FiltrationInfoStripStatusLabel,
             this.HelpStatusLabel});
             this.MainStatusStrip.Location = new System.Drawing.Point(0, 679);
             this.MainStatusStrip.Name = "MainStatusStrip";
@@ -1099,6 +1109,7 @@
             this.DebugToolStripStatusLabel.Name = "DebugToolStripStatusLabel";
             this.DebugToolStripStatusLabel.Size = new System.Drawing.Size(44, 17);
             this.DebugToolStripStatusLabel.Text = "DEBUG";
+            this.DebugToolStripStatusLabel.Visible = false;
             // 
             // HelpStatusLabel
             // 
@@ -1106,6 +1117,7 @@
             this.HelpStatusLabel.Name = "HelpStatusLabel";
             this.HelpStatusLabel.Size = new System.Drawing.Size(16, 17);
             this.HelpStatusLabel.Text = "...";
+            this.HelpStatusLabel.Visible = false;
             // 
             // ZoomPlus
             // 
@@ -1181,12 +1193,13 @@
             this.PolylineToolTip.InitialDelay = 400;
             this.PolylineToolTip.ReshowDelay = 100;
             // 
-            // ComparsionSelectToolStripMenuItem
+            // FiltrationInfoStripStatusLabel
             // 
-            this.ComparsionSelectToolStripMenuItem.Name = "ComparsionSelectToolStripMenuItem";
-            this.ComparsionSelectToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.ComparsionSelectToolStripMenuItem.Text = "Вибрати для порівняння";
-            this.ComparsionSelectToolStripMenuItem.Click += new System.EventHandler(this.ComparsionSelectToolStripMenuItem_Click);
+            this.FiltrationInfoStripStatusLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.FiltrationInfoStripStatusLabel.Margin = new System.Windows.Forms.Padding(100, 3, 0, 2);
+            this.FiltrationInfoStripStatusLabel.Name = "FiltrationInfoStripStatusLabel";
+            this.FiltrationInfoStripStatusLabel.Size = new System.Drawing.Size(123, 17);
+            this.FiltrationInfoStripStatusLabel.Text = "Фільтрація вимкнена";
             // 
             // MapWindow
             // 
@@ -1202,6 +1215,7 @@
             this.MinimumSize = new System.Drawing.Size(700, 540);
             this.Name = "MapWindow";
             this.Text = "Карта";
+            this.Shown += new System.EventHandler(this.MapWindow_Shown);
             this.MapObjectContextMenuStrip.ResumeLayout(false);
             this.PanelSideMenu.ResumeLayout(false);
             this.ElementsSideMenuPanel.ResumeLayout(false);
@@ -1318,5 +1332,6 @@
         private System.Windows.Forms.Button TubeSaveButton;
         private System.Windows.Forms.Button TubeDrawButton;
         private System.Windows.Forms.ToolStripMenuItem ComparsionSelectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel FiltrationInfoStripStatusLabel;
     }
 }

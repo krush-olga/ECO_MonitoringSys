@@ -63,8 +63,6 @@ namespace Maps
 
             itemConfigurationWindow = null;
             drawContext = null;
-
-            LoadCommonThings();
         }
 
         private void InitialiazeAdditionalComponent()
@@ -113,7 +111,7 @@ namespace Maps
             MainToolStripProgressBar.Visible = true;
             MainToolStripProgressBar.ProgressBar.Style = ProgressBarStyle.Marquee;
 
-            await FillCheckBoxFromBDAsync(CitiesComboBox, "cities", "*", "",
+            Task citiesTask = FillCheckBoxFromBDAsync(CitiesComboBox, "cities", "*", "",
                                           r =>
                                           {
                                               if (r[0].ToString() == "Камянець-Подільський")
@@ -138,7 +136,7 @@ namespace Maps
                                               GoToCityButton.Enabled = false;
                                           });
 
-            await FillCheckBoxFromBDAsync(EnvironmentComboBox, "environment", "*", "",
+            Task environmentTask = FillCheckBoxFromBDAsync(EnvironmentComboBox, "environment", "*", "",
                                           r => EnvironmentMapper.Map(r),
                                           displayComboBoxMember: "Name",
                                           valueComboBoxMember: "Id",
@@ -150,23 +148,16 @@ namespace Maps
                                               };
                                           });
 
-            await FillCheckBoxFromBDAsync(IssuesComboBox, "issues", "issue_id, name", "",
+            Task issuesTask = FillCheckBoxFromBDAsync(IssuesComboBox, "issues", "*", "",
                                           r =>
                                           {
-                                              int id;
-                                              int.TryParse(r[0].ToString(), out id);
-
-                                              return new
-                                              {
-                                                  Id = id,
-                                                  Name = r[1].ToString()
-                                              };
+                                              return IssueMapper.Map(r);
                                           },
-                                          displayComboBoxMember: "Name",
-                                          valueComboBoxMember: "Id",
+                                          displayComboBoxMember: "name",
+                                          valueComboBoxMember: "id",
                                           falultAction: c => c.Items.Add("Не вдалось завантажити задачі."));
 
-            await FillCheckBoxFromBDAsync(OwnershipTypeComboBox, "owner_types", "*", "",
+            Task ownershipTask = FillCheckBoxFromBDAsync(OwnershipTypeComboBox, "owner_types", "*", "",
                                           r =>
                                           {
                                               int id;
@@ -182,7 +173,7 @@ namespace Maps
                                           valueComboBoxMember: "Id",
                                           falultAction: c => c.Items.Add("Не вдалось завантажити типи власності"));
 
-            await FillCheckBoxFromBDAsync(EconomicActivityComboBox, "type_of_object", "Id, Name, Image_Name", "",
+            Task economicActivityTask = FillCheckBoxFromBDAsync(EconomicActivityComboBox, "type_of_object", "Id, Name, Image_Name", "",
                                           r =>
                                           {
                                               int id;
@@ -199,6 +190,8 @@ namespace Maps
                                           valueComboBoxMember: "ImageName",
                                           falultAction: c => c.Items.Add("Не вдалось завантажити вид економічної діяльності"));
 
+            await Task.WhenAll(citiesTask, environmentTask, issuesTask, ownershipTask, economicActivityTask);
+
             EconomicActivityComboBox.SelectedIndex = -1;
             EconomicActivityComboBox.SelectedIndex = 0;
 
@@ -207,7 +200,7 @@ namespace Maps
             MainToolStripProgressBar.ProgressBar.Style = ProgressBarStyle.Continuous;
         }
 
-        private Task FillCheckBoxFromBDAsync<TResult>(ComboBox comboBox, string table, string columns,
+        private async Task FillCheckBoxFromBDAsync<TResult>(ComboBox comboBox, string table, string columns,
                                                       string condition, Func<List<object>, TResult> func,
                                                       string displayComboBoxMember = null,
                                                       string valueComboBoxMember = null,
@@ -216,32 +209,25 @@ namespace Maps
             if (comboBox == null || string.IsNullOrEmpty(table) || columns == null ||
                 condition == null || func == null)
             {
-                return null;
+                return;
             }
 
             Action<ComboBox, string, string, Action<ComboBox>, List<TResult>> syncAction = SyncAction;
+            Action<ComboBox> syncStartFill = SyncStartFill;
 
-            comboBox.Items.Add("Йде завантаження...");
-            comboBox.SelectedIndex = 0;
+            comboBox.Invoke(syncStartFill, comboBox);
 
             try
             {
-                return Task.Run(() =>
-                {
-                    lock (_lock)
-                    {
-                        isLoading = true;
-                    }
+                var result = (await dBManager.GetRowsAsync(table, columns, condition))
+                                             .Select(func)
+                                             .ToList();
 
-                    var result = dBManager.GetRows(table, columns, condition)
-                                          .Select(func)
-                                          .ToList();
-
-                    comboBox.Invoke(syncAction, comboBox, displayComboBoxMember, valueComboBoxMember, falultAction, result);
-                });
+                comboBox.Invoke(syncAction, comboBox, displayComboBoxMember, valueComboBoxMember, falultAction, result);
             }
             catch (Exception ex)
             {
+                comboBox.DataSource = null;
                 if (falultAction != null)
                 {
                     falultAction(comboBox);
@@ -249,11 +235,6 @@ namespace Maps
 #if DEBUG
                 DebugLog(ex);
 #endif
-                return null;
-            }
-            finally
-            {
-                isLoading = false;
             }
         }
 
@@ -299,6 +280,12 @@ namespace Maps
             return img;
         }
 
+        private void SyncStartFill(ComboBox comboBox)
+        {
+            comboBox.Items.Add("Йде завантаження...");
+            comboBox.SelectedIndex = 0;
+        }
+
         private void SyncAction<TResult>(ComboBox comboBox, string displayComboBoxMember,
                                          string valueComboBoxMember, Action<ComboBox> falultAction,
                                          List<TResult> result)
@@ -324,6 +311,27 @@ namespace Maps
                             "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 #endif
+
+        private void MapWindow_Shown(object sender, EventArgs e)
+        {
+            LoadCommonThings();
+        }
+
+        public void HideContextMenuStripItems(ContextMenuStrip contextMenuStrip)
+        {
+            foreach (ToolStripItem item in contextMenuStrip.Items)
+            {
+                item.Visible = false;
+            }
+        }
+
+        public void ShowContextMenuStripItems(ContextMenuStrip contextMenuStrip)
+        {
+            foreach (ToolStripItem item in contextMenuStrip.Items)
+            {
+                item.Visible = true;
+            }
+        }
 
         #region Side panel methods
         private void HideAllSidePanels()
@@ -448,7 +456,10 @@ namespace Maps
                 drawContext.RemoveCoord(reworkedMap.SelectedMarker.Position);
             }
         }
+        private void ChangeObjectSettings(object sender, EventArgs e)
+        {
 
+        }
         private void AdditionalInfo(object sender, EventArgs e)
         {
             var marker = reworkedMap.SelectedMarker;
@@ -462,7 +473,6 @@ namespace Maps
                 emissionsForm.FormClosed += EmissionsForm_FormClosed;
             }
         }
-
         private void EmissionsForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             var disposableObj = sender as IDisposable;
@@ -487,10 +497,6 @@ namespace Maps
                 if (polygonAddingMode || tubeAddingMode || expert == Role.Admin)
                 {
                     MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = true;
-                }
-                else
-                {
-                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = false;
                 }
 
                 MapObjectContextMenuStrip.Show(gMapControl, e.Location);
@@ -657,6 +663,8 @@ namespace Maps
         #region Filtering method group
         private void ShowLayoutButton_Click(object sender, EventArgs e)
         {
+            FiltrationInfoStripStatusLabel.Text = "Ввімкнена фільтрація на мапі";
+
             reworkedMap.HideAllLayout();
 
             if (EnvironmentsCheckBox.Checked)
@@ -736,6 +744,8 @@ namespace Maps
                 itemConfigurationWindow.Dispose();
             }
             itemConfigurationWindow = null;
+
+            ShowContextMenuStripItems(MapObjectContextMenuStrip);
         }
 
         #region Marker methods
@@ -766,6 +776,7 @@ namespace Maps
 
         private void AddMarkerButton_Click(object sender, EventArgs e)
         {
+            HideContextMenuStripItems(MapObjectContextMenuStrip);
             markerAddingMode = !markerAddingMode;
 
             if (markerAddingMode)
@@ -788,7 +799,18 @@ namespace Maps
         {
             if (itemConfigurationWindow == null)
             {
-                itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
+                IList<Issue> issues = IssuesComboBox.DataSource as IList<Issue>;
+                IList<Data.Entity.Environment> environments = EnvironmentComboBox.DataSource as IList<Data.Entity.Environment>;
+
+                if (issues != null && environments != null)
+                {
+                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert, issues, environments);
+                }
+                else
+                {
+                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
+                }
+
             }
             itemConfigurationWindow.ShowDialog();
         }
@@ -1037,7 +1059,7 @@ namespace Maps
 
             string[] polygonDescColumns = { "id_poligon", "id_of_issue", "calculations_description_number" };
             string[] polygonDescValues = { polygonValues[0], issue != null ? issue.id.ToString() : "0",
-                                               series != null ? series.id.ToString() : "0"};
+                                               series != null && series.id != -1 ? series.id.ToString() : "0"};
 
             try
             {
@@ -1089,20 +1111,34 @@ namespace Maps
                     ((IDescribable)polyMarker).Type = _type;
                 }
 
-                if (issue != null)
+                Action<Issue, Map> action = (_issue, rwMap) =>
                 {
-                    reworkedMap.AddMarker(polyMarker, issue.name);
-                }
-                //if (environment != null)
-                //{
-                //    reworkedMap.AddPolygon(polygon, environment.Name);
-                //    reworkedMap.AddMarker(polyMarker, environment.Name);
-                //}
+                    if (issue != null)
+                    {
+                        rwMap.AddMarker(polyMarker, issue.name);
+                    }
+                    else
+                    {
+                        rwMap.AddMarker(polyMarker);
+                    }
+                };
 
-                if (issue == null /*&& environment == null*/)
-                {
-                    reworkedMap.AddMarker(polyMarker);
-                }
+                this.Invoke(action, issue, reworkedMap);
+
+                //if (issue != null)
+                //{
+                //    reworkedMap.AddMarker(polyMarker, issue.name);
+                //}
+                ////if (environment != null)
+                ////{
+                ////    reworkedMap.AddPolygon(polygon, environment.Name);
+                ////    reworkedMap.AddMarker(polyMarker, environment.Name);
+                ////}
+
+                //if (issue == null /*&& environment == null*/)
+                //{
+                //    reworkedMap.AddMarker(polyMarker);
+                //}
 
                 MessageBox.Show($"{_type} успішно збережений до бази даних.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -1116,14 +1152,14 @@ namespace Maps
 #endif
             }
         }
-        private async void LoadPolylines(string additionalTables = null, string additionalJoinCond = null,
+        private async Task LoadPolylines(string additionalTables = null, string additionalJoinCond = null,
                                          string additionalCondition = null, string polylineType = "polygon")
         {
-            CurrentActionStatusLabel.Text = "Завантаження усіх маркерів.";
-            MainToolStripProgressBar.Visible = true;
-            MainToolStripProgressBar.ProgressBar.Style = ProgressBarStyle.Marquee;
+            Action<string, bool, ProgressBarStyle> changeProgressBar = ChangeProgressBar;
 
-            string _tables = "poligon, poligon_calculations_description, issues, calculations_description, user";
+            this.Invoke(changeProgressBar, "Завантаження усіх маркерів.", true, ProgressBarStyle.Marquee);
+
+            string _tables = "poligon, poligon_calculations_description, issues, calculations_description, user, emissions_on_map";
             string _columns = "poligon.Id_of_poligon, poligon.brush_color_r, " +
                               "poligon.bruch_color_g, poligon.brush_color_b, " +
                               "poligon.brush_alfa, poligon.line_collor_r, " +
@@ -1131,12 +1167,12 @@ namespace Maps
                               "poligon.line_alfa, poligon.line_thickness, " +
                               "poligon.name, poligon.description, " +
                               "issues.name, calculations_description.calculation_name, " +
-                              "user.description, user.id_of_expert";
+                              "user.description, user.id_of_expert, emissions_on_map.idEnvironment";
             string _joinCond = "poligon.Id_of_poligon = poligon_calculations_description.id_poligon, " +
                                "poligon_calculations_description.id_of_issue = issues.issue_id, " +
                                "poligon_calculations_description.calculations_description_number = " +
                                "calculations_description.calculation_number, " +
-                               "poligon.id_of_user = user.id_of_user";
+                               "poligon.id_of_user = user.id_of_user, poligon.Id_of_poligon = emissions_on_map.idPoligon";
             string _condition = "poligon.type = " + DBUtil.AddQuotes(polylineType);
 
             string _polygonPointTables = "poligon, point_poligon";
@@ -1176,27 +1212,13 @@ namespace Maps
 
             try
             {
-                await Task.Run(() =>
-                {
-                    lock (_lock)
-                    {
-                        isLoading = true;
-                    }
-
-                    var _generalRes = dBManager.GetRowsUsingJoin(_tables, _columns, _joinCond, _condition, JoinType.LEFT);
-                    var _pointsRes = dBManager.GetRowsUsingJoin(_polygonPointTables,
-                                                                _polygonPointColumns,
-                                                                _polygonPointJoinConditions,
-                                                                _polygonPointCondition, JoinType.LEFT)
-                                              .GroupBy(row => (row[2] is DBNull ? -1 : (int)row[2]))
-                                              .ToList();
-
-                    lock (_lock)
-                    {
-                        result = _generalRes;
-                        pointsResult = _pointsRes;
-                    }
-                });
+                result = await dBManager.GetRowsUsingJoinAsync(_tables, _columns, _joinCond, _condition, JoinType.LEFT);
+                pointsResult = (await dBManager.GetRowsUsingJoinAsync(_polygonPointTables,
+                                                                      _polygonPointColumns,
+                                                                      _polygonPointJoinConditions,
+                                                                      _polygonPointCondition, JoinType.LEFT))
+                                               .GroupBy(row => (row[2] is DBNull ? -1 : (int)row[2]))
+                                               .ToList();
 
                 if (result.Count == 0)
                 {
@@ -1291,6 +1313,25 @@ namespace Maps
 
                         isAdded = true;
                     }
+                    if (!(row[16] is DBNull))
+                    {
+                        int envId = (int)row[16];
+
+                        string envName = ((IList<Data.Entity.Environment>)EnvironmentComboBox.DataSource).Where(env => env.Id == envId)
+                                                                                                         .FirstOrDefault()?.Name;
+                        reworkedMap.AddMarker(marker, envName);
+
+                        if (polylineType == "polygon")
+                        {
+                            reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, envName);
+                        }
+                        else if (polylineType == "tube")
+                        {
+                            reworkedMap.AddRoute((GMap.NET.WindowsForms.GMapRoute)figure, envName);
+                        }
+
+                        isAdded = true;
+                    }
 
                     if (!isAdded)
                     {
@@ -1321,9 +1362,7 @@ namespace Maps
             {
                 isLoading = false;
 
-                CurrentActionStatusLabel.Text = string.Empty;
-                MainToolStripProgressBar.Visible = false;
-                MainToolStripProgressBar.ProgressBar.Style = ProgressBarStyle.Continuous;
+                this.Invoke(changeProgressBar, string.Empty, false, ProgressBarStyle.Continuous);
             }
         }
         private async void DeletePolyline(object sender, EventArgs e)
@@ -1399,6 +1438,13 @@ namespace Maps
             }
         }
 
+        private void ChangeProgressBar(string text, bool visible, ProgressBarStyle progressBarStyle)
+        {
+            CurrentActionStatusLabel.Text = text;
+            MainToolStripProgressBar.Visible = visible;
+            MainToolStripProgressBar.ProgressBar.Style = progressBarStyle;
+        }
+
         #region Polygon methods
         private void ChangePictureBoxColor()
         {
@@ -1460,6 +1506,7 @@ namespace Maps
 
         private void PolygonDrawButton_Click(object sender, EventArgs e)
         {
+            HideContextMenuStripItems(MapObjectContextMenuStrip);
             polygonAddingMode = !polygonAddingMode;
 
             if (polygonAddingMode)
@@ -1485,7 +1532,17 @@ namespace Maps
         {
             if (itemConfigurationWindow == null)
             {
-                itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
+                IList<Issue> issues = IssuesComboBox.DataSource as IList<Issue>;
+                IList<Data.Entity.Environment> environments = EnvironmentComboBox.DataSource as IList<Data.Entity.Environment>;
+
+                if (issues != null && environments != null)
+                {
+                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert, issues, environments);
+                }
+                else
+                {
+                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
+                }
             }
             itemConfigurationWindow.ShowDialog();
 
@@ -1577,17 +1634,17 @@ namespace Maps
             }
         }
 
-        private void ShowAllPolygonsButton_Click(object sender, EventArgs e)
+        private async void ShowAllPolygonsButton_Click(object sender, EventArgs e)
         {
-            LoadPolylines();
+            await LoadPolylines();
         }
-        private void ShowCurrentUserPolygonsButton_Click(object sender, EventArgs e)
+        private async void ShowCurrentUserPolygonsButton_Click(object sender, EventArgs e)
         {
-            LoadPolylines(additionalCondition: "poligon.id_of_user = " + userId.ToString());
+            await LoadPolylines(additionalCondition: "poligon.id_of_user = " + userId.ToString());
         }
-        private void ShowAllExpertPolygonsButton_Click(object sender, EventArgs e)
+        private async void ShowAllExpertPolygonsButton_Click(object sender, EventArgs e)
         {
-            LoadPolylines(additionalCondition: "user.id_of_expert = " + ((int)expert).ToString());
+            await LoadPolylines(additionalCondition: "user.id_of_expert = " + ((int)expert).ToString());
         }
 
         private void ClearAllPolygons_Click(object sender, EventArgs e)
@@ -1622,6 +1679,7 @@ namespace Maps
         #region Tube methods
         private void TubeDrawButton_Click(object sender, EventArgs e)
         {
+            HideContextMenuStripItems(MapObjectContextMenuStrip);
             tubeAddingMode = !tubeAddingMode;
 
             if (tubeAddingMode)
@@ -1705,17 +1763,17 @@ namespace Maps
             }
         }
 
-        private void ShowAllTubesButton_Click(object sender, EventArgs e)
+        private async void ShowAllTubesButton_Click(object sender, EventArgs e)
         {
-            LoadPolylines(polylineType: "tube");
+            await LoadPolylines(polylineType: "tube");
         }
-        private void ShowCurrentUserTubesButton_Click(object sender, EventArgs e)
+        private async void ShowCurrentUserTubesButton_Click(object sender, EventArgs e)
         {
-            LoadPolylines(additionalCondition: "poligon.id_of_user = " + userId.ToString(), polylineType: "tube");
+            await LoadPolylines(additionalCondition: "poligon.id_of_user = " + userId.ToString(), polylineType: "tube");
         }
-        private void ShowCurrentExpertTubesButton_Click(object sender, EventArgs e)
+        private async void ShowCurrentExpertTubesButton_Click(object sender, EventArgs e)
         {
-            LoadPolylines(additionalCondition: "user.id_of_expert = " + ((int)expert).ToString(), polylineType: "tube");
+            await LoadPolylines(additionalCondition: "user.id_of_expert = " + ((int)expert).ToString(), polylineType: "tube");
         }
 
         private void ClearAllTubesButton_Click(object sender, EventArgs e)
@@ -1761,7 +1819,6 @@ namespace Maps
                 ComprasionItemsComboBox.SelectedIndex = ComprasionItemsComboBox.Items.Count - 1;
             }
         }
-
         private void DeleteCompareItemButton_Click(object sender, EventArgs e)
         {
             if (ComprasionItemsComboBox.SelectedIndex != -1)
@@ -1769,7 +1826,6 @@ namespace Maps
                 ComprasionItemsComboBox.Items.RemoveAt(ComprasionItemsComboBox.SelectedIndex);
             }
         }
-
         private void CompareButton_Click(object sender, EventArgs e)
         {
             if (ComprasionItemsComboBox.Items.Count == 0)
