@@ -65,52 +65,55 @@
             this.resDGV.Location = new System.Drawing.Point(8, 219);
             this.resDGV.Margin = new System.Windows.Forms.Padding(2);
             this.resDGV.Name = "resDGV";
+            this.resDGV.ReadOnly = true;
             this.resDGV.RowTemplate.Height = 28;
-            this.resDGV.Size = new System.Drawing.Size(620, 292);
+            this.resDGV.Size = new System.Drawing.Size(644, 292);
             this.resDGV.TabIndex = 0;
-            this.resDGV.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.cacheResFromFirstCol);
             this.resDGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resDGV_CellClick);
-            this.resDGV.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.commitValue);
             // 
             // nameCol
             // 
             this.nameCol.HeaderText = "Назва";
             this.nameCol.Name = "nameCol";
+            this.nameCol.ReadOnly = true;
             // 
             // priceCol
             // 
             this.priceCol.HeaderText = "Ціна";
             this.priceCol.Name = "priceCol";
+            this.priceCol.ReadOnly = true;
             // 
             // unitsCol
             // 
-            this.unitsCol.HeaderText = "Одиниці Виміру";
+            this.unitsCol.HeaderText = "Одиниці виміру";
             this.unitsCol.Name = "unitsCol";
+            this.unitsCol.ReadOnly = true;
             // 
             // descCol
             // 
             this.descCol.HeaderText = "Опис";
             this.descCol.Name = "descCol";
+            this.descCol.ReadOnly = true;
             // 
             // saveBtn
             // 
             this.saveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveBtn.Location = new System.Drawing.Point(562, 42);
+            this.saveBtn.Location = new System.Drawing.Point(576, 42);
             this.saveBtn.Margin = new System.Windows.Forms.Padding(2);
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(66, 24);
+            this.saveBtn.Size = new System.Drawing.Size(76, 24);
             this.saveBtn.TabIndex = 1;
-            this.saveBtn.Text = "Зберегти";
+            this.saveBtn.Text = "Редагувати";
             this.saveBtn.UseVisualStyleBackColor = true;
             this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
             // 
             // delBtn
             // 
             this.delBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.delBtn.Location = new System.Drawing.Point(562, 76);
+            this.delBtn.Location = new System.Drawing.Point(576, 76);
             this.delBtn.Margin = new System.Windows.Forms.Padding(2);
             this.delBtn.Name = "delBtn";
-            this.delBtn.Size = new System.Drawing.Size(66, 24);
+            this.delBtn.Size = new System.Drawing.Size(76, 24);
             this.delBtn.TabIndex = 2;
             this.delBtn.Text = "Видалити";
             this.delBtn.UseVisualStyleBackColor = true;
@@ -119,10 +122,10 @@
             // addBtn
             // 
             this.addBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addBtn.Location = new System.Drawing.Point(562, 10);
+            this.addBtn.Location = new System.Drawing.Point(576, 10);
             this.addBtn.Margin = new System.Windows.Forms.Padding(2);
             this.addBtn.Name = "addBtn";
-            this.addBtn.Size = new System.Drawing.Size(66, 24);
+            this.addBtn.Size = new System.Drawing.Size(76, 24);
             this.addBtn.TabIndex = 3;
             this.addBtn.Text = "Додати";
             this.addBtn.UseVisualStyleBackColor = true;
@@ -135,7 +138,7 @@
             this.nameTB.Location = new System.Drawing.Point(84, 12);
             this.nameTB.Margin = new System.Windows.Forms.Padding(2);
             this.nameTB.Name = "nameTB";
-            this.nameTB.Size = new System.Drawing.Size(445, 20);
+            this.nameTB.Size = new System.Drawing.Size(469, 20);
             this.nameTB.TabIndex = 4;
             // 
             // measureTB
@@ -145,7 +148,7 @@
             this.measureTB.Location = new System.Drawing.Point(84, 63);
             this.measureTB.Margin = new System.Windows.Forms.Padding(2);
             this.measureTB.Name = "measureTB";
-            this.measureTB.Size = new System.Drawing.Size(445, 20);
+            this.measureTB.Size = new System.Drawing.Size(469, 20);
             this.measureTB.TabIndex = 5;
             // 
             // descriptionTB
@@ -156,7 +159,7 @@
             this.descriptionTB.Margin = new System.Windows.Forms.Padding(2);
             this.descriptionTB.Multiline = true;
             this.descriptionTB.Name = "descriptionTB";
-            this.descriptionTB.Size = new System.Drawing.Size(445, 101);
+            this.descriptionTB.Size = new System.Drawing.Size(469, 101);
             this.descriptionTB.TabIndex = 6;
             // 
             // priceTB
@@ -182,7 +185,7 @@
             this.panel1.Location = new System.Drawing.Point(9, 10);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(539, 205);
+            this.panel1.Size = new System.Drawing.Size(563, 205);
             this.panel1.TabIndex = 8;
             // 
             // label4
@@ -229,7 +232,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(638, 520);
+            this.ClientSize = new System.Drawing.Size(662, 520);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.delBtn);
             this.Controls.Add(this.resDGV);
@@ -251,10 +254,6 @@
         private System.Windows.Forms.Button saveBtn;
         private System.Windows.Forms.Button delBtn;
         private System.Windows.Forms.Button addBtn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn descCol;
         private System.Windows.Forms.TextBox nameTB;
         private System.Windows.Forms.TextBox measureTB;
         private System.Windows.Forms.TextBox descriptionTB;
@@ -264,5 +263,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn descCol;
     }
 }

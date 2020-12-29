@@ -16,6 +16,7 @@ namespace oprForm
         private int unitsColIdx = 2;
         private int descColIdx = 3;
         private Resource saved;
+        int cur_row = 0;
 
         public MaterialsForm()
         {
@@ -46,122 +47,65 @@ namespace oprForm
         private void delBtn_Click(object sender, EventArgs e)
         {
             var selected = resDGV.SelectedRows;
-            foreach (DataGridViewRow row in selected)
+            if (selected.Count == 0)
             {
-                if (row.Cells[0].Value is Resource)
+                MessageBox.Show("Виділіть рядок або рядки, які бажаєте видалити. \n\n" +
+                                "Для цього натисніть на клітинку курсору (пусту клітинку зліва)\n" +
+                                "бажаного рядка або виділіть декілька рядків");
+            }
+            else
+            {
+                foreach (DataGridViewRow row in selected)
                 {
-                    var res = row.Cells[0].Value as Resource;
-                    try
+                    if (row.Cells[0].Value is Resource)
                     {
-                        db.Connect();
-                        string cols = "resource_id";
-                        string values = res.id.ToString();
-
-                        db.DeleteFromDB("resource", cols, values);
-                        resDGV.Rows.Remove(row);
-                    }
-                    catch (MySqlException ex)
-                    {
-                        if (ex.Number == 1451)
+                        var res = row.Cells[0].Value as Resource;
+                        try
                         {
-                            MessageBox.Show("Ресурс використовуэться.");
+                            db.Connect();
+                            string cols = "resource_id";
+                            string values = res.id.ToString();
+
+                            db.DeleteFromDB("resource", cols, values);
+                            resDGV.Rows.Remove(row);
+                        }
+                        catch (MySqlException ex)
+                        {
+                            if (ex.Number == 1451)
+                            {
+                                MessageBox.Show("Ресурс використовуэться");
+                            }
+                        }
+                        finally
+                        {
+                            db.Disconnect();
+                            MessageBox.Show("Дані успішно видалено");
                         }
                     }
-                    finally
-                    {
-                        db.Disconnect();
-                    }
                 }
             }
-        }
-
-        private void commitValue(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == nameColIdx)
-            {
-                var val = resDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                if (val.Length != 0 && !val.Equals(" "))
-                {
-                    saved.name = val;
-                }
-                else
-                {
-                    MessageBox.Show("Назвe не повиннa бути пустa.");
-                }
-                resDGV.Rows[e.RowIndex].Cells[0].Value = saved;
-                return;
-            }
-            if (resDGV.Rows[e.RowIndex].Cells[0].Value is Resource)
-            {
-                var res = resDGV.Rows[e.RowIndex].Cells[0].Value as Resource;
-                if (e.ColumnIndex == descColIdx)
-                {
-                    var val = resDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                    if (val.Length != 0 && !val.Equals(" "))
-                        res.description = val;
-                    else
-                    {
-                        MessageBox.Show("Опис не повинен бути пустим.");
-                    }
-                }
-                else if (e.ColumnIndex == priceColIdx)
-                {
-                    var val = resDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                    try
-                    {
-                        res.price = Double.Parse(val);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Введіть число.");
-                    }
-                }
-                else if (e.ColumnIndex == unitsColIdx)
-                {
-                    var val = resDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-                    if (val.Length != 0 && !val.Equals(" "))
-                    {
-                        res.unit = val;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Опис не повинен бути пустим.");
-                    }
-                }
-            }
-        }
-
-        private void cancelEdit()
-        {
-            //TODO
-            return;
         }
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow row in resDGV.Rows)
+            try
             {
-                if (row.Cells[0].Value is Resource)
-                {
-                    var res = row.Cells[0].Value as Resource;
-                    db.Connect();
+                db.Connect();
 
-                    string[] cols = { "resource_id", "name", "description", "units", "price" };
-                    string[] values = { res.id.ToString(), DBUtil.AddQuotes(res.name), DBUtil.AddQuotes(res.description), DBUtil.AddQuotes(res.unit), res.price.ToString() };
+                var res = resDGV.Rows[cur_row].Cells[0].Value as Resource;
+                string[] cols = { "resource_id", "name", "description", "units", "price" };
+                string[] values = { res.id.ToString(), DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descriptionTB.Text),
+                DBUtil.AddQuotes(measureTB.Text), priceTB.Text.ToString() };
 
-                    db.UpdateRecord("resource", cols, values);
+                db.UpdateRecord("resource", cols, values);
+                db.Disconnect();
 
-                    db.Disconnect();
-                }
+                MessageBox.Show("Дані успішно додано");
+                getMaterials();
+            } catch {
+                MessageBox.Show("Деякі дані введено невірно");
             }
-        }
-
-        private void cacheResFromFirstCol(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            if (e.ColumnIndex == nameColIdx)
-            {
-                saved = resDGV.Rows[e.RowIndex].Cells[e.ColumnIndex].Value as Resource;
-            }
+                       
         }
 
         private void addBtn_Click(object sender, EventArgs e)
@@ -169,7 +113,7 @@ namespace oprForm
             if (string.IsNullOrEmpty(nameTB.Text) || string.IsNullOrEmpty(descriptionTB.Text) ||
                 string.IsNullOrEmpty(priceTB.Text) || string.IsNullOrEmpty(measureTB.Text))
             {
-                MessageBox.Show("Всі поля воині бути заповнені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Всі поля повинні бути заповнені", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -185,13 +129,13 @@ namespace oprForm
 
             getMaterials();
 
-            MessageBox.Show("Запис був успішно додан.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Запис був успішно доданий", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void resDGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            int index = resDGV.CurrentCell.RowIndex;
-            var cells = resDGV.Rows[index].Cells;
+            cur_row= resDGV.CurrentCell.RowIndex;
+            var cells = resDGV.Rows[cur_row].Cells;
             var textBoxes = panel1.Controls.OfType<TextBox>().ToArray();
 
             for (int i = 0; i < cells.Count; i++)
