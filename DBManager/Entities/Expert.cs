@@ -5,12 +5,13 @@ namespace Data.Entity
 {
     public class Expert
     {
-        public int id;
-        public string name;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public Role role { get; set; }
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
     }
 
@@ -19,8 +20,8 @@ namespace Data.Entity
         public static Expert Map(IList<Object> row)
         {
             var i = new Expert();
-            i.id = Int32.Parse(row[0].ToString());
-            i.name = row[1].ToString();
+            i.Id = Int32.Parse(row[0].ToString());
+            i.Name = row[1].ToString();
 
             return i;
         }

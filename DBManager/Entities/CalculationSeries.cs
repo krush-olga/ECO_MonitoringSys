@@ -5,9 +5,9 @@ namespace Data.Entity
 {
     public class CalculationSeries
     {
-        public int id;
-        public string name;
-        public string description;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
 
         public CalculationSeries()
         {
@@ -15,14 +15,14 @@ namespace Data.Entity
 
         public CalculationSeries(int id, string name, string description)
         {
-            this.id = id;
-            this.name = name;
-            this.description = description;
+            this.Id = id;
+            this.Name = name;
+            this.Description = description;
         }
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
     }
 
@@ -31,9 +31,9 @@ namespace Data.Entity
         public static CalculationSeries Map(IList<Object> row)
         {
             var calc = new CalculationSeries();
-            calc.id = Int32.Parse(row[0].ToString());
-            calc.name = row[1].ToString();
-            calc.description = row[2].ToString();
+            calc.Id = Int32.Parse(row[0].ToString());
+            calc.Name = row[1].ToString();
+            calc.Description = row[2].ToString();
 
             return calc;
         }

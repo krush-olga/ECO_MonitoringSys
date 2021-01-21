@@ -34,27 +34,34 @@ namespace Data
         //Nikita
         public DBManager()
         {
-            StreamReader objReader = new StreamReader("init.ini");
-            if (!objReader.EndOfStream)
-                connectionString = objReader.ReadLine();
-            connection = new MySqlConnection(connectionString);
-            objReader.Close();
-            Connect();
-
-            disposed = false;
+            Initialize(null);
         }
         public DBManager(String connectionString)
         {
-            this.connectionString = connectionString;
-            connection = new MySqlConnection(connectionString);
-            Connect();
-
-            disposed = false;
+            Initialize(connectionString);
         }
 
         ~DBManager()
         {
             Dispose();
+        }
+
+        private void Initialize(String connectionString)
+        {
+            if (String.IsNullOrEmpty(connectionString))
+            {
+                using (var objReader = new StreamReader("init.ini"))
+                {
+                    if (!objReader.EndOfStream)
+                    {
+                        this.connectionString = objReader.ReadLine();
+                    }
+                }
+            }
+
+            connection = new MySqlConnection(this.connectionString);
+            disposed = false;
+            Connect();
         }
 
         public void Connect()
@@ -64,21 +71,20 @@ namespace Data
                 if (!connection.Ping())
                     connection.Open();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.Write(e.StackTrace);
+                throw;
             }
         }
-
         public void Disconnect()
         {
             try
             {
                 connection.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.Write(e.StackTrace);
+                throw;
             }
         }
 
@@ -86,7 +92,6 @@ namespace Data
         {
             currentTransaction = connection.BeginTransaction();
         }
-
         public void CommitTransaction()
         {
             if (currentTransaction != null)
@@ -95,7 +100,6 @@ namespace Data
                 currentTransaction = null;
             }
         }
-
         public void RollbackTransaction()
         {
             if (currentTransaction != null)
@@ -611,7 +615,7 @@ namespace Data
                 throw new ArgumentException("Количество колонок не соответствует количеству значений.");
             }
         }
-        private async Task<int> DeleteFromDBAsync(String query)
+        public async Task<int> DeleteFromDBAsync(String query)
         {
             if (query == null)
             {
@@ -669,10 +673,10 @@ namespace Data
             }
             else
             {
-                throw new ArgumentException("Field and Value list dont match.");
+                throw new ArgumentException("Количество колонок не соответствует количеству значений.");
             }
         }
-        private async Task<int> InsertToBDAsync(String query)
+        public async Task<int> InsertToBDAsync(String query)
         {
             MySqlCommand insertCmd = new MySqlCommand(query, connection);
 
@@ -680,7 +684,11 @@ namespace Data
             {
                 await semaphoreSlim.WaitAsync();
 
-                return (int?)await insertCmd.ExecuteScalarAsync() ?? -1;
+                string res = (await insertCmd.ExecuteScalarAsync())?.ToString();
+
+                int.TryParse(res, out int number);
+
+                return number;
             }
             catch (Exception)
             {
@@ -694,6 +702,53 @@ namespace Data
             }
         }
 
+        public async Task<int> UpdateRecordAsync(String tableName, IList<String> colNames, IList<String> colValues, String condition)
+        {
+            if (colNames.Count == colValues.Count)
+            {
+                StringBuilder sqlCommand = new StringBuilder("UPDATE " + tableName + " SET ");
+
+                for (int i = 1; i < colValues.Count - 1; i++)
+                {
+                    sqlCommand.AppendFormat("{0} = {1}, ", colNames[i], colValues[i]);
+                }
+                sqlCommand.AppendFormat("{0} = {1}", colNames[colNames.Count - 1], colValues[colValues.Count - 1]);
+
+                if (!string.IsNullOrEmpty(condition))
+                {
+                    if (!condition.ToUpper().Contains("WHERE"))
+                    {
+                        sqlCommand.Append(" WHERE ");
+                    }
+
+                    sqlCommand.Append(condition);
+                }
+
+                MySqlCommand insertCmd = new MySqlCommand(sqlCommand.ToString(), connection);
+
+                try
+                {
+                    await semaphoreSlim.WaitAsync();
+
+                    return await insertCmd.ExecuteNonQueryAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    semaphoreSlim.Release();
+
+                    insertCmd.Dispose();
+                }
+
+            }
+            else
+            {
+                throw new ArgumentException("Количество колонок не соответствует количеству значений.");
+            }
+        }
 
         #endregion
 

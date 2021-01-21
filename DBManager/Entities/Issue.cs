@@ -5,40 +5,40 @@ namespace Data.Entity
 {
     public class Issue
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public string tema { get; set; }
-        public DateTime creationDate { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Tema { get; set; }
+        public DateTime CreationDate { get; set; }
 
         public Issue(int id)
         {
-            this.id = id;
+            this.Id = id;
         }
 
         public Issue(int id, string name, string description, DateTime creationDate, string seriesId, string tema) : this(id)
         {
-            this.name = name;
-            this.description = description;
-            this.creationDate = creationDate;
-            this.tema = tema;
+            this.Name = name;
+            this.Description = description;
+            this.CreationDate = creationDate;
+            this.Tema = tema;
         }
 
         public override bool Equals(object obj)
         {
             var issue = obj as Issue;
             return issue != null &&
-                   id == issue.id;
+                   Id == issue.Id;
         }
 
         public override int GetHashCode()
         {
-            return 1877310944 + id.GetHashCode();
+            return 1877310944 + Id.GetHashCode();
         }
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
     }
 
@@ -48,10 +48,10 @@ namespace Data.Entity
         {
             var i = new Issue(Int32.Parse(row[0].ToString()))
             {
-                name = row[1].ToString(),
-                description = row[2].ToString(),
-                creationDate = DateTime.Parse(row[3].ToString()),
-                tema = row[4].ToString(),
+                Name = row[1].ToString(),
+                Description = row[2].ToString(),
+                CreationDate = DateTime.Parse(row[3].ToString()),
+                Tema = row[4].ToString(),
             };
 
             return i;

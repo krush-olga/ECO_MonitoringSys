@@ -23,8 +23,8 @@ namespace Data.Entity
         public static City Map(IList<Object> row)
         {
             double lng, lat;
-            double.TryParse(row[2].ToString(), out lng);
-            double.TryParse(row[1].ToString(), out lat);
+            double.TryParse(row[1].ToString(), out lng);
+            double.TryParse(row[2].ToString(), out lat);
 
             return new City
             {
