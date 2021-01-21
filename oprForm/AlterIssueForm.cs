@@ -54,7 +54,7 @@ namespace oprForm
 
         private void deleteBtn_Click(object sender, EventArgs e)
         {
-            var confirm = MessageBox.Show("Видалити проблему?", "Видалення", MessageBoxButtons.YesNo);
+            var confirm = MessageBox.Show("Видалити задачу?", "Видалення", MessageBoxButtons.YesNo);
 
             if (confirm.Equals(DialogResult.Yes))
             {

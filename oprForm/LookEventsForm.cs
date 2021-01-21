@@ -39,20 +39,14 @@ namespace oprForm
             try
             {
                 db.Connect();
-
                 var obj = db.GetRows("issues", "*", "");
-
                 issues.Clear();
-
                 foreach (var row in obj)
                 {
                     issues.Add(IssueMapper.Map(row));
                 }
-
                 UpdateApproveGroupBoxComponent();
-
                 issueCounter = 0;
-
             }
             catch (Exception ex)
             {
@@ -482,13 +476,5 @@ namespace oprForm
                 textBox2.Text = issues[issueCounter].tema;
             }
         }
-
-        private void updateIssueBtn_Click(object sender, EventArgs e)
-        {
-            UpdateIssues();
-        }
     }
-
-
-
 }

@@ -19,7 +19,6 @@ namespace oprForm
         private void RefreshIssues()
         {
             issuesLB.Items.Clear();
-            db.Connect();
             var obj = db.GetRows("issues", "*", "");
             var issues = new List<Issue>();
             foreach (var row in obj)
@@ -28,38 +27,47 @@ namespace oprForm
             }
 
             issuesLB.Items.AddRange(issues.ToArray());
-            db.Disconnect();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void clear_textbox()
         {
-            this.Close();
+            nameTB.Text = "";
+            descrTB.Text = "";
+            TemaTB.Text = "";
         }
 
         private void addBtn_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(nameTB.Text))
+        {//insert
+            if (nameTB.Text != "")
             {
-                MessageBox.Show("Назва не може бути порожньою.");
-                return;
+                string[] fields = { "name", "description", "Tema" };
+                string[] values = { DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descrTB.Text), DBUtil.AddQuotes(TemaTB.Text) };
+
+                db.InsertToBD("issues", fields, values);
+                RefreshIssues();
+            } else
+            {
+                MessageBox.Show("Заповніть всі поля");
             }
-
-            db.Connect();
-            string[] fields = { "name", "description", "Tema" };
-
-            // Менять кавычки
-            string[] values = { DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descrTB.Text) , DBUtil.AddQuotes(TemaTB.Text)};
-
-            int id = db.InsertToBD("issues", fields, values);
-
-            //Issue issue = new Issue(id, nameTB.Text, descrTB.Text, DateTime.Now, calcSeries);
-            //issuesLB.Items.Add(issue);
-
-            db.Disconnect();
-
-            RefreshIssues();
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {//update
+            if (nameTB.Text != "")
+            {
+                Issue item = issuesLB.SelectedItem as Issue;
+
+                string[] cols = { "issue_id", "name", "description", "Tema" };
+                string[] values = { item.id.ToString(), DBUtil.AddQuotes(nameTB.Text),
+                    DBUtil.AddQuotes(descrTB.Text), DBUtil.AddQuotes(TemaTB.Text) };
+
+                db.UpdateRecord("issues", cols, values);
+                RefreshIssues();
+            }
+            else
+            {
+                MessageBox.Show("Заповніть всі поля");
+            }
+        }
         private void ShowIssue(Issue issue)
         {
             if (issue == null)
@@ -69,22 +77,31 @@ namespace oprForm
 
             nameTB.Text = issue.name;
             descrTB.Text = issue.description;
+            TemaTB.Text = issue.tema;
         }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            var form = new AlterIssueForm(issuesLB.SelectedItem as Issue);
-
-            if (form.DialogResult != DialogResult.Abort)
-            {
-                form.ShowDialog(this);
-                ShowIssue(issuesLB.SelectedItem as Issue);
-                RefreshIssues();
-            }
-        }
-
         private void issuesLB_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        {//show
+            Text = issuesLB.SelectedIndex.ToString();
             ShowIssue(issuesLB.SelectedItem as Issue);
+        }
+        
+        private void bDelete_Click(object sender, EventArgs e)
+        {//delete
+            if (nameTB.Text != "")
+            {
+                var confirm = MessageBox.Show("Видалити задачу?", "Видалення", MessageBoxButtons.YesNo);
+                Issue item = issuesLB.SelectedItem as Issue;
+                if (confirm.Equals(DialogResult.Yes))
+                {
+                    db.DeleteFromDB("issues", "issue_id", item.id.ToString());
+                }
+                RefreshIssues();
+                clear_textbox();
+            }
+            else
+            {
+                MessageBox.Show("Оберіть задачу");
+            }
         }
     }
 }
