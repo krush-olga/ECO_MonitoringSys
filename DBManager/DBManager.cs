@@ -506,8 +506,29 @@ namespace Data
 
             return GetRowsUsingJoinAsync(_tables, _columns, _joinConditions, condition, joinType);
         }
+        public Task<List<List<Object>>> GetRowsUsingJoinAsync(String tables, String columns, String joinConditions,
+                                                              String condition, IList<JoinType> joinType)
+        {
+            Char[] separators = new[] { ',', ';' };
+            String[] _tables = tables.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            String[] _columns = columns.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            String[] _joinConditions = joinConditions.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            return GetRowsUsingJoinAsync(_tables, _columns, _joinConditions, condition, joinType);
+        }
         public Task<List<List<Object>>> GetRowsUsingJoinAsync(IList<String> tables, IEnumerable<String> columns,
                                                               IList<String> joinConditions, String condition, JoinType joinType)
+        {
+            var joinsType = new JoinType[joinConditions.Count];
+            for (int i = 0; i < joinsType.Length; i++)
+            {
+                joinsType[i] = joinType;
+            }
+
+            return GetRowsUsingJoinAsync(tables, columns, joinConditions, condition, joinsType);
+        }
+        public Task<List<List<Object>>> GetRowsUsingJoinAsync(IList<String> tables, IEnumerable<String> columns,
+                                                              IList<String> joinConditions, String condition, IList<JoinType> joinsType)
         {
             if (tables == null || tables.Count == 0)
                 throw new ArgumentException("Таблицы для выбора не могут отсутствовать.", "tables");
@@ -536,7 +557,7 @@ namespace Data
 
             for (int i = 1; i < tables.Count; i++)
             {
-                query.AppendFormat(" {0} JOIN {1} ON {2}", joinType, tables[i], joinConditions[i - 1]);
+                query.AppendFormat(" {0} JOIN {1} ON {2}", joinsType[i - 1], tables[i], joinConditions[i - 1]);
             }
 
             if (condition != "" && !condition.ToUpper().Contains("WHERE"))
