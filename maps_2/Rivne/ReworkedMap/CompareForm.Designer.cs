@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.CompareDataGridView = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -53,7 +53,7 @@
             this.CompareDataGridView.AllowUserToAddRows = false;
             this.CompareDataGridView.AllowUserToDeleteRows = false;
             this.CompareDataGridView.AllowUserToOrderColumns = true;
-            this.CompareDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.CompareDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CompareDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.CompareDataGridView.Location = new System.Drawing.Point(12, 44);
@@ -105,7 +105,7 @@
             // 
             // ColorUpdateButton
             // 
-            this.ColorUpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.ColorUpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ColorUpdateButton.Location = new System.Drawing.Point(9, 216);
             this.ColorUpdateButton.Name = "ColorUpdateButton";
@@ -119,8 +119,8 @@
             // 
             this.CompareColorDataGridView.AllowUserToAddRows = false;
             this.CompareColorDataGridView.AllowUserToDeleteRows = false;
-            this.CompareColorDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.CompareColorDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CompareColorDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.CompareColorDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -150,16 +150,17 @@
             // 
             // CompareChart
             // 
-            this.CompareChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.CompareChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.AxisX.IsLabelAutoFit = false;
-            chartArea1.AxisX.LabelStyle.Angle = -45;
-            chartArea1.AxisX.Title = "Дати, за які викиди були взяті";
-            chartArea1.AxisY.Title = "Значення викидів";
-            chartArea1.Name = "MainArea";
-            this.CompareChart.ChartAreas.Add(chartArea1);
+            chartArea2.AxisX.IsLabelAutoFit = false;
+            chartArea2.AxisX.LabelStyle.Angle = -45;
+            chartArea2.AxisX.Title = "Дати, за які викиди були взяті";
+            chartArea2.AxisY.Title = "Значення викидів";
+            chartArea2.Name = "MainArea";
+            this.CompareChart.ChartAreas.Add(chartArea2);
             this.CompareChart.Location = new System.Drawing.Point(12, 278);
+            this.CompareChart.MinimumSize = new System.Drawing.Size(650, 205);
             this.CompareChart.Name = "CompareChart";
             this.CompareChart.Size = new System.Drawing.Size(650, 205);
             this.CompareChart.TabIndex = 4;
@@ -187,14 +188,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(674, 495);
+            this.ClientSize = new System.Drawing.Size(674, 493);
             this.Controls.Add(this.LegendLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.CompareChart);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.CompareDataGridView);
-            this.MinimumSize = new System.Drawing.Size(690, 470);
+            this.MinimumSize = new System.Drawing.Size(690, 530);
             this.Name = "CompareForm";
             this.Text = "Порівняння";
             ((System.ComponentModel.ISupportInitialize)(this.CompareDataGridView)).EndInit();

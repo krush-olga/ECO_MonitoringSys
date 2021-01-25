@@ -1,4 +1,5 @@
 ﻿using Data;
+using Maps.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,34 +16,29 @@ namespace Maps
     {
         private DBManager db;
 
-        private IList<string> markers;
-        private IList<string> elements;
+        private IList<IDescribable> describableItems;
 
-        private object locker;
-
-        public CompareSettings(IList<string> markers)
+        public CompareSettings(IList<IDescribable> elements)
         {
-            locker = new object();
-
             InitializeComponent();
 
-            Markers = markers;
+            Elements = elements;
             LoadContext();
 
             UpdateListBox();
         }
 
-        public IList<string> Markers
+        public IList<IDescribable> Elements
         {
-            get { return markers; }
+            get { return describableItems; }
             set
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException("Markers");
+                    throw new ArgumentNullException("value");
                 }
 
-                markers = value;
+                describableItems = value;
 
                 UpdateListBox();
             }
@@ -54,32 +50,49 @@ namespace Maps
             {
                 db = await Task.Run(() => { return new DBManager(); });
 
-                ElementsСomboBox.DataSource = await Task.Run(() => 
+                StringBuilder elementsCondition = new StringBuilder();
+                string emissionIdColumn = string.Empty;
+                string objectNameColumn = string.Empty;
+                string objectTableName = string.Empty;
+                string objectIdColumn = string.Empty;
+                string joinCondition = "emissions_on_map.idElement = elements.code, emissions_on_map.idPoi IS NOT NULL" +
+                                       " AND emissions_on_map.idPoi = poi.Id, emissions_on_map.idPoligon IS NOT NULL" +
+                                       " AND emissions_on_map.idPoligon = poligon.Id_of_poligon";
+                string format = "({3}.{1} = '{0}' AND emissions_on_map.{2} = {3}.{4}) OR ";
+
+                foreach (var element in Elements)
                 {
-                    StringBuilder elementsCondition = new StringBuilder();
-                    string startCondition = "(Name_Object = ";
-                    string or = " OR ";
-                    string idPoiEquality = " AND emissions_on_map.idPoi = poi.Id AND emissions_on_map.idElement = elements.code)";
-
-                    for (int i = 0; i < Markers.Count; i++)
+                    if (element.Type == "Маркер")
                     {
-                        elementsCondition.Append(startCondition);
-                        elementsCondition.Append(DBUtil.AddQuotes(Markers[i]));
-                        elementsCondition.Append(idPoiEquality);
-
-                        if (i != Markers.Count - 1)
-                        {
-                            elementsCondition.Append(or);
-                        }
+                        emissionIdColumn = "idPoi";
+                        objectNameColumn = "Name_Object";
+                        objectTableName = "poi";
+                        objectIdColumn = "Id";
+                    }
+                    else if (element.Type == "Полігон")
+                    {
+                        emissionIdColumn = "idPoligon";
+                        objectNameColumn = "name";
+                        objectTableName = "poligon";
+                        objectIdColumn = "Id_of_poligon";
                     }
 
-                    return db.GetRows("elements, emissions_on_map, poi", 
-                                      "DISTINCT elements.code, elements.short_name", 
-                                      elementsCondition.ToString())
-                             .Select(e => new { Id = e[0], Name = e[1] }).ToList(); 
-                });
+                    elementsCondition.AppendFormat(format, element.Name, objectNameColumn,
+                                                   emissionIdColumn, objectTableName, objectIdColumn);
+                }
 
-                ElementsСomboBox.Text = string.Empty;
+                elementsCondition.Remove(elementsCondition.Length - 3, 3);
+
+                ElementsСomboBox.DataSource = (await db.GetRowsUsingJoinAsync($"elements, emissions_on_map, poi, poligon",
+                                                                       "DISTINCT elements.code, elements.short_name",
+                                                                       joinCondition, elementsCondition.ToString(), JoinType.LEFT))
+                                                        .Select(row => new
+                                                        {
+                                                            Id = row[0].ToString(),
+                                                            Name = row[1].ToString()
+                                                        })
+                                                        .ToList();
+
                 ElementsСomboBox.DisplayMember = "Name";
                 ElementsСomboBox.ValueMember = "Id";
 
@@ -102,12 +115,14 @@ namespace Maps
         private void UpdateListBox()
         {
             CompareObjectsListBox.DataSource = null;
-            CompareObjectsListBox.DataSource = Markers;
+            CompareObjectsListBox.DataSource = Elements;
         }
 
         private void DeleteObjectButton_Click(object sender, EventArgs e)
         {
-            if (Markers != null && (Markers.Count < 3 || Markers.Count - CompareObjectsListBox.SelectedIndices.Count < 2))
+            var listElements = Elements;
+
+            if (Elements != null && (listElements.Count < 3 || listElements.Count - CompareObjectsListBox.SelectedIndices.Count < 2))
             {
                 MessageBox.Show("Не можливо видалити елемент. " +
                                 "Для порівняння необхідно хоча б два елементи",
@@ -119,12 +134,12 @@ namespace Maps
             {
                 for (int i = 0; i < CompareObjectsListBox.SelectedIndices.Count; i++)
                 {
-                    Markers.RemoveAt(CompareObjectsListBox.SelectedIndices[i]);
+                    listElements.RemoveAt(CompareObjectsListBox.SelectedIndices[i]);
                 }
             }
             else if (CompareObjectsListBox.SelectedIndex != -1)
             {
-                Markers.RemoveAt(CompareObjectsListBox.SelectedIndex);
+                listElements.RemoveAt(CompareObjectsListBox.SelectedIndex);
             }
 
             UpdateListBox();
@@ -135,57 +150,82 @@ namespace Maps
             try
             {
                 StringBuilder nameObjectIdCondition = new StringBuilder();
+                string emissionIdColumn = string.Empty;
+                string objectNameColumn = string.Empty;
+                string objectTableName = string.Empty;
+                string objectIdColumn = string.Empty;
+                string format = "({3}.{1} = '{0}' AND emissions_on_map.{2} = {3}.{4} AND emissions_on_map.idElement = {5} AND " +
+                                "STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d') >= " +
+                                "'{6}' AND STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d') <=" +
+                                "'{7}') OR ";
+                string joinCondition = "emissions_on_map.idPoi IS NOT NULL AND emissions_on_map.idPoi = poi.Id, " +
+                                       "emissions_on_map.idPoligon IS NOT NULL AND emissions_on_map.idPoligon = poligon.Id_of_poligon";
 
-                for (int i = 0; i < Markers.Count; i++)
+                foreach (var element in Elements)
                 {
-                    nameObjectIdCondition.Append("(Name_Object = ");
-                    nameObjectIdCondition.Append(DBUtil.AddQuotes(markers[i]));
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("emissions_on_map.idPoi = poi.Id");
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("emissions_on_map.idElement = ");
-                    nameObjectIdCondition.Append(ElementsСomboBox.SelectedValue);
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
-                    nameObjectIdCondition.Append(" >= '");
-                    nameObjectIdCondition.Append(StartDateDTPicker.Value.ToString("yyyy-MM-dd"));
-                    nameObjectIdCondition.Append("'");
-                    nameObjectIdCondition.Append(" AND ");
-                    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
-                    nameObjectIdCondition.Append(" <= '");
-                    nameObjectIdCondition.Append(EndDateDTPicker.Value.ToString("yyyy-MM-dd"));
-                    nameObjectIdCondition.Append("')");
-
-                    if (i != Markers.Count - 1)
+                    if (element.Type == "Маркер")
                     {
-                        nameObjectIdCondition.Append(" OR ");
+                        emissionIdColumn = "idPoi";
+                        objectNameColumn = "Name_Object";
+                        objectTableName = "poi";
+                        objectIdColumn = "Id";
                     }
+                    else if (element.Type == "Полігон")
+                    {
+                        emissionIdColumn = "idPoligon";
+                        objectNameColumn = "name";
+                        objectTableName = "poligon";
+                        objectIdColumn = "Id_of_poligon";
+                    }
+
+                    nameObjectIdCondition.AppendFormat(format, element.Name, objectNameColumn,
+                                                       emissionIdColumn, objectTableName, objectIdColumn,
+                                                       ElementsСomboBox.SelectedValue,
+                                                       StartDateDTPicker.Value.ToString("yyyy-MM-dd"),
+                                                       EndDateDTPicker.Value.ToString("yyyy-MM-dd"));
                 }
 
-                var result = await Task.Run<List<List<object>>>(() =>
-                {
-                    return db.GetRows("emissions_on_map, poi",
-                                      "poi.Name_Object, emissions_on_map.ValueAvg, emissions_on_map.ValueMax, " +
-                                      "CONCAT(" +
-                                      "LPAD(emissions_on_map.day, 2, 0), '-', " +
-                                      "LPAD(emissions_on_map.Month, 2, 0), '-', " +
-                                      "emissions_on_map.Year" +
-                                      "), " +
-                                      "emissions_on_map.Measure", nameObjectIdCondition.ToString());
-                });
+                nameObjectIdCondition.Remove(nameObjectIdCondition.Length - 3, 3);
 
-                var borderLimits = await Task.Run<List<List<object>>>(() => 
-                {
-                    object value = null;
-                    Action assignComponentValue = () =>
-                    {
-                        value = ElementsСomboBox.SelectedValue;
-                    };
+                //for (int i = 0; i < Elements.Count; i++)
+                //{
+                //    nameObjectIdCondition.Append("(Name_Object = ");
+                //    nameObjectIdCondition.Append(DBUtil.AddQuotes(describableItems[i]));
+                //    nameObjectIdCondition.Append(" AND ");
+                //    nameObjectIdCondition.Append("emissions_on_map.idPoi = poi.Id");
+                //    nameObjectIdCondition.Append(" AND ");
+                //    nameObjectIdCondition.Append("emissions_on_map.idElement = ");
+                //    nameObjectIdCondition.Append(ElementsСomboBox.SelectedValue);
+                //    nameObjectIdCondition.Append(" AND ");
+                //    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
+                //    nameObjectIdCondition.Append(" >= '");
+                //    nameObjectIdCondition.Append(StartDateDTPicker.Value.ToString("yyyy-MM-dd"));
+                //    nameObjectIdCondition.Append("'");
+                //    nameObjectIdCondition.Append(" AND ");
+                //    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
+                //    nameObjectIdCondition.Append(" <= '");
+                //    nameObjectIdCondition.Append(EndDateDTPicker.Value.ToString("yyyy-MM-dd"));
+                //    nameObjectIdCondition.Append("')");
 
-                    ElementsСomboBox.Invoke(assignComponentValue);
+                //    if (i != Elements.Count - 1)
+                //    {
+                //        nameObjectIdCondition.Append(" OR ");
+                //    }
+                //}
 
-                    return db.GetRows("gdk", "mpc_m_ot, mpc_avrg_d", "code = " + value);
-                });
+
+
+                var result = await db.GetRowsUsingJoinAsync("emissions_on_map, poi, poligon",
+                                                            "poi.Name_Object, poligon.name, emissions_on_map.ValueAvg, emissions_on_map.ValueMax, " +
+                                                            "CONCAT(" +
+                                                            "LPAD(emissions_on_map.day, 2, 0), '-', " +
+                                                            "LPAD(emissions_on_map.Month, 2, 0), '-', " +
+                                                            "emissions_on_map.Year ), " +
+                                                            "emissions_on_map.Measure",
+                                                            joinCondition, nameObjectIdCondition.ToString(), JoinType.LEFT);
+
+                var borderLimits = await db.GetRowsAsync("gdk", "mpc_m_ot, mpc_avrg_d", 
+                                                         "code = " + ElementsСomboBox.SelectedValue.ToString());
 
                 if (result == null || result.Count == 0)
                 {
@@ -205,22 +245,26 @@ namespace Maps
 
                 //Записываем данные в  массив горизонтально (таблица растёт в право, а не в низ)
                 //Берём result[0].Count с учётом того, что все последующие массивы одинаковые
+                //Первые две колонки в результате являются именами, так 
                 //Первая итерация должна быть названиями маркеров (можно изменить, если есть желание)
                 //Т.к. в переменной result первой строкой есть poi.Name_Object
                 for (int i = 0; i < result[0].Count; i++)
                 {
-                    if (i == 0)
+                    if (i == 0 || i == 1)
                     {
                         for (int j = 0; j < result.Count; j++)
                         {
-                            names.Add(result[j][i].ToString());
+                            if (!(result[j][i] is DBNull))
+                            {
+                                names.Add(result[j][i].ToString());
+                            }
                         }
                     }
                     else
                     {
                         for (int j = 0; j < result.Count; j++)
                         {
-                            rowsNameAndvalues.Values.ElementAt(i - 1).Add(result[j][i]);
+                            rowsNameAndvalues.Values.ElementAt(i - 2).Add(result[j][i]);
                         }
                     }
                 }
@@ -228,26 +272,32 @@ namespace Maps
                 var distinctNames = names.Distinct();
                 int currentRowNameIndex = 0;
 
-                if (distinctNames.Count() < Markers.Count)
+                if (distinctNames.Count() < Elements.Count)
                 {
-                    names.AddRange(Markers.Except(distinctNames));
+                    names.AddRange(Elements.Select(elem => elem.Name).Except(distinctNames));
                 }
 
                 names.Insert(0, "");
 
-                var rowsWithBorderLimits = borderLimits.First()
+
+
+                IDictionary<string, double> rowsWithBorderLimits = null;
+                if (borderLimits.Count != 0)
+                {
+                    rowsWithBorderLimits = borderLimits.First()
                                                        .OfType<double>()
-                                                       .ToDictionary(limit => 
-                                                       { 
-                                                           return rowsNameAndvalues.Keys.ElementAt(currentRowNameIndex++); 
+                                                       .ToDictionary(limit =>
+                                                       {
+                                                           return rowsNameAndvalues.Keys.ElementAt(currentRowNameIndex++);
                                                        });
+                }
                 var chartRows = new List<string> { "Середнє значення", "Максимальне значення" };
 
                 CompareForm compareForm = null;
 
                 if (borderLimits.Count == 0)
                 {
-                    compareForm = new CompareForm(rowsNameAndvalues, names, legend);
+                    compareForm = new CompareForm(rowsNameAndvalues, names, legend, null, chartRows, "Дата, за яку вибрано");
                 }
                 else
                 {
@@ -256,9 +306,13 @@ namespace Maps
 
                 compareForm.ShowDialog();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+#if DEBUG
+                MessageBox.Show($"{ex.Message}\n\n{ex.StackTrace}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#else
                 MessageBox.Show("Помилка при порівнянні.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
             }
         }
     }

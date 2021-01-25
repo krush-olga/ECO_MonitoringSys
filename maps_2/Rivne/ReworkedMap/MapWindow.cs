@@ -22,7 +22,6 @@ namespace Maps
         private readonly Role expert;
         private readonly int userId;
 
-        private bool isLoading;
         private bool moveMode;
         private bool markerAddingMode;
         private bool polygonAddingMode;
@@ -37,8 +36,6 @@ namespace Maps
         private HelpWindows.ItemConfigurationWindow itemConfigurationWindow;
         private UserControls.ItemInfo itemInfo;
 
-        private object _lock;
-
         static MapWindow()
         {
             defaultImageName = "missingImage";
@@ -47,9 +44,9 @@ namespace Maps
 
         public MapWindow(Role expert, int userId)
         {
-            defaultMapStartCoord = new GMap.NET.PointLatLng(50.449173, 30.457578);
+            Helpers.MapCache.Add("images", new Dictionary<string, Bitmap>());
 
-            _lock = new object();
+            defaultMapStartCoord = new GMap.NET.PointLatLng(50.449173, 30.457578);
 
             this.userId = userId;
             this.expert = expert;
@@ -85,11 +82,12 @@ namespace Maps
             itemInfo.Visible = false;
             itemInfo.Location = new Point(this.Width - itemInfo.Width - 15, (this.Height - itemInfo.Height - MainStatusStrip.Height) / 2);
             itemInfo.Anchor = AnchorStyles.Right;
-            itemInfo.SubscribeAdditionalInfoClickEvent(AdditionalInfo);
+            itemInfo.SubscriChangeItemClickEvent(ChangeObjectSettings);
 
             if (expert != Role.Admin)
             {
                 itemInfo.HideDeleteButton();
+                TubeDrawButton.Enabled = false;
             }
 
             this.Controls.Add(itemInfo);
@@ -104,8 +102,12 @@ namespace Maps
 
             EnvironmentsGroupBox.DataBindings.Add(envCheckBinding);
             IssuesGroupBox.DataBindings.Add(issuesCheckBinding);
+
+#if DEBUG
+            DebugToolStripStatusLabel.Visible = true;
+#endif
         }
-        private async void LoadCommonThings()
+        private async Task LoadCommonThings()
         {
             CurrentActionStatusLabel.Text = "Йде завантаження головних даних.";
             MainToolStripProgressBar.Visible = true;
@@ -132,14 +134,13 @@ namespace Maps
                                           displayComboBoxMember: "Name",
                                           falultAction: c =>
                                           {
-                                              CitiesComboBox.Text = "Не вдалось завантажити міста.";
+                                              c.Items.Clear();
+                                              c.Text = "Не вдалось завантажити міста.";
                                               GoToCityButton.Enabled = false;
                                           });
 
-            Task environmentTask = FillCheckBoxFromBDAsync(EnvironmentComboBox, "environment", "*", "",
+            Task environmentTask = FillCheckedListBoxFromDBAsync(EnvironmentCheckedListBox, "environment", "*", "",
                                           r => EnvironmentMapper.Map(r),
-                                          displayComboBoxMember: "Name",
-                                          valueComboBoxMember: "Id",
                                           falultAction: c =>
                                           {
                                               c.DataSource = new List<Data.Entity.Environment>
@@ -148,13 +149,11 @@ namespace Maps
                                               };
                                           });
 
-            Task issuesTask = FillCheckBoxFromBDAsync(IssuesComboBox, "issues", "*", "",
+            Task issuesTask = FillCheckedListBoxFromDBAsync(IssueCheckedListBox, "issues", "*", "",
                                           r =>
                                           {
                                               return IssueMapper.Map(r);
                                           },
-                                          displayComboBoxMember: "name",
-                                          valueComboBoxMember: "id",
                                           falultAction: c => c.Items.Add("Не вдалось завантажити задачі."));
 
             Task ownershipTask = FillCheckBoxFromBDAsync(OwnershipTypeComboBox, "owner_types", "*", "",
@@ -192,6 +191,12 @@ namespace Maps
 
             await Task.WhenAll(citiesTask, environmentTask, issuesTask, ownershipTask, economicActivityTask);
 
+            if (environmentTask.IsCompleted)
+            {
+                Helpers.MapCache.Add("environments", EnvironmentCheckedListBox.Items.OfType<Data.Entity.Environment>()
+                                                                                        .ToList());
+            }
+
             EconomicActivityComboBox.SelectedIndex = -1;
             EconomicActivityComboBox.SelectedIndex = 0;
 
@@ -227,15 +232,48 @@ namespace Maps
             }
             catch (Exception ex)
             {
-                comboBox.DataSource = null;
                 if (falultAction != null)
                 {
-                    falultAction(comboBox);
+                    comboBox.Invoke(falultAction, comboBox);
                 }
 #if DEBUG
                 DebugLog(ex);
 #endif
             }
+        }
+        private async Task FillCheckedListBoxFromDBAsync<TResult>(CheckedListBox checkedListBox, string table, string columns,
+                                                                  string condition, Func<List<object>, TResult> func,
+                                                                  Action<CheckedListBox> falultAction = null)
+        {
+            if (checkedListBox == null || string.IsNullOrEmpty(table) ||
+                columns == null || condition == null || func == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var results = (await dBManager.GetRowsAsync(table, columns, condition))
+                                                   .Select(func)
+                                                   .ToList();
+
+                foreach (var item in results)
+                {
+                    checkedListBox.Items.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (falultAction != null)
+                {
+                    checkedListBox.Invoke(falultAction, checkedListBox);
+                }
+#if DEBUG
+                DebugLog(ex);
+#endif
+            }
+
+
         }
 
         private Bitmap LoadImage(string imageName)
@@ -248,33 +286,35 @@ namespace Maps
             string path = System.IO.Path.Combine(System.Environment.CurrentDirectory,
                                                  @"Resources\Images",
                                                  imageName);
+
             Bitmap img = null;
+            var images = (Dictionary<string, Bitmap>)Helpers.MapCache.GetItem("images");
 
             if (System.IO.File.Exists(path))
             {
-                if (Helpers.ImageCache.ContainsKey(imageName))
+                if (images.ContainsKey(imageName))
                 {
-                    img = Helpers.ImageCache.GetImage(imageName);
+                    img = images[imageName];
                 }
                 else
                 {
                     img = (Bitmap)Image.FromFile(path);
-                    Helpers.ImageCache.Add(imageName, img);
+                    images.Add(imageName, img);
                 }
             }
             else
             {
-                if (!Helpers.ImageCache.ContainsKey(defaultImageName))
+                if (!images.ContainsKey(defaultImageName))
                 {
-                    Helpers.ImageCache.Add(defaultImageName,
-                                           (Bitmap)Image.FromFile(
-                                               System.IO.Path.Combine(System.Environment.CurrentDirectory,
-                                                                      @"Resources\Images\noimage.png")
-                                               )
-                                           );
+                    images.Add(defaultImageName,
+                               (Bitmap)Image.FromFile(
+                                   System.IO.Path.Combine(System.Environment.CurrentDirectory,
+                                                          @"Resources\Images\noimage.png")
+                                   )
+                               );
                 }
 
-                img = Helpers.ImageCache.GetImage(defaultImageName);
+                img = images[defaultImageName];
             }
 
             return img;
@@ -312,20 +352,19 @@ namespace Maps
         }
 #endif
 
-        private void MapWindow_Shown(object sender, EventArgs e)
+        private async void MapWindow_Shown(object sender, EventArgs e)
         {
-            LoadCommonThings();
+            await LoadCommonThings();
         }
 
-        public void HideContextMenuStripItems(ContextMenuStrip contextMenuStrip)
+        private void HideContextMenuStripItems(ContextMenuStrip contextMenuStrip)
         {
             foreach (ToolStripItem item in contextMenuStrip.Items)
             {
                 item.Visible = false;
             }
         }
-
-        public void ShowContextMenuStripItems(ContextMenuStrip contextMenuStrip)
+        private void ShowContextMenuStripItems(ContextMenuStrip contextMenuStrip)
         {
             foreach (ToolStripItem item in contextMenuStrip.Items)
             {
@@ -426,6 +465,93 @@ namespace Maps
         }
         #endregion
 
+        private async Task ChangeObject(string objectType)
+        {
+            if (itemConfigurationWindow != null && reworkedMap.SelectedMarker != null)
+            {
+                var marker = reworkedMap.SelectedMarker as NamedGoogleMarker;
+
+                if (marker == null)
+                {
+                    return;
+                }
+
+                var (changedObjName, changedObjDescription, changedSeries, changedEmissions) = itemConfigurationWindow;
+
+                marker.Name = changedObjName;
+                marker.Description = changedObjDescription;
+
+                bool changeAsEmission = changedEmissions != null;
+
+                string objTableName = null;
+                string objCondColumn = null;
+                string emissionColumn = null;
+                string[] objColumns = null;
+                string[] objValues = null;
+
+                if (objectType == "Маркер")
+                {
+                    objTableName = "poi";
+                    objCondColumn = "Id";
+                    emissionColumn = "idPoi";
+
+                    objColumns = new string[] { "Description", "Name_Object", "id_of_issue",
+                                                "calculations_description_number", "idEnvironment" };
+                    objValues = new string[] { DBUtil.AddQuotes(changedObjName), DBUtil.AddQuotes(changedObjDescription),
+                                               //changedIssue != null ? changedIssue.Id.ToString() : "0",
+                                               //changedSeries != null ? changedSeries.Id.ToString() : "0",
+                                              /* changedEnvironment != null ? changedEnvironment.Id.ToString() : */"NULL" };
+                }
+                else if (objectType == "Полігон" || objectType == "Трубопровід")
+                {
+                    objTableName = "map_object_dependencies";
+                    objCondColumn = "id_poligon";
+                    emissionColumn = "idPoligon";
+
+                    objColumns = new string[] { "id_of_issue", "calculations_description_number" };
+                    //objValues = new string[] { changedIssue != null ? changedIssue.Id.ToString() : "0",
+                    //                           changedSeries != null ? changedSeries.Id.ToString() : "0" };
+                    objValues = null;
+                }
+
+
+
+                try
+                {
+                    dBManager.StartTransaction();
+                    await dBManager.UpdateRecordAsync(objTableName, objColumns, objValues, objCondColumn + " = " + marker.Id.ToString());
+
+                    if (changeAsEmission)
+                    {
+                        string[] emissionColumns = { "idElement", "idEnvironment", "ValueAvg", "ValueMax",
+                                                     "Year", "Month", "day", "Measure" };
+                        //string[] emissionValues = { changedEmission.Element.Code.ToString(), changedEmission.Environment.Id.ToString(),
+                        //                            changedEmission.AvgValue.ToString().Replace(',', '.'), 
+                        //                            changedEmission.MaxValue.ToString().Replace(',', '.'), 
+                        //                            changedEmission.Year.ToString(), changedEmission.Month.ToString(),
+                        //                            changedEmission.Day.ToString(), DBUtil.AddQuotes(changedEmission.Element.Measure) };
+                        string[] emissionValues = null;
+
+                        await dBManager.UpdateRecordAsync("emissions_on_map", emissionColumns, emissionValues, emissionColumn + " = " + marker.Id.ToString());
+                    }
+
+                    dBManager.CommitTransaction();
+
+                    MessageBox.Show("Дані успішно оновлені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    dBManager.RollbackTransaction();
+
+#if DEBUG
+                    DebugLog(ex);
+#else
+                    MessageBox.Show("Помилка при оновлені даних.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
+                }
+            }
+        }
+
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!polygonAddingMode && !tubeAddingMode)
@@ -434,20 +560,17 @@ namespace Maps
                 {
                     IDescribable describableItem = reworkedMap.SelectedMarker as IDescribable;
 
-                    itemInfo.DescribeDeleteItemClickEvent(DeleteMarker);
-                    itemInfo.DescribeDeleteItemClickEvent(DeletePolyline);
-
                     if (describableItem.Type == "Маркер")
                     {
-                        itemInfo.SubscribeDeleteItemClickEvent(DeleteMarker);
+                        DeleteMarker(null, null);
                     }
                     else if (describableItem.Type == "Полігон")
                     {
-                        itemInfo.SubscribeDeleteItemClickEvent(DeletePolyline);
+                        DeletePolyline(null, null);
                     }
                     else if (describableItem.Type == "Трубопровід")
                     {
-                        itemInfo.SubscribeDeleteItemClickEvent(DeletePolyline);
+                        DeletePolyline(null, null);
                     }
                 }
             }
@@ -456,8 +579,170 @@ namespace Maps
                 drawContext.RemoveCoord(reworkedMap.SelectedMarker.Position);
             }
         }
-        private void ChangeObjectSettings(object sender, EventArgs e)
+        private async void ChangeObjectSettings(object sender, EventArgs e)
         {
+            var marker = reworkedMap.SelectedMarker as NamedGoogleMarker;
+
+            if (marker == null)
+            {
+                MessageBox.Show("Не вдалось відкрити вікно для налаштування об'єкту",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string markerType = ((IDescribable)marker).Type;
+            string emissionObjIdColumn = string.Empty;
+
+            Data.Entity.Environment environment = null;
+            Data.Entity.Issue issue = null;
+            Data.Entity.CalculationSeries series = null;
+            Data.Entity.Emission emission = null;
+
+            try
+            {
+                if (markerType == "Маркер")
+                {
+                    emissionObjIdColumn = "idPoi";
+
+                    string poiTables = "poi, issues, calculations_description, environment";
+                    string poiColumns = "issues.issue_id, issues.name, calculations_description.calculation_number, " +
+                                        "calculations_description.calculation_name, environment.id, environment.name";
+                    string poiJoinCond = "poi.id_of_issue = issues.issue_id, " +
+                                         "poi.calculations_description_number = calculations_description.calculation_number, " +
+                                         "poi.idEnvironment = environment.id";
+                    string poiCondition = "poi.Id = " + marker.Id.ToString();
+
+                    var result = await dBManager.GetRowsUsingJoinAsync(poiTables, poiColumns, poiJoinCond, poiCondition, JoinType.LEFT);
+
+                    foreach (var row in result)
+                    {
+                        if (!(row[0] is DBNull))
+                        {
+                            issue = new Issue((int)row[0])
+                            {
+                                Name = row[1] is DBNull ? string.Empty : row[1].ToString()
+                            };
+                        }
+                        if (!(row[2] is DBNull))
+                        {
+                            series = new CalculationSeries()
+                            {
+                                Id = (int)row[2],
+                                Name = row[3] is DBNull ? string.Empty : row[3].ToString()
+                            };
+                        }
+                        if (!(row[4] is DBNull))
+                        {
+                            environment = new Data.Entity.Environment()
+                            {
+                                Id = (int)row[4],
+                                Name = row[5].ToString()
+                            };
+                        }
+                    }
+                }
+                else if (markerType == "Полігон" || markerType == "Трубопровід")
+                {
+                    emissionObjIdColumn = "idPoligon";
+
+                    string polyTables = "map_object_dependencies, issues, calculations_description";
+                    string polyColumns = "issues.issue_id, issues.name, calculations_description.calculation_number, " +
+                                        "calculations_description.calculation_name";
+                    string polyJoinCond = "map_object_dependencies.id_of_issue = issues.issue_id, " +
+                                         "map_object_dependencies.calculations_description_number = " +
+                                         "calculations_description.calculation_number AND " +
+                                         "map_object_dependencies.id_of_issue = calculations_description.issue_id";
+                    string polyCondition = "map_object_dependencies.id_poligon = " + marker.Id.ToString();
+
+                    var result = await dBManager.GetRowsUsingJoinAsync(polyTables, polyColumns, polyJoinCond, polyCondition, JoinType.LEFT);
+
+                    foreach (var row in result)
+                    {
+                        if (!(row[0] is DBNull))
+                        {
+                            issue = new Issue((int)row[0])
+                            {
+                                Name = row[1] is DBNull ? string.Empty : row[1].ToString()
+                            };
+                        }
+                        if (!(row[2] is DBNull))
+                        {
+                            series = new CalculationSeries()
+                            {
+                                Id = (int)row[2],
+                                Name = row[3] is DBNull ? string.Empty : row[3].ToString()
+                            };
+                        }
+                    }
+                }
+
+                string emissionTables = "emissions_on_map, elements, environment";
+                string emissionColumns = "elements.code, emissions_on_map.ValueAvg, emissions_on_map.ValueMax, " +
+                                         "emissions_on_map.Year, emissions_on_map.Month, emissions_on_map.day, " +
+                                         "environment.id, environment.name";
+                string emissionJoinCond = "emissions_on_map.idElement = elements.code, " +
+                                          "emissions_on_map.idEnvironment = environment.id";
+                string emissionCond = emissionObjIdColumn + " = " + marker.Id.ToString();
+
+                var emissionResult = await dBManager.GetRowsUsingJoinAsync(emissionTables, emissionColumns, emissionJoinCond, emissionCond, JoinType.LEFT);
+
+                foreach (var emissionItem in emissionResult)
+                {
+                    emission = new Emission()
+                    {
+                        //Element = new Element()
+                        //{
+                        //    Code = (int)emissionItem[0],
+                        //},
+                        //Environment = new Data.Entity.Environment()
+                        //{
+                        //    Id = (int)emissionItem[6],
+                        //    Name = emissionItem[7].ToString()
+                        //},
+                        AvgValue = (double)emissionItem[1],
+                        MaxValue = (double)emissionItem[2],
+                        Year = (int)emissionItem[3],
+                        Month = (int)emissionItem[4],
+                        Day = (int)emissionItem[5],
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                DebugLog(ex);
+#else
+                MessageBox.Show("Помилка при відкритті вікна для налаштування об'єкту.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
+            }
+
+            itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
+
+            //if (environment != null)
+            //{
+            //    itemConfigurationWindow.SetEnvironment(environment);
+            //}
+            //else if (emission != null && emission.Environment != null)
+            //{
+            //    itemConfigurationWindow.SetEnvironment(emission.Environment);
+            //}
+
+            //itemConfigurationWindow.SetIssue(issue);
+            //itemConfigurationWindow.SetEmission(emission);
+            //itemConfigurationWindow.SetSeries(series);
+            itemConfigurationWindow.SetObjName(marker.Name);
+            itemConfigurationWindow.SetObjDescritpion(marker.Description);
+
+            if (itemConfigurationWindow.ShowDialog() == DialogResult.OK)
+            {
+                await ChangeObject(markerType);
+            }
+
+            itemInfo.SetData(marker);
+
+            itemConfigurationWindow.Dispose();
+            itemConfigurationWindow = null;
+
 
         }
         private void AdditionalInfo(object sender, EventArgs e)
@@ -664,42 +949,52 @@ namespace Maps
         private void ShowLayoutButton_Click(object sender, EventArgs e)
         {
             FiltrationInfoStripStatusLabel.Text = "Ввімкнена фільтрація на мапі";
+            FiltrationSideMenuButton.Text = "Фільтрація (ввімкнена)";
+            FiltrationSideMenuButton.BackColor = Color.DarkGray;
 
             reworkedMap.HideAllLayout();
 
-            if (EnvironmentsCheckBox.Checked)
+            if (EnvironmentsCheckBox.Checked && EnvironmentCheckedListBox.CheckedItems.Count != 0)
             {
-                if (EnvironmentComboBox.Text == "Зобразити усі")
+                foreach (Data.Entity.Environment checkedItem in EnvironmentCheckedListBox.CheckedItems)
                 {
-                    if (EnvironmentComboBox.DataSource is IList<Data.Entity.Environment>)
-                    {
-                        foreach (var environment in (IList<Data.Entity.Environment>)EnvironmentComboBox.DataSource)
-                        {
-                            if (environment.Id != -1)
-                            {
-                                reworkedMap.ShowLayoutById(environment.Name);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    reworkedMap.ShowLayoutById(EnvironmentComboBox.Text);
+                    reworkedMap.ShowLayoutById(checkedItem.Name);
                 }
             }
 
             if (IssuesCheckBox.Checked)
             {
-                reworkedMap.ShowLayoutById(IssuesComboBox.Text);
+                foreach (Data.Entity.Issue checkedItem in IssueCheckedListBox.CheckedItems)
+                {
+                    reworkedMap.ShowLayoutById(checkedItem.Name);
+                }
+            }
+
+            if (RegionCheckBox.Checked)
+            {
+                reworkedMap.ShowLayoutById("region");
+            }
+
+            if (TubeCheckBox.Checked)
+            {
+                reworkedMap.ShowLayoutById("tube");
             }
         }
 
         private void HideAllLayoutButton_Click(object sender, EventArgs e)
         {
+            FiltrationInfoStripStatusLabel.Text = "Усі елементи сховані";
+            FiltrationSideMenuButton.Text = "Фільтрація (ввімкнена)";
+            FiltrationSideMenuButton.BackColor = Color.DarkGray;
+
             reworkedMap.HideAllLayout();
         }
         private void ShowAllLayoutButton_Click(object sender, EventArgs e)
         {
+            FiltrationInfoStripStatusLabel.Text = "Фільтрація вимкнена";
+            FiltrationSideMenuButton.Text = "Фільтрація";
+            FiltrationSideMenuButton.BackColor = Control.DefaultBackColor;
+
             reworkedMap.ShowAllLayout();
         }
         #endregion
@@ -724,7 +1019,10 @@ namespace Maps
             PolygonColorPictureBox.Enabled = false;
 
             TubeSaveButton.Enabled = false;
-            TubeSettingsButton.Enabled = false;
+            TubeNameTextBox.Enabled = false;
+            TubeDescriptionTextBox.Enabled = false;
+            TubeNameTextBox.Text = string.Empty;
+            TubeDescriptionTextBox.Text = string.Empty;
 
             AddMarkerButton.Text = "Додати";
             PolygonDrawButton.Text = "Почати";
@@ -770,10 +1068,9 @@ namespace Maps
                     }
                 }
 
-                DebugToolStripStatusLabel.Text = imageName;
+                //DebugToolStripStatusLabel.Text = imageName;
             }
         }
-
         private void AddMarkerButton_Click(object sender, EventArgs e)
         {
             HideContextMenuStripItems(MapObjectContextMenuStrip);
@@ -799,27 +1096,24 @@ namespace Maps
         {
             if (itemConfigurationWindow == null)
             {
-                IList<Issue> issues = IssuesComboBox.DataSource as IList<Issue>;
-                IList<Data.Entity.Environment> environments = EnvironmentComboBox.DataSource as IList<Data.Entity.Environment>;
-
-                if (issues != null && environments != null)
-                {
-                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert, issues, environments);
-                }
-                else
-                {
-                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
-                }
-
+                itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
             }
             itemConfigurationWindow.ShowDialog();
         }
-        private void SaveMarkerButton_Click(object sender, EventArgs e)
+        private async void SaveMarkerButton_Click(object sender, EventArgs e)
         {
             if (itemConfigurationWindow == null)
             {
                 MessageBox.Show("Не можливо зберегти об'єкт без його налаштування.",
                                 "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var (objName, objDescription, series, emissions) = itemConfigurationWindow;
+
+            if (string.IsNullOrEmpty(objName))
+            {
+                MessageBox.Show("Не можливо зберегти маркер без назви.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -829,22 +1123,75 @@ namespace Maps
             {
                 NamedGoogleMarker marker = (NamedGoogleMarker)markers.First();
 
-                var (issue, environment, series, objName, objDescription) = itemConfigurationWindow;
-
                 Data.Entity.TypeOfObject typeOfObject = EconomicActivityComboBox.SelectedItem as TypeOfObject;
 
                 string[] columns = { "id_of_user", "Type", "owner_type", "Coord_Lat", "Coord_Lng",
-                                     "Description", "Name_Object", "id_of_issue", "calculations_description_number", "idEnvironment"};
+                                     "Description", "Name_Object"};
                 string[] values = { userId.ToString(), typeOfObject.Id.ToString(), OwnershipTypeComboBox.SelectedValue.ToString(),
                                     marker.Position.Lat.ToString().Replace(',', '.'), marker.Position.Lng.ToString().Replace(',', '.'),
                                     string.IsNullOrEmpty(objDescription) ? "'Опис відсутній.'" : Data.DBUtil.AddQuotes(objDescription),
-                                    Data.DBUtil.AddQuotes(objName), issue != null ? issue.id.ToString() : "0",
-                                    series != null ? series.id.ToString() : "0",
-                                    environment != null ? environment.Id.ToString() : "NULL"};
+                                    Data.DBUtil.AddQuotes(objName) };
 
                 try
                 {
-                    marker.Id = dBManager.InsertToBD("poi", columns, values);
+                    dBManager.StartTransaction();
+                    marker.Id = await dBManager.InsertToBDAsync("poi", columns, values);
+
+                    if (emissions.Any())
+                    {
+                        StringBuilder emissionQuery = new StringBuilder("INSERT INTO emissions_on_map (idElement, idEnvironment, ValueAvg," +
+                                                                        " ValueMax, Year, Month, day, Measure, idPoi) VALUES ");
+                        var invarianCulture = System.Globalization.CultureInfo.InvariantCulture;
+
+                        foreach (var emission in emissions)
+                        {
+                            emissionQuery.Append("( ");
+                            emissionQuery.Append(emission.Element.Code.ToString() + ", ");
+                            emissionQuery.Append(emission.Environment.Id.ToString() + ", ");
+                            emissionQuery.Append(emission.AvgValue.ToString(invarianCulture) + ", ");
+                            emissionQuery.Append(emission.MaxValue.ToString(invarianCulture) + ", ");
+                            emissionQuery.Append(emission.Year.ToString() + ", ");
+                            emissionQuery.Append(emission.Month.ToString() + ", ");
+                            emissionQuery.Append(emission.Day.ToString() + ", ");
+                            emissionQuery.Append(DBUtil.AddQuotes(emission.Element.Measure.ToString()) + ", ");
+                            emissionQuery.Append(marker.Id.ToString());
+                            emissionQuery.Append("), ");
+                        }
+                        emissionQuery.Remove(emissionQuery.Length - 2, 1);
+
+                        await dBManager.InsertToBDAsync(emissionQuery.ToString());
+                    }
+
+                    if (series.Any())
+                    {
+                        StringBuilder mapObjectDependenciesQuery = new StringBuilder("INSERT INTO map_object_dependencies " +
+                                                                                     "(id_of_object, type_obj, id_of_ref, type_rel) VALUES");
+
+                        foreach (var keyValuePair in series)
+                        {
+                            mapObjectDependenciesQuery.Append("( ");
+                            mapObjectDependenciesQuery.Append(marker.Id);
+                            mapObjectDependenciesQuery.Append(", 0, ");
+                            mapObjectDependenciesQuery.Append(keyValuePair.Key.Id);
+                            mapObjectDependenciesQuery.Append(", 0 ");
+                            mapObjectDependenciesQuery.Append("), ");
+
+                            foreach (var _series in keyValuePair.Value)
+                            {
+                                mapObjectDependenciesQuery.Append("( ");
+                                mapObjectDependenciesQuery.Append(marker.Id);
+                                mapObjectDependenciesQuery.Append(", 0, ");
+                                mapObjectDependenciesQuery.Append(_series.Id);
+                                mapObjectDependenciesQuery.Append(", 1 ");
+                                mapObjectDependenciesQuery.Append("), ");
+                            }
+                        }
+                        mapObjectDependenciesQuery.Remove(mapObjectDependenciesQuery.Length - 2, 1);
+
+                        await dBManager.InsertToBDAsync(mapObjectDependenciesQuery.ToString());
+                    }
+
+                    dBManager.CommitTransaction();
 
                     marker.Format = "Назва: {0}\nОпис: {1}";
                     marker.Name = objName;
@@ -855,16 +1202,16 @@ namespace Maps
 
                     reworkedMap.RemoveMarker(marker);               //Убирает маркер из слоя для добавления
 
-                    if (issue != null)
+                    foreach (var _series in series)
                     {
-                        reworkedMap.AddMarker(marker, issue.name);
+                        reworkedMap.AddMarker(marker, _series.Key.Name);
                     }
-                    if (environment != null)
+                    foreach (var _emission in emissions)
                     {
-                        reworkedMap.AddMarker(marker, environment.Name);
+                        reworkedMap.AddMarker(marker, _emission.Environment.Name);
                     }
 
-                    if (issue == null && environment == null)
+                    if (!(emissions.Any() && series.Any()))
                     {
                         reworkedMap.AddMarker(marker);
                     }
@@ -875,6 +1222,7 @@ namespace Maps
                 }
                 catch (Exception ex)
                 {
+                    dBManager.RollbackTransaction();
 #if DEBUG
                     DebugLog(ex);
 #else 
@@ -906,36 +1254,50 @@ namespace Maps
             MainToolStripProgressBar.Visible = true;
             MainToolStripProgressBar.ProgressBar.Style = ProgressBarStyle.Marquee;
 
-            string _tables = "poi, type_of_object, issues, environment, user";
+            string _tables = "poi, type_of_object, user";
             string _columns = "poi.Coord_Lat, poi.Coord_Lng, poi.Description, poi.Name_Object, " +
-                              "type_of_object.Image_Name, issues.name, environment.name, user.description, user.id_of_expert, poi.Id";
-            string _joinCond = "type_of_object.Id = poi.Type, poi.id_of_issue = issues.issue_id, " +
-                               "poi.idEnvironment = environment.id, poi.id_of_user = user.id_of_user";
+                              "type_of_object.Image_Name, user.description, user.id_of_expert, poi.Id";
+            string _joinCond = "type_of_object.Id = poi.Type, poi.id_of_user = user.id_of_user";
             string _condition = condition ?? string.Empty;
+            string dependenciesTables = "poi, map_object_dependencies, issues";
+            string dependenciesColumns = " poi.Id, issues.name";
+            string dependenciesJoinCondition = "poi.Id = map_object_dependencies.id_of_object, " +
+                                               "map_object_dependencies.type_rel = 0 AND " +
+                                               "map_object_dependencies.type_obj = 0 AND " +
+                                               "map_object_dependencies.id_of_ref = issues.issue_id";
+            string dependenciesCondition = "type_obj = 0 ";
+            string emissionTables = "poi, emissions_on_map, environment";
+            string emissionColumns = "DISTINCT environment.name, poi.Id";
+            string emissionJoinCondition = "emissions_on_map.idPoi = poi.Id, emissions_on_map.idEnvironment = environment.id";
+
             List<List<object>> result = null;
+            List<List<object>> mapObjectDependencies = null;
+            List<List<object>> emissions = null;
 
             reworkedMap.ClearAllMarkers();
 
             if (!string.IsNullOrEmpty(additionalTables))
             {
                 _tables += ", " + additionalTables;
+                dependenciesTables += ", " + additionalTables;
             }
             if (!string.IsNullOrEmpty(additionalJoinCond))
             {
                 _joinCond += ", " + additionalJoinCond;
+                dependenciesJoinCondition += ", " + additionalJoinCond;
+            }
+            if (!string.IsNullOrEmpty(_condition))
+            {
+                dependenciesCondition += "AND " + _condition;
             }
 
             try
             {
-                result = await Task.Run(() =>
-                {
-                    lock (_lock)
-                    {
-                        isLoading = true;
-                    }
-
-                    return dBManager.GetRowsUsingJoin(_tables, _columns, _joinCond, _condition, JoinType.LEFT);
-                });
+                result = await dBManager.GetRowsUsingJoinAsync(_tables, _columns, _joinCond, _condition, JoinType.LEFT);
+                mapObjectDependencies = await dBManager.GetRowsUsingJoinAsync(dependenciesTables, dependenciesColumns,
+                                                                              dependenciesJoinCondition, dependenciesCondition, new JoinType[] { JoinType.LEFT, JoinType.INNER });
+                emissions = await dBManager.GetRowsUsingJoinAsync(emissionTables, emissionColumns,
+                                                                  emissionJoinCondition, string.Empty, JoinType.LEFT);
 
                 if (result.Count == 0)
                 {
@@ -948,28 +1310,26 @@ namespace Maps
                     NamedGoogleMarker marker = reworkedMap.AddMarker(new GMap.NET.PointLatLng((double)row[0], (double)row[1]),
                                                        LoadImage(row[4].ToString()),
                                                        "Назва: {0}\nОпис: {1}", row[3].ToString(), row[2].ToString()) as NamedGoogleMarker;
-                    marker.Id = (int)row[9];
-                    marker.CreatorFullName = row[7] is DBNull ? "Дані відсутні" : row[7].ToString();
-                    marker.CreatorRole = (Role)((int)row[8]);
+                    marker.Id = (int)row[7];
+                    marker.CreatorFullName = row[5] is DBNull ? "Дані відсутні" : row[5].ToString();
+                    marker.CreatorRole = (Role)((int)row[6]);
                     ((IDescribable)marker).Type = "Маркер";
 
-
-                    bool isAdded = false;
-
-                    if (!(row[5] is DBNull))
+                    var dependencies = mapObjectDependencies.Where(_row => !(_row[0] is DBNull) && (int)_row[0] == marker.Id);
+                    foreach (var dependenciesRow in dependencies)
                     {
-                        reworkedMap.AddMarker(marker, row[5].ToString());
-                        isAdded = true;
-                    }
-                    if (!(row[6] is DBNull))
-                    {
-                        reworkedMap.AddMarker(marker, row[6].ToString());
-                        isAdded = true;
+                        reworkedMap.AddMarker(marker, dependenciesRow[1].ToString());
                     }
 
-                    if (isAdded)
+                    var environment = emissions.Where(_row => !(_row[0] is DBNull) && (int)_row[1] == marker.Id);
+                    foreach (var env in environment)
                     {
-                        reworkedMap.RemoveMarkerFromLayout(marker);
+                        reworkedMap.AddMarker(marker, env[0].ToString());
+                    }
+
+                    if (!dependencies.Any() && !environment.Any())
+                    {
+                        reworkedMap.AddMarker(marker);
                     }
                 }
             }
@@ -983,7 +1343,6 @@ namespace Maps
             }
             finally
             {
-                isLoading = false;
 
                 CurrentActionStatusLabel.Text = string.Empty;
                 MainToolStripProgressBar.Visible = false;
@@ -1005,9 +1364,17 @@ namespace Maps
                     return;
                 }
 
+                var marker = (NamedGoogleMarker)reworkedMap.SelectedMarker;
+
                 try
                 {
-                    dBManager.DeleteFromDB("poi", "Id", ((NamedGoogleMarker)reworkedMap.SelectedMarker).Id.ToString());
+                    dBManager.StartTransaction();
+                    dBManager.DeleteFromDB("poi", "Id", marker.Id.ToString());
+                    dBManager.DeleteFromDB("emissions_on_map", "idPoligon", marker.Id.ToString());
+                    dBManager.DeleteFromDB("map_object_dependencies",
+                                           new string[] { "id_of_object", "type_obj" },
+                                           new string[] { marker.Id.ToString(), "0" });
+                    dBManager.CommitTransaction();
 
                     reworkedMap.RemoveMarker(reworkedMap.SelectedMarker);
                     itemInfo.ClearData();
@@ -1016,6 +1383,7 @@ namespace Maps
                 }
                 catch (Exception ex)
                 {
+                    dBManager.RollbackTransaction();
 #if DEBUG
                     DebugLog(ex);
 #else
@@ -1026,12 +1394,13 @@ namespace Maps
         }
         #endregion
 
-        private void SavePolyline(IList<GMap.NET.PointLatLng> points, Color fill, Color stroke, string polylineType)
+        private async Task SavePolyline(IList<GMap.NET.PointLatLng> points, Color fill, Color stroke, string polylineType)
         {
             if (string.IsNullOrEmpty(polylineType))
             {
                 throw new ArgumentException("Тип фигуры должен быть явно указан.", "polylineType");
             }
+
 
             string _type = string.Empty;
             if (polylineType == "polygon")
@@ -1048,7 +1417,7 @@ namespace Maps
                 return;
             }
 
-            var (issue, _, series, objName, objDescription) = itemConfigurationWindow;
+            var (objName, objDescription, series, emissions) = itemConfigurationWindow;
 
             string[] polygonColumns = { "Id_of_poligon", "brush_color_r", "bruch_color_g", "brush_color_b", "brush_alfa", "line_collor_r",
                                             "line_color_g", "line_color_b", "line_alfa", "line_thickness", "name", "id_of_user", "type", "description"};
@@ -1057,10 +1426,6 @@ namespace Maps
                                             "2", DBUtil.AddQuotes(objName), userId.ToString(), DBUtil.AddQuotes(polylineType),
                                             (string.IsNullOrEmpty(objDescription) ? "Опис відсутній." : DBUtil.AddQuotes(objDescription))};
 
-            string[] polygonDescColumns = { "id_poligon", "id_of_issue", "calculations_description_number" };
-            string[] polygonDescValues = { polygonValues[0], issue != null ? issue.id.ToString() : "0",
-                                               series != null && series.id != -1 ? series.id.ToString() : "0"};
-
             try
             {
                 object lastId = dBManager.GetValue("poligon", "MAX(Id_of_poligon)", "");
@@ -1068,29 +1433,81 @@ namespace Maps
                 if (lastId != null && !(lastId is DBNull))
                 {
                     polygonValues[0] = ((int)lastId + 1).ToString();
-                    polygonDescValues[0] = polygonValues[0];
                 }
 
                 dBManager.StartTransaction();
-                dBManager.InsertToBD("poligon", polygonColumns, polygonValues);
+                await dBManager.InsertToBDAsync("poligon", polygonColumns, polygonValues);
 
                 var _points = points;
 
-                string[] _columns = { "longitude", "latitude", "Id_of_poligon", "order123" };
-                string[] _values = new string[4];
-                _values[2] = polygonValues[0];
-
+                StringBuilder pointQuery = new StringBuilder("INSERT INTO point_poligon (longitude, latitude, Id_of_poligon, order123) VALUES ");
 
                 for (int i = 0; i < _points.Count; i++)
                 {
-                    _values[1] = _points[i].Lng.ToString().Replace(',', '.');
-                    _values[0] = _points[i].Lat.ToString().Replace(',', '.');
-                    _values[3] = (i + 1).ToString();
+                    string tempLng = _points[i].Lng.ToString().Replace(',', '.');
+                    string tempLat = _points[i].Lat.ToString().Replace(',', '.');
+                    string tempOrderNumber = (i + 1).ToString();
 
-                    dBManager.InsertToBD("point_poligon", _columns, _values);
+                    pointQuery.AppendFormat(" ({0}, {1}, {2}, {3}), ", tempLat, tempLng, polygonValues[0], tempOrderNumber);
+                }
+                pointQuery.Remove(pointQuery.Length - 2, 1);
+
+                await dBManager.InsertToBDAsync(pointQuery.ToString());
+
+                if (emissions.Any())
+                {
+                    StringBuilder emissionQuery = new StringBuilder("INSERT INTO emissions_on_map (idElement, idEnvironment, ValueAvg," +
+                                                                    " ValueMax, Year, Month, day, Measure, idPoligon) VALUES ");
+                    var invarianCulture = System.Globalization.CultureInfo.InvariantCulture;
+
+                    foreach (var emission in emissions)
+                    {
+                        emissionQuery.Append("( ");
+                        emissionQuery.Append(emission.Element.Code.ToString() + ", ");
+                        emissionQuery.Append(emission.Environment.Id.ToString() + ", ");
+                        emissionQuery.Append(emission.AvgValue.ToString(invarianCulture) + ", ");
+                        emissionQuery.Append(emission.MaxValue.ToString(invarianCulture) + ", ");
+                        emissionQuery.Append(emission.Year.ToString() + ", ");
+                        emissionQuery.Append(emission.Month.ToString() + ", ");
+                        emissionQuery.Append(emission.Day.ToString() + ", ");
+                        emissionQuery.Append(DBUtil.AddQuotes(emission.Element.Measure.ToString()) + ", ");
+                        emissionQuery.Append(polygonValues[0]);
+                        emissionQuery.Append("), ");
+                    }
+                    emissionQuery.Remove(emissionQuery.Length - 2, 1);
+
+                    await dBManager.InsertToBDAsync(emissionQuery.ToString());
                 }
 
-                dBManager.InsertToBD("poligon_calculations_description", polygonDescColumns, polygonDescValues);
+                if (series.Any())
+                {
+                    StringBuilder mapObjectDependenciesQuery = new StringBuilder("INSERT INTO map_object_dependencies " +
+                                                                                 "(id_of_object, type_obj, id_of_ref, type_rel) VALUES");
+
+                    foreach (var keyValuePair in series)
+                    {
+                        mapObjectDependenciesQuery.Append("( ");
+                        mapObjectDependenciesQuery.Append(polygonValues[0]);
+                        mapObjectDependenciesQuery.Append(", 1, ");
+                        mapObjectDependenciesQuery.Append(keyValuePair.Key.Id);
+                        mapObjectDependenciesQuery.Append(", 0 ");
+                        mapObjectDependenciesQuery.Append("), ");
+
+                        foreach (var _series in keyValuePair.Value)
+                        {
+                            mapObjectDependenciesQuery.Append("( ");
+                            mapObjectDependenciesQuery.Append(polygonValues[0]);
+                            mapObjectDependenciesQuery.Append(", 1, ");
+                            mapObjectDependenciesQuery.Append(_series.Id);
+                            mapObjectDependenciesQuery.Append(", 1 ");
+                            mapObjectDependenciesQuery.Append("), ");
+                        }
+                    }
+                    mapObjectDependenciesQuery.Remove(mapObjectDependenciesQuery.Length - 2, 1);
+
+                    await dBManager.InsertToBDAsync(mapObjectDependenciesQuery.ToString());
+                }
+
                 dBManager.CommitTransaction();
 
                 var polyMarker = new NamedGoogleMarker(points[0],
@@ -1111,34 +1528,34 @@ namespace Maps
                     ((IDescribable)polyMarker).Type = _type;
                 }
 
-                Action<Issue, Map> action = (_issue, rwMap) =>
+                Action<IDictionary<Issue, List<CalculationSeries>>, IEnumerable<Emission>, Map> action = (_issues, _emissions, rwMap) =>
                 {
-                    if (issue != null)
+                    bool added = false;
+
+                    if (_emissions != null)
                     {
-                        rwMap.AddMarker(polyMarker, issue.name);
+                        foreach (var _emission in _emissions)
+                        {
+                            rwMap.AddMarker(polyMarker, _emission.Environment.Name);
+                        }
+                        added = true;
                     }
-                    else
+                    if (_issues != null)
+                    {
+                        foreach (var _issue in _issues)
+                        {
+                            rwMap.AddMarker(polyMarker, _issue.Key.Name);
+                        }
+                        added = true;
+                    }
+
+                    if (!added)
                     {
                         rwMap.AddMarker(polyMarker);
                     }
                 };
 
-                this.Invoke(action, issue, reworkedMap);
-
-                //if (issue != null)
-                //{
-                //    reworkedMap.AddMarker(polyMarker, issue.name);
-                //}
-                ////if (environment != null)
-                ////{
-                ////    reworkedMap.AddPolygon(polygon, environment.Name);
-                ////    reworkedMap.AddMarker(polyMarker, environment.Name);
-                ////}
-
-                //if (issue == null /*&& environment == null*/)
-                //{
-                //    reworkedMap.AddMarker(polyMarker);
-                //}
+                this.Invoke(action, null, null, reworkedMap);
 
                 MessageBox.Show($"{_type} успішно збережений до бази даних.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -1148,7 +1565,7 @@ namespace Maps
 #if DEBUG
                 DebugLog(ex);
 #else
-                    MessageBox.Show($"Не вдалось зберегти {_type} до бази даних.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Не вдалось зберегти {_type} до бази даних.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
             }
         }
@@ -1159,29 +1576,36 @@ namespace Maps
 
             this.Invoke(changeProgressBar, "Завантаження усіх маркерів.", true, ProgressBarStyle.Marquee);
 
-            string _tables = "poligon, poligon_calculations_description, issues, calculations_description, user, emissions_on_map";
+            string _tables = "poligon, emissions_on_map, user";
             string _columns = "poligon.Id_of_poligon, poligon.brush_color_r, " +
                               "poligon.bruch_color_g, poligon.brush_color_b, " +
                               "poligon.brush_alfa, poligon.line_collor_r, " +
                               "poligon.line_color_g, poligon.line_color_b, " +
                               "poligon.line_alfa, poligon.line_thickness, " +
                               "poligon.name, poligon.description, " +
-                              "issues.name, calculations_description.calculation_name, " +
                               "user.description, user.id_of_expert, emissions_on_map.idEnvironment";
-            string _joinCond = "poligon.Id_of_poligon = poligon_calculations_description.id_poligon, " +
-                               "poligon_calculations_description.id_of_issue = issues.issue_id, " +
-                               "poligon_calculations_description.calculations_description_number = " +
-                               "calculations_description.calculation_number, " +
-                               "poligon.id_of_user = user.id_of_user, poligon.Id_of_poligon = emissions_on_map.idPoligon";
+            string _joinCond = "poligon.Id_of_poligon = emissions_on_map.idPoligon, poligon.id_of_user = user.id_of_user";
             string _condition = "poligon.type = " + DBUtil.AddQuotes(polylineType);
 
             string _polygonPointTables = "poligon, point_poligon";
             string _polygonPointColumns = "point_poligon.longitude, point_poligon.latitude, point_poligon.Id_of_poligon";
             string _polygonPointJoinConditions = "poligon.Id_of_poligon = point_poligon.Id_of_poligon";
             string _polygonPointCondition = " WHERE true ORDER BY `Id_of_poligon`, `order123`";
+            string dependenciesTables = "poi, map_object_dependencies, issues";
+            string dependenciesColumns = " poi.Id, issues.name";
+            string dependenciesJoinCondition = "poi.Id = map_object_dependencies.id_of_object, " +
+                                               "map_object_dependencies.type_rel = 0 AND " +
+                                               "map_object_dependencies.type_obj = 0 AND " +
+                                               "map_object_dependencies.id_of_ref = issues.issue_id";
+            string dependenciesCondition = "type_obj = 0 ";
+            string emissionTables = "poi, emissions_on_map, environment";
+            string emissionColumns = "DISTINCT environment.name, poi.Id";
+            string emissionJoinCondition = "emissions_on_map.idPoi = poi.Id, emissions_on_map.idEnvironment = environment.id";
 
             List<List<object>> result = null;
             List<IGrouping<int, List<object>>> pointsResult = null;
+            List<List<object>> mapObjectDependencies = null;
+            List<List<object>> emissions = null;
 
             GMap.NET.MapRoute figure = null;
 
@@ -1202,9 +1626,10 @@ namespace Maps
             {
                 reworkedMap.ClearAllPolygons();
             }
-            else if (polylineType == "polygon")
+            else if (polylineType == "tube")
             {
                 reworkedMap.ClearAllRoutes();
+                TubeCheckBox.Enabled = true;
             }
 
             string format = null;
@@ -1219,6 +1644,11 @@ namespace Maps
                                                                       _polygonPointCondition, JoinType.LEFT))
                                                .GroupBy(row => (row[2] is DBNull ? -1 : (int)row[2]))
                                                .ToList();
+                mapObjectDependencies = await dBManager.GetRowsUsingJoinAsync(dependenciesTables, dependenciesColumns,
+                                                                              dependenciesJoinCondition, dependenciesCondition, new JoinType[] { JoinType.LEFT, JoinType.INNER });
+                emissions = await dBManager.GetRowsUsingJoinAsync(emissionTables, emissionColumns,
+                                                                  emissionJoinCondition, string.Empty, JoinType.LEFT);
+
 
                 if (result.Count == 0)
                 {
@@ -1237,7 +1667,7 @@ namespace Maps
 
                     if (_points == null)
                     {
-                        break;
+                        continue;
                     }
 
                     Color fill = Color.FromArgb(Convert.ToInt32(row[4]),
@@ -1250,18 +1680,26 @@ namespace Maps
                                                   Convert.ToInt32(row[6]),
                                                   Convert.ToInt32(row[7]));
 
-                    if (polylineType == "polygon")
+                    if (polylineType == "polygon" || polylineType == "region")
                     {
                         var polygon = new GMap.NET.WindowsForms.GMapPolygon(_points, row[10].ToString());
                         polygon.Fill = new SolidBrush(fill);
                         polygon.Stroke = new Pen(stroke, Convert.ToInt32(row[9]));
-
-                        format = "Назва полігону: {0}\nОпис полігону: {1}";
                         figure = polygon;
 
-                        _type = "Полігон";
+                        if (polylineType == "polygon")
+                        {
+                            format = "Назва полігону: {0}\nОпис полігону: {1}";
+                            _type = "Полігон";
+                        }
+                        else
+                        {
+                            format = "Назва області: {0}\nОпис області: {1}";
+                            _type = "Область";
+                        }
+
                     }
-                    else
+                    else if (polylineType == "tube")
                     {
                         var route = new GMap.NET.WindowsForms.GMapRoute(_points, row[10].ToString());
                         route.Stroke = new Pen(stroke, Convert.ToInt32(row[9]));
@@ -1276,59 +1714,67 @@ namespace Maps
                                                                      format, row[10].ToString(), row[11].ToString()) as NamedGoogleMarker;
                     marker.Id = polygonId;
                     marker.IsDependent = true;
-                    marker.CreatorFullName = row[14] is DBNull ? "Дані відсутні" : row[14].ToString();
-                    marker.CreatorRole = (Role)((int)row[15]);
+                    marker.CreatorFullName = row[12] is DBNull ? "Дані відсутні" : row[14].ToString();
+                    marker.CreatorRole = (Role)((int)row[13]);
 
                     ((IDescribable)marker).Type = _type;
 
                     bool isAdded = false;
+                    string layout = string.Empty;
 
-                    if (!(row[12] is DBNull))
+                    if (polylineType == "polygon")
                     {
-                        reworkedMap.AddMarker(marker, row[12].ToString());
-
-                        if (polylineType == "polygon")
+                        if (!(row[14] is DBNull))
                         {
-                            reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, row[12].ToString());
-                        }
-                        else if (polylineType == "tube")
-                        {
-                            reworkedMap.AddRoute((GMap.NET.WindowsForms.GMapRoute)figure, row[12].ToString());
+                            int envId = (int)row[14];
+                            var env = EnvironmentCheckedListBox.Items.OfType<Data.Entity.Environment>().Where(_env => _env.Id == envId)
+                                                                                                       .FirstOrDefault();
+
+                            if (env != null)
+                            {
+                                layout = env.Name;
+                                reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, layout);
+                                reworkedMap.AddMarker(marker, layout);
+
+                                isAdded = true;
+                            }
                         }
 
-                        isAdded = true;
+                        var dependencies = mapObjectDependencies.Where(_row => !(_row[0] is DBNull) && (int)_row[0] == marker.Id);
+                        foreach (var dependenciesRow in dependencies)
+                        {
+                            var tempDependecies = dependenciesRow[1].ToString();
+
+                            reworkedMap.AddMarker(marker, tempDependecies);
+                            reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, tempDependecies);
+                        }
+
+                        var environment = emissions.Where(_row => !(_row[0] is DBNull) && (int)_row[1] == marker.Id);
+                        foreach (var env in environment)
+                        {
+                            var tempEnvironment = env[0].ToString();
+
+                            reworkedMap.AddMarker(marker, tempEnvironment);
+                            reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, tempEnvironment);
+                        }
+
+                        if (!dependencies.Any() && !environment.Any())
+                        {
+                            reworkedMap.AddMarker(marker);
+                        }
                     }
-                    if (!(row[13] is DBNull))
+                    else
                     {
-                        reworkedMap.AddMarker(marker, row[13].ToString());
-
-                        if (polylineType == "polygon")
+                        if (polylineType == "region")
                         {
-                            reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, row[13].ToString());
+                            reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, polylineType);
                         }
-                        else if (polylineType == "tube")
+                        else
                         {
-                            reworkedMap.AddRoute((GMap.NET.WindowsForms.GMapRoute)figure, row[13].ToString());
+                            reworkedMap.AddRoute((GMap.NET.WindowsForms.GMapRoute)figure, polylineType);
                         }
 
-                        isAdded = true;
-                    }
-                    if (!(row[16] is DBNull))
-                    {
-                        int envId = (int)row[16];
-
-                        string envName = ((IList<Data.Entity.Environment>)EnvironmentComboBox.DataSource).Where(env => env.Id == envId)
-                                                                                                         .FirstOrDefault()?.Name;
-                        reworkedMap.AddMarker(marker, envName);
-
-                        if (polylineType == "polygon")
-                        {
-                            reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure, envName);
-                        }
-                        else if (polylineType == "tube")
-                        {
-                            reworkedMap.AddRoute((GMap.NET.WindowsForms.GMapRoute)figure, envName);
-                        }
+                        reworkedMap.AddMarker(marker, polylineType);
 
                         isAdded = true;
                     }
@@ -1338,10 +1784,6 @@ namespace Maps
                         if (polylineType == "polygon")
                         {
                             reworkedMap.AddPolygon((GMap.NET.WindowsForms.GMapPolygon)figure);
-                        }
-                        else if (polylineType == "tube")
-                        {
-                            reworkedMap.AddRoute((GMap.NET.WindowsForms.GMapRoute)figure);
                         }
                     }
                     else
@@ -1360,7 +1802,6 @@ namespace Maps
             }
             finally
             {
-                isLoading = false;
 
                 this.Invoke(changeProgressBar, string.Empty, false, ProgressBarStyle.Continuous);
             }
@@ -1385,24 +1826,14 @@ namespace Maps
 
                 try
                 {
-                    await Task.Run(() =>
-                    {
-                        while (isLoading)
-                        {
-                            System.Threading.Thread.Sleep(500);
-                        }
-
-                        lock (_lock)
-                        {
-                            isLoading = true;
-                        }
-
-                        dBManager.StartTransaction();
-                        dBManager.DeleteFromDB("poligon_calculations_description", "id_poligon", polyMarker.Id.ToString());
-                        dBManager.DeleteFromDB("point_poligon", "Id_of_poligon", polyMarker.Id.ToString());
-                        dBManager.DeleteFromDB("poligon", "Id_of_poligon", polyMarker.Id.ToString());
-                        dBManager.CommitTransaction();
-                    });
+                    dBManager.StartTransaction();
+                    await dBManager.DeleteFromDBAsync("map_object_dependencies",
+                                                       new string[] { "id_of_object", "type_obj" },
+                                                       new string[] { polyMarker.Id.ToString(), "1" });
+                    await dBManager.DeleteFromDBAsync("point_poligon", "Id_of_poligon", polyMarker.Id.ToString());
+                    await dBManager.DeleteFromDBAsync("emissions_on_map", "idPoligon", polyMarker.Id.ToString());
+                    await dBManager.DeleteFromDBAsync("poligon", "Id_of_poligon", polyMarker.Id.ToString());
+                    dBManager.CommitTransaction();
 
                     if (_type == "Полігон")
                     {
@@ -1429,8 +1860,6 @@ namespace Maps
                 }
                 finally
                 {
-                    isLoading = false;
-
                     CurrentActionStatusLabel.Text = string.Empty;
                     MainToolStripProgressBar.Visible = false;
                     MainToolStripProgressBar.ProgressBar.Style = ProgressBarStyle.Continuous;
@@ -1532,17 +1961,7 @@ namespace Maps
         {
             if (itemConfigurationWindow == null)
             {
-                IList<Issue> issues = IssuesComboBox.DataSource as IList<Issue>;
-                IList<Data.Entity.Environment> environments = EnvironmentComboBox.DataSource as IList<Data.Entity.Environment>;
-
-                if (issues != null && environments != null)
-                {
-                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert, issues, environments);
-                }
-                else
-                {
-                    itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
-                }
+                itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
             }
             itemConfigurationWindow.ShowDialog();
 
@@ -1575,7 +1994,14 @@ namespace Maps
                 return;
             }
 
-            var (issue, _, _, objName, _) = itemConfigurationWindow;
+            var (objName, _, series, emissions) = itemConfigurationWindow;
+
+            if (string.IsNullOrEmpty(objName))
+            {
+                MessageBox.Show("Не можливо зберегти полігон без назви.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var polygon = reworkedMap.GetPolygonByNameOrNull(objName);
 
             if (polygon != null)
@@ -1583,11 +2009,7 @@ namespace Maps
                 Color polyFill = ((SolidBrush)polygon.Fill).Color;
                 Color polyStroke = polygon.Stroke.Color;
 
-                isLoading = true;
-
-                await Task.Run(() => SavePolyline(polygon.Points, polyFill, polyStroke, "polygon"));
-
-                isLoading = false;
+                await SavePolyline(polygon.Points, polyFill, polyStroke, "polygon");
 
                 reworkedMap.EndPolygonDraw();
                 drawContext = null;
@@ -1599,17 +2021,17 @@ namespace Maps
                 reworkedMap.RemovePolygon(polygon);
                 reworkedMap.RemoveLayout(addTempLayoutName);
 
-                if (issue != null)
+                foreach (var _series in series)
                 {
-                    reworkedMap.AddPolygon(newPolygon, issue.name);
+                    reworkedMap.AddPolygon(newPolygon, _series.Key.Name);
                 }
-                //if (environment != null)
-                //{
-                //    reworkedMap.AddPolygon(polygon, environment.Name);
-                //    reworkedMap.AddMarker(polyMarker, environment.Name);
-                //}
 
-                if (issue == null /*&& environment == null*/)
+                foreach (var emission in emissions)
+                {
+                    reworkedMap.AddPolygon(newPolygon, emission.Environment.Name);
+                }
+
+                if (!series.Any() && !emissions.Any())
                 {
                     reworkedMap.AddPolygon(newPolygon);
                 }
@@ -1687,9 +2109,11 @@ namespace Maps
                 HelpStatusLabel.Text = "Натискайте два рази на карту для встановлення точки трубопроводу.";
 
                 TubeSaveButton.Enabled = true;
-                TubeSettingsButton.Enabled = true;
+                TubeNameTextBox.Enabled = true;
+                TubeDescriptionTextBox.Enabled = true;
 
                 TubeDrawButton.Text = "Відміна";
+                itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
 
                 drawContext = reworkedMap.StartDrawRoute(Color.Blue, "__newRoute__", addTempLayoutName, GMap.NET.WindowsForms.Markers.GMarkerGoogleType.blue_dot);
             }
@@ -1708,18 +2132,23 @@ namespace Maps
                 return;
             }
 
-            var (issue, _, _, objName, _) = itemConfigurationWindow;
+            itemConfigurationWindow.SetObjName(TubeNameTextBox.Text);
+            itemConfigurationWindow.SetObjDescritpion(TubeDescriptionTextBox.Text);
+            string objName = itemConfigurationWindow.GetObjName();
+
+            if (string.IsNullOrEmpty(objName))
+            {
+                MessageBox.Show("Не можливо зберегти трубопровід без назви.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var route = reworkedMap.GetRouteByNameOrNull(objName);
 
             if (route != null)
             {
                 Color polyStroke = route.Stroke.Color;
 
-                isLoading = true;
-
-                await Task.Run(() => SavePolyline(route.Points, Color.Transparent, polyStroke, "tube"));
-
-                isLoading = false;
+                await SavePolyline(route.Points, Color.Transparent, polyStroke, "tube");
 
                 reworkedMap.EndRouteDraw();
                 drawContext = null;
@@ -1730,20 +2159,7 @@ namespace Maps
                 reworkedMap.RemoveRoute(route);
                 reworkedMap.RemoveLayout(addTempLayoutName);
 
-                if (issue != null)
-                {
-                    reworkedMap.AddRoute(newRoute, issue.name);
-                }
-                //if (environment != null)
-                //{
-                //    reworkedMap.AddPolygon(polygon, environment.Name);
-                //    reworkedMap.AddMarker(polyMarker, environment.Name);
-                //}
-
-                if (issue == null /*&& environment == null*/)
-                {
-                    reworkedMap.AddRoute(newRoute);
-                }
+                reworkedMap.AddRoute(newRoute, "tube");
 
                 if (itemConfigurationWindow != null)
                 {
@@ -1754,8 +2170,11 @@ namespace Maps
                 tubeAddingMode = false;
 
                 TubeDrawButton.Text = "Почати";
-                TubeSettingsButton.Enabled = false;
                 TubeSaveButton.Enabled = false;
+                TubeNameTextBox.Enabled = false;
+                TubeDescriptionTextBox.Enabled = false;
+                TubeNameTextBox.Text = string.Empty;
+                TubeDescriptionTextBox.Text = string.Empty;
             }
             else
             {
@@ -1778,6 +2197,9 @@ namespace Maps
 
         private void ClearAllTubesButton_Click(object sender, EventArgs e)
         {
+            TubeCheckBox.Checked = false;
+            TubeCheckBox.Enabled = false;
+
             foreach (var overlay in gMapControl.Overlays)
             {
                 foreach (var route in overlay.Routes)
@@ -1805,15 +2227,16 @@ namespace Maps
         }
         #endregion
 
+        #region Comprasion methods
         private void ComparsionSelectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (reworkedMap.SelectedMarker != null)
             {
                 NamedGoogleMarker marker = (NamedGoogleMarker)reworkedMap.SelectedMarker;
 
-                if (!ComprasionItemsComboBox.Items.Contains(marker.ToString()))
+                if (!ComprasionItemsComboBox.Items.Contains(marker))
                 {
-                    ComprasionItemsComboBox.Items.Add(marker.ToString());
+                    ComprasionItemsComboBox.Items.Add(marker);
                 }
 
                 ComprasionItemsComboBox.SelectedIndex = ComprasionItemsComboBox.Items.Count - 1;
@@ -1834,8 +2257,30 @@ namespace Maps
                 return;
             }
 
-            CompareSettings compareSettings = new CompareSettings(ComprasionItemsComboBox.Items.OfType<string>().ToList());
+            CompareSettings compareSettings = new CompareSettings(ComprasionItemsComboBox.Items.OfType<IDescribable>().ToList());
             compareSettings.ShowDialog();
+        }
+
+        private void ComprasionItemsComboBox_Format(object sender, ListControlConvertEventArgs e)
+        {
+            NamedGoogleMarker marker = e.ListItem as NamedGoogleMarker;
+
+            if (marker != null)
+            {
+                e.Value = $"{marker.Name} ({((IDescribable)marker).Type})";
+            }
+        }
+        #endregion
+
+        private async void RegionCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            string region = "region";
+
+            if (!reworkedMap.LayoutExist(region))
+            {
+                await LoadPolylines(polylineType: region);
+                reworkedMap.HideLayoutById(region);
+            }
         }
     }
 }

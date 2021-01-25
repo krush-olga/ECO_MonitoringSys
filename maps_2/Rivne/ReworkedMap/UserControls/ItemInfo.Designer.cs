@@ -42,7 +42,6 @@ namespace Maps.UserControls
             this.NameTextBox = new System.Windows.Forms.TextBox();
             this.ChangeButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
-            this.AdditionalInfoButton = new System.Windows.Forms.Button();
             this.HideButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.GeneralInfoGroupBox.SuspendLayout();
@@ -167,7 +166,7 @@ namespace Maps.UserControls
             // 
             this.ChangeButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ChangeButton.Enabled = false;
-            this.ChangeButton.Location = new System.Drawing.Point(97, 237);
+            this.ChangeButton.Location = new System.Drawing.Point(32, 237);
             this.ChangeButton.Name = "ChangeButton";
             this.ChangeButton.Size = new System.Drawing.Size(75, 23);
             this.ChangeButton.TabIndex = 1;
@@ -177,22 +176,12 @@ namespace Maps.UserControls
             // DeleteButton
             // 
             this.DeleteButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.DeleteButton.Location = new System.Drawing.Point(178, 237);
+            this.DeleteButton.Location = new System.Drawing.Point(148, 237);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(75, 23);
             this.DeleteButton.TabIndex = 2;
             this.DeleteButton.Text = "Видалити";
             this.DeleteButton.UseVisualStyleBackColor = true;
-            // 
-            // AdditionalInfoButton
-            // 
-            this.AdditionalInfoButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.AdditionalInfoButton.Location = new System.Drawing.Point(16, 237);
-            this.AdditionalInfoButton.Name = "AdditionalInfoButton";
-            this.AdditionalInfoButton.Size = new System.Drawing.Size(75, 23);
-            this.AdditionalInfoButton.TabIndex = 3;
-            this.AdditionalInfoButton.Text = "Додатково";
-            this.AdditionalInfoButton.UseVisualStyleBackColor = true;
             // 
             // HideButton
             // 
@@ -222,7 +211,6 @@ namespace Maps.UserControls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label6);
             this.Controls.Add(this.HideButton);
-            this.Controls.Add(this.AdditionalInfoButton);
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.ChangeButton);
             this.Controls.Add(this.GeneralInfoGroupBox);
@@ -243,7 +231,6 @@ namespace Maps.UserControls
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button AdditionalInfoButton;
         private System.Windows.Forms.Button ChangeButton;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Label ExpertLabel;

@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="named_google_marker">
+    <NamedGoogleMarker>
+      <summary>
+        Расширенный маркер с возможностью идентефикации как по Id, так и по названию с небольшим описанием.
+      </summary>
+    </NamedGoogleMarker>
+    <NamedGoogleMarkerCtor1>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="type">
+        Тип для отображения маркера на карте.
+      </param>
+    </NamedGoogleMarkerCtor1>
+    <NamedGoogleMarkerCtor2>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="type">
+        Тип для отображения маркера на карте.
+      </param>
+      <param name="format">
+        Формат для настройки отображения подсказки на основе названии и описания.
+      </param>
+    </NamedGoogleMarkerCtor2>
+    <NamedGoogleMarkerCtor3>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="type">
+        Тип для отображения маркера на карте.
+      </param>
+      <param name="format">
+        Формат для настройки отображения подсказки на основе названии и описания.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+    </NamedGoogleMarkerCtor3>
+    <NamedGoogleMarkerCtor4>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="type">
+        Тип для отображения маркера на карте.
+      </param>
+      <param name="format">
+        Формат для настройки отображения подсказки на основе названии и описания.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+    </NamedGoogleMarkerCtor4>
+    <NamedGoogleMarkerCtor5>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="Bitmap">
+        Картинка для отображения маркера на карте.
+      </param>
+    </NamedGoogleMarkerCtor5>
+    <NamedGoogleMarkerCtor6>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="Bitmap">
+        Картинка для отображения маркера на карте.
+      </param>
+      <param name="format">
+        Формат для настройки отображения подсказки на основе названии и описания.
+      </param>
+    </NamedGoogleMarkerCtor6>
+    <NamedGoogleMarkerCtor7>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="Bitmap">
+        Картинка для отображения маркера на карте.
+      </param>
+      <param name="format">
+        Формат для настройки отображения подсказки на основе названии и описания.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+    </NamedGoogleMarkerCtor7>
+    <NamedGoogleMarkerCtor8>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.NamedGoogleMarker"/>.
+      </summary>
+      <param name="p">
+        Координата маркера на карте.
+      </param>
+      <param name="Bitmap">
+        Картинка для отображения маркера на карте.
+      </param>
+      <param name="format">
+        Формат для настройки отображения подсказки на основе названии и описания.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+    </NamedGoogleMarkerCtor8>
+    <NamedGoogleMarkerCtor9>
+      <summary>
+        Конструктор, отвечающий за сериализацию/десериализацию объекта.
+      </summary>
+      <param name="info">
+        Содержит данные, необходимые для сериализации/десериализации объекта.
+      </param>
+      <param name="context">
+        Источник и назначание заданого потока сериализации/десериализации.
+      </param>
+    </NamedGoogleMarkerCtor9>
+    <Format>
+      <summary>
+        Формат отображения текста в подсказке.
+      </summary>
+      <value>
+        Возвращает/устанавливает формат отображения текста в подсказке.
+      </value>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда <see langword="value"/> равен <see langword="null"/>.
+      </exception>
+    </Format>
+    <Id>
+      <summary>
+        Идентефикатор маркера.
+      </summary>
+      <value>
+        Возвращает/устанавливает идентефикатор маркера.
+      </value>
+    </Id>
+    <IsDependent>
+      <summary>
+        Показывает, зависим ли маркер от другого объекта.
+      </summary>
+      <value>
+        Возвращает/устанавливает зависимость маркера.
+      </value>
+    </IsDependent>
+    <ToolTipText>
+      <summary>
+        Представляет текст подсказки маркера.
+      </summary>
+      <value>
+        Возвращает текст подсказки.
+      </value>
+    </ToolTipText>
+  </members>
+</docs>

@@ -1,0 +1,293 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="draw_context">
+    <DrawContext>
+      <summary>
+        Абстрактный класс для рисовния сложной фигуры на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </summary>
+    </DrawContext>
+    <DrawContextCtor1>
+      <summary>
+        Конструктор класса <see cref="DrawContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+    </DrawContextCtor1>
+    <DrawContextCtor2>
+      <summary>
+        Конструктор класса <see cref="DrawContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="figureName">
+        Название фигуры для корректного к ней обращения.
+      </param>
+    </DrawContextCtor2>
+    <DrawContextCtor3>
+      <summary>
+        Конструктор класса <see cref="DrawContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="figureName">
+        Название фигуры для корректного к ней обращения.
+      </param>
+      <param name="markerType">
+        Тип маркера из перичесления <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogleType"/>.
+      </param>
+    </DrawContextCtor3>
+    <Overlay>
+      <summary>
+        Используемый слой для рисования фигуры.
+      </summary>
+    </Overlay>
+    <PolygonPoints>
+      <summary>
+        Точки фигуры для рисования.
+      </summary>
+    </PolygonPoints>
+    <GetFigureName>
+      <summary>
+        Возвращает название текущей фигуры.
+      </summary>
+      <returns>
+        Название текущей фигуры.
+      </returns>
+    </GetFigureName>
+    <SetFigureName>
+      <summary>
+        Устанавливает новое название фигуры.
+      </summary>
+      <param name="name">
+        Новое название фигуры.
+      </param>
+      <exception cref="System.ArgumentException">
+        Возникает, когда новое название равно <see cref="String.Empty"/> или <see langword="null"/>.
+      </exception>
+    </SetFigureName>
+    <AddCoord>
+      <summary>
+        Добавляет новую точку для фигуры и отображает её как <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogle"/>.
+      </summary>
+      <param name="coord">
+        Координата на карте.
+      </param>
+    </AddCoord>
+    <RemoveCoordInt>
+      <summary>
+        Убирает точку по индексу у фигуры и так же убирает <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogle"/> принадлежащей этой точке.
+        Если индекс находиться вне диапазона, то ничего не делает.
+      </summary>
+      <param name="coordIndex">
+        Индекс координаты на карте.
+      </param>
+    </RemoveCoordInt>
+    <RemoveCoordPointLatLng>
+      <summary>
+        Убирает точку у фигуры и так же убирает <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogle"/> принадлежащей этой точке.
+      </summary>
+      <param name="coord">
+        Координата на карте.
+      </param>
+    </RemoveCoordPointLatLng>
+    <MoveCoord>
+      <summary>
+        Двигает точку и <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogle"/> принадлежащей этой точке по указанному индексу на новое место.
+        Если индекс находиться вне диапазона, то ничего не делает.
+      </summary>
+      <param name="newCoord">
+        Координата на карте.
+      </param>
+      <param name="coordIndex">
+        Координата на карте.
+      </param>
+    </MoveCoord>
+    <ClearFigure>
+      <summary>
+        Уберает у фигуры все точки и <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogle"/> и чистит её на карте.
+      </summary>
+    </ClearFigure>
+    <DrawFigure>
+      <summary>
+        Отвечает за отрисовку фигуры.
+      </summary>
+    </DrawFigure>
+  </members>
+  <members name="polygon_context">
+    <PolygonContext>
+      <summary>
+        Класс для рисовния полигона на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </summary>
+    </PolygonContext>
+    <PolygonContextCtor1>
+      <summary>
+        Конструктор класса <see cref="PolygonContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="fill">
+        Цвет зарисовки полигона.
+      </param>
+      <param name="opacity">
+        Значение прозрачности зарисовки полигона.
+      </param>
+    </PolygonContextCtor1>
+    <PolygonContextCtor2>
+      <summary>
+        Конструктор класса <see cref="PolygonContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="fill">
+        Цвет зарисовки полигона.
+      </param>
+      <param name="opacity">
+        Значение прозрачности зарисовки полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона для корректного к ней обращения.
+      </param>
+    </PolygonContextCtor2>
+    <PolygonContextCtor3>
+      <summary>
+        Конструктор класса <see cref="PolygonContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="fill">
+        Цвет зарисовки полигона.
+      </param>
+      <param name="opacity">
+        Значение прозрачности зарисовки полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона для корректного к ней обращения.
+      </param>
+      <param name="markerType">
+        Тип маркера из перичесления <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogleType"/>.
+      </param>
+    </PolygonContextCtor3>
+    <SetOpacity>
+      <summary>
+        Устанавливает новое значение прозрачности зарисовки полигона. Значение находиться в диапазоне от 0 до 255.
+      </summary>
+      <param name="opacity">
+        Значение прозрачности зарисовки полигона.
+      </param>
+      <exception cref="System.ArgumentOutOfRangeException">
+        Возникает, когда новое название выходит за диапазон от 0 до 255.
+      </exception>
+    </SetOpacity>
+    <SetFill>
+      <summary>
+        Устанавливает новое значение цвета зарисовки полигона.
+      </summary>
+      <param name="fill">
+        Цвет зарисовки полигона.
+      </param>
+    </SetFill>
+    <SetStroke>
+      <summary>
+        Устанавливает новое значение цвета линий полигона.
+      </summary>
+      <param name="stroke">
+        Цвет линий полигона.
+      </param>
+    </SetStroke>
+    <GetOpacity>
+      <summary>
+        Возвращает текущее значение прозрачности зарисовки полигона. Значение находиться в диапазоне от 0 до 255.
+      </summary>
+      <returns>
+        Значение прозрачности зарисовки полигона.
+      </returns>
+    </GetOpacity>
+    <GetFill>
+      <summary>
+        Возвращает текущее значение цвета зарисовки полигона.
+      </summary>
+      <returns>
+        Цвет зарисовки полигона.
+      </returns>
+    </GetFill>
+    <GetStroke>
+      <summary>
+        Возвращает текущее значение цвета линий полигона.
+      </summary>
+      <returns>
+        Цвет линий полигона.
+      </returns>
+    </GetStroke>
+  </members>
+  <members name="route_context">
+    <RouteContext>
+      <summary>
+        Класс для рисовния маршрута на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </summary>
+    </RouteContext>
+    <RouteContextCtor1>
+      <summary>
+        Конструктор класса <see cref="PolygonContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="routeStroke">
+        Цвет линий маршрута.
+      </param>
+    </RouteContextCtor1>
+    <RouteContextCtor2>
+      <summary>
+        Конструктор класса <see cref="PolygonContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="routeName">
+        Название маршрута для корректного к ней обращения.
+      </param>
+      <param name="routeStroke">
+        Цвет линий маршрута.
+      </param>
+    </RouteContextCtor2>
+    <RouteContextCtor3>
+      <summary>
+        Конструктор класса <see cref="PolygonContext"/>.
+      </summary>
+      <param name="overlay">
+        Слой карты, на котором будет происходить рисование.
+      </param>
+      <param name="routeName">
+        Название маршрута для корректного к ней обращения.
+      </param>
+      <param name="routeStroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="markerType">
+        Тип маркера из перичесления <see cref="GMap.NET.WindowsForms.Markers.GMarkerGoogleType"/>.
+      </param>
+    </RouteContextCtor3>
+    <SetStroke>
+      <summary>
+        Устанавливает новое значение цвета линий маршрута.
+      </summary>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+    </SetStroke>
+    <GetStroke>
+      <summary>
+        Возвращает текущее значение цвета линий маршрута.
+      </summary>
+      <returns>
+        Цвет линий маршрута.
+      </returns>
+    </GetStroke>
+  </members>
+</docs>

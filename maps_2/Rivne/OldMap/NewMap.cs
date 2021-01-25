@@ -320,7 +320,7 @@ namespace Maps.OldMap
                     AddMarkerOnMap(list[i][2].ToString(), Convert.ToDouble(list[i][0]), Convert.ToDouble(list[i][1]), list[i][4].ToString(), (Bitmap)img, list[i][5].ToString());
                 }
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 MessageBox.Show("Помилка при зображенні об'єкта");
             }

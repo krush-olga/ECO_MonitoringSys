@@ -32,25 +32,15 @@ namespace Maps.UserControls
         {
             DeleteButton.Visible = false;
 
-            AdditionalInfoButton.Location = new System.Drawing.Point(AdditionalInfoButton.Location.X + DeleteButton.Width / 2, AdditionalInfoButton.Location.Y);
-            ChangeButton.Location = new System.Drawing.Point(ChangeButton.Location.X + DeleteButton.Width / 2 + 10, AdditionalInfoButton.Location.Y);
+            ChangeButton.Location = new System.Drawing.Point((this.Width - ChangeButton.Width) / 2, ChangeButton.Location.Y);
         }
         public void ShowDeleteButton()
         {
             DeleteButton.Visible = true;
 
-            AdditionalInfoButton.Location = new System.Drawing.Point(AdditionalInfoButton.Location.X - DeleteButton.Width / 2 , AdditionalInfoButton.Location.Y);
-            ChangeButton.Location = new System.Drawing.Point(ChangeButton.Location.X - DeleteButton.Width / 2 - 10, AdditionalInfoButton.Location.Y);
+            ChangeButton.Location = new System.Drawing.Point((int)((this.Width + ChangeButton.Width) / 1.5), ChangeButton.Location.Y);
         }
 
-        public void SubscribeAdditionalInfoClickEvent(EventHandler eventHandler)
-        {
-            AdditionalInfoButton.Click += eventHandler;
-        }
-        public void DescribeAdditionalInfoClickEvent(EventHandler eventHandler)
-        {
-            AdditionalInfoButton.Click -= eventHandler;
-        }
         public void SubscriChangeItemClickEvent(EventHandler eventHandler)
         {
             ChangeButton.Click += eventHandler;

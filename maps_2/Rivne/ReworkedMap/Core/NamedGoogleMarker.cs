@@ -7,6 +7,7 @@ using Data;
 
 namespace Maps.Core
 {
+    /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarker/*'/>
     public class NamedGoogleMarker : GMarkerGoogle, IDescribable, IEquatable<NamedGoogleMarker>
     {
         private string name;
@@ -16,31 +17,41 @@ namespace Maps.Core
         private string creatorFullName;
         private Role role;
 
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor1/*'/>
         public NamedGoogleMarker(PointLatLng p, GMarkerGoogleType type) 
             : this(p, type, string.Empty, null, null) { }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor2/*'/>
         public NamedGoogleMarker(PointLatLng p, GMarkerGoogleType type, string format) 
             : this(p, type, format, null, null) { }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor3/*'/>
         public NamedGoogleMarker(PointLatLng p, GMarkerGoogleType type, string format, string name) 
             : this(p, type, format, name, null) { }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor4/*'/>
         public NamedGoogleMarker(PointLatLng p, GMarkerGoogleType type, string format, string name, string description) 
             : base(p, type) 
         {
             InitializeMarker(format, name, description);
         }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor5/*'/>
         public NamedGoogleMarker(PointLatLng p, Bitmap Bitmap) 
             : this(p, Bitmap, string.Empty, null, null) { }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor6/*'/>
         public NamedGoogleMarker(PointLatLng p, Bitmap Bitmap, string format) 
             : this(p, Bitmap, format, null, null) { }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor7/*'/>
         public NamedGoogleMarker(PointLatLng p, Bitmap Bitmap, string format, string name) 
             : this(p, Bitmap, format, name, null) { }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor8/*'/>
         public NamedGoogleMarker(PointLatLng p, Bitmap Bitmap, string format, string name, string description) 
             : base(p, Bitmap) 
         {
             InitializeMarker(format, name, description);
         }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor9/*'/>
         protected NamedGoogleMarker(SerializationInfo info, StreamingContext context) 
             : base(info, context) { }
 
+        /// <inheritdoc/>
         public string Name
         {
             get 
@@ -53,6 +64,7 @@ namespace Maps.Core
                 ChangeMarkerTextInfo();
             }
         }
+        /// <inheritdoc/>
         public string Description
         {
             get
@@ -65,6 +77,7 @@ namespace Maps.Core
                 ChangeMarkerTextInfo();
             }
         }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/Format/*'/>
         public string Format
         {
             get
@@ -75,7 +88,7 @@ namespace Maps.Core
             {
                 if (value == null)
                 {
-                    throw new ArgumentException("Значение формата не может отсутствовать.");
+                    throw new ArgumentNullException("value");
                 }
 
                 format = value;
@@ -87,20 +100,25 @@ namespace Maps.Core
             get => type;
             set => type = value; 
         }
+        /// <inheritdoc/>
         public string CreatorFullName 
         {
             get => creatorFullName;
             set => creatorFullName = value;
         }
+        /// <inheritdoc/>
         public Role CreatorRole 
         {
             get => role;
             set => role = value;
         }
 
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/Id/*'/>
         public int Id { get; set; }
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/IsDependent/*'/>
         public bool IsDependent { get; set; }
 
+        /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/ToolTipText/*'/>
         public new string ToolTipText
         {
             get
@@ -109,6 +127,7 @@ namespace Maps.Core
             }
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             if (!(obj is NamedGoogleMarker))
@@ -123,15 +142,18 @@ namespace Maps.Core
 
             return this.Equals((NamedGoogleMarker)obj);
         }
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return Id.GetHashCode() ^ Name.GetHashCode() ^ ((IDescribable)this).Type.GetHashCode();
         }
+        /// <inheritdoc/>
         public override string ToString()
         {
             return Name; /*string.Format("{0} ({1})", Name, ((IDescribable)this).Type);*/
         }
 
+        /// <inheritdoc/>
         public virtual bool Equals(NamedGoogleMarker other)
         {
             if (other == null)

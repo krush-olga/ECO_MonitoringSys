@@ -42,6 +42,7 @@ namespace Maps
         /// <param name="columnNames">Имена колонок (объекты, для которых отображается информация). 
         /// Используется отношение каждая коллекция в rowAndvalues последовательно равна каждому значению columnNames.</param>
         /// <param name="legend">Легенда для отображения дополнительной ифнформации.</param>
+        /// <param name="emissionLimits">Лимит выбросов (для каждой строки одно число).</param>
         public CompareForm(IDictionary<string, List<object>> rowNameAndvalues, IEnumerable<string> columnNames, 
                            string legend, IDictionary<string, double> emissionLimits) 
             : this(rowNameAndvalues, columnNames, legend, emissionLimits, null, null)
@@ -82,9 +83,11 @@ namespace Maps
             this.rowsToUseInChart = rowsToUseInChart;
             this.rowNameX = rowX;
 
-            if (emissionLimits == null)
+            if (rowX == null || rowsToUseInChart == null)
             {
                 CompareChart.Visible = false;
+                this.Height = 315;
+                this.MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, 315);
             }
 
             LegendLabel.Text = legend;
@@ -100,7 +103,7 @@ namespace Maps
 
         private void FillChart()
         {
-            if (!rowNameAndvalues.ContainsKey(rowNameX))
+            if (rowNameX == null || rowsToUseInChart == null || !rowNameAndvalues.ContainsKey(rowNameX))
             {
                 return;
             }
@@ -148,8 +151,6 @@ namespace Maps
                 }
                 index++;
             }
-
-
         }
 
         private void FillGrid()
@@ -158,15 +159,12 @@ namespace Maps
             {
                 throw new ArgumentNullException("rowNameAndvalues");
             }
-
             if (columnNames == null)
             {
                 throw new ArgumentNullException("columnNames");
             }
 
             StringBuilder emptyObject = new StringBuilder();
-
-            
 
             foreach (string columnName in columnNames)
             {
@@ -202,7 +200,7 @@ namespace Maps
                     {
                         if (i == rowNameAndvalues.Count - 1)
                         {
-                            emptyObject.Append(columnNames.ElementAtOrDefault(i));
+                            emptyObject.Append(columnNames.ElementAtOrDefault(j + 1));
 
                             if (j != CompareDataGridView.Columns.Count - 2)
                             {
@@ -261,9 +259,19 @@ namespace Maps
                     RowColorComboBox.SelectedIndex = 0;
                 }
 
-                FillCompareColorGrid(emissionLimits.Keys.First());
+                if (emissionLimits != null && emissionLimits.Count != 0)
+                {
+                    FillCompareColorGrid(emissionLimits.Keys.First());
+                }
 
                 AcceptColor();
+            }
+
+            if (rowNameX == null || rowsToUseInChart == null)
+            {
+                MessageBox.Show("Інформація для відображення на графіку відсутня, тому графік буде схований.", 
+                                "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
 
             if (emptyObject.Length != 0)
@@ -271,8 +279,7 @@ namespace Maps
                 emptyObject.Insert(0, "Для наступних об'єктів відстуні дані:\n");
                 emptyObject.Append("\n\nВони не будуть відображені на графіку.");
 
-
-                MessageBox.Show(emptyObject.ToString());
+                MessageBox.Show(emptyObject.ToString(), "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

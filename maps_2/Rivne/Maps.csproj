@@ -27,6 +27,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Map.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -155,7 +158,7 @@
     <Compile Include="ReworkedMap\Core\Context.cs" />
     <Compile Include="ReworkedMap\Core\IDescribable.cs" />
     <Compile Include="ReworkedMap\Core\NamedGoogleMarker.cs" />
-    <Compile Include="ReworkedMap\Helpers\ImageCache.cs" />
+    <Compile Include="ReworkedMap\Helpers\MapCache.cs" />
     <Compile Include="ReworkedMap\Helpers\MapHelper.cs" />
     <Compile Include="ReworkedMap\HelpWindows\ItemConfigurationWindow.cs">
       <SubType>Form</SubType>
@@ -194,6 +197,8 @@
     <Compile Include="OldMap\Taxes.Designer.cs">
       <DependentUpon>Taxes.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReworkedMap\ViewModel\EmissionsControllerVM.cs" />
+    <Compile Include="ReworkedMap\ViewModel\Loader.cs" />
     <EmbeddedResource Include="ReworkedMap\CompareForm.resx">
       <DependentUpon>CompareForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -250,8 +255,6 @@
       <DependentUpon>Taxes.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="Properties\DataSources\Data.Entity.Element.datasource" />
-    <None Include="Properties\DataSources\Maps.TestNewMap.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -296,6 +299,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Docs\Core\ContextDoc.xml" />
+    <Content Include="Docs\Core\DescribableDoc.xml" />
+    <Content Include="Docs\Core\MapDoc.xml" />
+    <Content Include="Docs\Core\NamedGoogleMarkerDoc.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

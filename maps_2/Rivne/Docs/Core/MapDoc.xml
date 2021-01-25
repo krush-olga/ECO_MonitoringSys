@@ -1,0 +1,837 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="map">
+    <Map>
+      <summary>
+        Представляет оболочку над <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </summary>
+      <remarks>
+        <para>
+          Предоставляет методы <c>AddXxx(...)</c> для добавления различных элементов на карту (маркер, полигон, маршрут).
+        </para>
+        <para>
+          Предоставляет методы <c>RemoveXxx(...)</c> для удаление различных элементов из карты (маркер, полигон, маршрут).
+          Для полигонов (<see cref="GMap.NET.WindowsForms.GMapPolygon"/>) и маршрутов (<see cref="GMap.NET.WindowsForms.GMapRoute"/>) вызываеться метод <c>Dispose()</c>
+          при удалении их из карты.
+        </para>
+        <para>
+          Позволяет получить или определённые элементы по имени/координате, или все объекты из определённого слоя.
+        </para>
+      </remarks>
+    </Map>
+    <MapCtor1>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.Map"/>. 
+        Создаёт новую карту для использования.
+      </summary>
+    </MapCtor1>
+    <MapCtor2>
+      <summary>
+        Конструктор класса <see cref="Maps.Core.Map"/>.
+      </summary>
+      <param name="gMapControl">
+        Экземпляр карты для работы с ней.
+      </param>
+    </MapCtor2>
+    <MapObject>
+      <summary>
+        Представляет экземпляр карты, над которой будут выполняться действия.
+      </summary>
+      <value>
+        Возвращает экземпляр карты.
+      </value>
+    </MapObject>
+    <SelectedMarker>
+      <summary>
+        Представляет экземпляр текущего выбранного маркера.
+      </summary>
+      <value>
+        Возвращает/устанавливает маркер.
+      </value>
+    </SelectedMarker>
+    <SelectedPolygon>
+      <summary>
+        Представляет экземпляр текущего выбранного полигона.
+      </summary>
+      <value>
+        Возвращает/устанавливает полигон.
+      </value>
+    </SelectedPolygon>
+    <SelectedRoute>
+      <summary>
+        Представляет экземпляр текущего выбранного маршрута.
+      </summary>
+      <value>
+        Возвращает/устанавливает маршрут.
+      </value>
+    </SelectedRoute>
+    <AddMarkerPointBitmap2arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointBitmap2arg>
+    <AddMarkerPointBitmap3arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointBitmap3arg>
+    <AddMarkerPointBitmap5arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+        или когда format равен <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointBitmap5arg>
+    <AddMarkerPointBitmap6arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+        или когда format равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointBitmap6arg>
+    <AddMarkerPointLatLngBitmap2arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngBitmap2arg>
+    <AddMarkerPointLatLngBitmap3arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngBitmap3arg>
+    <AddMarkerPointLatLngBitmap5arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+        или когда format равен <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngBitmap5arg>
+    <AddMarkerPointLatLngBitmap6arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="img">
+        Изображение для представления точки на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда изображение равно <see langword="null"/>
+        или когда format равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngBitmap6arg>
+    <AddMarkerPointGMarkerGoogleType2arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointGMarkerGoogleType2arg>
+    <AddMarkerPointGMarkerGoogleType3arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointGMarkerGoogleType3arg>
+    <AddMarkerPointGMarkerGoogleType5arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException"></exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointGMarkerGoogleType5arg>
+    <AddMarkerPointGMarkerGoogleType6arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException"></exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointGMarkerGoogleType6arg>
+    <AddMarkerPointLatLngGMarkerGoogleType2arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngGMarkerGoogleType2arg>
+    <AddMarkerPointLatLngGMarkerGoogleType3arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngGMarkerGoogleType3arg>
+    <AddMarkerPointLatLngGMarkerGoogleType5arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException"></exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngGMarkerGoogleType5arg>
+    <AddMarkerPointLatLngGMarkerGoogleType6arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Координата на карте <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="markerType">
+        Тип для изображения маркера на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <param name="format">
+        Нужен для форматирования подсказки маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <exception cref="System.ArgumentNullException"></exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerPointLatLngGMarkerGoogleType6arg>
+    <AddMarkerGMapMarker1arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="marker">
+        Готовый маркер для добавления на карту.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда marker равен <see langword="null"/>.
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerGMapMarker1arg>
+    <AddMarkerGMapMarker2arg>
+      <summary>
+        Создаёт новый маркер на карте по заданным параметрам.
+      </summary>
+      <param name="marker">
+        Готовый маркер для добавления на карту.
+      </param>
+      <param name="layoutId">
+        Готовый маркер для добавления на карту.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда marker равен <see langword="null"/>.
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название словя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маркер, если он был добавлен или на маркер из карты, если такой уже существует.
+      </returns>
+    </AddMarkerGMapMarker2arg>
+    <AddPolygonPoint3arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="points">
+        Точки монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/> для создания полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPoint3arg>
+    <AddPolygonPoint4arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="points">
+        Точки монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/> для создания полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPoint4arg>
+    <AddPolygonPoint5arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="points">
+        Точки монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/> для создания полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPoint5arg>
+    <AddPolygonPoint6arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="points">
+        Точки монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/> для создания полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="stroke">
+        Цвет линий полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPoint6arg>
+    <AddPolygonPointLatLng3arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Набор точек для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPointLatLng3arg>
+    <AddPolygonPointLatLng4arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Набор точек для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPointLatLng4arg>
+    <AddPolygonPointLatLng5arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Набор точек для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPointLatLng5arg>
+    <AddPolygonPointLatLng6arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Набор точек для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="stroke">
+        Цвет линий полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPointLatLng6arg>
+    <AddPolygonMarker3arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="markers">
+        Набор маркеров для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonMarker3arg>
+    <AddPolygonMarker4arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="markers">
+        Набор маркеров для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonMarker4arg>
+    <AddPolygonMarker5arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="markers">
+        Набор маркеров для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonMarker5arg>
+    <AddPolygonMarker6arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
+      <param name="markers">
+        Набор маркеров для полигона.
+      </param>
+      <param name="fill">
+        Цвет для закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение для прозрачности закраски полигона.
+      </param>
+      <param name="stroke">
+        Цвет линий полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек полигона равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название полигона равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonMarker6arg>
+    <AddPolygonPolygon1arg>
+      <param name="polygon">
+        Набор маркеров для полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда полигон равен или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPolygon1arg>
+    <AddPolygonPolygon2arg>
+      <param name="polygon">
+        Набор маркеров для полигона.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда полигон равен или <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название слоя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <param name="layoutId">
+        Название слоя, на котором будет распологаться точка.
+      </param>
+      <returns>
+        Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
+      </returns>
+    </AddPolygonPolygon2arg>
+  </members>
+</docs>

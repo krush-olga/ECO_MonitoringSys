@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="describable_interface">
+    <IDescribable>
+      <summary>
+        Интерфейс для минимального описания объекта.
+      </summary>
+    </IDescribable>
+    <Type>
+      <summary>
+        Указывает тип объекта.
+      </summary>
+      <value>
+        Позволяет получать и устанавливать тип объекта.
+      </value>
+    </Type>
+    <Name>
+      <summary>
+        Указывает название объекта.
+      </summary>
+      <value>
+        Позволяет получать и устанавливать название объекта.
+      </value>
+    </Name>
+    <Description>
+      <summary>
+        Представляет описание объекта.
+      </summary>
+      <value>
+        Позволяет получать и устанавливать описание объекта.
+      </value>
+    </Description>
+    <CreatorFullName>
+      <summary>
+        Представляет имя создателя этого объекта.
+      </summary>
+      <value>
+        Возвращает и устанавливает имя создателя объекта.
+      </value>
+    </CreatorFullName>
+    <CreatorRole>
+      <summary>
+        Представляет роль создателя этого объекта.
+      </summary>
+      <value>
+        Возвращаети и устанавливает роль создателя объекта в виде <see cref="Data.Role"/>.
+      </value>
+    </CreatorRole>
+  </members>
+</docs>

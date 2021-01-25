@@ -1523,8 +1523,8 @@ namespace Maps.OldMap
                 return;
             }
 
-            CompareSettings compareSettings = new CompareSettings(markers);
-            compareSettings.ShowDialog();
+            //CompareSettings compareSettings = new CompareSettings(markers);
+            //compareSettings.ShowDialog();
         }
 
         private void MapEnvironmentButton_Click(object sender, EventArgs e)
