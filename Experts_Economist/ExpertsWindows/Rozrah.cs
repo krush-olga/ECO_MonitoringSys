@@ -448,12 +448,12 @@ namespace Experts_Economist
                     if (tmp.Count == 0)
                     {
                         fields5 = new[] { "Id", "calculation_number", "date_of_calculation", "id_of_formula", "element_name", "value", "result", "id_of_expert" };
-                        values5 = new[] { "0", currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
+                        values5 = new[] { "0", currentSeries.Id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
                     }
                     else
                     {
                         fields5 = new[] { "Id", "calculation_number", "date_of_calculation", "id_of_formula", "element_name", "value", "result", "id_of_expert" };
-                        values5 = new[] { (Convert.ToInt32(tmp[tmp.Count - 1][0]) + 1).ToString(), currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
+                        values5 = new[] { (Convert.ToInt32(tmp[tmp.Count - 1][0]) + 1).ToString(), currentSeries.Id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), $"'{row.Cells[0].Value.ToString()}'", row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString().Replace(",", "."), 2.ToString() };
                     }
                     db.InsertToBD("calculations_norm", fields5, values5);
                 }
@@ -463,7 +463,7 @@ namespace Experts_Economist
             {
                 fields5 = new[] { "calculation_number", "date_of_calculation", "id_of_formula", "result", "id_of_expert" };
                 //  if (idf==175 &&id_of_exp==6)//for energetic ОСЕрік
-                values5 = new[] { currentSeries.id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), formulasDGV.Rows[formulasDGV.Rows.Count - 1].Cells[1].Value.ToString().Replace(",", "."), id_of_exp.ToString() };
+                values5 = new[] { currentSeries.Id.ToString(), "'" + localDate.ToString("yyyy-MM-dd HH:mm:ss") + "'", idf.ToString(), formulasDGV.Rows[formulasDGV.Rows.Count - 1].Cells[1].Value.ToString().Replace(",", "."), id_of_exp.ToString() };
             }
 
             try
@@ -499,7 +499,7 @@ namespace Experts_Economist
                 var obj = db.GetRows("formula_compound", "id_of_parameter", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp);
                 //первый параметр i - количество итераций
                 string[] fields5_1 = { "calculation_number", "id_of_parameter", "parameter_value", "index_of_parameter", "id_of_expert", "id_of_formula" };
-                string[] values5_1 = { currentSeries.id.ToString(), obj[0][0].ToString(), it.ToString(), "0", id_of_exp.ToString(), idf.ToString() };
+                string[] values5_1 = { currentSeries.Id.ToString(), obj[0][0].ToString(), it.ToString(), "0", id_of_exp.ToString(), idf.ToString() };
                 db.InsertToBD("parameters_value", fields5_1, values5_1);
                 //переменная для хранения количества параметров у формулы
                 int obj_items = obj.Count;
@@ -537,7 +537,7 @@ namespace Experts_Economist
             {
                 var obj = db.GetRows("formula_compound", "id_of_parameter", "id_of_formula = " + idf + " AND id_of_expert = " + id_of_exp);
                 string[] fields6 = { "calculation_number", "id_of_parameter", "parameter_value", "index_of_parameter", "id_of_expert", "id_of_formula" };
-                string[] values6 = { currentSeries.id.ToString(), "", "", "0", id_of_exp.ToString(), idf.ToString() };
+                string[] values6 = { currentSeries.Id.ToString(), "", "", "0", id_of_exp.ToString(), idf.ToString() };
                 for (int i = 0; i < obj.Count; i++)
                 {
                     values6[1] = obj[i][0].ToString();
@@ -647,7 +647,7 @@ namespace Experts_Economist
             else
             {
                 string[] fields4_1 = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
-                string[] values4_1 = { currentSeries.id.ToString(), "'" + name_of_seriesCB.Text.Replace('\'', '`') + "'", "'" + desc_of_seriesTB.Text.Replace('\'', '`') + "'", issueid.ToString(), id_of_exp.ToString() };
+                string[] values4_1 = { currentSeries.Id.ToString(), "'" + name_of_seriesCB.Text.Replace('\'', '`') + "'", "'" + desc_of_seriesTB.Text.Replace('\'', '`') + "'", issueid.ToString(), id_of_exp.ToString() };
                 try
                 {
                     db.UpdateRecord("calculations_description", fields4_1, values4_1);
@@ -691,7 +691,7 @@ namespace Experts_Economist
                 help = true;
             }
 
-            desc_of_seriesTB.Text = ((CalculationSeries)name_of_seriesCB.SelectedItem).description;
+            desc_of_seriesTB.Text = ((CalculationSeries)name_of_seriesCB.SelectedItem).Description;
         }
 
         private void formulasDGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -755,7 +755,7 @@ namespace Experts_Economist
                                     id_of_exp + " and issue_id=" + Issues.ElementAt(issueTB.SelectedIndex).id.ToString());
 
             IEnumerable<CalculationSeries> calculationSeries = calcDescription.Select(c => CalculatoinSeriesMapper.Map(c))
-                                                                              .GroupBy(calcSer => calcSer.name)
+                                                                              .GroupBy(calcSer => calcSer.Name)
                                                                               .Select(g => g.FirstOrDefault());
 
             if (calcDescription.Count != 0)
@@ -784,7 +784,7 @@ namespace Experts_Economist
 
                 foreach (CalculationSeries item in name_of_seriesCB.Items)
                 {
-                    if (item.name == addNewSeriesWindow.SeriesTextBox.Text)
+                    if (item.Name == addNewSeriesWindow.SeriesTextBox.Text)
                     {
                         MessageBox.Show("Така серія вже існує.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -811,7 +811,7 @@ namespace Experts_Economist
                 CalculationSeries newCalculationSeries = new CalculationSeries(int.Parse(newId), addNewSeriesWindow.SeriesTextBox.Text, addNewSeriesWindow.DescriptionTextBox.Text);
 
                 string[] fields = { "calculation_number", "calculation_name", "description_of_calculation", "issue_id", "id_of_expert" };
-                string[] values = { newId, DBUtil.AddQuotes(newCalculationSeries.name), DBUtil.AddQuotes(newCalculationSeries.description), currentIssue.id.ToString(), id_of_exp.ToString() };
+                string[] values = { newId, DBUtil.AddQuotes(newCalculationSeries.Name), DBUtil.AddQuotes(newCalculationSeries.Description), currentIssue.id.ToString(), id_of_exp.ToString() };
 
                 try
                 {
@@ -820,7 +820,7 @@ namespace Experts_Economist
                     name_of_seriesCB.Items.Add(newCalculationSeries);
                     name_of_seriesCB.SelectedIndex = name_of_seriesCB.Items.Count - 1;
 
-                    desc_of_seriesTB.Text = newCalculationSeries.description;
+                    desc_of_seriesTB.Text = newCalculationSeries.Description;
 
                     MessageBox.Show("Нова серій додана.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
