@@ -12,7 +12,6 @@ namespace Data.Entity
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public byte[] Image { get; set; }
         public string ImageName { get; set; }
 
         public string KVED
@@ -29,6 +28,11 @@ namespace Data.Entity
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
     }
 
     public class TypeOfObjectMapper
@@ -43,8 +47,7 @@ namespace Data.Entity
                 Id = id,
                 KVED = row[1].ToString(),
                 Name = row[2].ToString(),
-                Image = (byte[])row[3],
-                ImageName = row[4].ToString()
+                ImageName = row[3].ToString()
             };
 
             return typeOfObject;

@@ -723,7 +723,7 @@ namespace Data
             }
         }
 
-        public async Task<int> UpdateRecordAsync(String tableName, IList<String> colNames, IList<String> colValues, String condition)
+        public Task<int> UpdateRecordAsync(String tableName, IList<String> colNames, IList<String> colValues, String condition)
         {
             if (colNames.Count == colValues.Count)
             {
@@ -745,29 +745,32 @@ namespace Data
                     sqlCommand.Append(condition);
                 }
 
-                MySqlCommand insertCmd = new MySqlCommand(sqlCommand.ToString(), connection);
-
-                try
-                {
-                    await semaphoreSlim.WaitAsync();
-
-                    return await insertCmd.ExecuteNonQueryAsync();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    semaphoreSlim.Release();
-
-                    insertCmd.Dispose();
-                }
-
+                return UpdateRecordAsync(sqlCommand.ToString());
             }
             else
             {
                 throw new ArgumentException("Количество колонок не соответствует количеству значений.");
+            }
+        }
+        public async Task<int> UpdateRecordAsync(String query)
+        {
+            MySqlCommand updateQuery = new MySqlCommand(query, connection);
+
+            try
+            {
+                await semaphoreSlim.WaitAsync();
+
+                return await updateQuery.ExecuteNonQueryAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+
+                updateQuery.Dispose();
             }
         }
 

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Data.Helpers
 {
-    public static class Mapper<T>
-        where T : new()
+    public static class Mapper
     {
-        public static T Map(IList<object> values)
+        public static T Map<T>(IList<object> values)
+            where T : new()
         {
             T obj = new T();
             Type type = typeof(T);
@@ -21,7 +21,7 @@ namespace Data.Helpers
             {
                 currentType = values[i].GetType();
 
-                if (currentType == propertyInfos[i].GetMethod.ReturnType)
+                if (propertyInfos[i].CanWrite && currentType == propertyInfos[i].GetMethod.ReturnType)
                 {
                     propertyInfos[i].SetValue(obj, values[i]);
                 }

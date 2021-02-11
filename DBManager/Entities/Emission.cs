@@ -21,6 +21,24 @@ namespace Data.Entity
         }
 
         public int Id { get; set; }
+        public double AvgValue
+        {
+            get { return avgValue; }
+            set
+            {
+                avgValue = value;
+                OnPropertyChanged();
+            }
+        }
+        public double MaxValue
+        {
+            get { return maxValue; }
+            set
+            {
+                maxValue = value;
+                OnPropertyChanged();
+            }
+        }
         public int Year
         {
             get { return year; }
@@ -45,24 +63,6 @@ namespace Data.Entity
             set
             {
                 day = value;
-                OnPropertyChanged();
-            }
-        }
-        public double MaxValue
-        {
-            get { return maxValue; }
-            set
-            {
-                maxValue = value;
-                OnPropertyChanged();
-            }
-        }
-        public double AvgValue
-        {
-            get { return avgValue; }
-            set
-            {
-                avgValue = value;
                 OnPropertyChanged();
             }
         }

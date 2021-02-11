@@ -95,6 +95,7 @@
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Expert.cs" />
     <Compile Include="Entities\Formula.cs" />
+    <Compile Include="Entities\OwerType.cs" />
     <Compile Include="Helpers\Mapper.cs" />
     <Compile Include="Entities\Issue.cs" />
     <Compile Include="Entities\Poi.cs" />
