@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Maps.Helpers;
+using UserMap.Helpers;
 
-namespace Maps.Core
+namespace UserMap.Core
 {
     /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/Map/*'/>
     public class Map : IDisposable
@@ -352,29 +352,35 @@ namespace Maps.Core
             return polygon;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRoutePoint3arg/*'/>
         public GMapRoute AddRoute(IEnumerable<Point> points, Color stroke, string routeName)
         {
             return AddRoute(points, stroke, defaultOverlayName, routeName);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRoutePoint4arg/*'/>
         public GMapRoute AddRoute(IEnumerable<Point> points, Color stroke, string routeName, string layoutId)
         {
             List<PointLatLng> coords = points.Select(p => MapObject.FromLocalToLatLng(p.X, p.Y)).ToList();
 
             return AddRoute(MapHelper.CreateRoute(coords, stroke, routeName), layoutId);
         }
-        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Color stroke, string polygonName)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRoutePointLatLng3arg/*'/>
+        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Color stroke, string routeName)
         {
-            return AddRoute(coords, stroke, defaultOverlayName, polygonName);
+            return AddRoute(coords, stroke, defaultOverlayName, routeName);
         }
-        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Color stroke, string polygonName, string layoutId)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRoutePointLatLng4arg/*'/>
+        public GMapRoute AddRoute(IEnumerable<PointLatLng> coords, Color stroke, string routeName, string layoutId)
         {
-            return AddRoute(MapHelper.CreateRoute(coords.ToList(), stroke, polygonName), layoutId);
+            return AddRoute(MapHelper.CreateRoute(coords.ToList(), stroke, routeName), layoutId);
         }
-        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string polygonName)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRouteMarkers3arg/*'/>
+        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string routeName)
         {
-            return AddRoute(markers, stroke, defaultOverlayName, polygonName);
+            return AddRoute(markers, stroke, defaultOverlayName, routeName);
         }
-        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string polygonName, string layoutId)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRouteMarkers4arg/*'/>
+        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string routeName, string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
@@ -385,12 +391,14 @@ namespace Maps.Core
                                                     })
                                                     .ToList();
 
-            return AddRoute(MapHelper.CreateRoute(markersCoord, stroke, polygonName), layoutId);
+            return AddRoute(MapHelper.CreateRoute(markersCoord, stroke, routeName), layoutId);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRouteRoute1arg/*'/>
         public GMapRoute AddRoute(GMapRoute route)
         {
             return AddRoute(route, defaultOverlayName);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRouteRoute2arg/*'/>
         public GMapRoute AddRoute(GMapRoute route, string layoutId)
         {
             if (route == null)
@@ -430,6 +438,7 @@ namespace Maps.Core
             return route;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/HideAllLayout/*'/>
         public void HideAllLayout() 
         {
             foreach (GMapOverlay overlay in MapObject.Overlays)
@@ -437,6 +446,7 @@ namespace Maps.Core
                 overlay.IsVisibile = false;
             }
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ShowAllLayout/*'/>
         public void ShowAllLayout()
         {
             foreach (GMapOverlay overlay in MapObject.Overlays)
@@ -445,6 +455,7 @@ namespace Maps.Core
             }
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/HideLayoutById/*'/>
         public void HideLayoutById(string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
@@ -454,6 +465,7 @@ namespace Maps.Core
                 overlay.IsVisibile = false;
             }
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ShowLayoutById/*'/>
         public void ShowLayoutById(string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
@@ -464,6 +476,7 @@ namespace Maps.Core
             }
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/HidePolygonByName/*'/>
         public void HidePolygonByName(string polygonName)
         {
             GMapPolygon polygon = GetPolygonByNameOrNull(polygonName);
@@ -473,7 +486,8 @@ namespace Maps.Core
                 polygon.IsVisible = false;
             }
         }
-        public void ShowPolygonById(string polygonName)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ShowPolygonByName/*'/>
+        public void ShowPolygonByName(string polygonName)
         {
             GMapPolygon polygon = GetPolygonByNameOrNull(polygonName);
 
@@ -483,17 +497,50 @@ namespace Maps.Core
             }
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/HideRouteByName/*'/>
+        public void HideRouteByName(string routeName)
+        {
+            GMapRoute route = GetRouteByNameOrNull(routeName);
+
+            if (route != null)
+            {
+                route.IsVisible = false;
+            }
+        }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ShowRouteByName/*'/>
+        public void ShowRouteByName(string routeName)
+        {
+            GMapRoute route = GetRouteByNameOrNull(routeName);
+
+            if (route != null)
+            {
+                route.IsVisible = true;
+            }
+        }
+
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/StartDrawPolygon3arg/*'/>
         public DrawContext StartDrawPolygon(Color fill, int opacity, string polygonName)
         {
             return StartDrawPolygon(fill, opacity, polygonName, defaultOverlayName, GMarkerGoogleType.arrow);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/StartDrawPolygon4arg/*'/>
         public DrawContext StartDrawPolygon(Color fill, int opacity, string polygonName, string layoutId)
         {
             return StartDrawPolygon(fill, opacity, polygonName, layoutId, GMarkerGoogleType.arrow);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/StartDrawPolygon5arg/*'/>
         public DrawContext StartDrawPolygon(Color fill, int opacity, string polygonName, 
                                             string layoutId, GMarkerGoogleType markerType)
         {
+            if (string.IsNullOrEmpty(polygonName))
+            {
+                throw new ArgumentException("Название полигона не может отсутствовать.");
+            }
+            if (string.IsNullOrEmpty(layoutId))
+            {
+                throw new ArgumentException("Название слоя не может отсутствовать.");
+            }
+
             if (polygonContext == null)
             {
                 GMapOverlay overlay = new GMapOverlay($"__{layoutId}__");
@@ -511,6 +558,7 @@ namespace Maps.Core
 
             return polygonContext;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/CancelPolygonDraw/*'/>
         public void CancelPolygonDraw()
         {
             if (polygonContext == null)
@@ -524,6 +572,7 @@ namespace Maps.Core
             polygonContext.Dispose();
             polygonContext = null;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/EndPolygonDraw/*'/>
         public void EndPolygonDraw()
         {
             if (polygonContext == null)
@@ -558,16 +607,28 @@ namespace Maps.Core
             polygonContext = null;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/StartDrawRoute2arg/*'/>
         public DrawContext StartDrawRoute(Color stroke, string routeName)
         {
             return StartDrawRoute(stroke, routeName, defaultOverlayName, GMarkerGoogleType.arrow);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/StartDrawRoute3arg/*'/>
         public DrawContext StartDrawRoute(Color stroke, string routeName, string layoutId)
         {
             return StartDrawRoute(stroke, routeName, layoutId, GMarkerGoogleType.arrow);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/StartDrawRoute4arg/*'/>
         public DrawContext StartDrawRoute(Color stroke, string routeName, string layoutId, GMarkerGoogleType markerType)
         {
+            if (string.IsNullOrEmpty(routeName))
+            {
+                throw new ArgumentException("Название маршрута не может отсутствовать.");
+            }
+            if (string.IsNullOrEmpty(layoutId))
+            {
+                throw new ArgumentException("Название слоя не может отсутствовать.");
+            }
+
             if (routeContext == null)
             {
                 GMapOverlay overlay = new GMapOverlay($"__{layoutId}__");
@@ -585,6 +646,7 @@ namespace Maps.Core
 
             return routeContext;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/CancelRouteDraw/*'/>
         public void CancelRouteDraw()
         {
             if (routeContext == null)
@@ -598,6 +660,7 @@ namespace Maps.Core
             routeContext.Dispose();
             routeContext = null;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/EndRouteDraw/*'/>
         public void EndRouteDraw()
         {
             if (routeContext == null)
@@ -632,18 +695,28 @@ namespace Maps.Core
             routeContext = null;
         }
 
-        public void RemoveMarker(Point screenPoint)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerPoint/*'/>
+        public bool RemoveMarker(Point screenPoint)
         {
             PointLatLng coords = MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y);
 
-            RemoveMarker(GetMarkerByCoordsOrNull(coords));
+            return RemoveMarker(GetMarkerByCoordsOrNull(coords));
         }
-        public void RemoveMarker(PointLatLng coords)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerPointLatLng/*'/>
+        public bool RemoveMarker(PointLatLng coords)
         {
-            RemoveMarker(GetMarkerByCoordsOrNull(coords));
+            return RemoveMarker(GetMarkerByCoordsOrNull(coords));
         }
-        public void RemoveMarker(GMapMarker marker)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerMarker/*'/>
+        public bool RemoveMarker(GMapMarker marker)
         {
+            bool res = false;
+
+            if (marker == null)
+            {
+                return res;
+            }
+
             if (object.ReferenceEquals(marker, SelectedMarker))
             {
                 SelectedMarker = null;
@@ -651,34 +724,46 @@ namespace Maps.Core
 
             foreach (var overlay in MapObject.Overlays)
             {
-                overlay.Markers.Remove(marker);
+                res = overlay.Markers.Remove(marker) || res;
             }
+
+            return res;
         }
-        
-        public void RemovePolygon(string polygonName)
+
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemovePolygonString/*'/>
+        public bool RemovePolygon(string polygonName)
         {
+            bool res = false;
+
+            if (string.IsNullOrEmpty(polygonName))
+            {
+                return res;
+            }
+
             foreach (var overlay in MapObject.Overlays)
             {
-                GMapPolygon _polygon = null;
-                foreach (var polygon in overlay.Polygons)
-                {
-                    if (polygon.Name == polygonName)
-                    {
-                        _polygon = polygon;
-                        break;
-                    }
-                }
+                GMapPolygon _polygon = GetPolygonByNameOrNull(polygonName);
 
-                overlay.Polygons.Remove(_polygon);
+                res = overlay.Polygons.Remove(_polygon) || res;
 
                 if (object.ReferenceEquals(_polygon, SelectedPolygon))
                 {
                     SelectedPolygon = null;
                 }
             }
+
+            return res;
         }
-        public void RemovePolygon(GMapPolygon polygon)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemovePolygonPolygon/*'/>
+        public bool RemovePolygon(GMapPolygon polygon)
         {
+            bool res = false;
+
+            if (polygon == null)
+            {
+                return res;
+            }
+
             if (object.ReferenceEquals(polygon, SelectedPolygon))
             {
                 SelectedPolygon = null;
@@ -686,36 +771,46 @@ namespace Maps.Core
 
             foreach (var overlay in MapObject.Overlays)
             {
-                overlay.Polygons.Remove(polygon);
+                res = overlay.Polygons.Remove(polygon) || res;
             }
 
-            polygon.Dispose();
+            return res;
         }
 
-        public void RemoveRoute(string routeName)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveRouteString/*'/>
+        public bool RemoveRoute(string routeName)
         {
+            bool res = false;
+
+            if (string.IsNullOrEmpty(routeName))
+            {
+                return res;
+            }
+
             foreach (var overlay in MapObject.Overlays)
             {
-                GMapRoute _route = null;
-                foreach (var route in overlay.Routes)
-                {
-                    if (route.Name == routeName)
-                    {
-                        _route = route;
-                        break;
-                    }
-                }
+                GMapRoute _route = GetRouteByNameOrNull(routeName);
 
-                overlay.Routes.Remove(_route);
+                res = overlay.Routes.Remove(_route) || res;
 
                 if (object.ReferenceEquals(_route, SelectedRoute))
                 {
                     SelectedRoute = null;
                 }
             }
+
+            return res;
         }
-        public void RemoveRoute(GMapRoute route)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveRouteRoute/*'/>
+        public bool RemoveRoute(GMapRoute route)
         {
+            bool res = false;
+
+            if (route == null)
+            {
+                return res;
+            }
+
             if (object.ReferenceEquals(route, SelectedRoute))
             {
                 SelectedRoute = null;
@@ -723,24 +818,34 @@ namespace Maps.Core
 
             foreach (var overlay in MapObject.Overlays)
             {
-                overlay.Routes.Remove(route);
+                res = overlay.Routes.Remove(route) || res;
             }
 
-            route.Dispose();
+            return res;
         }
 
-        public void RemoveMarkerFromLayout(Point screenPoint, string layoutId = "default")
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerFromLayoutPoint/*'/>
+        public bool RemoveMarkerFromLayout(Point screenPoint, string layoutId = "default")
         {
             PointLatLng coords = MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y);
 
-            RemoveMarkerFromLayout(GetMarkerByCoordsOrNull(coords), layoutId);
+            return RemoveMarkerFromLayout(GetMarkerByCoordsOrNull(coords), layoutId);
         }
-        public void RemoveMarkerFromLayout(PointLatLng coords, string layoutId = "default")
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerFromLayoutPointLatLng/*'/>
+        public bool RemoveMarkerFromLayout(PointLatLng coords, string layoutId = "default")
         {
-            RemoveMarkerFromLayout(GetMarkerByCoordsOrNull(coords), layoutId);
+            return RemoveMarkerFromLayout(GetMarkerByCoordsOrNull(coords), layoutId);
         }
-        public void RemoveMarkerFromLayout(GMapMarker marker, string layoutId = "default")
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerFromLayoutMarker/*'/>
+        public bool RemoveMarkerFromLayout(GMapMarker marker, string layoutId = "default")
         {
+            bool res = false;
+
+            if (marker == null || string.IsNullOrEmpty(layoutId))
+            {
+                return res;
+            }
+
             if (object.ReferenceEquals(marker, SelectedMarker))
             {
                 SelectedMarker = null;
@@ -750,16 +855,32 @@ namespace Maps.Core
 
             if (overlay != null)
             {
-                overlay.Markers.Remove(marker);
+                res = overlay.Markers.Remove(marker);
             }
+
+            return res;
         }
 
-        public void RemovePolygonFromLayout(string polygonName, string layoutId = "default")
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemovePolygonFromLayoutString/*'/>
+        public bool RemovePolygonFromLayout(string polygonName, string layoutId = "default")
         {
-            RemovePolygonFromLayout(GetPolygonByNameOrNull(polygonName), layoutId);
+            if (string.IsNullOrEmpty(polygonName) || string.IsNullOrEmpty(layoutId))
+            {
+                return false;
+            }
+
+            return RemovePolygonFromLayout(GetPolygonByNameOrNull(polygonName), layoutId);
         }
-        public void RemovePolygonFromLayout(GMapPolygon polygon, string layoutId = "default")
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemovePolygonFromLayoutPolygon/*'/>
+        public bool RemovePolygonFromLayout(GMapPolygon polygon, string layoutId = "default")
         {
+            bool res = false;
+
+            if (polygon == null || string.IsNullOrEmpty(layoutId))
+            {
+                return res;
+            }
+
             if (object.ReferenceEquals(polygon, SelectedPolygon))
             {
                 SelectedPolygon = null;
@@ -772,19 +893,36 @@ namespace Maps.Core
                 int polygonIndex = overlay.Polygons.IndexOf(polygon);
                 if (polygonIndex != -1)
                 {
+                    res = true;
 
                     overlay.Polygons[polygonIndex].Dispose();
                     overlay.Polygons.RemoveAt(polygonIndex);
                 }
             }
+
+            return res;
         }
 
-        public void RemoveRouteFromLayout(string routeName, string layoutId = "default")
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveRouteFromLayoutString/*'/>
+        public bool RemoveRouteFromLayout(string routeName, string layoutId = "default")
         {
-            RemoveRouteFromLayout(GetRouteByNameOrNull(routeName), layoutId);
+            if (string.IsNullOrEmpty(routeName) || string.IsNullOrEmpty(layoutId))
+            {
+                return false;
+            }
+
+            return RemoveRouteFromLayout(GetRouteByNameOrNull(routeName), layoutId);
         }
-        public void RemoveRouteFromLayout(GMapRoute route, string layoutId = "default")
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveRouteFromLayoutRoute/*'/>
+        public bool RemoveRouteFromLayout(GMapRoute route, string layoutId = "default")
         {
+            bool res = false;
+
+            if (route == null || string.IsNullOrEmpty(layoutId))
+            {
+                return res;
+            }
+
             if (object.ReferenceEquals(route, SelectedPolygon))
             {
                 SelectedRoute = null;
@@ -797,25 +935,31 @@ namespace Maps.Core
                 int routeIndex = overlay.Routes.IndexOf(route);
                 if (routeIndex != -1)
                 {
+                    res = true;
 
                     overlay.Routes[routeIndex].Dispose();
                     overlay.Routes.RemoveAt(routeIndex);
                 }
             }
+
+            return res;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkersByLayoutOrNull/*'/>
         public ICollection<GMapMarker> GetMarkersByLayoutOrNull(string layoutId = "default")
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
             return overlay != null ? overlay.Markers : null;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetPolygonsByLayoutOrNull/*'/>
         public ICollection<GMapPolygon> GetPolygonsByLayoutOrNull(string layoutId = "default")
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
             return overlay != null ? overlay.Polygons : null;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetRoutesByLayoutOrNull/*'/>
         public ICollection<GMapRoute> GetRoutesByLayoutOrNull(string layoutId = "default")
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
@@ -823,22 +967,26 @@ namespace Maps.Core
             return overlay != null ? overlay.Routes : null;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsOrNullPoint/*'/>
         public GMapMarker GetMarkerByCoordsOrNull(Point screenPoint)
         {
             return GetMarkerByCoordsOrNull(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y));
         }
-        public GMapMarker GetMarkerByCoordsOrNull(PointLatLng coords)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsOrNullPointLatLng/*'/>
+        public GMapMarker GetMarkerByCoordsOrNull(PointLatLng coord)
         {
-            return GetMarkerByCoordsInLayoutOrNull(coords, null);
+            return GetMarkerByCoordsInLayoutOrNull(coord, "_all");
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsInLayoutOrNullPoint/*'/>
         public GMapMarker GetMarkerByCoordsInLayoutOrNull(Point screenPoint, string layoutId)
         {
             return GetMarkerByCoordsInLayoutOrNull(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), layoutId);
         }
-        public GMapMarker GetMarkerByCoordsInLayoutOrNull(PointLatLng coords, string layoutId)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsInLayoutOrNullPointLatLng/*'/>
+        public GMapMarker GetMarkerByCoordsInLayoutOrNull(PointLatLng coord, string layoutId)
         {
-            double offsetLat = 0.004;
-            double offsetLng = 0.002;
+            double offsetLat = 0.001;
+            double offsetLng = 0.0008;
 
             if (MapObject.Zoom >= 0 && MapObject.Zoom <= 3)
             {
@@ -868,15 +1016,15 @@ namespace Maps.Core
 
             foreach (var overlay in MapObject.Overlays)
             {
-                if (layoutId != null && overlay.Id != layoutId)
+                if (layoutId != null && overlay.Id != layoutId && layoutId != "_all")
                 {
                     continue;
                 }
 
                 foreach (var marker in overlay.Markers)
                 {
-                    if (coords.Lat > marker.Position.Lat - offsetLat && coords.Lat < marker.Position.Lat + offsetLat &&
-                        coords.Lng > marker.Position.Lng - offsetLng && coords.Lng < marker.Position.Lng + offsetLng)
+                    if (coord.Lat > marker.Position.Lat - offsetLat && coord.Lat < marker.Position.Lat + offsetLat &&
+                        coord.Lng > marker.Position.Lng - offsetLng && coord.Lng < marker.Position.Lng + offsetLng)
                     {
                         return marker;
                     }
@@ -885,8 +1033,15 @@ namespace Maps.Core
 
             return null;
         }
+
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetPolygonByNameOrNull/*'/>
         public GMapPolygon GetPolygonByNameOrNull(string polygonName)
         {
+            if (string.IsNullOrEmpty(polygonName))
+            {
+                return null;
+            }
+
             foreach (var overlay in MapObject.Overlays)
             {
                 foreach (var polygon in overlay.Polygons)
@@ -900,8 +1055,14 @@ namespace Maps.Core
 
             return null;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetRouteByNameOrNull/*'/>
         public GMapRoute GetRouteByNameOrNull(string routeName)
         {
+            if (string.IsNullOrEmpty(routeName))
+            {
+                return null;
+            }
+
             foreach (var overlay in MapObject.Overlays)
             {
                 foreach (var route in overlay.Routes)
@@ -916,8 +1077,14 @@ namespace Maps.Core
             return null;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/LayoutExist/*'/>
         public bool LayoutExist(string layoutId)
         {
+            if (string.IsNullOrEmpty(layoutId))
+            {
+                return false;
+            }
+
             foreach (var overlay in MapObject.Overlays)
             {
                 if (overlay.Id == layoutId)
@@ -929,6 +1096,7 @@ namespace Maps.Core
             return false;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ClearMap/*'/>
         public void ClearMap()
         {
             EndPolygonDraw();
@@ -946,6 +1114,7 @@ namespace Maps.Core
 
             MapObject.Overlays.Add(defaultOverlay);
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ClearLayout/*'/>
         public void ClearLayout(string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
@@ -959,11 +1128,12 @@ namespace Maps.Core
                 overlay.Clear();
             }
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ClearAllMarkers/*'/>
         public void ClearAllMarkers()
         {
             var demendentMarkers = (from overlay in MapObject.Overlays
                                     from marker in overlay.Markers
-                                    where ((NamedGoogleMarker)marker).IsDependent
+                                    where marker is NamedGoogleMarker && ((NamedGoogleMarker)marker).IsDependent
                                     select new { Marker = marker, OverlayId = overlay.Id })
                                     .ToArray();
 
@@ -977,6 +1147,7 @@ namespace Maps.Core
                 AddMarker(dependetMarker.Marker, dependetMarker.OverlayId);
             }
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ClearAllPolygons/*'/>
         public void ClearAllPolygons()
         {
             foreach (var overlay in MapObject.Overlays)
@@ -984,6 +1155,7 @@ namespace Maps.Core
                 overlay.Polygons.Clear();
             }
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ClearAllRoutes/*'/>
         public void ClearAllRoutes()
         {
             foreach (var overlay in MapObject.Overlays)
@@ -992,11 +1164,18 @@ namespace Maps.Core
             }
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddLayout/*'/>
         public void AddLayout(string layoutId)
         {
-            GMapOverlay overlay = new GMapOverlay(layoutId);
-            MapObject.Overlays.Add(overlay);
+            var overlay = GetOverlayByIdOrNull(layoutId);
+
+            if (overlay == null)
+            {
+                overlay = new GMapOverlay(layoutId);
+                MapObject.Overlays.Add(overlay);
+            }
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveLayout/*'/>
         public void RemoveLayout(string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
@@ -1019,10 +1198,12 @@ namespace Maps.Core
             SelectedRoute = null;
         }
 
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ZoomPlus/*'/>
         public void ZoomPlus()
         {
             MapObject.Zoom++;
         }
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ZoomMinus/*'/>
         public void ZoomMinus()
         {
             MapObject.Zoom--;
@@ -1047,7 +1228,8 @@ namespace Maps.Core
             return null;
         }
     }
-    
+
+    /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="markers_comparator"]/MarkersComparator/*'/>
     public class MarkersComparator : IEqualityComparer<GMapMarker>
     {
         /// <inheritdoc/>
@@ -1073,6 +1255,7 @@ namespace Maps.Core
             return obj.GetHashCode();
         }
     }
+    /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="polygons_comparator"]/PolygonsComparator/*'/>
     public class PolygonsComparator : IEqualityComparer<GMapPolygon>
     {
         /// <inheritdoc/>
@@ -1097,6 +1280,7 @@ namespace Maps.Core
             return obj.GetHashCode();
         }
     }
+    /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="routes_comparator"]/RoutesComparator/*'/>
     public class RoutesComparator : IEqualityComparer<GMapRoute>
     {
         /// <inheritdoc/>

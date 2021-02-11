@@ -1,8 +1,8 @@
 ﻿using System;
-using Maps.Core;
+using UserMap.Core;
 using System.Windows.Forms;
 
-namespace Maps.UserControls
+namespace UserMap.UserControls
 {
     public partial class ItemInfo : UserControl
     {
@@ -32,13 +32,15 @@ namespace Maps.UserControls
         {
             DeleteButton.Visible = false;
 
-            ChangeButton.Location = new System.Drawing.Point((this.Width - ChangeButton.Width) / 2, ChangeButton.Location.Y);
+            AdditionInfoButton.Location = new System.Drawing.Point(AdditionInfoButton.Location.X + DeleteButton.Width / 2 + 10, AdditionInfoButton.Location.Y);
+            ChangeButton.Location = new System.Drawing.Point(ChangeButton.Location.X - DeleteButton.Width / 2 - 10, ChangeButton.Location.Y);
         }
         public void ShowDeleteButton()
         {
             DeleteButton.Visible = true;
 
-            ChangeButton.Location = new System.Drawing.Point((int)((this.Width + ChangeButton.Width) / 1.5), ChangeButton.Location.Y);
+            AdditionInfoButton.Location = new System.Drawing.Point(AdditionInfoButton.Location.X - DeleteButton.Width / 2 - 10, AdditionInfoButton.Location.Y);
+            ChangeButton.Location = new System.Drawing.Point(ChangeButton.Location.X + DeleteButton.Width / 2 + 10, ChangeButton.Location.Y);
         }
 
         public void SubscriChangeItemClickEvent(EventHandler eventHandler)
@@ -56,6 +58,14 @@ namespace Maps.UserControls
         public void DescribeDeleteItemClickEvent(EventHandler eventHandler)
         {
             DeleteButton.Click -= eventHandler;
+        }
+        public void SubscribeAdditionInfoClickEvent(EventHandler eventHandler)
+        {
+            AdditionInfoButton.Click += eventHandler;
+        }
+        public void DescribeAdditionInfoClickEvent(EventHandler eventHandler)
+        {
+            AdditionInfoButton.Click -= eventHandler;
         }
 
         private string GetStringRole(Data.Role role)

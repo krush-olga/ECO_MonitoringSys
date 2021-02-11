@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Runtime.Serialization;
 using Data;
 
-namespace Maps.Core
+namespace UserMap.Core
 {
     /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarker/*'/>
     public class NamedGoogleMarker : GMarkerGoogle, IDescribable, IEquatable<NamedGoogleMarker>

@@ -1,19 +1,19 @@
 ﻿using Data;
-using Maps.Core;
+using UserMap.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Maps
+namespace UserMap
 {
     public partial class CompareSettings : Form
     {
+        private readonly Services.ILogger logger;
+
         private DBManager db;
 
         private IList<IDescribable> describableItems;
@@ -23,7 +23,8 @@ namespace Maps
             InitializeComponent();
 
             Elements = elements;
-            LoadContext();
+            db = new DBManager();
+            logger = new Services.FileLogger();
 
             UpdateListBox();
         }
@@ -44,12 +45,10 @@ namespace Maps
             }
         }
 
-        private async void LoadContext()
+        private async Task LoadContext()
         {
             try
             {
-                db = await Task.Run(() => { return new DBManager(); });
-
                 StringBuilder elementsCondition = new StringBuilder();
                 string emissionIdColumn = string.Empty;
                 string objectNameColumn = string.Empty;
@@ -107,7 +106,9 @@ namespace Maps
 #if DEBUG
                 MessageBox.Show(ex.Message + "\n" + ex.StackTrace, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
-                MessageBox.Show("Виникла помилка при підключенні до бази даних.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Виникла помилка при завантаженні необхідних даних з бази даних.", 
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Log(ex);
 #endif
             }
         }
@@ -116,6 +117,11 @@ namespace Maps
         {
             CompareObjectsListBox.DataSource = null;
             CompareObjectsListBox.DataSource = Elements;
+        }
+
+        private async void CompareSettings_Load(object sender, EventArgs e)
+        {
+            await LoadContext();
         }
 
         private void DeleteObjectButton_Click(object sender, EventArgs e)
@@ -187,35 +193,12 @@ namespace Maps
 
                 nameObjectIdCondition.Remove(nameObjectIdCondition.Length - 3, 3);
 
-                //for (int i = 0; i < Elements.Count; i++)
-                //{
-                //    nameObjectIdCondition.Append("(Name_Object = ");
-                //    nameObjectIdCondition.Append(DBUtil.AddQuotes(describableItems[i]));
-                //    nameObjectIdCondition.Append(" AND ");
-                //    nameObjectIdCondition.Append("emissions_on_map.idPoi = poi.Id");
-                //    nameObjectIdCondition.Append(" AND ");
-                //    nameObjectIdCondition.Append("emissions_on_map.idElement = ");
-                //    nameObjectIdCondition.Append(ElementsСomboBox.SelectedValue);
-                //    nameObjectIdCondition.Append(" AND ");
-                //    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
-                //    nameObjectIdCondition.Append(" >= '");
-                //    nameObjectIdCondition.Append(StartDateDTPicker.Value.ToString("yyyy-MM-dd"));
-                //    nameObjectIdCondition.Append("'");
-                //    nameObjectIdCondition.Append(" AND ");
-                //    nameObjectIdCondition.Append("STR_TO_DATE(CONCAT(Year,'-',LPAD(Month,2,'00'),'-',LPAD(day,2,'00')), '%Y-%m-%d')");
-                //    nameObjectIdCondition.Append(" <= '");
-                //    nameObjectIdCondition.Append(EndDateDTPicker.Value.ToString("yyyy-MM-dd"));
-                //    nameObjectIdCondition.Append("')");
+                List<List<object>> result = null;
+                List<List<object>> borderLimits = null;
 
-                //    if (i != Elements.Count - 1)
-                //    {
-                //        nameObjectIdCondition.Append(" OR ");
-                //    }
-                //}
-
-
-
-                var result = await db.GetRowsUsingJoinAsync("emissions_on_map, poi, poligon",
+                try
+                {
+                    result = await db.GetRowsUsingJoinAsync("emissions_on_map, poi, poligon",
                                                             "poi.Name_Object, poligon.name, emissions_on_map.ValueAvg, emissions_on_map.ValueMax, " +
                                                             "CONCAT(" +
                                                             "LPAD(emissions_on_map.day, 2, 0), '-', " +
@@ -223,9 +206,35 @@ namespace Maps
                                                             "emissions_on_map.Year ), " +
                                                             "emissions_on_map.Measure",
                                                             joinCondition, nameObjectIdCondition.ToString(), JoinType.LEFT);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Виникла помилка при завантаженні даних для фільтрації.",
+                                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Log(ex);
+                }
 
-                var borderLimits = await db.GetRowsAsync("gdk", "mpc_m_ot, mpc_avrg_d", 
+                if (result == null)
+                {
+                    return;
+                }
+
+                try
+                {
+                    borderLimits = await db.GetRowsAsync("gdk", "mpc_m_ot, mpc_avrg_d",
                                                          "code = " + ElementsСomboBox.SelectedValue.ToString());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Виникла помилка при завантаженні гдк.",
+                                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Log(ex);
+                }
+
+                if (borderLimits == null)
+                {
+                    return;
+                }
 
                 if (result == null || result.Count == 0)
                 {
@@ -279,8 +288,6 @@ namespace Maps
 
                 names.Insert(0, "");
 
-
-
                 IDictionary<string, double> rowsWithBorderLimits = null;
                 if (borderLimits.Count != 0)
                 {
@@ -312,6 +319,7 @@ namespace Maps
                 MessageBox.Show($"{ex.Message}\n\n{ex.StackTrace}", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 MessageBox.Show("Помилка при порівнянні.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Log(ex);
 #endif
             }
         }

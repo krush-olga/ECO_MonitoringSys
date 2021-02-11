@@ -11,8 +11,6 @@
         </para>
         <para>
           Предоставляет методы <c>RemoveXxx(...)</c> для удаление различных элементов из карты (маркер, полигон, маршрут).
-          Для полигонов (<see cref="GMap.NET.WindowsForms.GMapPolygon"/>) и маршрутов (<see cref="GMap.NET.WindowsForms.GMapRoute"/>) вызываеться метод <c>Dispose()</c>
-          при удалении их из карты.
         </para>
         <para>
           Позволяет получить или определённые элементы по имени/координате, или все объекты из определённого слоя.
@@ -21,7 +19,7 @@
     </Map>
     <MapCtor1>
       <summary>
-        Конструктор класса <see cref="Maps.Core.Map"/>. 
+        Конструктор класса <see cref="Maps.Core.Map"/>.
         Создаёт новую карту для использования.
       </summary>
     </MapCtor1>
@@ -806,8 +804,11 @@
       </returns>
     </AddPolygonMarker6arg>
     <AddPolygonPolygon1arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
       <param name="polygon">
-        Набор маркеров для полигона.
+        Готовый полигон.
       </param>
       <exception cref="System.ArgumentNullException">
         Возникает, когда полигон равен или <see langword="null"/>
@@ -817,8 +818,11 @@
       </returns>
     </AddPolygonPolygon1arg>
     <AddPolygonPolygon2arg>
+      <summary>
+        Создаёт новый полигон на карте по заданным параметрам.
+      </summary>
       <param name="polygon">
-        Набор маркеров для полигона.
+        Готовый полигон.
       </param>
       <exception cref="System.ArgumentNullException">
         Возникает, когда полигон равен или <see langword="null"/>
@@ -833,5 +837,763 @@
         Ссылку на этот же полигон, если он был добавлен или на полигон из карты, если такой уже существует.
       </returns>
     </AddPolygonPolygon2arg>
+    <AddRoutePoint3arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="points">
+        Точки монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/> для создания полигона.
+      </param>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название маршрута равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRoutePoint3arg>
+    <AddRoutePoint4arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="points">
+        Точки монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/> для создания полигона.
+      </param>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор точек равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название маршрута равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRoutePoint4arg>
+    <AddRoutePointLatLng3arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Набор координат для маршрута.
+      </param>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор координат равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название маршрута равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRoutePointLatLng3arg>
+    <AddRoutePointLatLng4arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="coords">
+        Набор координат для маршрута.
+      </param>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор координат равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название маршрута равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRoutePointLatLng4arg>
+    <AddRouteMarkers3arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="markers">
+        Набор маркеров для маршрута.
+      </param>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор маркеров равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название маршрута равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRouteMarkers3arg>
+    <AddRouteMarkers4arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="markers">
+        Набор маркеров для маршрута.
+      </param>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда набор маркеров равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название маршрута равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRouteMarkers4arg>
+    <AddRouteRoute1arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="route">
+        Готовый маршрут.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда маршрут равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название слоя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRouteRoute1arg>
+    <AddRouteRoute2arg>
+      <summary>
+        Создаёт новый маршрут на карте по заданным параметрам.
+      </summary>
+      <param name="route">
+        Готовый маршрут.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда маршут равен <see langword="null"/>
+      </exception>
+      <exception cref="System.ArgumentException">
+        Возникает, когда название слоя равно или <see cref="System.String.Empty"/>, или <see langword="null"/>
+      </exception>
+      <returns>
+        Ссылку на этот же маршрут, если он был добавлен или на маршрут из карты, если такой уже существует.
+      </returns>
+    </AddRouteRoute2arg>
+    <HideAllLayout>
+      <summary>
+        Скрывает все существующие слои.
+      </summary>
+    </HideAllLayout>
+    <ShowAllLayout>
+      <summary>
+        Показывает все существующие слои.
+      </summary>
+    </ShowAllLayout>
+    <HideLayoutById>
+      <summary>
+        Скрывает слой по названию, если он существует.
+      </summary>
+      <param name="layoutId">
+        Название слоя, который будет скрыт.
+      </param>
+    </HideLayoutById>
+    <ShowLayoutById>
+      <summary>
+        Показывает слой по названию, если он существует.
+      </summary>
+      <param name="layoutId">
+        Название слоя, который будет скрыт.
+      </param>
+    </ShowLayoutById>
+    <HidePolygonByName>
+      <summary>
+        Скрывает полигон по названию, если он существует.
+      </summary>
+      <param name="polygonName">
+        Название полигона, который будет скрыт.
+      </param>
+    </HidePolygonByName>
+    <ShowPolygonByName>
+      <summary>
+        Показывает полигон по названию, если он существует.
+      </summary>
+      <param name="polygonName">
+        Название полигона, который будет скрыт.
+      </param>
+    </ShowPolygonByName>
+    <HideRouteByName>
+      <summary>
+        Скрывает маршрут по названию, если он существует.
+      </summary>
+      <param name="routeName">
+        Название маршрута, который будет скрыт.
+      </param>
+    </HideRouteByName>
+    <ShowRouteByName>
+      <summary>
+        Показывает маршрут по названию, если он существует.
+      </summary>
+      <param name="routeName">
+        Название маршрута, который будет скрыт.
+      </param>
+    </ShowRouteByName>
+    <StartDrawPolygon3arg>
+      <summary>
+        Создаёт контекст для рисования нового полигона по указанным параметрам.
+      </summary>
+      <param name="fill">
+        Цвет закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение прозрачности.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <exception cref="System.ArgumentException"></exception>
+      <returns>
+        Ссылку на новый контекст для рисования полигона или на существующий, если рисование не было закончено.
+      </returns>
+    </StartDrawPolygon3arg>
+    <StartDrawPolygon4arg>
+      <summary>
+        Создаёт контекст для рисования нового полигона по указанным параметрам.
+      </summary>
+      <param name="fill">
+        Цвет закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение прозрачности.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <exception cref="System.ArgumentException"></exception>
+      <returns>
+        Ссылку на новый контекст для рисования полигона или на существующий, если рисование не было закончено.
+      </returns>
+    </StartDrawPolygon4arg>
+    <StartDrawPolygon5arg>
+      <summary>
+        Создаёт контекст для рисования нового полигона по указанным параметрам.
+      </summary>
+      <param name="fill">
+        Цвет закраски полигона.
+      </param>
+      <param name="opacity">
+        Значение прозрачности.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <param name="markerType">
+        Тип отображение маркера.
+      </param>
+      <exception cref="System.ArgumentException"></exception>
+      <returns>
+        Ссылку на новый контекст для рисования полигона или на существующий, если рисование не было закончено.
+      </returns>
+    </StartDrawPolygon5arg>
+    <CancelPolygonDraw>
+      <summary>
+        Отменяет рисование полигона без сохранения полигона, если рисование активно. Иначе ничего не делает.
+      </summary>
+    </CancelPolygonDraw>
+    <EndPolygonDraw>
+      <summary>
+        Заканчивает рисование полигона с сохранения полигона, если рисование активно. Иначе ничего не делает.
+      </summary>
+    </EndPolygonDraw>
+    <StartDrawRoute2arg>
+      <summary>
+        Создаёт контекст для рисования нового полигона по указанным параметрам.
+      </summary>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <exception cref="System.ArgumentException"></exception>
+      <returns>
+        Ссылку на новый контекст для рисования маршрута или на существующий, если рисование не было закончено.
+      </returns>
+    </StartDrawRoute2arg>
+    <StartDrawRoute3arg>
+      <summary>
+        Создаёт контекст для рисования нового полигона по указанным параметрам.
+      </summary>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <exception cref="System.ArgumentException"></exception>
+      <returns>
+        Ссылку на новый контекст для рисования маршрута или на существующий, если рисование не было закончено.
+      </returns>
+    </StartDrawRoute3arg>
+    <StartDrawRoute4arg>
+      <summary>
+        Создаёт контекст для рисования нового полигона по указанным параметрам.
+      </summary>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <param name="layoutId">
+        Название слоя.
+      </param>
+      <param name="markerType">
+        Тип отображение маркера.
+      </param>
+      <exception cref="System.ArgumentException"></exception>
+      <returns>
+        Ссылку на новый контекст для рисования маршрута или на существующий, если рисование не было закончено.
+      </returns>
+    </StartDrawRoute4arg>
+    <CancelRouteDraw>
+      <summary>
+        Отменяет рисование маршрута без сохранения маршрута, если рисование активно. Иначе ничего не делает.
+      </summary>
+    </CancelRouteDraw>
+    <EndRouteDraw>
+      <summary>
+        Закнчивает рисование маршрута с сохранением маршрута, если рисование активно. Иначе ничего не делает.
+      </summary>
+    </EndRouteDraw>
+    <RemoveMarkerPoint>
+      <summary>
+        Удаляет точку, если она существует.
+      </summary>
+      <param name="screenPoint">
+        Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <returns>
+        <see langword="true"/>, если маркер был удалён. Иначе <see langword="false"/>.
+      </returns>
+    </RemoveMarkerPoint>
+    <RemoveMarkerPointLatLng>
+      <summary>
+        Удаляет точку, если она существует.
+      </summary>
+      <param name="coords">
+        Координата точки.
+      </param>
+      <returns>
+        <see langword="true"/>, если маркер был удалён. Иначе <see langword="false"/>
+      </returns>
+    </RemoveMarkerPointLatLng>
+    <RemoveMarkerMarker>
+      <summary>
+        Удаляет точку, если она существует.
+      </summary>
+      <param name="marker">
+        Существующий маркер.
+      </param>
+      <returns>
+        <see langword="true"/>, если маркер был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="marker"/> - <see langword="null"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemoveMarkerMarker>
+    <RemovePolygonString>
+      <summary>
+        Удаляет полигон, если он существует.
+      </summary>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <returns>
+        <see langword="true"/>, если полигон был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="polygonName"/> - <see langword="null"/> или <see cref="String.Empty"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemovePolygonString>
+    <RemovePolygonPolygon>
+      <summary>
+        Удаляет полигон, если он существует.
+      </summary>
+      <param name="polygon">
+        Существующий полигон.
+      </param>
+      <returns>
+        <see langword="true"/>, если полигон был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="polygon"/> - <see langword="null"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemovePolygonPolygon>
+    <RemoveRouteString>
+      <summary>
+        Удаляет маршрут, если он существует.
+      </summary>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <returns>
+        <see langword="true"/>, если маршрут был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="routeName"/> - <see langword="null"/> или <see cref="String.Empty"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemoveRouteString>
+    <RemoveRouteRoute>
+      <summary>
+        Удаляет маршрут, если он существует.
+      </summary>
+      <param name="route">
+        Существующий маршрут.
+      </param>
+      <returns>
+        <see langword="true"/>, если маршрут был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="route"/> - <see langword="null"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemoveRouteRoute>
+    <RemoveMarkerFromLayoutPoint>
+      <summary>
+        Удаляет маркер из выбранного слоя.
+      </summary>
+      <param name="screenPoint">
+        Точка монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="layoutId">
+        Название слоя, с которого будет удаляться маркер.
+      </param>
+      <returns>
+        <see langword="true"/>, если маркер был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="layoutId"/> - <see langword="null"/> или <see cref="String.Empty"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemoveMarkerFromLayoutPoint>
+    <RemoveMarkerFromLayoutPointLatLng>
+      <summary>
+        Удаляет маркер из выбранного слоя.
+      </summary>
+      <param name="coords">
+        Координата маркера на карте.
+      </param>
+      <param name="layoutId">
+        Название слоя, с которого будет удаляться маркер.
+      </param>
+      <returns>
+        <see langword="true"/>, если маркер был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="layoutId"/> - <see langword="null"/> или <see cref="String.Empty"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemoveMarkerFromLayoutPointLatLng>
+    <RemoveMarkerFromLayoutMarker>
+      <summary>
+        Удаляет маркер из выбранного слоя.
+      </summary>
+      <param name="marker">
+        Существующий маркер для удаления.
+      </param>
+      <param name="layoutId">
+        Название слоя, с которого будет удаляться маркер.
+      </param>
+      <returns>
+        <see langword="true"/>, если маркер был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="marker"/> - <see langword="null"/>, возвращает <see langword="false"/>.
+        Если <paramref name="layoutId"/> - <see langword="null"/> или <see cref="String.Empty"/>, возвращает <see langword="false"/>.
+      </returns>
+    </RemoveMarkerFromLayoutMarker>
+    <RemovePolygonFromLayoutString>
+      <summary>
+        Удаляет полигон из выбранного слоя.
+      </summary>
+      <param name="polygonName">
+        Название полигона для удаления.
+      </param>
+      <param name="layoutId">
+        Название слоя, с которого будет удаляться полигон.
+      </param>
+      <returns>
+        <see langword="true"/>, если полигон был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="polygonName"/> - <see langword="null"/> или <see cref="String.Empty"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemovePolygonFromLayoutString>
+    <RemovePolygonFromLayoutPolygon>
+      <summary>
+        Удаляет полигон из выбранного слоя.
+      </summary>
+      <param name="polygon">
+        Существующий полигон.
+      </param>
+      <param name="layoutId">
+        Название слоя, с которого будет удаляться полигон.
+      </param>
+      <returns>
+        <see langword="true"/>, если полигон был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="polygon"/> - <see langword="null"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemovePolygonFromLayoutPolygon>
+    <RemoveRouteFromLayoutString>
+      <summary>
+        Удаляет маршрут из выбранного слоя.
+      </summary>
+      <param name="routeName">
+        Название маршрута, для удаления.
+      </param>
+      <param name="layoutId">
+        Название слоя, с которого будет удаляться полигон.
+      </param>
+      <returns>
+        <see langword="true"/>, если маршрут был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="routeName"/> - <see langword="null"/> или <see cref="String.Empty"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemoveRouteFromLayoutString>
+    <RemoveRouteFromLayoutRoute>
+      <summary>
+        Удаляет маршрут из выбранного слоя.
+      </summary>
+      <param name="route">
+        Существующий маршрут.
+      </param>
+      <param name="layoutId">
+        Название слоя, с которого будет удаляться маршрут.
+      </param>
+      <returns>
+        <see langword="true"/>, если маршрут был удалён. Иначе <see langword="false"/>.
+        Если <paramref name="route"/> - <see langword="null"/>, возвращает <see langword="false"/>
+      </returns>
+    </RemoveRouteFromLayoutRoute>
+    <GetMarkersByLayoutOrNull>
+      <summary>
+        Возвращает коллекцию маркеров из указанного слоя.
+      </summary>
+      <param name="layoutId">
+        Название слоя, с которого будут получатся маркера.
+      </param>
+      <returns>
+        Коллекция <see cref="GMap.NET.WindowsForms.GMapMarker"/>, если слой существует. Иначе <see langword="null"/>.
+      </returns>
+    </GetMarkersByLayoutOrNull>
+    <GetPolygonsByLayoutOrNull>
+      <summary>
+        Возвращает коллекцию полигонов из указанного слоя.
+      </summary>
+      <param name="layoutId">
+        Название слоя, с которого будут получатся полигоны.
+      </param>
+      <returns>
+        Коллекция <see cref="GMap.NET.WindowsForms.GMapPolygon"/>, если слой существует. Иначе <see langword="null"/>.
+      </returns>
+    </GetPolygonsByLayoutOrNull>
+    <GetRoutesByLayoutOrNull>
+      <summary>
+        Возвращает коллекцию маршрутов из указанного слоя.
+      </summary>
+      <param name="layoutId">
+        Название слоя, с которого будут получатся маршруты.
+      </param>
+      <returns>
+        Коллекция <see cref="GMap.NET.WindowsForms.GMapRoute"/>, если слой существует. Иначе <see langword="null"/>.
+      </returns>
+    </GetRoutesByLayoutOrNull>
+    <GetMarkerByCoordsOrNullPoint>
+      <summary>
+        Возвращает первое вхождение маркера по указанным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <returns>
+        Экземпляр <see cref="GMap.NET.WindowsForms.GMapMarker"/>, если он находится не подалёку от <paramref name="screenPoint"/>. Иначе <see langword="null"/>.
+      </returns>
+    </GetMarkerByCoordsOrNullPoint>
+    <GetMarkerByCoordsOrNullPointLatLng>
+      <summary>
+        Возвращает первое вхождение маркера по указанным параметрам.
+      </summary>
+      <param name="coord">
+        Координата маркера.
+      </param>
+      <returns>
+        Экземпляр <see cref="GMap.NET.WindowsForms.GMapMarker"/>, если он находится не подалёку от <paramref name="coord"/>. Иначе <see langword="null"/>.
+      </returns>
+    </GetMarkerByCoordsOrNullPointLatLng>
+    <GetMarkerByCoordsInLayoutOrNullPoint>
+      <summary>
+        Возвращает первое вхождение маркера по указанным параметрам.
+      </summary>
+      <param name="screenPoint">
+        Точка монитора над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
+      </param>
+      <param name="layoutId">
+        Слой, в котором будет искаться маркер.
+      </param>
+      <returns>
+        Экземпляр <see cref="GMap.NET.WindowsForms.GMapMarker"/>, если он находится не подалёку от <paramref name="screenPoint"/>. Иначе <see langword="null"/>.
+      </returns>
+    </GetMarkerByCoordsInLayoutOrNullPoint>
+    <GetMarkerByCoordsInLayoutOrNullPointLatLng>
+      <summary>
+        Возвращает первое вхождение маркера по указанным параметрам.
+      </summary>
+      <param name="coord">
+        Координата маркера.
+      </param>
+      <param name="layoutId">
+        Слой, в котором будет искаться маркер.
+      </param>
+      <returns>
+        Экземпляр <see cref="GMap.NET.WindowsForms.GMapMarker"/>, если он находится не подалёку от <paramref name="coord"/>. Иначе <see langword="null"/>.
+      </returns>
+    </GetMarkerByCoordsInLayoutOrNullPointLatLng>
+    <GetPolygonByNameOrNull>
+      <summary>
+        Возвращает полигон по имени.
+      </summary>
+      <param name="polygonName">
+        Название полигона, для поиска.
+      </param>
+      <returns>
+        Экземпляр <see cref="GMap.NET.WindowsForms.GMapPolygon"/>, если существует с таким <paramref name="polygonName"/>. Иначе <see langword="null"/>.
+      </returns>
+    </GetPolygonByNameOrNull>
+    <GetRouteByNameOrNull>
+      <summary>
+        Возвращает маршрут по имени.
+      </summary>
+      <param name="routeName">
+        Название маршрута, для поиска.
+      </param>
+      <returns>
+        Экземпляр <see cref="GMap.NET.WindowsForms.GMapRoute"/>, если существует с таким <paramref name="routeName"/>. Иначе <see langword="null"/>.
+      </returns>
+    </GetRouteByNameOrNull>
+    <LayoutExist>
+      <summary>
+        Проверяет, существует ли слой по указанному названию.
+      </summary>
+      <param name="layoutId">
+        Название слоя для поиска.
+      </param>
+      <returns>
+        <see langword="true"/>, если слой с таким <paramref name="layoutId"/> существует. Иначе <see langword="false"/>.
+      </returns>
+    </LayoutExist>
+    <ClearMap>
+      <summary>
+        Убирает все объекты с карты.
+      </summary>
+    </ClearMap>
+    <ClearLayout>
+      <summary>
+        Чистит слой по названию, если он существует.
+      </summary>
+      <param name="layoutId">
+        Название слоя очистки.
+      </param>
+    </ClearLayout>
+    <ClearAllMarkers>
+      <summary>
+        Убирает все независимые маркера с карты.
+      </summary>
+    </ClearAllMarkers>
+    <ClearAllPolygons>
+      <summary>
+        Убирает все полигоны с карты.
+      </summary>
+    </ClearAllPolygons>
+    <ClearAllRoutes>
+      <summary>
+        Убирает все маршруты с карты.
+      </summary>
+    </ClearAllRoutes>
+    <AddLayout>
+      <summary>
+        Добавляет новый слой на карту, если он не существует.
+      </summary>
+      <param name="layoutId">
+        Название нового слоя.
+      </param>
+    </AddLayout>
+    <RemoveLayout>
+      <summary>
+        Удаляет слой по названию, если он существует.
+      </summary>
+      <param name="layoutId">
+        Название слоя для удаления.
+      </param>
+    </RemoveLayout>
+    <ZoomPlus>
+      <summary>
+        Прибавляет 1 к приближению карты.
+      </summary>
+    </ZoomPlus>
+    <ZoomMinus>
+      <summary>
+        Убавляет 1 к приближению карты.
+      </summary>
+    </ZoomMinus>
+  </members>
+  <members name="markers_comparator">
+    <MarkersComparator>
+      <summary>
+        Служит для сравнивания двух объектов типа <see cref="GMap.NET.WindowsForms.GMapMarker"/>.
+      </summary>
+    </MarkersComparator>
+  </members>
+  <members name="polygons_comparator">
+    <PolygonsComparator>
+      <summary>
+        Служит для сравнивания двух объектов типа <see cref="GMap.NET.WindowsForms.GMapPolygon"/>.
+      </summary>
+    </PolygonsComparator>
+  </members>
+  <members name="routes_comparator">
+    <RoutesComparator>
+      <summary>
+        Служит для сравнивания двух объектов типа <see cref="GMap.NET.WindowsForms.GMapRoute"/>.
+      </summary>
+    </RoutesComparator>
   </members>
 </docs>

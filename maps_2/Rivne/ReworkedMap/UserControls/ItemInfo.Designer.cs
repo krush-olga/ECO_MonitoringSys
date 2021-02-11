@@ -1,5 +1,5 @@
 ﻿
-namespace Maps.UserControls
+namespace UserMap.UserControls
 {
     partial class ItemInfo
     {
@@ -44,6 +44,7 @@ namespace Maps.UserControls
             this.DeleteButton = new System.Windows.Forms.Button();
             this.HideButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
+            this.AdditionInfoButton = new System.Windows.Forms.Button();
             this.GeneralInfoGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -166,7 +167,7 @@ namespace Maps.UserControls
             // 
             this.ChangeButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ChangeButton.Enabled = false;
-            this.ChangeButton.Location = new System.Drawing.Point(32, 237);
+            this.ChangeButton.Location = new System.Drawing.Point(97, 237);
             this.ChangeButton.Name = "ChangeButton";
             this.ChangeButton.Size = new System.Drawing.Size(75, 23);
             this.ChangeButton.TabIndex = 1;
@@ -176,7 +177,7 @@ namespace Maps.UserControls
             // DeleteButton
             // 
             this.DeleteButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.DeleteButton.Location = new System.Drawing.Point(148, 237);
+            this.DeleteButton.Location = new System.Drawing.Point(184, 237);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(75, 23);
             this.DeleteButton.TabIndex = 2;
@@ -205,10 +206,21 @@ namespace Maps.UserControls
             this.label6.TabIndex = 5;
             this.label6.Text = "Додаткова інформація про об\'єкт";
             // 
+            // AdditionInfoButton
+            // 
+            this.AdditionInfoButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.AdditionInfoButton.Location = new System.Drawing.Point(9, 237);
+            this.AdditionInfoButton.Name = "AdditionInfoButton";
+            this.AdditionInfoButton.Size = new System.Drawing.Size(75, 23);
+            this.AdditionInfoButton.TabIndex = 6;
+            this.AdditionInfoButton.Text = "Додатково";
+            this.AdditionInfoButton.UseVisualStyleBackColor = true;
+            // 
             // ItemInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.AdditionInfoButton);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.HideButton);
             this.Controls.Add(this.DeleteButton);
@@ -240,5 +252,6 @@ namespace Maps.UserControls
         private System.Windows.Forms.Label CreatorNameLabel;
         private System.Windows.Forms.Button HideButton;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button AdditionInfoButton;
     }
 }

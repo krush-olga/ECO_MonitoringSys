@@ -7,8 +7,8 @@
     <ProjectGuid>{5D83FACC-D62F-45C9-B1F0-EBC98E54CE58}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Odessa</RootNamespace>
-    <AssemblyName>Odessa</AssemblyName>
+    <RootNamespace>UserMap</RootNamespace>
+    <AssemblyName>UserMap</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -39,7 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Map.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\UserMap.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -111,53 +111,12 @@
     <Compile Include="ReworkedMap\CompareSettings.Designer.cs">
       <DependentUpon>CompareSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldMap\DeleteForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\DeleteForm.Designer.cs">
-      <DependentUpon>DeleteForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\Elements.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\Elements.Designer.cs">
-      <DependentUpon>Elements.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\EmissionsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\EmissionsForm.Designer.cs">
-      <DependentUpon>EmissionsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\Environment.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\Environment.Designer.cs">
-      <DependentUpon>Environment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\NormAllForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\NormAllForm.Designer.cs">
-      <DependentUpon>NormAllForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\NormForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\NormForm.Designer.cs">
-      <DependentUpon>NormForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\Map.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\Map.Designer.cs">
-      <DependentUpon>Map.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\NewMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReworkedMap\Core\Context.cs" />
     <Compile Include="ReworkedMap\Core\IDescribable.cs" />
     <Compile Include="ReworkedMap\Core\NamedGoogleMarker.cs" />
+    <Compile Include="ReworkedMap\Helpers\ComboBoxExtensions.cs" />
+    <Compile Include="ReworkedMap\Helpers\IEnumerableExtensions.cs" />
     <Compile Include="ReworkedMap\Helpers\MapCache.cs" />
     <Compile Include="ReworkedMap\Helpers\MapHelper.cs" />
     <Compile Include="ReworkedMap\HelpWindows\ItemConfigurationWindow.cs">
@@ -167,64 +126,33 @@
       <DependentUpon>ItemConfigurationWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ReworkedMap\Core\Map.cs" />
+    <Compile Include="ReworkedMap\HelpWindows\MultiBindingObjectEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReworkedMap\HelpWindows\MultiBindingObjectEditor.Designer.cs">
+      <DependentUpon>MultiBindingObjectEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReworkedMap\MapWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ReworkedMap\MapWindow.Designer.cs">
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReworkedMap\Services\FileLogger.cs" />
+    <Compile Include="ReworkedMap\Services\ILogger.cs" />
     <Compile Include="ReworkedMap\UserControls\ItemInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ReworkedMap\UserControls\ItemInfo.Designer.cs">
       <DependentUpon>ItemInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="OldMap\Risks.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\Risks.Designer.cs">
-      <DependentUpon>Risks.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\Rozrachunki.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\Rozrachunki.Designer.cs">
-      <DependentUpon>Rozrachunki.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OldMap\Taxes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OldMap\Taxes.Designer.cs">
-      <DependentUpon>Taxes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ReworkedMap\ViewModel\EmissionsControllerVM.cs" />
+    <Compile Include="ReworkedMap\ViewModel\ControllerVM.cs" />
     <Compile Include="ReworkedMap\ViewModel\Loader.cs" />
     <EmbeddedResource Include="ReworkedMap\CompareForm.resx">
       <DependentUpon>CompareForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReworkedMap\CompareSettings.resx">
       <DependentUpon>CompareSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\DeleteForm.resx">
-      <DependentUpon>DeleteForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\Elements.resx">
-      <DependentUpon>Elements.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\EmissionsForm.resx">
-      <DependentUpon>EmissionsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\Environment.resx">
-      <DependentUpon>Environment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\NormAllForm.resx">
-      <DependentUpon>NormAllForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\NormForm.resx">
-      <DependentUpon>NormForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\Map.resx">
-      <DependentUpon>Map.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -239,20 +167,14 @@
     <EmbeddedResource Include="ReworkedMap\HelpWindows\ItemConfigurationWindow.resx">
       <DependentUpon>ItemConfigurationWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ReworkedMap\HelpWindows\MultiBindingObjectEditor.resx">
+      <DependentUpon>MultiBindingObjectEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReworkedMap\MapWindow.resx">
       <DependentUpon>MapWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReworkedMap\UserControls\ItemInfo.resx">
       <DependentUpon>ItemInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\Risks.resx">
-      <DependentUpon>Risks.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\Rozrachunki.resx">
-      <DependentUpon>Rozrachunki.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OldMap\Taxes.resx">
-      <DependentUpon>Taxes.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

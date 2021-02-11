@@ -5,9 +5,9 @@ using System.Drawing;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
-using Maps.Helpers;
+using UserMap.Helpers;
 
-namespace Maps.Core
+namespace UserMap.Core
 {
     /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/DrawContext/*'/>
     public abstract class DrawContext : IDisposable

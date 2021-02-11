@@ -1,4 +1,4 @@
-﻿namespace Maps.Core
+﻿namespace UserMap.Core
 {
     /// <include file='Docs/Core/DescribableDoc.xml' path='docs/members[@name="describable_interface"]/IDescribable/*'/>
     public interface IDescribable

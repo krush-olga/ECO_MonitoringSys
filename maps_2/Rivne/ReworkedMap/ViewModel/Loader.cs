@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Maps.HelpWindows;
+using UserMap.HelpWindows;
 
-namespace Maps.ViewModel
+namespace UserMap.ViewModel
 {
     public abstract class Loader<T>
     {

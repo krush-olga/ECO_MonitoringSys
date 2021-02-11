@@ -1,4 +1,4 @@
-﻿namespace Maps
+﻿namespace UserMap
 {
     partial class CompareForm
     {
