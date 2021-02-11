@@ -57,7 +57,7 @@ namespace oprForm
                 Issue item = issuesLB.SelectedItem as Issue;
 
                 string[] cols = { "issue_id", "name", "description", "Tema" };
-                string[] values = { item.id.ToString(), DBUtil.AddQuotes(nameTB.Text),
+                string[] values = { item.Id.ToString(), DBUtil.AddQuotes(nameTB.Text),
                     DBUtil.AddQuotes(descrTB.Text), DBUtil.AddQuotes(TemaTB.Text) };
 
                 db.UpdateRecord("issues", cols, values);
@@ -75,9 +75,9 @@ namespace oprForm
                 return;
             }
 
-            nameTB.Text = issue.name;
-            descrTB.Text = issue.description;
-            TemaTB.Text = issue.tema;
+            nameTB.Text = issue.Name;
+            descrTB.Text = issue.Description;
+            TemaTB.Text = issue.Tema;
         }
         private void issuesLB_SelectedIndexChanged(object sender, EventArgs e)
         {//show
@@ -93,7 +93,7 @@ namespace oprForm
                 Issue item = issuesLB.SelectedItem as Issue;
                 if (confirm.Equals(DialogResult.Yes))
                 {
-                    db.DeleteFromDB("issues", "issue_id", item.id.ToString());
+                    db.DeleteFromDB("issues", "issue_id", item.Id.ToString());
                 }
                 RefreshIssues();
                 clear_textbox();

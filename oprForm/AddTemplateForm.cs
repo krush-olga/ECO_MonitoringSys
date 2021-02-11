@@ -33,7 +33,7 @@ namespace oprForm
                     return;
             }
 
-            materialListGrid.Rows.Add(res, res.description);
+            materialListGrid.Rows.Add(res, res.Description);
         }
         
         private void RemoveResourceFromGrid()
@@ -64,9 +64,9 @@ namespace oprForm
         {
             Resource res = materialListGrid.Rows[e.RowIndex].Cells[0].Value as Resource;
             if (e.RowIndex == valueCol)
-                res.value = Int32.Parse(materialListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                res.Value = Int32.Parse(materialListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
             if (e.RowIndex == descCol)
-                res.description = materialListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                res.Description = materialListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
         }
 
         private void addBtn_Click(object sender, EventArgs e)
@@ -86,7 +86,7 @@ namespace oprForm
                 if (res != null)
                 {
                     string[] fields = { "template_id", "resource_id" };
-                    string[] values = { evId.ToString(), res.id.ToString() };
+                    string[] values = { evId.ToString(), res.Id.ToString() };
 
                     db.InsertToBD("template_resource", fields, values);
                 }

@@ -90,9 +90,9 @@ namespace oprForm
         {
             if (issues.Count != 0)
             {
-                issueTB.Text = issues[0].name;
-                issueDescTB.Text = issues[0].description;
-                textBox2.Text = issues[0].tema;
+                issueTB.Text = issues[0].Name;
+                issueDescTB.Text = issues[0].Description;
+                textBox2.Text = issues[0].Tema;
             }
             else
             {
@@ -139,16 +139,16 @@ namespace oprForm
                 {
                     db.Connect();
 
-                    ev.dmVer = approved ? "1" : "0";
+                    ev.DmVer = approved ? "1" : "0";
 
                     updateEvent(ev);
 
                     string[] cols = { "event_id", "dm_verification" };
-                    string[] values = { ev.id.ToString(), approved.ToString() };
+                    string[] values = { ev.Id.ToString(), approved.ToString() };
 
                     db.UpdateRecord("event", cols, values);
 
-                    MessageBox.Show($"Захід \"{ev.name}\" було {(approved ? "підтверджено" : "відхилено")}", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Захід \"{ev.Name}\" було {(approved ? "підтверджено" : "відхилено")}", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     
                     UpdateEvents();
                 }
@@ -171,14 +171,14 @@ namespace oprForm
                 approveGB.Visible = true;
                 db.Connect();
                 var resourcesForEvent = db.GetRows("event_resource", "event_id, resource_id, description, value",
-                    "event_id=" + ev.id);
+                    "event_id=" + ev.Id);
                 var resources = new List<Resource>();
                 foreach (var resForEvent in resourcesForEvent)
                 {
                     var res = db.GetRows("resource", "*", "resource_id=" + resForEvent[1]);
                     var resource = ResourceMapper.Map(res[0]);
-                    resource.description = resForEvent[2].ToString();
-                    resource.value = Int32.Parse(resForEvent[3].ToString());
+                    resource.Description = resForEvent[2].ToString();
+                    resource.Value = Int32.Parse(resForEvent[3].ToString());
                     resources.Add(resource);
                 }
 
@@ -186,14 +186,14 @@ namespace oprForm
                 double totalPrice = 0;
                 foreach (var r in resources)
                 {
-                    eventListGrid.Rows.Add(r, r.description, r.value, r.unit, r.price, r.value * r.price);
-                    totalPrice += r.value * r.price;
+                    eventListGrid.Rows.Add(r, r.Description, r.Value, r.Unit, r.Price, r.Value * r.Price);
+                    totalPrice += r.Value * r.Price;
                 }
                 issueCostTB.Text = totalPrice.ToString();
 
                 updateEvent(ev);
 
-                var docObj = db.GetRows("event_documents", "*", "event_id=" + ev.id);
+                var docObj = db.GetRows("event_documents", "*", "event_id=" + ev.Id);
                 var docs = new List<Document>();
                 foreach (var row in docObj)
                 {
@@ -220,13 +220,13 @@ namespace oprForm
 
         private void updateEvent(Event ev)
         {
-            issueDescTB.Text = ev.description;
-            dmCheck.Checked = ukrToBool(ev.dmVer);
-            lawyerCheck.Checked = ukrToBool(ev.lawyerVer);
+            issueDescTB.Text = ev.Description;
+            dmCheck.Checked = ukrToBool(ev.DmVer);
+            lawyerCheck.Checked = ukrToBool(ev.LawyerVer);
 
-            if (ev.issueId != -1)
+            if (ev.IssueId != -1)
             {
-                var issName = db.GetValue("issues", "name", "issue_id=" + ev.issueId);
+                var issName = db.GetValue("issues", "name", "issue_id=" + ev.IssueId);
                 issueTB.Text = issName.ToString();
             }
             else
@@ -280,13 +280,13 @@ namespace oprForm
             {
                 var expert = expertsLB.SelectedItem as Expert;
                 eventsLB.Items.Clear();
-                if (expert.id == -1)
+                if (expert.Id == -1)
                 {
                     eventsLB.Items.AddRange(events.ToArray());
                 }
                 else
                 {
-                    eventsLB.Items.AddRange((from ev in events where expertOfUser[ev.userId] == expert.id select ev).ToArray());
+                    eventsLB.Items.AddRange((from ev in events where expertOfUser[ev.UserId] == expert.Id select ev).ToArray());
                 }
             }
         }
@@ -301,15 +301,15 @@ namespace oprForm
             {
                 var res = db.GetRows("resource", "*", "resource_id=" + resForEvent[1]);
                 var resource = ResourceMapper.Map(res[0]);
-                resource.description = resForEvent[2].ToString();
-                resource.value = Int32.Parse(resForEvent[3].ToString());
+                resource.Description = resForEvent[2].ToString();
+                resource.Value = Int32.Parse(resForEvent[3].ToString());
                 resources.Add(resource);
             }
 
             double totalPrice = 0;
             foreach (var r in resources)
             {
-                totalPrice += r.value * r.price;
+                totalPrice += r.Value * r.Price;
             }
 
             return totalPrice;
@@ -326,7 +326,7 @@ namespace oprForm
             {
                 eventsLB.Items.Clear();
                 db.Connect();
-                var obj = db.GetRows("event", "*", "issue_id=" + (issuesLB.SelectedItem as Issue).id);
+                var obj = db.GetRows("event", "*", "issue_id=" + (issuesLB.SelectedItem as Issue).Id);
                 if (obj.Count != 0)
                 {
                     events.Clear();
@@ -338,12 +338,12 @@ namespace oprForm
                     double issueCost = 0;
                     foreach (var ev in events)
                     {
-                        issueCost += GetTotalCost(ev.id);
+                        issueCost += GetTotalCost(ev.Id);
                     }
                     issueCostTB.Text = issueCost.ToString();
 
                     // Get list of user ids
-                    var userIds = (from ev in events select Int32.Parse(ev.userId.ToString())).ToArray();
+                    var userIds = (from ev in events select Int32.Parse(ev.UserId.ToString())).ToArray();
 
                     // Get list of expert ids from users
                     List<int> expertIds = new List<int>();
@@ -361,8 +361,8 @@ namespace oprForm
                     var experts = new List<Expert>();
 
                     var emptyExpert = new Expert();
-                    emptyExpert.id = -1;
-                    emptyExpert.name = "Усі";
+                    emptyExpert.Id = -1;
+                    emptyExpert.Name = "Усі";
                     experts.Add(emptyExpert);
 
                     expertsLB.Items.Clear();
@@ -443,17 +443,17 @@ namespace oprForm
             {
                 issueCounter++;
 
-                issueTB.Text = issues[issueCounter].name;
-                issueDescTB.Text = issues[issueCounter].description;
-                textBox2.Text = issues[issueCounter].tema;
+                issueTB.Text = issues[issueCounter].Name;
+                issueDescTB.Text = issues[issueCounter].Description;
+                textBox2.Text = issues[issueCounter].Tema;
             }
             else if (issueCounter == issues.Count - 1)
             {
                 issueCounter = 0;
 
-                issueTB.Text = issues[issueCounter].name;
-                issueDescTB.Text = issues[issueCounter].description;
-                textBox2.Text = issues[issueCounter].tema;
+                issueTB.Text = issues[issueCounter].Name;
+                issueDescTB.Text = issues[issueCounter].Description;
+                textBox2.Text = issues[issueCounter].Tema;
             }
         }
 
@@ -463,17 +463,17 @@ namespace oprForm
             {
                 issueCounter--;
 
-                issueTB.Text = issues[issueCounter].name;
-                issueDescTB.Text = issues[issueCounter].description;
-                textBox2.Text = issues[issueCounter].tema;
+                issueTB.Text = issues[issueCounter].Name;
+                issueDescTB.Text = issues[issueCounter].Description;
+                textBox2.Text = issues[issueCounter].Tema;
             }
             else if (issueCounter == 0)
             {
                 issueCounter = issues.Count - 1;
 
-                issueTB.Text = issues[issueCounter].name;
-                issueDescTB.Text = issues[issueCounter].description;
-                textBox2.Text = issues[issueCounter].tema;
+                issueTB.Text = issues[issueCounter].Name;
+                issueDescTB.Text = issues[issueCounter].Description;
+                textBox2.Text = issues[issueCounter].Tema;
             }
         }
     }

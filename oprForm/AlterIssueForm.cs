@@ -22,12 +22,12 @@ namespace oprForm
 
             InitializeComponent();
             this.item = item;
-            nameTB.Text = item.name;
-            descrTB.Text = item.description;
+            nameTB.Text = item.Name;
+            descrTB.Text = item.Description;
             // Add choice to add null to calculation series
             var emptySeries = new CalculationSeries();
-            emptySeries.id = -1;
-            emptySeries.name = "Без серiї";
+            emptySeries.Id = -1;
+            emptySeries.Name = "Без серiї";
 
             //seriesCB.Items.Add(emptySeries);
             //seriesCB.SelectedIndex = 0; //Bugged
@@ -59,7 +59,7 @@ namespace oprForm
             if (confirm.Equals(DialogResult.Yes))
             {
                 db.Connect();
-                db.DeleteFromDB("issues", "issue_id", item.id.ToString());
+                db.DeleteFromDB("issues", "issue_id", item.Id.ToString());
                 db.Disconnect();
                 this.Close();
             }
@@ -67,15 +67,15 @@ namespace oprForm
 
         private void addBtn_Click(object sender, EventArgs e)
         {
-            item.name = nameTB.Text;
-            item.description = descrTB.Text;
+            item.Name = nameTB.Text;
+            item.Description = descrTB.Text;
 
             db.Connect();
             string[] cols = { "issue_id", "name", "description" };
 
-            //int calcSeriesId = (seriesCB.SelectedItem as CalculationSeries).id;
+            //int calcSeriesId = (seriesCB.SelectedItem as CalculationSeries).Id;
             //string calcSeries = calcSeriesId == -1 ? "null" : calcSeriesId.ToString();
-            string[] values = { item.id.ToString(), DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descrTB.Text) };
+            string[] values = { item.Id.ToString(), DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descrTB.Text) };
 
             db.UpdateRecord("issues", cols, values);
             db.Disconnect();

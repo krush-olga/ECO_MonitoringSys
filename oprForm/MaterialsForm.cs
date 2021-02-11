@@ -38,7 +38,7 @@ namespace oprForm
 
             foreach (var r in res)
             {
-                resDGV.Rows.Add(r, r.price, r.unit, r.description);
+                resDGV.Rows.Add(r, r.Price, r.Unit, r.Description);
             }
 
             db.Disconnect();
@@ -64,7 +64,7 @@ namespace oprForm
                         {
                             db.Connect();
                             string cols = "resource_id";
-                            string values = res.id.ToString();
+                            string values = res.Id.ToString();
 
                             db.DeleteFromDB("resource", cols, values);
                             resDGV.Rows.Remove(row);
@@ -94,7 +94,7 @@ namespace oprForm
 
                 var res = resDGV.Rows[cur_row].Cells[0].Value as Resource;
                 string[] cols = { "resource_id", "name", "description", "units", "price" };
-                string[] values = { res.id.ToString(), DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descriptionTB.Text),
+                string[] values = { res.Id.ToString(), DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descriptionTB.Text),
                 DBUtil.AddQuotes(measureTB.Text), priceTB.Text.ToString() };
 
                 db.UpdateRecord("resource", cols, values);

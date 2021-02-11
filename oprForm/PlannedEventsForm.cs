@@ -77,7 +77,7 @@ namespace oprForm
 
                 string[] evFields = new string[] { "name", "description", "id_of_user", "issue_id" };
 
-                string issueId = issue.id.ToString();
+                string issueId = issue.Id.ToString();
                 string[] evValues = new string[] { evName, evDesc, user.ToString(), issueId };
 
                 int evId = db.InsertToBD("event", evFields, evValues);
@@ -95,7 +95,7 @@ namespace oprForm
                             value = row.Cells[valueCol].Value.ToString();
 
                         string[] fields = { "event_id", "resource_id", "value", "description" };
-                        string[] values = { evId.ToString(), res.id.ToString(), value, desc };
+                        string[] values = { evId.ToString(), res.Id.ToString(), value, desc };
 
                         db.InsertToBD("event_resource", fields, values);
                     }
@@ -124,7 +124,7 @@ namespace oprForm
                     return;
                 }
                 var resourcesForEvent = db.GetRows("template_resource", "template_id, resource_id",
-                    "template_id=" + ev.id);
+                    "template_id=" + ev.Id);
                 var resources = new List<Resource>();
                 foreach (var resForEvent in resourcesForEvent)
                 {
@@ -135,9 +135,9 @@ namespace oprForm
                 eventListGrid.Rows.Clear();
                 foreach (var r in resources)
                 {
-                    eventListGrid.Rows.Add(r, r.description);
+                    eventListGrid.Rows.Add(r, r.Description);
                 }
-                descTB.Text = ev.description;
+                descTB.Text = ev.Description;
 
                 db.Disconnect();
             }
@@ -156,7 +156,7 @@ namespace oprForm
                         var val = Int32.Parse(eventListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
                         if (val > 0)
                         {
-                            res.value = val;
+                            res.Value = val;
                             return;
                         }
                         else
@@ -177,7 +177,7 @@ namespace oprForm
                 {
                     var val = eventListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                     if (val.Length != 0 && !val.Equals(" "))
-                        res.description = val;
+                        res.Description = val;
                     else
                     {
                         MessageBox.Show("Опис не повинен бути пустим.");
@@ -225,7 +225,7 @@ namespace oprForm
                 if (row.Cells[0].Value == res)
                     return;
             }
-            eventListGrid.Rows.Add(res, res.description);
+            eventListGrid.Rows.Add(res, res.Description);
         }
     }
 }

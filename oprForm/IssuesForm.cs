@@ -55,9 +55,9 @@ namespace oprForm
 
         private void ShowIssue(Issue issue)
         {
-            nameLbl.Text = issue.name;
-            descrLbl.Text = issue.description;
-            dateLbl.Text = issue.creationDate.ToString();
+            nameLbl.Text = issue.Name;
+            descrLbl.Text = issue.Description;
+            dateLbl.Text = issue.CreationDate.ToString();
         }
 
         private Issue lastSelected;

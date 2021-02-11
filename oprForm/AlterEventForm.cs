@@ -65,21 +65,21 @@ namespace oprForm
                     alterGB.Visible = true;
                     db.Connect();
                     var resourcesForEvent = db.GetRows("event_resource", "event_id, resource_id, description, value",
-                        "event_id=" + ev.id);
+                        "event_id=" + ev.Id);
                     var resources = new List<Resource>();
                     foreach (var resForEvent in resourcesForEvent)
                     {
                         var res = db.GetRows("resource", "*", "resource_id=" + resForEvent[1]);
                         var resource = ResourceMapper.Map(res[0]);
-                        resource.description = resForEvent[2].ToString();
-                        resource.value = Int32.Parse(resForEvent[3].ToString());
+                        resource.Description = resForEvent[2].ToString();
+                        resource.Value = Int32.Parse(resForEvent[3].ToString());
                         resources.Add(resource);
                     }
 
                     eventListGrid.Rows.Clear();
                     foreach (var r in resources)
                     {
-                        eventListGrid.Rows.Add(r, r.description, r.value);
+                        eventListGrid.Rows.Add(r, r.Description, r.Value);
                     }
 
                     updateEvent(ev);
@@ -101,7 +101,7 @@ namespace oprForm
                         var val = Int32.Parse(eventListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
                         if (val > 0)
                         {
-                            res.value = val;
+                            res.Value = val;
                             return;
                         }
                         else
@@ -122,7 +122,7 @@ namespace oprForm
                 {
                     var val = eventListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                     if (val.Length != 0 && !val.Equals(" "))
-                        res.description = val;
+                        res.Description = val;
                     else
                     {
                         MessageBox.Show("Опис не повинен бути пустим.");
@@ -138,15 +138,15 @@ namespace oprForm
 
         private void updateEvent(Event ev)
         {
-            evNameTB.Text = ev.name;
-            descTB.Text = ev.description;
+            evNameTB.Text = ev.Name;
+            descTB.Text = ev.Description;
 
             foreach (var i in issuesCB.Items)
             {
                 if (i is Issue)
                 {
                     var iss = i as Issue;
-                    if (iss.id == ev.issueId)
+                    if (iss.Id == ev.IssueId)
                     {
                         issuesCB.SelectedItem = iss;
                     }
@@ -162,7 +162,7 @@ namespace oprForm
             {
                 Event ev = eventsLB.SelectedItem as Event;
                 db.Connect();
-                db.DeleteFromDB("event", "event_id", ev.id.ToString());
+                db.DeleteFromDB("event", "event_id", ev.Id.ToString());
                 getEvents();
                 db.Disconnect();
                 eventListGrid.Rows.Clear();
@@ -174,12 +174,12 @@ namespace oprForm
             var ev = eventsLB.SelectedItem as Event;
             db.Connect();
             string[] cols = { "event_id", "name", "description", "issue_id" };
-            string[] values = { ev.id.ToString(), DBUtil.AddQuotes(evNameTB.Text), DBUtil.AddQuotes(descTB.Text), (issuesCB.SelectedItem as Issue).id.ToString() };
+            string[] values = { ev.Id.ToString(), DBUtil.AddQuotes(evNameTB.Text), DBUtil.AddQuotes(descTB.Text), (issuesCB.SelectedItem as Issue).Id.ToString() };
 
             db.UpdateRecord("event", cols, values);
 
             //Get all resources for thar event
-            var ress = db.GetRows("event_resource", "resource_id", "event_id=" + ev.id);
+            var ress = db.GetRows("event_resource", "resource_id", "event_id=" + ev.Id);
 
             //Update resources for event
             foreach (DataGridViewRow row in eventListGrid.Rows)
@@ -187,14 +187,14 @@ namespace oprForm
                 var res = row.Cells[0].Value as Resource;
 
                 //Remove present resources to delete left ones
-                ress.RemoveAll(o => Int32.Parse(o[0].ToString()) == res.id);
+                ress.RemoveAll(o => Int32.Parse(o[0].ToString()) == res.Id);
 
                 string[] resCols = { "event_id", "value", "description" };
-                string[] resValues = { ev.id + " AND resource_id=" + res.id, res.value.ToString(), DBUtil.AddQuotes(res.description) };
+                string[] resValues = { ev.Id + " AND resource_id=" + res.Id, res.Value.ToString(), DBUtil.AddQuotes(res.Description) };
                 if (db.UpdateRecord("event_resource", resCols, resValues) == 0)
                 {
                     string[] resColsIns = { "event_id", "resource_id", "value", "description" };
-                    string[] resValuesIns = { ev.id.ToString(), res.id.ToString(), res.value.ToString(), DBUtil.AddQuotes(res.description) };
+                    string[] resValuesIns = { ev.Id.ToString(), res.Id.ToString(), res.Value.ToString(), DBUtil.AddQuotes(res.Description) };
                     db.InsertToBDWithoutId("event_resource", resColsIns, resValuesIns);
                 }
             }
@@ -203,7 +203,7 @@ namespace oprForm
             foreach (var resId in ress)
             {
                 string resCols = "event_id";
-                string resValues = ev.id + " AND resource_id=" + resId[0].ToString();
+                string resValues = ev.Id + " AND resource_id=" + resId[0].ToString();
 
                 db.DeleteFromDB("event_resource", resCols, resValues);
             }
@@ -220,7 +220,7 @@ namespace oprForm
                 if (row.Cells[0].Value.Equals(res))
                     return;
             }
-            eventListGrid.Rows.Add(res, res.description);
+            eventListGrid.Rows.Add(res, res.Description);
         }
     }
 }
