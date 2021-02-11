@@ -1,19 +1,18 @@
 ﻿using Data;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UserMap.Helpers;
 
-namespace Maps.HelpWindows
+namespace UserMap.HelpWindows
 {
     public partial class ItemConfigurationWindow : Form
     {
         private static readonly Data.Entity.CalculationSeries missingSeries;
+        private readonly Services.ILogger logger;
 
         private int oldIssueIndex;
         private int oldElementIndex;
@@ -27,7 +26,7 @@ namespace Maps.HelpWindows
 
         private Role expert;
 
-        private ViewModel.EmissionsControllerVM emissionsController;
+        private ViewModel.ControllerVM<Data.Entity.Emission> emissionsController;
         private IDictionary<int, IList<Data.Entity.CalculationSeries>> series;
         private IDictionary<int, IEnumerable<int>> selectedSeries;
         private IDictionary<int, IEnumerable<int>> selectedEnvironments;
@@ -49,7 +48,7 @@ namespace Maps.HelpWindows
             this.expert = expert;
 
             dbManager = new DBManager();
-            emissionsController = new ViewModel.EmissionsControllerVM();
+            emissionsController = new ViewModel.ControllerVM<Data.Entity.Emission>();
             series = new Dictionary<int, IList<Data.Entity.CalculationSeries>>();
             selectedSeries = new Dictionary<int, IEnumerable<int>>();
             selectedEnvironments = new Dictionary<int, IEnumerable<int>>();
@@ -62,6 +61,7 @@ namespace Maps.HelpWindows
             oldSelectedElements = null;
             oldSelectedSeries = null;
             oldSelectedEnvironments = null;
+            logger = new Services.FileLogger();
 
             InitializeAdditionalComponent();
         }
@@ -88,7 +88,6 @@ namespace Maps.HelpWindows
                     EnvironmentsCheckedListBox.Items.Add(env);
                 }
             }
-
         }
 
         private void SelectCheckedListBoxItems(CheckedListBox checkedListBox, IEnumerable<int> indices)
@@ -120,9 +119,9 @@ namespace Maps.HelpWindows
                    IssuesCheckedListBox.CheckedItems.OfType<Data.Entity.Issue>() :
                    new List<Data.Entity.Issue>();
         }
-        public IDictionary<Data.Entity.Issue, List<Data.Entity.CalculationSeries>> GetSeries()
+        public IDictionary<Data.Entity.Issue, IEnumerable<Data.Entity.CalculationSeries>> GetSeries()
         {
-            var _series = new Dictionary<Data.Entity.Issue, List<Data.Entity.CalculationSeries>>();
+            var _series = new Dictionary<Data.Entity.Issue, IEnumerable<Data.Entity.CalculationSeries>>();
 
             if (IssueCheckBox.Checked)
             {
@@ -157,13 +156,13 @@ namespace Maps.HelpWindows
 
             ElementsCheckedListBox.SelectedIndex = -1;
 
-            if (EnvironmentsCheckedListBox.CheckedItems.Count != 0)
+            if (ElementsCheckedListBox.CheckedItems.Count != 0)
             {
                 foreach (int index in ElementsCheckedListBox.CheckedIndices)
                 {
                     foreach (var envIndex in selectedEnvironments[index])
                     {
-                        var selectedEmission = emissionsController.Emissions.FirstOrDefault(emission => emission.Id == index * environmentCount + envIndex);
+                        var selectedEmission = emissionsController.Elements.FirstOrDefault(emission => emission.Id == index * environmentCount + envIndex);
 
                         if (selectedEmission != null)
                         {
@@ -175,119 +174,6 @@ namespace Maps.HelpWindows
 
             return checkedEmissions;
         }
-
-        //public void SetIssueIndex(int index)
-        //{
-        //    if (index == -1)
-        //    {
-        //        return;
-        //    }
-
-        //    IssueCheckBox.Checked = true;
-
-        //    SetComboBoxIndex<Data.Entity.Issue>(IssuesComboBox, index, ref oldIssueIndex);
-        //}
-        //public void SetEnvironmentIndex(int index)
-        //{
-        //    if (index == -1)
-        //    {
-        //        return;
-        //    }
-
-        //    EnvironmentCheckBox.Checked = true;
-
-        //    //SetComboBoxIndex<Data.Entity.Environment>(EnvironmentsComboBox, index, ref oldEnvironmentIndex);
-        //}
-        //public void SetSeriesIndex(int index)
-        //{
-        //    if (index == -1)
-        //    {
-        //        return;
-        //    }
-
-        //    if (IssuesComboBox.SelectedIndex != -1)
-        //    {
-        //        SetSeries();
-        //        SetComboBoxIndex<Data.Entity.CalculationSeries>(SeriesComboBox, index, ref oldSeriesIndex);
-        //    }
-        //}
-        //public void SetIssue(Data.Entity.Issue issue)
-        //{
-        //    if (issue != null)
-        //    {
-        //        IssueCheckBox.Checked = true;
-
-        //        SetIssueIndex(IndexOf(issues, _issue => _issue.Id == issue.Id));
-        //    }
-        //    else
-        //    {
-        //        SetIssueIndex(-1);
-        //    }
-        //}
-        //public void SetEnvironment(Data.Entity.Environment environment)
-        //{
-        //    if (environment != null)
-        //    {
-        //        EnvironmentCheckBox.Checked = true;
-
-        //        SetEnvironmentIndex(IndexOf(environments, _env => _env.Id == environment.Id));
-        //    }
-        //    else
-        //    {
-        //        SetEnvironmentIndex(-1);
-        //    }
-        //}
-        //public void SetSeries(Data.Entity.CalculationSeries series)
-        //{
-        //    if (series != null && IssuesComboBox.SelectedIndex != -1)
-        //    {
-        //        IssueCheckBox.Checked = true;
-
-        //        SetSeries();
-
-        //        var issue = IssuesComboBox.SelectedItem as Data.Entity.Issue;
-
-        //        if (issue == null)
-        //        {
-        //            SetSeriesIndex(-1);
-        //        }
-
-        //        var seriesCollection = this.series[issue.Id];
-
-        //        SetSeriesIndex(IndexOf(seriesCollection, _series => _series.Id == series.Id));
-        //    }
-        //    else
-        //    {
-        //        SetSeriesIndex(-1);
-        //    }
-        //}
-        //public void SetEmission(Data.Entity.Emission emission)
-        //{
-        //    if (emission != null)
-        //    {
-        //        EmissionCheckBox.Checked = true;
-
-        //        if (emission.Element != null)
-        //        {
-        //            SetComboBoxIndex<Data.Entity.Element>(ElementsComboBox,
-        //                                                  IndexOf(elements, 
-        //                                                          _element => _element.Code == emission.Element.Code),
-        //                                                  ref oldElementIndex);
-        //        }   
-
-        //        if (emission.Environment != null)
-        //        {
-        //            SetEnvironment(emission.Environment);
-        //        }
-
-        //        YearNumericUpDown.Value = emission.Year;
-        //        MonthNumericUpDown.Value = emission.Month;
-        //        DayNumericUpDown.Value = emission.Day;
-
-        //        MaxEmissionValueTextBox.Text = emission.MaxValue.ToString();
-        //        AvgEmissionValueTextBox.Text = emission.AvgValue.ToString();
-        //    }
-        //}
 
         public void SetObjName(string name)
         {
@@ -304,12 +190,141 @@ namespace Maps.HelpWindows
             oldObjDescription = description;
             ObjectDescriptionTextBox.Text = description;
         }
+        public void SetSelectedIssues(IEnumerable<Data.Entity.Issue> issues)
+        {
+            if (issues == null)
+            {
+                throw new ArgumentNullException("issues");
+            }
+            if (IssuesCheckedListBox.Items.Count == 0)
+            {
+                throw new InvalidOperationException("Не возможно установить выбранные задачи. Для начала загрузите их явно.");
+            }
+
+            var innerIssues = IssuesCheckedListBox.Items.OfType<Data.Entity.Issue>();
+
+            foreach (Data.Entity.Issue issue in issues)
+            {
+                int index = innerIssues.IndexOf(_issue => _issue.Id == issue.Id || _issue.Name == issue.Name);
+                if (index != -1)
+                {
+                    IssuesCheckedListBox.SetItemChecked(index, true);
+                }
+            }
+
+            IssueCheckBox.Checked = true;
+            IssuesCheckedListBox.SelectedIndex = 0;
+        }
+        public void SetSelectedElements(IEnumerable<Data.Entity.Element> elements)
+        {
+            if (elements == null)
+            {
+                throw new ArgumentNullException("elements");
+            }
+            if (ElementsCheckedListBox.Items.Count == 0)
+            {
+                throw new InvalidOperationException("Не возможно установить выбранные елементы. Для начала загрузите их явно.");
+            }
+
+            var innerElement = ElementsCheckedListBox.Items.OfType<Data.Entity.Element>();
+
+            foreach (Data.Entity.Element element in elements)
+            {
+                int index = innerElement.IndexOf(_element => _element.Code == element.Code || _element.Name == element.Name);
+                if (index != -1)
+                {
+                    ElementsCheckedListBox.SetItemChecked(index, true);
+                }
+            }
+
+            EmissionCheckBox.Checked = true;
+            ElementsCheckedListBox.SelectedIndex = 0;
+        }
+        public void SetSelectedSeries(IDictionary<Data.Entity.Issue, IEnumerable<Data.Entity.CalculationSeries>> series)
+        {
+            if (series == null)
+            {
+                throw new ArgumentNullException("series");
+            }
+
+            var issues = IssuesCheckedListBox.Items.OfType<Data.Entity.Issue>();
+
+            foreach (var keyValuePairs in series)
+            {
+                Task task = SetSeries(keyValuePairs.Key);
+                task.Wait(10000);
+
+                if (task.IsCanceled)
+                {
+                    throw new InvalidOperationException("Не возможно загрузить серии для установки. Попробуйте ещё раз.");
+                }
+
+                var innerSeries = this.series[keyValuePairs.Key.Id];
+                var indices = new List<int>();
+
+                foreach (var value in keyValuePairs.Value)
+                {
+                    indices.Add(innerSeries.IndexOf(_series => _series.Id == value.Id ||
+                                                     _series.Name == value.Name));
+                }
+
+                int issueIndex = issues.IndexOf(issue => issue.Id == keyValuePairs.Key.Id ||
+                                                issue.Name == keyValuePairs.Key.Name);
+
+                IssuesCheckedListBox.SetItemChecked(issueIndex, true);
+                selectedSeries[issueIndex] = indices;
+            }
+
+            IssuesCheckedListBox.SelectedIndex = 0;
+            IssueCheckBox.Checked = true;
+        }
+        public void SetSelectedEmissions(IEnumerable<Data.Entity.Emission> emissions)
+        {
+            if (emissions == null)
+            {
+                throw new ArgumentNullException("emissions");
+            }
+            if (ElementsCheckedListBox.Items.Count == 0)
+            {
+                throw new InvalidOperationException("Не возможно установить выбранные выбросы. Для начала загрузите явно елементы.");
+            }
+            if (EnvironmentsCheckedListBox.Items.Count == 0)
+            {
+                throw new InvalidOperationException("Не возможно установить выбранные выбросы. Для начала загрузите явно среды.");
+            }
+
+            var environments = EnvironmentsCheckedListBox.Items.OfType<Data.Entity.Environment>();
+            var groupedEmissions = emissions.GroupBy(_emission => _emission.Element.Name);
+            var elements = ElementsCheckedListBox.Items.OfType<Data.Entity.Element>();
+
+            foreach (var emissionGroup in groupedEmissions)
+            {
+                var currentElement = emissionGroup.FirstOrDefault();
+                var indices = new List<int>();
+                foreach (var emission in emissionGroup)
+                {
+                    indices.Add(environments.IndexOf(environment => environment.Id == emission.Environment.Id ||
+                                                     environment.Name == emission.Environment.Name));
+                }
+
+                if (currentElement != null && currentElement.Element != null)
+                {
+                    int elemIndex = elements.IndexOf(element => element.Code == currentElement.Element.Code ||
+                                                     element.Name == currentElement.Element.Name);
+                    ElementsCheckedListBox.SetItemChecked(elemIndex, true);
+                    selectedEnvironments[elemIndex] = indices;
+                }
+            }
+
+            ElementsCheckedListBox.SelectedIndex = 0;
+            EmissionCheckBox.Checked = true;
+        }
 
         private int FindEmissionById(int id)
         {
-            for (int i = 0; i < emissionsController.Emissions.Count; i++)
+            for (int i = 0; i < emissionsController.Elements.Count; i++)
             {
-                if (emissionsController.Emissions[i].Id == id)
+                if (emissionsController.Elements[i].Id == id)
                 {
                     return i;
                 }
@@ -318,7 +333,7 @@ namespace Maps.HelpWindows
             return -1;
         }
 
-        private async void SetSeries(Data.Entity.Issue issue)
+        private async Task SetSeries(Data.Entity.Issue issue)
         {
             if (issue == null)
             {
@@ -336,13 +351,46 @@ namespace Maps.HelpWindows
 
                 series[issue.Id] = loadedSeries;
             }
+        }
 
-            SeriesCheckedListBox.Items.Clear();
+        public Task LoadIssuesAsync()
+        {
+            IssuesCheckedListBox.Items.Clear();
+            selectedSeries.Clear();
+            oldSelectedSeries = null;
+            oldSelectedIssues = null;
 
-            foreach (var series in series[issue.Id])
-            {
-                SeriesCheckedListBox.Items.Add(series);
-            }
+            return FillAndReturnCheckedListBoxFromDBAsync(IssuesCheckedListBox, "issues", "issue_id, name", "",
+                                                           r =>
+                                                           {
+                                                               int id;
+                                                               int.TryParse(r[0].ToString(), out id);
+
+                                                               return new Data.Entity.Issue(id)
+                                                               {
+                                                                   Name = r[1].ToString()
+                                                               };
+                                                           });
+        }
+        public Task LoadElementsAsync()
+        {
+            ElementsCheckedListBox.Items.Clear();
+            selectedEnvironments.Clear();
+            oldSelectedEnvironments = null;
+            oldSelectedElements = null;
+            emissionsController.Clear();
+
+            return FillAndReturnCheckedListBoxFromDBAsync(ElementsCheckedListBox, "elements", "*", "",
+                                                         r => Data.Helpers.Mapper.Map<Data.Entity.Element>(r));
+        }
+        public Task LoadEnvironments()
+        {
+            selectedEnvironments.Clear();
+            oldSelectedEnvironments = null;
+            emissionsController.Clear();
+
+            return FillAndReturnCheckedListBoxFromDBAsync(EnvironmentsCheckedListBox, "environment", "*", "",
+                                                          r => Data.Entity.EnvironmentMapper.Map(r));
         }
 
         private async Task FillAndReturnCheckedListBoxFromDBAsync<TResult>(CheckedListBox checkedListBox, string table, string columns,
@@ -378,6 +426,7 @@ namespace Maps.HelpWindows
                 "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else 
                 MessageBox.Show("Сталась помилка при завантажені об'єктів.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Log(ex);
 #endif
             }
         }
@@ -390,19 +439,30 @@ namespace Maps.HelpWindows
                 condition += $" AND id_of_expert = {((int)expert)}";
             }
 
-            return (await dbManager.GetRowsAsync("calculations_description", "calculation_number, calculation_name", condition))
-                                   .Select(r =>
-                                   {
-                                       int id;
-                                       int.TryParse(r[0].ToString(), out id);
-
-                                       return new Data.Entity.CalculationSeries
+            try
+            {
+                return (await dbManager.GetRowsAsync("calculations_description", "calculation_number, calculation_name", condition))
+                                       .Select(r =>
                                        {
-                                           Id = id,
-                                           Name = r[1].ToString()
-                                       };
-                                   })
-                                   .ToList();
+                                           int id;
+                                           int.TryParse(r[0].ToString(), out id);
+
+                                           return new Data.Entity.CalculationSeries
+                                           {
+                                               Id = id,
+                                               Name = r[1].ToString()
+                                           };
+                                       })
+                                       .ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Сталась помилка при завантаженні серій. Спробуйте ще раз.", 
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Log(ex);
+            }
+
+            return new List<Data.Entity.CalculationSeries>();
         }
 
         private void ItemConfigurationWindow_Load(object sender, EventArgs e)
@@ -415,40 +475,33 @@ namespace Maps.HelpWindows
         {
             if (IssuesCheckedListBox.Items.Count == 0)
             {
-                await FillAndReturnCheckedListBoxFromDBAsync(IssuesCheckedListBox, "issues", "issue_id, name", "",
-                                               r =>
-                                               {
-                                                   int id;
-                                                   int.TryParse(r[0].ToString(), out id);
-
-                                                   return new Data.Entity.Issue(id)
-                                                   {
-                                                       Name = r[1].ToString()
-                                                   };
-                                               });
+                await LoadIssuesAsync();
             }
         }
         private async void EmissionCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ElementsCheckedListBox.Items.Count == 0)
             {
-                await FillAndReturnCheckedListBoxFromDBAsync(ElementsCheckedListBox, "elements", "*", "",
-                                                             r => Data.Helpers.Mapper<Data.Entity.Element>.Map(r));
+                await LoadElementsAsync();
 
                 if (EnvironmentsCheckedListBox.Items.Count == 0)
                 {
-                    await FillAndReturnCheckedListBoxFromDBAsync(EnvironmentsCheckedListBox, "environment", "*", "",
-                                                                 r => Data.Entity.EnvironmentMapper.Map(r));
+                    await LoadEnvironments();
                 }
 
                 ElementsCheckedListBox.SelectedIndex = 0;
                 EnvironmentsCheckedListBox.SelectedIndex = 0;
 
-                MaxEmissionValueTextBox.DataBindings.Add("Text", emissionsController, "CurrentEmission.MaxValue");
-                AvgEmissionValueTextBox.DataBindings.Add("Text", emissionsController, "CurrentEmission.AvgValue");
-                YearNumericUpDown.DataBindings.Add("Value", emissionsController, "CurrentEmission.Year");
-                MonthNumericUpDown.DataBindings.Add("Value", emissionsController, "CurrentEmission.Month");
-                DayNumericUpDown.DataBindings.Add("Value", emissionsController, "CurrentEmission.Day");
+                MaxEmissionValueTextBox.DataBindings.Add("Text", emissionsController, "CurrentElement.MaxValue",
+                                                         true, DataSourceUpdateMode.OnPropertyChanged, 0);
+                AvgEmissionValueTextBox.DataBindings.Add("Text", emissionsController, "CurrentElement.AvgValue",
+                                                         true, DataSourceUpdateMode.OnPropertyChanged, 0);
+                YearNumericUpDown.DataBindings.Add("Value", emissionsController, "CurrentElement.Year",
+                                                   true, DataSourceUpdateMode.OnPropertyChanged, DateTime.Now.Year);
+                MonthNumericUpDown.DataBindings.Add("Value", emissionsController, "CurrentElement.Month",
+                                                    true, DataSourceUpdateMode.OnPropertyChanged, 1);
+                DayNumericUpDown.DataBindings.Add("Value", emissionsController, "CurrentElement.Day",
+                                                  true, DataSourceUpdateMode.OnPropertyChanged, 1);
             }
         }
 
@@ -489,9 +542,9 @@ namespace Maps.HelpWindows
             }
         }
 
-        private void IssuesCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private async void IssuesCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (SeriesCheckedListBox.Enabled && SeriesCheckedListBox.CheckedIndices.Count != 0 && oldIssueIndex != -1)
+            if (SeriesCheckedListBox.Enabled && oldIssueIndex != -1)
             {
                 selectedSeries[oldIssueIndex] = SeriesCheckedListBox.CheckedIndices.OfType<int>().ToArray();
             }
@@ -502,7 +555,14 @@ namespace Maps.HelpWindows
 
                 if (issue != null)
                 {
-                    SetSeries(issue);
+                    await SetSeries(issue);
+
+                    SeriesCheckedListBox.Items.Clear();
+
+                    foreach (var series in series[issue.Id])
+                    {
+                        SeriesCheckedListBox.Items.Add(series);
+                    }
                 }
             }
 
@@ -534,7 +594,7 @@ namespace Maps.HelpWindows
                 CurrentElementLable.Text = ElementsCheckedListBox.Items[ElementsCheckedListBox.SelectedIndex].ToString();
             }
 
-            if (EnvironmentsCheckedListBox.CheckedIndices.Count != 0 && oldElementIndex != -1)
+            if (oldElementIndex != -1)
             {
                 selectedEnvironments[oldElementIndex] = EnvironmentsCheckedListBox.CheckedIndices.OfType<int>().ToArray();
             }
@@ -573,12 +633,12 @@ namespace Maps.HelpWindows
                     Environment = EnvironmentsCheckedListBox.Items[EnvironmentsCheckedListBox.SelectedIndex] as Data.Entity.Environment,
                 };
 
-                emissionsController.AddEmission(emission);
-                emissionsController.CurrentEmissionIndex = emissionsController.Emissions.Count - 1;
+                emissionsController.AddElement(emission);
+                emissionsController.CurrentElementIndex = emissionsController.Elements.Count - 1;
             }
             else
             {
-                emissionsController.CurrentEmissionIndex = emissionIndex;
+                emissionsController.CurrentElementIndex = emissionIndex;
             }
         }
 
@@ -594,9 +654,19 @@ namespace Maps.HelpWindows
 
         private void m_AcceptButton_Click(object sender, EventArgs e)
         {
+            IssuesCheckedListBox.SelectedIndex = -1;
+            ElementsCheckedListBox.SelectedIndex = -1;
+
             if (string.IsNullOrEmpty(ObjectNameTextBox.Text))
             {
                 MessageBox.Show("Ви не заповнили усі необхідні поля.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!CheckSelectedElementsMatchedSelectedEnvironments())
+            {
+                MessageBox.Show("Для кожного вибраного елемента " +
+                                "необхідно вибрати мінімум одне середовище.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -608,9 +678,6 @@ namespace Maps.HelpWindows
                 return;
             }
 
-            IssuesCheckedListBox.SelectedIndex = -1;
-            ElementsCheckedListBox.SelectedIndex = -1;
-
             oldObjName = ObjectNameTextBox.Text;
             oldObjDescription = ObjectDescriptionTextBox.Text;
             oldSelectedElements = ElementsCheckedListBox.CheckedIndices.OfType<int>().ToList();
@@ -621,6 +688,25 @@ namespace Maps.HelpWindows
             this.DialogResult = DialogResult.OK;
         }
 
+        private bool CheckSelectedElementsMatchedSelectedEnvironments()
+        {
+            foreach (int index in ElementsCheckedListBox.CheckedIndices)
+            {
+                if (selectedEnvironments.ContainsKey(index))
+                {
+                    if (!selectedEnvironments[index].Any())
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
         private IDictionary<int, IEnumerable<int>> CopySelectedIndiciesDictionary(IDictionary<int, IEnumerable<int>> oldDictionary)
         {
             var newDictionary = new Dictionary<int, IEnumerable<int>>();
@@ -640,8 +726,8 @@ namespace Maps.HelpWindows
             return newDictionary;
         }
 
-        public void Deconstruct(out string name, out string description, 
-                                out IDictionary<Data.Entity.Issue, List<Data.Entity.CalculationSeries>> series,
+        public void Deconstruct(out string name, out string description,
+                                out IDictionary<Data.Entity.Issue, IEnumerable<Data.Entity.CalculationSeries>> series,
                                 out IEnumerable<Data.Entity.Emission> emissions)
         {
             series = GetSeries();

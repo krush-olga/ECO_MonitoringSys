@@ -1,5 +1,5 @@
 ﻿
-namespace Maps.HelpWindows
+namespace UserMap.HelpWindows
 {
     partial class ItemConfigurationWindow
     {
