@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Maps.Helpers
+namespace UserMap.Helpers
 {
-    public static class MapCache
+    internal static class MapCache
     {
         private static readonly IDictionary<string, object> cache = new Dictionary<string, object>();
 

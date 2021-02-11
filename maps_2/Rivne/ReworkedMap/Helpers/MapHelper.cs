@@ -1,12 +1,12 @@
 ﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
-using Maps.Core;
+using UserMap.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Maps.Helpers
+namespace UserMap.Helpers
 {
     internal static class MapHelper
     {
