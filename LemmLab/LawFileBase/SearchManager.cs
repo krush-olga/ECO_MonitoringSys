@@ -130,7 +130,7 @@ namespace LawFileBase
 			var AllList = LawBaseManager.GetListOfFiles();
 			foreach (var t in AllList)
 			{
-				resList[t.Split(' ')[0]] = 0;
+				resList[t.Split(' ')[0] + " " + t.Split(' ')[1]] = 0;
 			}
 			var sortedOneList = from pair in resList
 								orderby pair.Value descending

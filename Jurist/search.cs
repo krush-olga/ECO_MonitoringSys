@@ -71,6 +71,43 @@ namespace experts_jurist
         {
           
             var tempList = SM.SearchLine(textBox1.Text);
+
+            if (textBox1.Text.Contains("№ ")) // 
+            {
+                var i = 0;
+                var z = 2;
+                foreach (var a in tempList)
+                {
+                     if (a == textBox1.Text)
+         
+                   // var text = textBox1.Text;
+                  //  if (text.Length == z+1)
+                  //  {
+                    //    try
+                        {
+                         //   if (text[z] == a[z])
+                         //   {
+                                var temp1 = tempList[i];
+                                while (i != 0)
+                                {
+                                    tempList[i] = tempList[i - 1];
+                                    i--;
+                                }
+                                tempList[0] = temp1;
+
+                          //  }
+                           // z++;
+                     //   }
+                      //  catch { };
+                      
+                    }
+
+                    i = i + 1;
+                }
+            }    //
+          
+          
+           
 			if(tempList.Count() > 0)
 			{
 				listOfFi = tempList;
