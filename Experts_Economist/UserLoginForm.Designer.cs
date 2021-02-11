@@ -70,7 +70,7 @@
             this.passTB.PasswordChar = '*';
             this.passTB.Size = new System.Drawing.Size(139, 20);
             this.passTB.TabIndex = 6;
-            this.passTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.passTB_KeyDown);
+            this.passTB.KeyUp += new System.Windows.Forms.KeyEventHandler(this.passTB_KeyDown);
             // 
             // loginTB
             // 
@@ -78,6 +78,9 @@
             this.loginTB.Name = "loginTB";
             this.loginTB.Size = new System.Drawing.Size(139, 20);
             this.loginTB.TabIndex = 5;
+            this.loginTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UserLogin_KeyDown);
+            this.loginTB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.loginTB_KeyPress);
+            this.loginTB.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UserLogin_KeyDown);
             // 
             // UserLogin
             // 
@@ -89,12 +92,11 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.passTB);
             this.Controls.Add(this.loginTB);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "UserLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вхід в систему";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.UserLogin_FormClosed);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UserLogin_KeyDown);
             this.Leave += new System.EventHandler(this.UserLogin_Leave);
             this.ResumeLayout(false);
             this.PerformLayout();

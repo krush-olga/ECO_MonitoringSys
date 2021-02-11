@@ -255,6 +255,9 @@
     <EmbeddedResource Include="Admins\User_editor.resx">
       <DependentUpon>User_editor.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

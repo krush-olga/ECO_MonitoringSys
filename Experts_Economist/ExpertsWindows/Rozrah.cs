@@ -793,7 +793,7 @@ namespace Experts_Economist
 
                 Issue currentIssue = (Issue)issueTB.SelectedItem;
 
-                object objId = db.GetValue("calculations_description", "Max(calculation_number) + 1", "id_of_expert = " + id_of_exp);
+                object objId = db.GetValue("calculations_description", "Max(calculation_number) + 1", "");
                 string newId = null;
 
                 if (objId == null)
