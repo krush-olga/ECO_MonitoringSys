@@ -85,6 +85,7 @@ namespace LawFileBase
 				if (chooseWords)
 				{
 					List<string> choosedWords = new List<string>();
+				//	choosedWords.Add(FileOpen.SafeFileName.Replace(".html", "")); // mine
 					foreach (var but in flowLayoutPanel1.Controls)
 						if (but is CheckBox)
 							if (((CheckBox)but).Checked)
@@ -101,13 +102,14 @@ namespace LawFileBase
 							dic.Add(a, maxId++);
 						var amount = (from b in allWords where a == LM.ToLemm(b) select b).Count();
 						
-                        
 							FBM.AddFileToWord(dic[a], FileOpen.SafeFileName.Replace(".html", ""), amount); 
-						
-						
-						
+
 					}
+					//dic.Add(FileOpen.SafeFileName.Replace(".html", ""), maxId++);
+					//maxId = maxId - 1;
+					//FBM.AddFileToWord(maxId, FileOpen.SafeFileName.Replace(".html", ""), 1);
 					FBM.SetDictionary(dic);
+					
 				}
 				else
 				{
@@ -125,7 +127,9 @@ namespace LawFileBase
 						var amount = (from b in allWords where a == LM.ToLemm(b) select b).Count();
 						FBM.AddFileToWord(dic[a], FileOpen.SafeFileName.Replace(".html", ""), amount);
 					}
+
 					FBM.SetDictionary(dic);
+					
 				}
 			}
 		}
@@ -140,6 +144,11 @@ namespace LawFileBase
 				var oneBut = new CheckBox();
 				oneBut.Text = word.Key;
 				if (word.Key.Count() > 2) oneBut.Checked = true;
+				if (word.Key == "№") oneBut.Checked = true; //
+
+				var temp = FileOpen.SafeFileName.Replace(".html", ""); //
+				var temp1 = temp.Replace("№ ", ""); //
+				if (word.Key == temp1) oneBut.Checked = true; //
 				flowLayoutPanel1.Controls.Add(oneBut);
 			}
 		}
