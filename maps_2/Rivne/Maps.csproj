@@ -227,6 +227,9 @@
     <Content Include="Docs\Core\DescribableDoc.xml" />
     <Content Include="Docs\Core\MapDoc.xml" />
     <Content Include="Docs\Core\NamedGoogleMarkerDoc.xml" />
+    <Content Include="Docs\Helpers\ComboBoxExtensionsDoc.xml" />
+    <Content Include="Docs\Helpers\IEnumerableExtensionsDoc.xml" />
+    <Content Include="Docs\Helpers\MapHelperDoc.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

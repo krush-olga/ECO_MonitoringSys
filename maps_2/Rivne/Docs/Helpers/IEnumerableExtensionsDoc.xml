@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="IEnumerable_extensions">
+    <IEnumerableExtensions>
+      <summary>
+        Содержит в себе методы расширения для <see cref="System.Collections.Generic.IEnumerable{T}"/> и их копии для <see cref="System.Collections.IEnumerable"/>.
+      </summary>
+    </IEnumerableExtensions>
+    <IndexOf>
+      <summary>
+        Ищет элемент в соответствии с указанным предикатом (<paramref name="predicat"/>).
+      </summary>
+      <typeparam name="T">
+        Тип, который содержиться в коллекции.
+      </typeparam>
+      <param name="collection">
+        Коллекция, в которой будет происходить поиск.
+      </param>
+      <param name="predicat">
+        Предикат, по которому будет происходить выбор индекса.
+      </param>
+      <returns>
+        Отсчитываемый от 0 индекс найденого элемента. Иначе <c>-1</c>.
+      </returns>
+    </IndexOf>
+  </members>
+</docs>

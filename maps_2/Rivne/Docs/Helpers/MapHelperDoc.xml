@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="map_helper">
+    <MapHelper>
+      <summary>
+        Класс-помощник для создания <see cref="UserMap.Core.NamedGoogleMarker"/>, <see cref="GMap.NET.WindowsForms.GMapPolygon"/>, <see cref="GMap.NET.WindowsForms.GMapRoute"/>
+      </summary>
+    </MapHelper>
+    <CreateMarkerImg>
+      <summary>
+        Создаёт новый экземляр <see cref="UserMap.Core.NamedGoogleMarker"/> с изображением.
+      </summary>
+      <param name="coord">
+        Координата маркера.
+      </param>
+      <param name="img">
+        Изображение для отображения маркера.
+      </param>
+      <param name="format">
+        Формат, по которому будут отображаться название и описание маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <returns>
+        Новый экземпляр <see cref="UserMap.Core.NamedGoogleMarker"/>.
+      </returns>
+    </CreateMarkerImg>
+    <CreateMarkerGMarkerGoogleType>
+      <summary>
+        Создаёт новый экземляр <see cref="UserMap.Core.NamedGoogleMarker"/> с изображением.
+      </summary>
+      <param name="coord">
+        Координата маркера.
+      </param>
+      <param name="markerType">
+        Тип отображения маркера на карте.
+      </param>
+      <param name="format">
+        Формат, по которому будут отображаться название и описание маркера.
+      </param>
+      <param name="name">
+        Название маркера.
+      </param>
+      <param name="description">
+        Описание маркера.
+      </param>
+      <returns>
+        Новый экземпляр <see cref="UserMap.Core.NamedGoogleMarker"/>.
+      </returns>
+    </CreateMarkerGMarkerGoogleType>
+    <CreatePolygon4arg>
+      <summary>
+        Создаёт новый экземляр <see cref="GMap.NET.WindowsForms.GMapPolygon"/> с чёрными линиями.
+      </summary>
+      <param name="coords">
+        Координаты для полигона.
+      </param>
+      <param name="fill">
+        Цвет закраски полигона.
+      </param>
+      <param name="opacity">
+        Прозрачность закраски.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <returns>
+        Новый экземпляр <see cref="GMap.NET.WindowsForms.GMapPolygon"/>.
+      </returns>
+    </CreatePolygon4arg>
+    <CreatePolygon5arg>
+      <summary>
+        Создаёт новый экземляр <see cref="GMap.NET.WindowsForms.GMapPolygon"/>.
+      </summary>
+      <param name="coords">
+        Координаты для полигона.
+      </param>
+      <param name="fill">
+        Цвет закраски полигона.
+      </param>
+      <param name="opacity">
+        Прозрачность закраски.
+      </param>
+      <param name="stroke">
+        Цвет линий полигона.
+      </param>
+      <param name="polygonName">
+        Название полигона.
+      </param>
+      <returns>
+        Новый экземпляр <see cref="GMap.NET.WindowsForms.GMapPolygon"/>.
+      </returns>
+    </CreatePolygon5arg>
+    <CreateRoute2arg>
+      <summary>
+        Создаёт новый экземляр <see cref="GMap.NET.WindowsForms.GMapRoute"/> с чёрными линиями.
+      </summary>
+      <param name="coords">
+        Координаты для маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <returns>
+        Новый экземпляр <see cref="GMap.NET.WindowsForms.GMapRoute"/>.
+      </returns>
+    </CreateRoute2arg>
+    <CreateRoute3arg>
+      <summary>
+        Создаёт новый экземляр <see cref="GMap.NET.WindowsForms.GMapRoute"/>.
+      </summary>
+      <param name="coords">
+        Координаты для маршрута.
+      </param>
+      <param name="stroke">
+        Цвет линий маршрута.
+      </param>
+      <param name="routeName">
+        Название маршрута.
+      </param>
+      <returns>
+        Новый экземпляр <see cref="GMap.NET.WindowsForms.GMapRoute"/>.
+      </returns>
+    </CreateRoute3arg>
+    <DisposeElements>
+      <summary>
+        Высвобождает элементы из указанной коллекции <paramref name="disposables"/>.
+      </summary>
+      <param name="disposables">
+        Коллекция с элементами типа <see cref="System.IDisposable"/>.
+      </param>
+    </DisposeElements>
+  </members>
+</docs>

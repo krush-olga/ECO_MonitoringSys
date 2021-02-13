@@ -6,8 +6,10 @@ using System.Windows.Forms;
 
 namespace UserMap.Helpers
 {
+    /// <include file='Docs/Helpers/ComboBoxExtensionsDoc.xml' path='docs/members[@name="combobox_extensions"]/ComboBoxExtensions/*'/>
     public static class ComboBoxExtensions
     {
+        /// <include file='Docs/Helpers/ComboBoxExtensionsDoc.xml' path='docs/members[@name="combobox_extensions"]/FillComboBoxFromBDAsync/*'/>
         public static async Task FillComboBoxFromBDAsync<TResult>(this ComboBox comboBox, Data.DBManager dbManager, 
                                                                   string table, string columns,
                                                                   string condition, Func<List<object>, TResult> func,
@@ -28,19 +30,23 @@ namespace UserMap.Helpers
             if (columns == null)
                 throw new ArgumentException("Колонки для выбора не могут быть пустыми.");
 
-
-            Action<ComboBox, string, string, Action<ComboBox>, List<TResult>> syncAction = SyncActionComboBox;
             Action<ComboBox> syncStartFill = SyncStartFill;
 
             comboBox.Invoke(syncStartFill, comboBox);
 
             try
             {
-                var result = (await dbManager.GetRowsAsync(table, columns, condition))
-                                             .Select(func)
-                                             .ToList();
-
-                comboBox.Invoke(syncAction, comboBox, displayComboBoxMember, valueComboBoxMember, falultAction, result);
+                await dbManager.GetRowsAsync(table, columns, condition)
+                               .ContinueWith(result =>
+                               {
+                                   return result.Result.Select(func)
+                                                       .ToList();
+                               }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                               .ContinueWith(result => 
+                               {
+                                   SyncActionComboBox(comboBox, displayComboBoxMember, valueComboBoxMember,
+                                                      falultAction, result.Result);
+                               }, System.Threading.CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
             }
             catch
             {
@@ -59,8 +65,8 @@ namespace UserMap.Helpers
             comboBox.SelectedIndex = 0;
         }
         private static void SyncActionComboBox<TResult>(ComboBox comboBox, string displayComboBoxMember,
-                                                         string valueComboBoxMember, Action<ComboBox> falultAction,
-                                                         List<TResult> result)
+                                                        string valueComboBoxMember, Action<ComboBox> falultAction,
+                                                        List<TResult> result)
         {
             comboBox.Items.Clear();
 

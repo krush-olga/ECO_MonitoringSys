@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="combobox_extensions">
+    <ComboBoxExtensions>
+      <summary>
+        Содержит в себе методы расширения для компонента <see cref="System.Windows.Forms.ComboBox"/>
+      </summary>
+    </ComboBoxExtensions>
+    <FillComboBoxFromBDAsync>
+      <summary>
+        Загружает данные из указанной таблицы в текущий <see cref="System.Windows.Forms.ComboBox"/> по указанному формату (<paramref name="func"/>).
+      </summary>
+      <typeparam name="TResult">
+        Выходной тип, который будет сохраняться в виде коллекции в свойстве <c>DataSource</c> текущего <see cref="System.Windows.Forms.ComboBox"/>.
+      </typeparam>
+      <param name="comboBox">
+        Выбранный <see cref="System.Windows.Forms.ComboBox"/>.
+      </param>
+      <param name="dbManager">
+        <see cref="Data.DBManager"/> используется для обращения к базе данных.
+      </param>
+      <param name="table">
+        Таблица, с которой будет выполняться выбор.
+      </param>
+      <param name="columns">
+        Колонки указанной таблицы (<paramref name="table"/>), которые будут в учавствовать в выборе.
+      </param>
+      <param name="condition">
+        Условие выбора данных.
+      </param>
+      <param name="func">
+        Функция по превращению полученных данных из бд в <typeparamref name="TResult"/>.
+      </param>
+      <param name="displayComboBoxMember">
+        Свойство типа <typeparamref name="TResult"/>, которое учавствует в отображении в <see cref="System.Windows.Forms.ComboBox"/>.
+      </param>
+      <param name="valueComboBoxMember">
+        Свойство типа <typeparamref name="TResult"/>, которое возвращаеться <see cref="System.Windows.Forms.ComboBox"/> при вызове свойсва <c>SelectedValue</c>.
+      </param>
+      <param name="falultAction">
+        Действие при возникновении исключения или при отсутствии элементов у выборки.
+      </param>
+      <exception cref="System.ArgumentNullException"></exception>
+      <exception cref="System.ArgumentException"></exception>
+      <returns>
+        Возвращает текущую задачу для ожидания.
+      </returns>
+    </FillComboBoxFromBDAsync>
+  </members>
+</docs>

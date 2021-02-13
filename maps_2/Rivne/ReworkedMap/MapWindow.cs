@@ -190,25 +190,28 @@ namespace UserMap
                                           falultAction: c => c.Items.Add("Не вдалось завантажити вид економічної діяльності"));
 
             await Task.WhenAll(citiesTask, environmentTask, issuesTask, ownershipTask, economicActivityTask)
-                  .ContinueWith(_task => 
-                  {
-                      EconomicActivityComboBox.SelectedIndex = -1;
-                      EconomicActivityComboBox.SelectedIndex = 0;
-
-                      foreach (var typeOfObject in (IEnumerable<TypeOfObject>)EconomicActivityComboBox.DataSource)
+                      .ContinueWith(_task =>
                       {
-                          EconomicActivityCheckedListBox.Items.Add(typeOfObject);
-                      }
+                          EconomicActivityComboBox.SelectedIndex = -1;
+                          EconomicActivityComboBox.SelectedIndex = 0;
 
-                      ChangeProgressBar(string.Empty, false, ProgressBarStyle.Continuous);
+                          if (!economicActivityTask.IsFaulted)
+                          {
+                              foreach (var typeOfObject in (IEnumerable<TypeOfObject>)EconomicActivityComboBox.DataSource)
+                              {
+                                  EconomicActivityCheckedListBox.Items.Add(typeOfObject);
+                              }
+                          }
 
-                      if (environmentTask.IsCompleted)
-                      {
-                          MapCache.Add("environments", EnvironmentCheckedListBox.Items
-                                                                                    .OfType<Data.Entity.Environment>()
-                                                                                    .ToList());
-                      }
-                  }, TaskScheduler.FromCurrentSynchronizationContext());
+                          ChangeProgressBar(string.Empty, false, ProgressBarStyle.Continuous);
+
+                          if (!environmentTask.IsFaulted)
+                          {
+                              MapCache.Add("environments", EnvironmentCheckedListBox.Items
+                                                                                        .OfType<Data.Entity.Environment>()
+                                                                                        .ToList());
+                          }
+                      }, TaskScheduler.FromCurrentSynchronizationContext());
         }
         private async Task FillCheckedListBoxFromDBAsync<TResult>(CheckedListBox checkedListBox, string table, string columns,
                                                                   string condition, Func<List<object>, TResult> func,
@@ -723,7 +726,6 @@ namespace UserMap
                 else
                 {
                     addedMarkers.First().Position = gMapControl.FromLocalToLatLng(cursorLocation.X, cursorLocation.Y);
-
                     SetMarkerPosNearExistMarker(cursorLocation);
                 }
             }

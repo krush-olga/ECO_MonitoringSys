@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace UserMap.Helpers
 {
+    /// <summary>
+    /// Представляет кэш, в котром можно сохранять общие элементы для подальшего их использования.
+    /// </summary>
     internal static class MapCache
     {
         private static readonly IDictionary<string, object> cache = new Dictionary<string, object>();
@@ -36,11 +38,21 @@ namespace UserMap.Helpers
             return item;
         }
 
+        /// <summary>
+        /// Проверяет наличие указанного ключа.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns><see langword="true"/> если такой ключ существует. Иначе <see langword="false"/></returns>
         public static bool ContainsKey(string key)
         {
             return cache.ContainsKey(key);
         }
 
+        /// <summary>
+        /// Добавляет элемент в кэш.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="img"></param>
         public static void Add(string key, object img)
         {
             if (string.IsNullOrEmpty(key))
@@ -56,22 +68,23 @@ namespace UserMap.Helpers
                                                cache.Count.ToString(), key);
 #endif
         }
+
         /// <summary>
-        /// Удаляет элемент из кеша, если ключ есть. Иначе ничего не делает.
+        /// Удаляет элемент из кэша.
         /// </summary>
         /// <param name="key">Ключ элемента</param>
         /// <param name="dispose">Указывает, нужно ли высвобождать элемент, если его можно вывободить,
         /// после удаления его из кеша. По-умолочанию высвобождает/></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="KeyNotFoundException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
         public static bool Remove(string key, bool dispose = true)
         {
-            if (cache.ContainsKey(key))
-            {
-                object item = cache[key];
+            object item = cache[key];
 
-                if (item is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
+            if (dispose && item is IDisposable disposable)
+            {
+                disposable.Dispose();
             }
 
             return cache.Remove(key);
