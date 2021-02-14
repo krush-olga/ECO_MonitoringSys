@@ -257,7 +257,7 @@ namespace UserMap
                                                  imageName);
 
             Bitmap img = null;
-            var images = (Dictionary<string, Bitmap>)Helpers.MapCache.GetItem("images");
+            var images = (Dictionary<string, Bitmap>)MapCache.GetItem("images");
 
             if (System.IO.File.Exists(path))
             {

@@ -2,6 +2,8 @@
 {
     partial class MapWindow
     {
+        private bool disposed;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -13,6 +15,13 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            if (disposed)
+            {
+                return;
+            }
+
+            disposed = true;
+
             if (disposing && (components != null))
             {
                 components.Dispose();
