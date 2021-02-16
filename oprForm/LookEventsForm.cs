@@ -167,6 +167,7 @@ namespace oprForm
         {
             if (eventsLB.SelectedItem is Event)
             {
+            
                 Event ev = eventsLB.SelectedItem as Event;
                 approveGB.Visible = true;
                 db.Connect();
@@ -189,9 +190,12 @@ namespace oprForm
                     eventListGrid.Rows.Add(r, r.Description, r.Value, r.Unit, r.Price, r.Value * r.Price);
                     totalPrice += r.Value * r.Price;
                 }
-                issueCostTB.Text = totalPrice.ToString();
+                textBox6.Text = totalPrice.ToString();
 
                 updateEvent(ev);
+
+                textBox5.Text = ev.Name;
+                textBox4.Text = ev.Description;
 
                 var docObj = db.GetRows("event_documents", "*", "event_id=" + ev.Id);
                 var docs = new List<Document>();
@@ -220,7 +224,7 @@ namespace oprForm
 
         private void updateEvent(Event ev)
         {
-            issueDescTB.Text = ev.Description;
+            
             dmCheck.Checked = ukrToBool(ev.DmVer);
             lawyerCheck.Checked = ukrToBool(ev.LawyerVer);
 
@@ -341,6 +345,7 @@ namespace oprForm
                         issueCost += GetTotalCost(ev.Id);
                     }
                     issueCostTB.Text = issueCost.ToString();
+                    textBox6.Text = issueCost.ToString();
 
                     // Get list of user ids
                     var userIds = (from ev in events select Int32.Parse(ev.UserId.ToString())).ToArray();
@@ -372,16 +377,24 @@ namespace oprForm
                     }
                     expertsLB.Items.AddRange(experts.ToArray());
                 }
-                issueDescTB.Text = db.GetValue("issues", "description", "name='" + issuesLB.SelectedItem + "'").ToString();
-                textBox2.Text = db.GetValue("issues", "Tema", "name='" + issuesLB.SelectedItem + "'").ToString();
-                db.Disconnect();
+                var issue = db.GetRows("issues", "name, description, Tema", "issue_id=" + (issuesLB.SelectedItem as Issue).Id);
+                if (issue.Count > 0)
+                {
+                    issueTB.Text = issue[0][0].ToString();
+                    issueDescTB.Text = issue[0][1].ToString();
+                    textBox2.Text = issue[0][2].ToString();
+                    textBox4.Text = issue[0][0].ToString();
+                    textBox5.Text = issue[0][1].ToString();
+                }
+
+              //  db.Disconnect();
             }
 
-            issueTB.Text = issuesLB.SelectedItem.ToString();
+            
         }
 
         private void IssueListClick(object sender, EventArgs e)
-        {
+        { 
             OpenAddIssueForm();
         }
 
