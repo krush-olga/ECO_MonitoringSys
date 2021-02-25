@@ -162,7 +162,7 @@ namespace UserMap.HelpWindows
                 {
                     foreach (var envIndex in selectedEnvironments[index])
                     {
-                        var selectedEmission = emissionsController.Elements.FirstOrDefault(emission => emission.Id == index * environmentCount + envIndex);
+                        var selectedEmission = (Data.Entity.Emission)emissionsController.Elements.FirstOrDefault(emission => ((Data.Entity.Emission)emission).Id == index * environmentCount + envIndex);
 
                         if (selectedEmission != null)
                         {
@@ -324,7 +324,7 @@ namespace UserMap.HelpWindows
         {
             for (int i = 0; i < emissionsController.Elements.Count; i++)
             {
-                if (emissionsController.Elements[i].Id == id)
+                if (((Data.Entity.Emission)emissionsController.Elements[i]).Id == id)
                 {
                     return i;
                 }

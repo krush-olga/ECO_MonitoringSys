@@ -19,6 +19,11 @@ namespace UserMap.HelpWindows
                 components.Dispose();
             }
             base.Dispose(disposing);
+
+            if (dbManager != null)
+            {
+                dbManager.Dispose();
+            }
         }
 
         #region Windows Form Designer generated code
@@ -431,7 +436,7 @@ namespace UserMap.HelpWindows
             this.Controls.Add(this.m_AcceptButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ItemConfigurationWindow";
-            this.Text = "Налаштування маркеру";
+            this.Text = "Налаштування об\'єкту";
             this.Load += new System.EventHandler(this.ItemConfigurationWindow_Load);
             this.IssueGroupBox.ResumeLayout(false);
             this.IssueGroupBox.PerformLayout();
