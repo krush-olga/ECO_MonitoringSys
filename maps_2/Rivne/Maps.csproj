@@ -139,15 +139,28 @@
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="ReworkedMap\Services\FileLogger.cs" />
+    <Compile Include="ReworkedMap\Services\IController.cs" />
     <Compile Include="ReworkedMap\Services\ILogger.cs" />
+    <Compile Include="ReworkedMap\UserControls\IssuesAndSeries.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReworkedMap\UserControls\IssuesAndSeries.Designer.cs">
+      <DependentUpon>IssuesAndSeries.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReworkedMap\UserControls\ItemInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ReworkedMap\UserControls\ItemInfo.Designer.cs">
       <DependentUpon>ItemInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReworkedMap\UserControls\MedStatUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReworkedMap\UserControls\MedStatUserControl.Designer.cs">
+      <DependentUpon>MedStatUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReworkedMap\ViewModel\ChangeType.cs" />
     <Compile Include="ReworkedMap\ViewModel\ControllerVM.cs" />
-    <Compile Include="ReworkedMap\ViewModel\Loader.cs" />
     <EmbeddedResource Include="ReworkedMap\CompareForm.resx">
       <DependentUpon>CompareForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -173,8 +186,14 @@
     <EmbeddedResource Include="ReworkedMap\MapWindow.resx">
       <DependentUpon>MapWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ReworkedMap\UserControls\IssuesAndSeries.resx">
+      <DependentUpon>IssuesAndSeries.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReworkedMap\UserControls\ItemInfo.resx">
       <DependentUpon>ItemInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReworkedMap\UserControls\MedStatUserControl.resx">
+      <DependentUpon>MedStatUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

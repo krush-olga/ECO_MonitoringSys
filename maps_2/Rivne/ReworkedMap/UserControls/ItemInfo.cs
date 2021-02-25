@@ -16,8 +16,8 @@ namespace UserMap.UserControls
             ObjectTypeLabel.Text = describableEntity.Type;
             NameTextBox.Text = describableEntity.Name;
             DescriptionTextBox.Text = describableEntity.Description;
-            CreatorNameLabel.Text = describableEntity.CreatorFullName;
-            ExpertLabel.Text = GetStringRole(describableEntity.CreatorRole);
+            CreatorNameLabel.Text = describableEntity.Creator.ToString();
+            ExpertLabel.Text = GetStringRole(describableEntity.Creator.Role);
         }
         public void ClearData()
         {
@@ -32,25 +32,27 @@ namespace UserMap.UserControls
         {
             DeleteButton.Visible = false;
 
-            AdditionInfoButton.Location = new System.Drawing.Point(AdditionInfoButton.Location.X + DeleteButton.Width / 2 + 10, AdditionInfoButton.Location.Y);
-            ChangeButton.Location = new System.Drawing.Point(ChangeButton.Location.X - DeleteButton.Width / 2 - 10, ChangeButton.Location.Y);
+            AdditionInfoButton.Location = new System.Drawing.Point((this.Width - AdditionInfoButton.Width) / 2, AdditionInfoButton.Location.Y);
         }
         public void ShowDeleteButton()
         {
             DeleteButton.Visible = true;
 
-            AdditionInfoButton.Location = new System.Drawing.Point(AdditionInfoButton.Location.X - DeleteButton.Width / 2 - 10, AdditionInfoButton.Location.Y);
-            ChangeButton.Location = new System.Drawing.Point(ChangeButton.Location.X + DeleteButton.Width / 2 + 10, ChangeButton.Location.Y);
+            AdditionInfoButton.Location = new System.Drawing.Point(this.Width / 2 - 10, AdditionInfoButton.Location.Y);
+        }
+        public void HideAdditionInfoButton()
+        {
+            HideButton.Visible = false;
+
+            DeleteButton.Location = new System.Drawing.Point(this.Width / 2 - 10, DeleteButton.Location.Y);
+        }
+        public void ShowAdditionInfoButton()
+        {
+            HideButton.Visible = true;
+
+            DeleteButton.Location = new System.Drawing.Point(this.Width / 2 + 10, DeleteButton.Location.Y);
         }
 
-        public void SubscriChangeItemClickEvent(EventHandler eventHandler)
-        {
-            ChangeButton.Click += eventHandler;
-        }
-        public void DescribeChangeItemClickEvent(EventHandler eventHandler)
-        {
-            ChangeButton.Click -= eventHandler;
-        }
         public void SubscribeDeleteItemClickEvent(EventHandler eventHandler)
         {
             DeleteButton.Click += eventHandler;

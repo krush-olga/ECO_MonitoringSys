@@ -40,7 +40,6 @@ namespace UserMap.UserControls
             this.ObjectTypeLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.NameTextBox = new System.Windows.Forms.TextBox();
-            this.ChangeButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.HideButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
@@ -163,21 +162,10 @@ namespace UserMap.UserControls
             this.NameTextBox.Size = new System.Drawing.Size(250, 20);
             this.NameTextBox.TabIndex = 0;
             // 
-            // ChangeButton
-            // 
-            this.ChangeButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.ChangeButton.Enabled = false;
-            this.ChangeButton.Location = new System.Drawing.Point(97, 237);
-            this.ChangeButton.Name = "ChangeButton";
-            this.ChangeButton.Size = new System.Drawing.Size(75, 23);
-            this.ChangeButton.TabIndex = 1;
-            this.ChangeButton.Text = "Змінити";
-            this.ChangeButton.UseVisualStyleBackColor = true;
-            // 
             // DeleteButton
             // 
             this.DeleteButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.DeleteButton.Location = new System.Drawing.Point(184, 237);
+            this.DeleteButton.Location = new System.Drawing.Point(142, 237);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(75, 23);
             this.DeleteButton.TabIndex = 2;
@@ -209,7 +197,7 @@ namespace UserMap.UserControls
             // AdditionInfoButton
             // 
             this.AdditionInfoButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.AdditionInfoButton.Location = new System.Drawing.Point(9, 237);
+            this.AdditionInfoButton.Location = new System.Drawing.Point(44, 237);
             this.AdditionInfoButton.Name = "AdditionInfoButton";
             this.AdditionInfoButton.Size = new System.Drawing.Size(75, 23);
             this.AdditionInfoButton.TabIndex = 6;
@@ -224,7 +212,6 @@ namespace UserMap.UserControls
             this.Controls.Add(this.label6);
             this.Controls.Add(this.HideButton);
             this.Controls.Add(this.DeleteButton);
-            this.Controls.Add(this.ChangeButton);
             this.Controls.Add(this.GeneralInfoGroupBox);
             this.Name = "ItemInfo";
             this.Size = new System.Drawing.Size(268, 263);
@@ -243,7 +230,6 @@ namespace UserMap.UserControls
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button ChangeButton;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Label ExpertLabel;
         private System.Windows.Forms.TextBox DescriptionTextBox;
