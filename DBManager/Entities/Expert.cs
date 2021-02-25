@@ -7,7 +7,7 @@ namespace Data.Entity
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Role role { get; set; }
+        public Role Role { get; set; }
 
         public override string ToString()
         {

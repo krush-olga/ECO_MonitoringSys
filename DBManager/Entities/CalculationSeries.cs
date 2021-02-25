@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Data.Entity
 {
+    [Serializable]
     public class CalculationSeries
     {
         public int Id { get; set; }

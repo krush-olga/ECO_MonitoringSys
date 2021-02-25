@@ -3,6 +3,7 @@ using System.ComponentModel;
 
 namespace Data.Entity
 {
+    [Serializable]
     public class Emission : INotifyPropertyChanged
     {
         private int year;
@@ -86,6 +87,7 @@ namespace Data.Entity
             }
         }
 
+        [field:NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()

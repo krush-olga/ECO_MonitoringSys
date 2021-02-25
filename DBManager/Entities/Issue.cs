@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Data.Entity
 {
+    [Serializable]
     public class Issue
     {
         public int Id { get; set; }
@@ -11,6 +12,7 @@ namespace Data.Entity
         public string Tema { get; set; }
         public DateTime CreationDate { get; set; }
 
+        public Issue() {}
         public Issue(int id)
         {
             this.Id = id;
