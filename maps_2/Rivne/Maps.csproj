@@ -141,12 +141,6 @@
     <Compile Include="ReworkedMap\Services\FileLogger.cs" />
     <Compile Include="ReworkedMap\Services\IController.cs" />
     <Compile Include="ReworkedMap\Services\ILogger.cs" />
-    <Compile Include="ReworkedMap\UserControls\IssuesAndSeries.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ReworkedMap\UserControls\IssuesAndSeries.Designer.cs">
-      <DependentUpon>IssuesAndSeries.cs</DependentUpon>
-    </Compile>
     <Compile Include="ReworkedMap\UserControls\ItemInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -185,9 +179,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ReworkedMap\MapWindow.resx">
       <DependentUpon>MapWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ReworkedMap\UserControls\IssuesAndSeries.resx">
-      <DependentUpon>IssuesAndSeries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReworkedMap\UserControls\ItemInfo.resx">
       <DependentUpon>ItemInfo.cs</DependentUpon>
