@@ -98,14 +98,17 @@ namespace LemmLab
         /// </summary>
         /// <param name="str">«м≥ст html-стор≥нки.</param>
         /// <returns>ћасив сл≥в.</returns>
-        public string[] ToWordsHTML(string str)
+        public string[] ToWordsHTML(string str)                                 //   (\\d)+\\/(?!\\d)|\\/(?!\\d) - 645/97   \\/+ - 645 97
         {
             Regex re1 = new Regex("(\\s)|[.,:;\"()]");
-            Regex re2 = new Regex("<(.|\\s|&quot)*?>|[A-Za-z|!|[|=|\\||&|_|$|^|'{2}|Е|Ч|Ђ|ї|Ф|У|?||©|%|/+|>+|<+|Х]+|\\]|\\-(?=\\d)|\\-(?=\\s)|\\-$|\\-{2,5}");
-            Regex re3 = new Regex("<style>(.|\\s)*?<\\/style>");
-            //{[^{}].[\\w\\W]*}|  шоб видалити все м≥ж ф≥гурними дужками
+            Regex re2 = new Regex("<(.|\\s|&quot)*?>|[A-Za-z|!|[|=|\\|{|}|&|$|^|Е|_|Ч|Ђ|ї|Ф|У|?|©|%|>+|<+|Х]+|\\]|\\/+|\\-(?=\\d)|\\-(?=%)|\\-(?=\\s)|\\-$|\\-{2,5}"); 
+            Regex re3 = new Regex("<script language(.|\\s)*?<\\/script>|<div class=\"footer_support col-lg-4 col-md-6 order-md-1\">(.|\\s)*?</div>|<div class=\"cc-block\">(.|\\s)*?</div>|<div class=\"kitsoft-block hidden\">(.|\\s)*?</div>|<ul class=\"column-3-list my-3\">(.|\\s)*?</ul>|<label for=\"link-only\">(.|\\s)*?</div>|<h4 class=\"social-title mb-3\">(.|\\s)*?</h4>|<nobr>(.|\\s)*?</div>|<small class=\"text-muted\">(.|\\s)*?</small>|<div class=\"modal-body\">(.|\\s)*?</div>|<h3 class=\"alert-heading danger alert-no-flexbox\">(.|\\s)*?</noscript>|<ul class=\"navbar-nav mr-auto\">(.|\\s)*?</ul>|<i class=\"icn-rewind\"(.|\\s)*?</a>|<span class=\"d-lg-none\">(.|\\s)*?</div>|<div class=\"checkbox mt-3\">(.|\\s)*?</div>|<div class=\"clearfix\">(.|\\s)*?</a>|target=\"mail_blank\">(.|\\s)*?</div>|<nav class=\"nav nav-separated btn toolbar flex-wrap\">(.|\\s)*?</nav>|<div class=\"mb-3\">(.|\\s)*?</div>|<label for=\"orfo-name\">(.|\\s)*?</label>|<label for=\"orfo-email\">(.|\\s)*?</label>|<div class=\"modal-footer\">(.|\\s)*?</div>|<label for=\"link-code\">(.|\\s)*?</label>|<script>(.|\\s)*?</script>|<div class=\"modal-content\">(.|\\s)*?</div>|<div class=\"nav\">(.|\\s)*?</nav>|<button class=\"btn btn-link mr-3\"(.|\\s)*?</button>|<label for=\"link-code2\">(.|\\s)*?</label>|<div class=\"center-cell\">(.|\\s)*?</div>|<style>(.|\\s)*?<\\/style>");
+            Regex re4 = new Regex("'{2}");
+           // Regex re5 = new Regex("\\/(?=\\d)");
 
-            return (from a in re1.Split(re2.Replace(re3.Replace(str.ToLower(), ""), "")) where a.Trim() != "" select a.Trim()).ToArray();
+            return (from a in re1.Split(re2.Replace(re3.Replace(re4.Replace(str.ToLower(), ""), ""), " ")) where a.Trim() != "" select a.Trim()).ToArray();
+           // return (from a in re1.Split(re2.Replace(re3.Replace(re4.Replace(re5.Replace(str.ToLower(), "-"), ""), " "), "")) where a.Trim() != "" select a.Trim()).ToArray();
+
         }
     }
 }

@@ -94,12 +94,10 @@ namespace FileBase
 			Dictionary<string, int> res = new Dictionary<string, int>();
 			foreach(var str in strM)
 			{
+                var pair = str.Split(' ');
               
-                
-                    var pair = str.Split(' ');
-                    res.Add(pair[1], int.Parse(pair[0]));
-                
-                
+                res.Add(pair[1], int.Parse(pair[0]));
+               
 			}
 			return res;
 		}
@@ -250,35 +248,39 @@ namespace FileBase
 		public string GetName(string name )
         {
             var mFile = GetHtm(name);
-            var re0 = new Regex("<div class=\"page-header\"><h1>(.*)</h1></div>"); // Mine
-          /*  var re1 = new Regex("<span class=rvts70>(.*)</span>");
-              var re2 = new Regex("<span class=rvts66>(.*)</span>");
-              var re3 = new Regex("<span class=rvts23>(.*)</span>");
-          */
+          //  var re0 = new Regex("<div class=\"page-header\"><h1>(.*)</h1></div>"); // Mine
+            var re1 = new Regex("<title>(.*)</title>");                              // Mine
+            /*  var re1 = new Regex("<span class=rvts70>(.*)</span>");
+                var re2 = new Regex("<span class=rvts66>(.*)</span>");
+                var re3 = new Regex("<span class=rvts23>(.*)</span>");
+            */
             string res = "";
-            foreach(var g in mFile)
+            foreach (var g in mFile)
             {
-                if (re0.IsMatch(g)) // Mine
-                {
-                    res += (re0.Match(g).Groups[1].Value) + " ";
-                    return res;
-                }
-             /*   if (re1.IsMatch(g))
+                if (re1.IsMatch(g)) // Mine
                 {
                     res += (re1.Match(g).Groups[1].Value) + " ";
+                    return res;
                 }
-                if (re2.IsMatch(g))
-                {
-                    res += (re2.Match(g).Groups[1].Value) + " ";
-                }
-                if (re3.IsMatch(g))
-                {
-                    res += (re3.Match(g).Groups[1].Value) + " ";
-                   // return res;     
-                }
-             */
             }
-            return name; // Mine
+
+                    /*   if (re1.IsMatch(g))
+                       {
+                           res += (re1.Match(g).Groups[1].Value) + " ";
+                       }
+                       if (re2.IsMatch(g))
+                       {
+                           res += (re2.Match(g).Groups[1].Value) + " ";
+                       }
+                       if (re3.IsMatch(g))
+                       {
+                           res += (re3.Match(g).Groups[1].Value) + " ";
+                          // return res;     
+                       }
+                    */
+                
+         
+                return name; // Mine
            // return "none";
         }
         
