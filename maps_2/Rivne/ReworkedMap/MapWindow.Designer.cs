@@ -29,7 +29,10 @@
 
             Helpers.MapCache.Remove("images");
 
-            dBManager.Dispose();
+            if (dBManager != null)
+            {
+                dBManager.Dispose();
+            }
 
             base.Dispose(disposing);
         }
@@ -110,11 +113,6 @@
             this.CompareButton = new System.Windows.Forms.Button();
             this.CompareSideMenuButton = new System.Windows.Forms.Button();
             this.FindSideMenuPanel = new System.Windows.Forms.Panel();
-            this.FindByGroupBox = new System.Windows.Forms.GroupBox();
-            this.tbSearch = new System.Windows.Forms.TextBox();
-            this.cbSearch = new System.Windows.Forms.ComboBox();
-            this.btnSearch = new System.Windows.Forms.Button();
-            this.btnNormAll = new System.Windows.Forms.Button();
             this.CityGroupBox = new System.Windows.Forms.GroupBox();
             this.CitiesComboBox = new System.Windows.Forms.ComboBox();
             this.GoToCityButton = new System.Windows.Forms.Button();
@@ -153,7 +151,6 @@
             this.EnvironmentsGroupBox.SuspendLayout();
             this.CompareSideMenuPanel.SuspendLayout();
             this.FindSideMenuPanel.SuspendLayout();
-            this.FindByGroupBox.SuspendLayout();
             this.CityGroupBox.SuspendLayout();
             this.CoordinatesFindGroupBox.SuspendLayout();
             this.MainStatusStrip.SuspendLayout();
@@ -203,7 +200,7 @@
             // 
             this.ElementsSideMenuPanel.Controls.Add(this.AddItemTabControl);
             this.ElementsSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ElementsSideMenuPanel.Location = new System.Drawing.Point(0, 900);
+            this.ElementsSideMenuPanel.Location = new System.Drawing.Point(0, 787);
             this.ElementsSideMenuPanel.Name = "ElementsSideMenuPanel";
             this.ElementsSideMenuPanel.Size = new System.Drawing.Size(293, 281);
             this.ElementsSideMenuPanel.TabIndex = 10;
@@ -778,7 +775,7 @@
             // 
             this.ElementsSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.ElementsSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ElementsSideMenuButton.Location = new System.Drawing.Point(0, 870);
+            this.ElementsSideMenuButton.Location = new System.Drawing.Point(0, 757);
             this.ElementsSideMenuButton.Name = "ElementsSideMenuButton";
             this.ElementsSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.ElementsSideMenuButton.TabIndex = 9;
@@ -801,7 +798,7 @@
             this.FiltrationSideMenuPanel.Controls.Add(this.EnvironmentsGroupBox);
             this.FiltrationSideMenuPanel.Controls.Add(this.ShowLayoutButton);
             this.FiltrationSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.FiltrationSideMenuPanel.Location = new System.Drawing.Point(0, 436);
+            this.FiltrationSideMenuPanel.Location = new System.Drawing.Point(0, 323);
             this.FiltrationSideMenuPanel.Name = "FiltrationSideMenuPanel";
             this.FiltrationSideMenuPanel.Size = new System.Drawing.Size(293, 434);
             this.FiltrationSideMenuPanel.TabIndex = 8;
@@ -950,7 +947,7 @@
             this.FiltrationSideMenuButton.BackColor = System.Drawing.SystemColors.Control;
             this.FiltrationSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.FiltrationSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.FiltrationSideMenuButton.Location = new System.Drawing.Point(0, 406);
+            this.FiltrationSideMenuButton.Location = new System.Drawing.Point(0, 293);
             this.FiltrationSideMenuButton.Name = "FiltrationSideMenuButton";
             this.FiltrationSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.FiltrationSideMenuButton.TabIndex = 7;
@@ -966,7 +963,7 @@
             this.CompareSideMenuPanel.Controls.Add(this.DeleteCompareItemButton);
             this.CompareSideMenuPanel.Controls.Add(this.CompareButton);
             this.CompareSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.CompareSideMenuPanel.Location = new System.Drawing.Point(0, 299);
+            this.CompareSideMenuPanel.Location = new System.Drawing.Point(0, 186);
             this.CompareSideMenuPanel.Name = "CompareSideMenuPanel";
             this.CompareSideMenuPanel.Size = new System.Drawing.Size(293, 107);
             this.CompareSideMenuPanel.TabIndex = 5;
@@ -1014,7 +1011,7 @@
             // 
             this.CompareSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.CompareSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CompareSideMenuButton.Location = new System.Drawing.Point(0, 269);
+            this.CompareSideMenuButton.Location = new System.Drawing.Point(0, 156);
             this.CompareSideMenuButton.Name = "CompareSideMenuButton";
             this.CompareSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.CompareSideMenuButton.TabIndex = 4;
@@ -1025,72 +1022,13 @@
             // 
             // FindSideMenuPanel
             // 
-            this.FindSideMenuPanel.Controls.Add(this.FindByGroupBox);
             this.FindSideMenuPanel.Controls.Add(this.CityGroupBox);
             this.FindSideMenuPanel.Controls.Add(this.CoordinatesFindGroupBox);
             this.FindSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.FindSideMenuPanel.Location = new System.Drawing.Point(0, 30);
             this.FindSideMenuPanel.Name = "FindSideMenuPanel";
-            this.FindSideMenuPanel.Size = new System.Drawing.Size(293, 239);
+            this.FindSideMenuPanel.Size = new System.Drawing.Size(293, 126);
             this.FindSideMenuPanel.TabIndex = 1;
-            // 
-            // FindByGroupBox
-            // 
-            this.FindByGroupBox.Controls.Add(this.tbSearch);
-            this.FindByGroupBox.Controls.Add(this.cbSearch);
-            this.FindByGroupBox.Controls.Add(this.btnSearch);
-            this.FindByGroupBox.Controls.Add(this.btnNormAll);
-            this.FindByGroupBox.Location = new System.Drawing.Point(6, 124);
-            this.FindByGroupBox.Name = "FindByGroupBox";
-            this.FindByGroupBox.Size = new System.Drawing.Size(282, 110);
-            this.FindByGroupBox.TabIndex = 88;
-            this.FindByGroupBox.TabStop = false;
-            this.FindByGroupBox.Text = "Пошук по";
-            this.FindByGroupBox.Visible = false;
-            // 
-            // tbSearch
-            // 
-            this.tbSearch.Location = new System.Drawing.Point(6, 50);
-            this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(273, 20);
-            this.tbSearch.TabIndex = 72;
-            // 
-            // cbSearch
-            // 
-            this.cbSearch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSearch.FormattingEnabled = true;
-            this.cbSearch.Items.AddRange(new object[] {
-            "Назві",
-            "Задачі",
-            "Розрахунку",
-            "Формулі"});
-            this.cbSearch.Location = new System.Drawing.Point(6, 19);
-            this.cbSearch.Name = "cbSearch";
-            this.cbSearch.Size = new System.Drawing.Size(273, 21);
-            this.cbSearch.TabIndex = 74;
-            // 
-            // btnSearch
-            // 
-            this.btnSearch.Enabled = false;
-            this.btnSearch.FlatAppearance.BorderSize = 0;
-            this.btnSearch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.btnSearch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.btnSearch.Location = new System.Drawing.Point(6, 76);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(79, 23);
-            this.btnSearch.TabIndex = 75;
-            this.btnSearch.Text = "Пошук";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            // 
-            // btnNormAll
-            // 
-            this.btnNormAll.Location = new System.Drawing.Point(118, 76);
-            this.btnNormAll.Name = "btnNormAll";
-            this.btnNormAll.Size = new System.Drawing.Size(161, 23);
-            this.btnNormAll.TabIndex = 77;
-            this.btnNormAll.Text = "Всі результати нормування";
-            this.btnNormAll.UseVisualStyleBackColor = true;
             // 
             // CityGroupBox
             // 
@@ -1358,8 +1296,6 @@
             this.CompareSideMenuPanel.ResumeLayout(false);
             this.CompareSideMenuPanel.PerformLayout();
             this.FindSideMenuPanel.ResumeLayout(false);
-            this.FindByGroupBox.ResumeLayout(false);
-            this.FindByGroupBox.PerformLayout();
             this.CityGroupBox.ResumeLayout(false);
             this.CoordinatesFindGroupBox.ResumeLayout(false);
             this.CoordinatesFindGroupBox.PerformLayout();
@@ -1381,11 +1317,6 @@
         private System.Windows.Forms.Panel CompareSideMenuPanel;
         private System.Windows.Forms.Button CompareSideMenuButton;
         private System.Windows.Forms.Panel FindSideMenuPanel;
-        private System.Windows.Forms.GroupBox FindByGroupBox;
-        private System.Windows.Forms.TextBox tbSearch;
-        private System.Windows.Forms.ComboBox cbSearch;
-        private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.Button btnNormAll;
         private System.Windows.Forms.GroupBox CityGroupBox;
         private System.Windows.Forms.ComboBox CitiesComboBox;
         private System.Windows.Forms.Button GoToCityButton;

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -84,13 +85,10 @@ namespace UserMap
             CompareSideMenuPanel.Visible = false;
             ElementsSideMenuPanel.Visible = true;
 
-            cbSearch.SelectedIndex = 0;
-
             itemInfo = new UserControls.ItemInfo();
             itemInfo.Visible = false;
             itemInfo.Location = new Point(this.Width - itemInfo.Width - 15, (this.Height - itemInfo.Height - MainStatusStrip.Height) / 2);
             itemInfo.Anchor = AnchorStyles.Right;
-            itemInfo.SubscriChangeItemClickEvent(ChangeObjectSettings);
             itemInfo.SubscribeAdditionInfoClickEvent(AdditionalInfo);
 
             if (expert != Role.Admin)
@@ -415,94 +413,6 @@ namespace UserMap
         }
         #endregion
 
-        private async Task ChangeObject(string objectType)
-        {
-            if (itemConfigurationWindow != null && reworkedMap.SelectedMarker != null)
-            {
-                var marker = reworkedMap.SelectedMarker as NamedGoogleMarker;
-
-                if (marker == null)
-                {
-                    return;
-                }
-
-                var (changedObjName, changedObjDescription, changedSeries, changedEmissions) = itemConfigurationWindow;
-
-                marker.Name = changedObjName;
-                marker.Description = changedObjDescription;
-
-                bool changeAsEmission = changedEmissions != null;
-
-                string objTableName = null;
-                string objCondColumn = null;
-                string emissionColumn = null;
-                string[] objColumns = null;
-                string[] objValues = null;
-
-                if (objectType == "Маркер")
-                {
-                    objTableName = "poi";
-                    objCondColumn = "Id";
-                    emissionColumn = "idPoi";
-
-                    objColumns = new string[] { "Description", "Name_Object", "id_of_issue",
-                                                "calculations_description_number", "idEnvironment" };
-                    objValues = new string[] { DBUtil.AddQuotes(changedObjName), DBUtil.AddQuotes(changedObjDescription),
-                                               //changedIssue != null ? changedIssue.Id.ToString() : "0",
-                                               //changedSeries != null ? changedSeries.Id.ToString() : "0",
-                                              /* changedEnvironment != null ? changedEnvironment.Id.ToString() : */"NULL" };
-                }
-                else if (objectType == "Полігон" || objectType == "Трубопровід")
-                {
-                    objTableName = "map_object_dependencies";
-                    objCondColumn = "id_poligon";
-                    emissionColumn = "idPoligon";
-
-                    objColumns = new string[] { "id_of_issue", "calculations_description_number" };
-                    //objValues = new string[] { changedIssue != null ? changedIssue.Id.ToString() : "0",
-                    //                           changedSeries != null ? changedSeries.Id.ToString() : "0" };
-                    objValues = null;
-                }
-
-
-
-                try
-                {
-                    dBManager.StartTransaction();
-                    await dBManager.UpdateRecordAsync(objTableName, objColumns, objValues, objCondColumn + " = " + marker.Id.ToString());
-
-                    if (changeAsEmission)
-                    {
-                        string[] emissionColumns = { "idElement", "idEnvironment", "ValueAvg", "ValueMax",
-                                                     "Year", "Month", "day", "Measure" };
-                        //string[] emissionValues = { changedEmission.Element.Code.ToString(), changedEmission.Environment.Id.ToString(),
-                        //                            changedEmission.AvgValue.ToString().Replace(',', '.'), 
-                        //                            changedEmission.MaxValue.ToString().Replace(',', '.'), 
-                        //                            changedEmission.Year.ToString(), changedEmission.Month.ToString(),
-                        //                            changedEmission.Day.ToString(), DBUtil.AddQuotes(changedEmission.Element.Measure) };
-                        string[] emissionValues = null;
-
-                        await dBManager.UpdateRecordAsync("emissions_on_map", emissionColumns, emissionValues, emissionColumn + " = " + marker.Id.ToString());
-                    }
-
-                    dBManager.CommitTransaction();
-
-                    MessageBox.Show("Дані успішно оновлені.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    dBManager.RollbackTransaction();
-
-#if DEBUG
-                    DebugLog(ex);
-#else
-                    MessageBox.Show("Помилка при оновлені даних.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    logger.Log(ex);
-#endif
-                }
-            }
-        }
-
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!polygonAddingMode && !tubeAddingMode)
@@ -530,113 +440,22 @@ namespace UserMap
                 drawContext.RemoveCoord(reworkedMap.SelectedMarker.Position);
             }
         }
-        private async void ChangeObjectSettings(object sender, EventArgs e)
-        {
-            var marker = reworkedMap.SelectedMarker as NamedGoogleMarker;
-
-            if (marker == null)
-            {
-                MessageBox.Show("Не вдалось відкрити вікно для налаштування об'єкту",
-                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string markerType = ((IDescribable)marker).Type;
-            string emissionObjIdColumn = string.Empty;
-
-            IEnumerable<Emission> emissions = null;
-            IDictionary<Issue, IEnumerable<CalculationSeries>> series = null;
-
-            string dependenciesTables = "poi, map_object_dependencies, issues, calculations_description";
-            string dependenciesColumns = " poi.Id, issues.name, calculations_description.calculation_name, " +
-                                         "calculations_description.issue_id";
-            string dependenciesJoinCondition = "poi.Id = map_object_dependencies.id_of_object, " +
-                                               "map_object_dependencies.type_rel = 0 AND " +
-                                               "map_object_dependencies.type_obj = 0 AND " +
-                                               "map_object_dependencies.id_of_ref = issues.issue_id";
-            string dependenciesCondition = "type_obj = " + (markerType == "Маркер" ? "0" : "1");
-            string emissionTables = "poi, emissions_on_map, environment";
-            string emissionColumns = "DISTINCT environment.name, poi.Id, emissions_on_map.ValueAvg, " +
-                                     "emissions_on_map.ValueMax, emissions_on_map.Year, emissions_on_map.ValueAvg.";
-            string emissionJoinCondition = "emissions_on_map.idPoi = poi.Id, emissions_on_map.idEnvironment = environment.id";
-
-            try
-            {
-
-
-                //string emissionTables = "emissions_on_map, elements, environment";
-                //string emissionColumns = "elements.code, emissions_on_map.ValueAvg, emissions_on_map.ValueMax, " +
-                //                         "emissions_on_map.Year, emissions_on_map.Month, emissions_on_map.day, " +
-                //                         "environment.id, environment.name";
-                //string emissionJoinCond = "emissions_on_map.idElement = elements.code, " +
-                //                          "emissions_on_map.idEnvironment = environment.id";
-                //string emissionCond = emissionObjIdColumn + " = " + marker.Id.ToString();
-
-                //var emissionResult = await dBManager.GetRowsUsingJoinAsync(emissionTables, emissionColumns, emissionJoinCond, emissionCond, JoinType.LEFT);
-
-                //foreach (var emissionItem in emissionResult)
-                //{
-                //    emission = new Emission()
-                //    {
-                //        //Element = new Element()
-                //        //{
-                //        //    Code = (int)emissionItem[0],
-                //        //},
-                //        //Environment = new Data.Entity.Environment()
-                //        //{
-                //        //    Id = (int)emissionItem[6],
-                //        //    Name = emissionItem[7].ToString()
-                //        //},
-                //        AvgValue = (double)emissionItem[1],
-                //        MaxValue = (double)emissionItem[2],
-                //        Year = (int)emissionItem[3],
-                //        Month = (int)emissionItem[4],
-                //        Day = (int)emissionItem[5],
-                //    };
-                //}
-            }
-            catch (Exception ex)
-            {
-#if DEBUG
-                DebugLog(ex);
-#else
-                MessageBox.Show("Помилка при відкритті вікна для налаштування об'єкту.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                logger.Log(ex);
-#endif
-            }
-
-            itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
-
-            //if (environment != null)
-            //{
-            //    itemConfigurationWindow.SetEnvironment(environment);
-            //}
-            //else if (emission != null && emission.Environment != null)
-            //{
-            //    itemConfigurationWindow.SetEnvironment(emission.Environment);
-            //}
-
-            //itemConfigurationWindow.SetIssue(issue);
-            //itemConfigurationWindow.SetEmission(emission);
-            //itemConfigurationWindow.SetSeries(series);
-            itemConfigurationWindow.SetObjName(marker.Name);
-            itemConfigurationWindow.SetObjDescritpion(marker.Description);
-
-            if (itemConfigurationWindow.ShowDialog() == DialogResult.OK)
-            {
-                await ChangeObject(markerType);
-            }
-
-            itemInfo.SetData(marker);
-
-            itemConfigurationWindow.Dispose();
-            itemConfigurationWindow = null;
-        }
-        private void AdditionalInfo(object sender, EventArgs e)
+        private async void AdditionalInfo(object sender, EventArgs e)
         {
             var marker = (NamedGoogleMarker)reworkedMap.SelectedMarker;
 
-            HelpWindows.MultiBindingObjectEditor multiBindingObjectEditor = new HelpWindows.MultiBindingObjectEditor(marker.Id, marker);
+            bool isReadOnly = expert != Role.Admin || marker.Creator.Id != userId;
+
+            HelpWindows.MultiBindingObjectEditor multiBindingObjectEditor = new HelpWindows.MultiBindingObjectEditor(marker.Id, marker, isReadOnly);
+
+            if (((IDescribable)marker).Type == "Область" || expert == Role.Medic)
+            {
+                var medStatUC = await UserControls.MedStatUserControl.CreateInstanceAsync();
+                medStatUC.FindObjectId = marker.Id;
+
+                multiBindingObjectEditor.AddNewPage("Медична статистика", medStatUC);
+            }
+
             multiBindingObjectEditor.ShowDialog();
             multiBindingObjectEditor.Dispose();
         }
@@ -681,6 +500,7 @@ namespace UserMap
 
                 if (expert == Role.Admin)
                 {
+                    itemInfo.ShowAdditionInfoButton();
                     itemInfo.DescribeDeleteItemClickEvent(DeleteMarker);
                     itemInfo.DescribeDeleteItemClickEvent(DeletePolyline);
 
@@ -695,6 +515,7 @@ namespace UserMap
                     else if (describableItem.Type == "Трубопровід")
                     {
                         itemInfo.SubscribeDeleteItemClickEvent(DeletePolyline);
+                        itemInfo.HideAdditionInfoButton();
                     }
                 }
 
@@ -956,21 +777,20 @@ namespace UserMap
                                               addTempLayoutName, marker.Format, marker.Name, marker.Description);
                     }
                 }
-
-                //DebugToolStripStatusLabel.Text = imageName;
             }
         }
         private void AddMarkerButton_Click(object sender, EventArgs e)
         {
             HideContextMenuStripItems(MapObjectContextMenuStrip);
             markerAddingMode = !markerAddingMode;
+            itemInfo.ClearData();
+            itemInfo.Visible = false;
 
             if (markerAddingMode)
             {
                 HelpStatusLabel.Text = "Натисніть два рази на карту для встановлення маркеру.";
 
                 MarkerSettingsButton.Enabled = true;
-                SaveMarkerButton.Enabled = true;
 
                 AddMarkerButton.Text = "Відміна";
             }
@@ -987,7 +807,11 @@ namespace UserMap
             {
                 itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
             }
-            itemConfigurationWindow.ShowDialog();
+
+            if (itemConfigurationWindow.ShowDialog() == DialogResult.OK)
+            {
+                SaveMarkerButton.Enabled = true;
+            }
         }
         private async void SaveMarkerButton_Click(object sender, EventArgs e)
         {
@@ -1085,8 +909,7 @@ namespace UserMap
                     marker.Format = "Назва: {0}\nОпис: {1}";
                     marker.Name = objName;
                     marker.Description = (string.IsNullOrEmpty(objDescription) ? "Опис відсутній." : objDescription);
-                    marker.CreatorFullName = "Потрібне перезавантаження маркеру";
-                    marker.CreatorRole = expert;
+                    marker.Creator = new Expert { Name = "Потрібне перезавантаження маркеру" };
                     ((IDescribable)marker).Type = "Маркер";
 
                     reworkedMap.RemoveMarker(marker);               //Убирает маркер из слоя для добавления
@@ -1146,7 +969,7 @@ namespace UserMap
 
             string _tables = "poi, type_of_object, user";
             string _columns = "poi.Coord_Lat, poi.Coord_Lng, poi.Description, poi.Name_Object, " +
-                              "type_of_object.Image_Name, user.description, user.id_of_expert, poi.Id, type_of_object.Name";
+                              "type_of_object.Image_Name, user.description, user.id_of_expert, poi.Id, type_of_object.Name, user.id_of_user";
             string _joinCond = "type_of_object.Id = poi.Type, poi.id_of_user = user.id_of_user";
             string _condition = condition ?? string.Empty;
             string dependenciesTables = "poi, map_object_dependencies, issues";
@@ -1197,8 +1020,10 @@ namespace UserMap
                                                        LoadImage(row[4].ToString()),
                                                        "Назва: {0}\nОпис: {1}", row[3].ToString(), row[2].ToString()) as NamedGoogleMarker;
                     marker.Id = (int)row[7];
-                    marker.CreatorFullName = row[5] is DBNull ? "Дані відсутні" : row[5].ToString();
-                    marker.CreatorRole = (Role)((int)row[6]);
+                    if (!(row[5] is DBNull))
+                        marker.Creator = new Expert { Id = (int)row[9], Name = row[5].ToString(), Role = (Role)((int)row[6]) };
+                    else
+                        marker.Creator = new Expert { Name = "Дані відсутні" };
                     ((IDescribable)marker).Type = "Маркер";
 
                     var dependencies = mapObjectDependencies.Where(_row => !(_row[0] is DBNull) && (int)_row[0] == marker.Id);
@@ -1409,8 +1234,7 @@ namespace UserMap
                                                        "Назва: {0}\nОпис: {1}", objName,
                                                        (string.IsNullOrEmpty(objDescription) ? "Опис відсутній." : objDescription));
                 polyMarker.Id = ((int)lastId + 1);
-                polyMarker.CreatorFullName = "Потрібне перезавантаження маркеру";
-                polyMarker.CreatorRole = expert;
+                polyMarker.Creator = new Expert { Name = "Потрібне перезавантаження маркеру" };
                 polyMarker.IsDependent = true;
 
                 if (polylineType == "polygon")
@@ -1478,7 +1302,7 @@ namespace UserMap
                               "poligon.line_color_g, poligon.line_color_b, " +
                               "poligon.line_alfa, poligon.line_thickness, " +
                               "poligon.name, poligon.description, " +
-                              "user.description, user.id_of_expert, emissions_on_map.idEnvironment";
+                              "user.description, user.id_of_expert, emissions_on_map.idEnvironment, user.id_of_user";
             string _joinCond = "poligon.Id_of_poligon = emissions_on_map.idPoligon, poligon.id_of_user = user.id_of_user";
             string _condition = "poligon.type = " + DBUtil.AddQuotes(polylineType);
 
@@ -1519,7 +1343,7 @@ namespace UserMap
 
             if (polylineType == "polygon")
             {
-                reworkedMap.ClearAllPolygons();
+                ClearPolygonByFunc(overlay => overlay.Id != "region");
             }
             else if (polylineType == "tube")
             {
@@ -1609,8 +1433,10 @@ namespace UserMap
                                                                      format, row[10].ToString(), row[11].ToString()) as NamedGoogleMarker;
                     marker.Id = polygonId;
                     marker.IsDependent = true;
-                    marker.CreatorFullName = row[12] is DBNull ? "Дані відсутні" : row[14].ToString();
-                    marker.CreatorRole = (Role)((int)row[13]);
+                    if (!(row[12] is DBNull))
+                        marker.Creator = new Expert { Id = (int)row[15], Name = row[14].ToString(), Role = (Role)((int)row[13]) };
+                    else
+                        marker.Creator = new Expert { Name = "Дані відсутні" };
 
                     ((IDescribable)marker).Type = _type;
 
@@ -1764,6 +1590,22 @@ namespace UserMap
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DeleteMarkerFromLayout(GMap.NET.WindowsForms.GMapOverlay overlay, GMap.NET.PointLatLng coord)
+        {
+            GMap.NET.WindowsForms.GMapMarker marker = null;
+
+            foreach (var _marker in overlay.Markers)
+            {
+                if (_marker.Position == coord)
+                {
+                    marker = _marker;
+                }
+            }
+
+            overlay.Markers.Remove(marker);
+        }
+
         #region Polygon methods
         private void ChangePictureBoxColor()
         {
@@ -1827,12 +1669,13 @@ namespace UserMap
         {
             HideContextMenuStripItems(MapObjectContextMenuStrip);
             polygonAddingMode = !polygonAddingMode;
+            itemInfo.ClearData();
+            itemInfo.Visible = false;
 
             if (polygonAddingMode)
             {
                 HelpStatusLabel.Text = "Натискайте два рази на карту для встановлення точки полігону.";
 
-                PolygonSaveButton.Enabled = true;
                 PolygonSettingsButton.Enabled = true;
                 PolygonColorPictureBox.Enabled = true;
 
@@ -1853,7 +1696,11 @@ namespace UserMap
             {
                 itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
             }
-            itemConfigurationWindow.ShowDialog();
+            
+            if (itemConfigurationWindow.ShowDialog() == DialogResult.OK)
+            {
+                PolygonSaveButton.Enabled = true;
+            }
 
             string tempObjName = itemConfigurationWindow.GetObjName();
             if (drawContext != null && !string.IsNullOrEmpty(tempObjName))
@@ -1962,30 +1809,23 @@ namespace UserMap
 
         private void ClearAllPolygons_Click(object sender, EventArgs e)
         {
+            ClearPolygonByFunc(overlay => overlay.Id != "region");
+        }
+
+        private void ClearPolygonByFunc(Func<GMap.NET.WindowsForms.GMapOverlay, bool> func)
+        {
             foreach (var overlay in gMapControl.Overlays)
             {
-                foreach (var polygon in overlay.Polygons)
+                if (func(overlay))
                 {
-                    DeletePolygonMarker(overlay, polygon.Points.First());
-                }
-            }
-
-            void DeletePolygonMarker(GMap.NET.WindowsForms.GMapOverlay overlay, GMap.NET.PointLatLng coord)
-            {
-                GMap.NET.WindowsForms.GMapMarker marker = null;
-
-                foreach (var _marker in overlay.Markers)
-                {
-                    if (_marker.Position == coord)
+                    foreach (var polygon in overlay.Polygons)
                     {
-                        marker = _marker;
+                        DeleteMarkerFromLayout(overlay, polygon.Points.First());
                     }
+
+                    overlay.Polygons.Clear();
                 }
-
-                overlay.Markers.Remove(marker);
             }
-
-            reworkedMap.ClearAllPolygons();
         }
         #endregion
 
@@ -1994,6 +1834,8 @@ namespace UserMap
         {
             HideContextMenuStripItems(MapObjectContextMenuStrip);
             tubeAddingMode = !tubeAddingMode;
+            itemInfo.ClearData();
+            itemInfo.Visible = false;
 
             if (tubeAddingMode)
             {
@@ -2095,23 +1937,8 @@ namespace UserMap
             {
                 foreach (var route in overlay.Routes)
                 {
-                    DeleteRouteMarker(overlay, route.Points.First());
+                    DeleteMarkerFromLayout(overlay, route.Points.First());
                 }
-            }
-
-            void DeleteRouteMarker(GMap.NET.WindowsForms.GMapOverlay overlay, GMap.NET.PointLatLng coord)
-            {
-                GMap.NET.WindowsForms.GMapMarker marker = null;
-
-                foreach (var _marker in overlay.Markers)
-                {
-                    if (_marker.Position == coord)
-                    {
-                        marker = _marker;
-                    }
-                }
-
-                overlay.Markers.Remove(marker);
             }
 
             reworkedMap.ClearAllRoutes();
@@ -2138,6 +1965,7 @@ namespace UserMap
             if (ComprasionItemsComboBox.SelectedIndex != -1)
             {
                 ComprasionItemsComboBox.Items.RemoveAt(ComprasionItemsComboBox.SelectedIndex);
+                ComprasionItemsComboBox.SelectedIndex = ComprasionItemsComboBox.Items.Count - 1;
             }
         }
         private void CompareButton_Click(object sender, EventArgs e)
