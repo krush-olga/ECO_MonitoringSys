@@ -2,29 +2,23 @@
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
+using UserMap.Services;
 
 namespace UserMap.ViewModel
 {
-    internal enum ChangeType
-    {
-        Added = 0,
-        Changed,
-        Deleted
-    }
-
     /* 
      * Dictionary<T, KeyValuePair<T, ChangeType>>:
      * T = новый элемент (если произошло удаление элемента, но его 
      * не было с самого начала, то ставим тот же, что и при удалении),
      * 
      * KeyValuePair<T, ChangeType>> - содержит пару, где: 
-     *      T - старый элемент (если было добавлено элемент, то будет null),
+     *      T - старый элемент (если было добавлено элемент, то будет default),
      *      ChangeType = что произошло с этим элементом.
      */
 
-    internal sealed class ControllerVM<T> : INotifyPropertyChanged
-        where T : class, INotifyPropertyChanged, new()
+    internal class ControllerVM<T> : IController
     {
         private bool isAddedInternaly;
         private bool isAddingNewElem;
@@ -33,15 +27,13 @@ namespace UserMap.ViewModel
 
         private T currentEditableElement;
         private T originElement;
-        private List<object> recursionElement;
-        private ObservableCollection<T> elements;
-        private Dictionary<T, KeyValuePair<T, ChangeType>> changedElements;
+        protected ObservableCollection<T> elements;
+        protected Dictionary<T, KeyValuePair<T, ChangeType>> changedElements;
 
         public ControllerVM()
         {
             elements = new ObservableCollection<T>();
             changedElements = new Dictionary<T, KeyValuePair<T, ChangeType>>();
-            recursionElement = new List<object>();
             elementIndex = -1;
 
             elements.CollectionChanged += Elements_CollectionChanged;
@@ -88,6 +80,45 @@ namespace UserMap.ViewModel
             }
         }
 
+        public int IndexOf(Func<T, bool> func)
+        {
+            int index = -1;
+            foreach (var element in elements)
+            {
+                ++index;
+                if (func(element))
+                {
+                    return index;
+                }
+            }
+
+            return -1;
+        }
+        public int IndexOf(Func<object, bool> func)
+        {
+            int index = -1;
+            foreach (var element in elements)
+            {
+                ++index;
+                if (func(element))
+                {
+                    return index;
+                }
+            }
+
+            return -1;
+        }
+
+        public void Sort<TKey>(Func<T, TKey> keySelector)
+        {
+            var oldElements = elements;
+
+            elements = new ObservableCollection<T>(elements.OrderBy(keySelector).ToList());
+            elements.CollectionChanged += Elements_CollectionChanged;
+
+            oldElements.Clear();
+        }
+
         public void Clear()
         {
             CancelEditElement();
@@ -111,9 +142,14 @@ namespace UserMap.ViewModel
 
             CurrentElementIndex = elements.Count - 1;
         }
-        public void StartAddingNewElement()
+        public void StartAddingNewElement(T elem)
         {
-            elements.Add(new T());
+            if (elem == null)
+            {
+                throw new ArgumentNullException("elem");
+            }
+
+            elements.Add(elem);
             isAddingNewElem = true;
             CurrentElementIndex = elements.Count - 1;
         }
@@ -123,6 +159,8 @@ namespace UserMap.ViewModel
             {
                 elements.RemoveAt(elements.Count - 1);
                 isAddingNewElem = false;
+
+                ResetElementIndex();
             }
         }
         public void EndAddingNewElement()
@@ -130,46 +168,27 @@ namespace UserMap.ViewModel
             if (isAddingNewElem)
             {
                 isAddingNewElem = false;
+
+                ResetElementIndex();
             }
         }
 
-        public bool RemoveEmissionAt(int index)
+        public bool RemoveElementAt(int index)
         {
             if (index < 0 || index >= elements.Count)
                 return false;
 
             var element = elements[index];
 
-            return RemoveEmission(element);
+            return RemoveElement(element);
         }
-        public bool RemoveEmission(T element)
+        public bool RemoveElement(T element)
         {
             bool res = elements.Remove(element);
 
             if (elementIndex >= elements.Count)
             {
                 CurrentElementIndex -= 1;
-            }
-
-            if (res)
-            {
-                if (changedElements.ContainsKey(element))
-                {
-                    var elemInfo = changedElements[element];
-
-                    if (elemInfo.Value != ChangeType.Added)
-                    {
-                        changedElements[element] = new KeyValuePair<T, ChangeType>(elemInfo.Key, ChangeType.Deleted);
-                    }
-                    else
-                    {
-                        changedElements.Remove(element);
-                    }
-                }
-                else
-                {
-                    changedElements[element] = new KeyValuePair<T, ChangeType>(element, ChangeType.Deleted);
-                }
             }
 
             return res;
@@ -192,11 +211,9 @@ namespace UserMap.ViewModel
             {
                 originElement = currentElem;
 
-                var newCurrentElem = new T();
+                var newCurrentElem = CloneElement(currentElem);
                 elements[index] = newCurrentElem;
                 currentEditableElement = newCurrentElem;
-
-                CopyElement(ref originElement, ref newCurrentElem);
             }
         }
         public void CancelEditElement()
@@ -204,8 +221,8 @@ namespace UserMap.ViewModel
             if (originElement != null)
             {
                 elements[elementIndex] = originElement;
-                currentEditableElement = null;
-                originElement = null;
+                currentEditableElement = default;
+                originElement = default;
             }
         }
         public void EndEditElement()
@@ -213,8 +230,8 @@ namespace UserMap.ViewModel
             if (originElement != null)
             {
                 changedElements[currentEditableElement] = new KeyValuePair<T, ChangeType>(originElement, ChangeType.Changed);
-                currentEditableElement = null;
-                originElement = null;
+                currentEditableElement = default;
+                originElement = default;
             }
         }
 
@@ -259,40 +276,17 @@ namespace UserMap.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void CopyElement<CType>(ref CType oldElement, ref CType newElement)
+        private T CloneElement(T target)
         {
-            Type elemType = oldElement.GetType();
-            System.Reflection.PropertyInfo[] propertyInfos = elemType.GetProperties();
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
 
-            for (int i = 0; i < propertyInfos.Length; i++)
+            using (var mStream = new System.IO.MemoryStream())
             {
-                var propInfo = propertyInfos[i];
-                var propType = propInfo.GetGetMethod().ReturnType;
+                binaryFormatter.Serialize(mStream, target);
 
-                if (propType.IsClass && propType != typeof(string))
-                {
-                    var innerElem = propInfo.GetValue(oldElement);
-
-                    if (recursionElement.Contains(innerElem))
-                    {
-                        propInfo.SetValue(newElement, innerElem);
-                    }
-                    else
-                    {
-                        recursionElement.Add(innerElem);
-
-                        var newInnerElement = Activator.CreateInstance(innerElem.GetType());
-                        CopyElement(ref innerElem, ref newInnerElement);
-
-                        propInfo.SetValue(newElement, newInnerElement);
-
-                        recursionElement.Remove(innerElem);
-                    }
-                }
-                else if (propInfo.CanWrite && propInfo.CanRead)
-                {
-                    propInfo.SetValue(newElement, propInfo.GetValue(oldElement));
-                }
+                mStream.Position = 0;
+                
+                return (T)binaryFormatter.Deserialize(mStream);
             }
         }
 
@@ -310,7 +304,7 @@ namespace UserMap.ViewModel
                     {
                         if (item != null && !isAddedInternaly)
                         {
-                            changedElements[item] = new KeyValuePair<T, ChangeType>(null, ChangeType.Added);
+                            changedElements[item] = new KeyValuePair<T, ChangeType>(default, ChangeType.Added);
                         }
                     }
                     break;
@@ -347,9 +341,7 @@ namespace UserMap.ViewModel
 
         private void Element_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var elem = sender as T;
-
-            if (!changedElements.ContainsKey(elem))
+            if (sender is T elem && !changedElements.ContainsKey(elem))
             {
                 changedElements[elem] = new KeyValuePair<T, ChangeType>(originElement, ChangeType.Changed);
             }
@@ -359,5 +351,44 @@ namespace UserMap.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
+
+        void IController.AddElement(object element)
+        {
+            if (element is T elem)
+            {
+                AddElement(elem);
+            }
+        }
+        void IController.StartAddingNewElement(object elem)
+        {
+            if (elem is T _elem)
+            {
+                StartAddingNewElement(_elem);
+            }
+        }
+        bool IController.RemoveEmission(object element)
+        {
+            if (element is T elem)
+            {
+                return RemoveElement(elem);
+            }
+
+            return false;
+        }
+
+        IEnumerable<object> IController.Elements => elements.OfType<object>();
+        ReadOnlyDictionary<object, KeyValuePair<object, ChangeType>> IController.ChangedElements 
+        {
+            get
+            {
+                var objRes = changedElements.ToDictionary(key => (object)key.Key, 
+                                                          value => new KeyValuePair<object, ChangeType>(value.Value.Key, 
+                                                                                                        value.Value.Value));
+
+                return new ReadOnlyDictionary<object, KeyValuePair<object, ChangeType>>(objRes);
+            }
+        }
+
+        object IController.CurrentElement => CurrentElement;
     }
 }
