@@ -14,7 +14,7 @@ namespace UserMap.Core
         private string description;
         private string format;
         private string type;
-        private string creatorFullName;
+        private Data.Entity.Expert creator;
         private Role role;
 
         /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor1/*'/>
@@ -101,16 +101,18 @@ namespace UserMap.Core
             set => type = value; 
         }
         /// <inheritdoc/>
-        public string CreatorFullName 
+        public Data.Entity.Expert Creator 
         {
-            get => creatorFullName;
-            set => creatorFullName = value;
-        }
-        /// <inheritdoc/>
-        public Role CreatorRole 
-        {
-            get => role;
-            set => role = value;
+            get => creator;
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+
+                creator = value;
+            }
         }
 
         /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/Id/*'/>
