@@ -473,13 +473,15 @@ namespace Data
         }
 
         #region Async methods
-        public Task<Object> GetValueAsync(String tableName, String fields, String cond)
+        public async Task<Object> GetValueAsync(String tableName, String fields, String cond)
         {
             MySqlCommand command = new MySqlCommand(GetSelectStatement(tableName, fields, cond), connection);
 
             try
             {
-                return command.ExecuteScalarAsync();
+                await semaphoreSlim.WaitAsync();
+
+                return await command.ExecuteScalarAsync();
             }
             catch (Exception)
             {
@@ -487,6 +489,7 @@ namespace Data
             }
             finally
             {
+                semaphoreSlim.Release();
                 command.Dispose();
             }
         }
@@ -572,7 +575,6 @@ namespace Data
 
         public async Task<List<List<Object>>> GetRowsAsync(String query)
         {
-            List<List<Object>> result = new List<List<Object>>();
             MySqlCommand command = new MySqlCommand(query, connection);
             MySqlDataReader reader = null;
 
@@ -580,21 +582,28 @@ namespace Data
             {
                 await semaphoreSlim.WaitAsync();
 
-                reader = (MySqlDataReader)(await command.ExecuteReaderAsync());
+                return await Task.Run(async () => await command.ExecuteReaderAsync()
+                                                                .ContinueWith(res =>
+                                                                {
+                                                                    var result = new List<List<Object>>();
 
-                while (reader.Read())
-                {
-                    List<Object> row = new List<object>();
+                                                                    reader = (MySqlDataReader)res.Result;
 
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        row.Add(reader[i]);
-                    }
+                                                                    while (reader.Read())
+                                                                    {
+                                                                        List<Object> row = new List<object>();
 
-                    result.Add(row);
-                }
+                                                                        for (int i = 0; i < reader.FieldCount; i++)
+                                                                        {
+                                                                           row.Add(reader[i]);
+                                                                        }
 
-                return result;
+                                                                        result.Add(row);
+                                                                    }
+
+                                                                    return result;
+                                                                })
+                                       );
             }
             catch
             {
@@ -649,7 +658,7 @@ namespace Data
             {
                 await semaphoreSlim.WaitAsync();
 
-                return await deleteCmd.ExecuteNonQueryAsync();
+                return await Task.Run(async () => await deleteCmd.ExecuteNonQueryAsync());
             }
             catch (Exception)
             {
@@ -705,11 +714,15 @@ namespace Data
             {
                 await semaphoreSlim.WaitAsync();
 
-                string res = (await insertCmd.ExecuteScalarAsync())?.ToString();
+                return await Task.Run(async () => await insertCmd.ExecuteScalarAsync()
+                                                                 .ContinueWith(result =>
+                                                                 {
+                                                                     string res = result.Result.ToString();
+                                                                     int.TryParse(res, out int number);
 
-                int.TryParse(res, out int number);
-
-                return number;
+                                                                     return number;
+                                                                 })
+                                      );
             }
             catch (Exception)
             {
@@ -760,7 +773,7 @@ namespace Data
             {
                 await semaphoreSlim.WaitAsync();
 
-                return await updateQuery.ExecuteNonQueryAsync();
+                return await Task.Run(async () => await updateQuery.ExecuteNonQueryAsync());
             }
             catch (Exception)
             {
