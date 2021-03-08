@@ -119,6 +119,7 @@
     <Compile Include="ReworkedMap\Helpers\IEnumerableExtensions.cs" />
     <Compile Include="ReworkedMap\Helpers\MapCache.cs" />
     <Compile Include="ReworkedMap\Helpers\MapHelper.cs" />
+    <Compile Include="ReworkedMap\Helpers\TaskExtensions.cs" />
     <Compile Include="ReworkedMap\HelpWindows\ItemConfigurationWindow.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -91,6 +91,9 @@ namespace UserMap
             itemInfo.Anchor = AnchorStyles.Right;
             itemInfo.SubscribeAdditionInfoClickEvent(AdditionalInfo);
 
+            MarkerManagmentButtonPanel.Location = new Point(MarkerManagmentButtonPanel.Location.X,
+                                                            MarkerManagmentButtonPanel.Location.Y - MarkerManagmentButtonPanel.Height / 2);
+
             if (expert != Role.Admin)
             {
                 itemInfo.HideDeleteButton();
@@ -450,13 +453,23 @@ namespace UserMap
 
             if (((IDescribable)marker).Type == "Область" || expert == Role.Medic)
             {
-                var medStatUC = await UserControls.MedStatUserControl.CreateInstanceAsync();
-                medStatUC.FindObjectId = marker.Id;
+                var medStatUC = await UserControls.MedStatUserControl.CreateInstanceAsync(marker.Id);
 
                 multiBindingObjectEditor.AddNewPage("Медична статистика", medStatUC);
             }
 
             multiBindingObjectEditor.ShowDialog();
+
+            var issues = multiBindingObjectEditor.GetIssuesAndSeries();
+
+            foreach (var issue in issues)
+            {
+                reworkedMap.RemoveMarkerFromLayout(marker, issue.Key.Name);
+                reworkedMap.AddMarker(marker, issue.Key.Name);
+            }
+
+            ShowLayout();
+
             multiBindingObjectEditor.Dispose();
         }
 
@@ -485,6 +498,10 @@ namespace UserMap
                 if (polygonAddingMode || tubeAddingMode || expert == Role.Admin)
                 {
                     MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = true;
+                }
+                else
+                {
+                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = false;
                 }
 
                 MapObjectContextMenuStrip.Show(gMapControl, e.Location);
@@ -648,16 +665,16 @@ namespace UserMap
         #endregion
 
         #region Filtering method group
-        private void ShowLayoutButton_Click(object sender, EventArgs e)
+
+        private void ShowLayout()
         {
-            FiltrationInfoStripStatusLabel.Text = "Ввімкнена фільтрація на мапі";
-            FiltrationSideMenuButton.Text = "Фільтрація (ввімкнена)";
-            FiltrationSideMenuButton.BackColor = Color.DarkGray;
+            bool isNothingSelected = true;
 
             reworkedMap.HideAllLayout();
 
             if (EnvironmentsCheckBox.Checked && EnvironmentCheckedListBox.CheckedItems.Count != 0)
             {
+                isNothingSelected = false;
                 foreach (Data.Entity.Environment checkedItem in EnvironmentCheckedListBox.CheckedItems)
                 {
                     reworkedMap.ShowLayoutById(checkedItem.Name);
@@ -666,6 +683,7 @@ namespace UserMap
 
             if (IssuesCheckBox.Checked)
             {
+                isNothingSelected = false;
                 foreach (Issue checkedItem in IssueCheckedListBox.CheckedItems)
                 {
                     reworkedMap.ShowLayoutById(checkedItem.Name);
@@ -674,6 +692,7 @@ namespace UserMap
 
             if (EconomicActivityCheckBox.Checked)
             {
+                isNothingSelected = false;
                 foreach (TypeOfObject checkedItem in EconomicActivityCheckedListBox.CheckedItems)
                 {
                     reworkedMap.ShowLayoutById(checkedItem.Name);
@@ -682,13 +701,35 @@ namespace UserMap
 
             if (RegionCheckBox.Checked)
             {
+                isNothingSelected = false;
                 reworkedMap.ShowLayoutById("region");
             }
 
             if (TubeCheckBox.Checked)
             {
+                isNothingSelected = false;
                 reworkedMap.ShowLayoutById("tube");
             }
+
+            if (isNothingSelected)
+            {
+                FiltrationInfoStripStatusLabel.Text = "Фільтрація вимкнена";
+                FiltrationSideMenuButton.Text = "Фільтрація";
+                FiltrationSideMenuButton.BackColor = Control.DefaultBackColor;
+
+                reworkedMap.ShowAllLayout();
+            }
+            else
+            {
+                FiltrationInfoStripStatusLabel.Text = "Ввімкнена фільтрація на мапі";
+                FiltrationSideMenuButton.Text = "Фільтрація (ввімкнена)";
+                FiltrationSideMenuButton.BackColor = Color.DarkGray;
+            }
+        }
+
+        private void ShowLayoutButton_Click(object sender, EventArgs e)
+        {
+            ShowLayout();
         }
 
         private void HideAllLayoutButton_Click(object sender, EventArgs e)
@@ -733,6 +774,10 @@ namespace UserMap
             TubeDescriptionTextBox.Enabled = false;
             TubeNameTextBox.Text = string.Empty;
             TubeDescriptionTextBox.Text = string.Empty;
+
+            AddMarkerInfoPanel.Visible = false;
+            MarkerManagmentButtonPanel.Location = new Point(MarkerManagmentButtonPanel.Location.X, 
+                                                            (MarkerTabPage.Height - MarkerManagmentButtonPanel.Height) / 2);
 
             AddMarkerButton.Text = "Додати";
             PolygonDrawButton.Text = "Почати";
@@ -793,6 +838,10 @@ namespace UserMap
                 MarkerSettingsButton.Enabled = true;
 
                 AddMarkerButton.Text = "Відміна";
+
+                AddMarkerInfoPanel.Visible = true;
+                MarkerManagmentButtonPanel.Location = new Point(MarkerManagmentButtonPanel.Location.X,
+                                                                MarkerManagmentButtonPanel.Location.Y + MarkerManagmentButtonPanel.Height / 2);
             }
             else
             {
@@ -1050,6 +1099,8 @@ namespace UserMap
                         reworkedMap.AddMarker(marker);
                     }
                 }
+
+                ShowLayout();
             }
             catch (Exception ex)
             {
@@ -1512,6 +1563,8 @@ namespace UserMap
                         reworkedMap.RemoveMarkerFromLayout(marker);
                     }
                 }
+
+                ShowLayout();
             }
             catch (Exception ex)
             {
@@ -1998,7 +2051,6 @@ namespace UserMap
             if (!reworkedMap.LayoutExist(region))
             {
                 await LoadPolylines(polylineType: region);
-                reworkedMap.HideLayoutById(region);
             }
         }
 
