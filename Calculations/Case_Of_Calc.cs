@@ -1372,15 +1372,50 @@ namespace Calculations
                             objem
                             ).ToString();
                     }
-               // case 195: { break; }
-                    /*case 172:
-                        {
-                            double Taxation = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value);
-                            double Pollution = Convert.ToDouble(this.formulasDGV.Rows[1].Cells[1].Value);
+                // case 195: { break; }
+                /*case 172:
+                    {
+                        double Taxation = Convert.ToDouble(this.formulasDGV.Rows[0].Cells[1].Value);
+                        double Pollution = Convert.ToDouble(this.formulasDGV.Rows[1].Cells[1].Value);
 
-                            this.formulasDGV.Rows.Add("Result", ecoCalc.Под(Taxation, Pollution),"");
-                            break;
-                        }*/
+                        this.formulasDGV.Rows.Add("Result", ecoCalc.Под(Taxation, Pollution),"");
+                        break;
+                    }*/
+                case 248: //розрахунок маси забруднюючої речовини у водний об'єкт внаслідок перевищенняя ГДС
+                    {
+                        double cif = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
+                        double cid = Convert.ToInt32(formulasDGV.Rows[1].Cells[1].Value);
+                        double qif = Convert.ToInt32(formulasDGV.Rows[2].Cells[1].Value);
+                        double t = Convert.ToInt32(formulasDGV.Rows[3].Cells[1].Value);
+                        return ecoCalc.mi1(cif, cid, qif, t).ToString();
+                    }
+                case 253: //розрахунок маси забруднюючої речовини у водний об'єкт на основі форми 2-ТП(водгосп)
+                    {
+                        double mif = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
+                        double mil = Convert.ToInt32(formulasDGV.Rows[1].Cells[1].Value);
+                        return ecoCalc.mi2(mif, mil).ToString();
+                    }
+                case 256: //розрахунок маси наднормативного скиду забруднюючої речовини у водний об'єкт, що підлягають нормуванню 
+                    {
+                        double cif = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
+                        double cik = Convert.ToInt32(formulasDGV.Rows[1].Cells[1].Value);
+                        double qif = Convert.ToInt32(formulasDGV.Rows[2].Cells[1].Value);
+                        double t = Convert.ToInt32(formulasDGV.Rows[3].Cells[1].Value);
+                        return ecoCalc.mi3(cif, cik, qif, t).ToString();
+                    }
+                case 258: //розрахунок маси наднормативного скиду забруднюючої речовини у водний об'єкт, що не підлягають нормуванню
+                    {
+                        double cif = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
+                        double qif = Convert.ToInt32(formulasDGV.Rows[1].Cells[1].Value);
+                        double t = Convert.ToInt32(formulasDGV.Rows[2].Cells[1].Value);
+                        return ecoCalc.mi4(cif, qif, t).ToString();
+                    }
+               /* case 249: //середня фактична концентрація забруднюючої речовини 
+                    {
+                        double cin[1] = Convert.ToDouble(formulasDGV.Rows[0].Cells[1].Value);
+                        int n = Convert.ToInt32(formulasDGV.Rows[1].Cells[1].Value);
+                        return ecoCalc.cif(cin[], n).ToString();
+                    }*/
             } return " ";
             #endregion
         }

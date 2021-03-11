@@ -181,6 +181,8 @@ namespace Experts_Economist
                     for_i.Text = "Кількість постраждалих";
                 if (Convert.ToInt32(idf) == 44)
                     for_i.Text = "Кількість установ \n природно-заповідного фонду ";
+                if ((Convert.ToInt32(idf) == 249))
+                    for_i.Text = "Кількість відібраних проб";
 
                 for_i.Visible = true;
                 Iterations.Visible = true;

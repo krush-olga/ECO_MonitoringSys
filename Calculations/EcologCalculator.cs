@@ -524,6 +524,45 @@ public class EcologCalculator
     {
         return indexOfSubstanceAirPollution.Sum();
     }
+
+    public double mi1(double cif, double cid, double qif, double t)//
+    {
+        double res;
+        res = (cif - cid) * qif * t * 0.000001;
+        return res;
+    }
+
+    public double mi2(double mif, double mil)//
+    {
+        double res;
+        res = mif - mil;
+        return res;
+    }
+
+    public double mi3(double cif, double cik, double qif, double t)//
+    {
+        double res;
+        res = (cif - cik) * qif * t * 0.000001;
+        return res;
+    }
+
+    public double mi4(double cif, double qif, double t)//
+    {
+        double res;
+        res = cif * qif * t * 0.000001;
+        return res;
+    }
+
+    public double cif(double []cin, int n)//
+    {
+        double res = 0;
+        for(int i=0; i<n; i++)
+        {
+            res += cin[i];
+        }
+        res /= n;
+        return res;
+    }
     /*
     ///<summary>
     /// Формула розрахунку податку за класом небезпеки речовини
