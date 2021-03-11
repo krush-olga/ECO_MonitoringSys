@@ -72,6 +72,19 @@ namespace UserMap.HelpWindows
             content.Margin = new Padding(10);
         }
 
+        public Dictionary<Issue, IList<CalculationSeries>> GetIssuesAndSeries()
+        {
+            var result = new Dictionary<Issue, IList<CalculationSeries>>();
+            var issueController = (ControllerVM<KeyValuePair<Issue, ControllerVM<CalculationSeries>>>)GetControllerByIndex(0);
+
+            foreach (var element in issueController.Elements)
+            {
+                result.Add(element.Key, new System.Collections.ObjectModel.ReadOnlyCollection<CalculationSeries>(element.Value.Elements));
+            }
+
+            return result;
+        }
+
         private void SetBinings()
         {
             if (!bingingsSet && ((ControllerVM<Emission>)controller.CurrentElement).Elements.Count != 0)
@@ -177,7 +190,7 @@ namespace UserMap.HelpWindows
             {
                 try
                 {
-                    await Task.WhenAll(tasks);
+                    await Task.WhenAll(tasks).CatchErrorOrCancel(ex => System.Diagnostics.Debug.WriteLine(ex.Message));
                 }
                 catch (Exception ex)
                 {
@@ -192,7 +205,8 @@ namespace UserMap.HelpWindows
             try
             {
                 await Task.WhenAll(LoadEmissions(), LoadIssuesAndSeries())
-                          .ContinueWith(FillDataGrid, TaskScheduler.FromCurrentSynchronizationContext());
+                          .ContinueWith(FillDataGrid, TaskScheduler.FromCurrentSynchronizationContext())
+                          .CatchErrorOrCancel(ex => System.Diagnostics.Debug.WriteLine(ex.Message));
             }
             catch (Exception ex)
             {
@@ -1233,7 +1247,7 @@ namespace UserMap.HelpWindows
 
         private void SeriesCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (isRestoring)
+            if (isRestoring || isReadOnly)
             {
                 return;
             }
@@ -1278,8 +1292,13 @@ namespace UserMap.HelpWindows
         }
         private void IssuesCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (isRestoring)
+            if (isRestoring || isReadOnly)
             {
+                if (isReadOnly && e.NewValue == CheckState.Checked)
+                {
+                    IssuesCheckedListBox.SetItemChecked(e.Index, false);
+                }
+
                 return;
             }
 

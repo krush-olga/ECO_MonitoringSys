@@ -52,20 +52,21 @@
             this.PanelSideMenu = new System.Windows.Forms.Panel();
             this.ElementsSideMenuPanel = new System.Windows.Forms.Panel();
             this.AddItemTabControl = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.MarkerSettingsButton = new System.Windows.Forms.Button();
-            this.ShowAllExpertMarkerButton = new System.Windows.Forms.Button();
+            this.MarkerTabPage = new System.Windows.Forms.TabPage();
+            this.AddMarkerInfoPanel = new System.Windows.Forms.Panel();
+            this.MarkerPictureBox = new System.Windows.Forms.PictureBox();
+            this.EconomicActivityComboBox = new System.Windows.Forms.ComboBox();
+            this.OwnershipTypeComboBox = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.OwnershipTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.EconomicActivityComboBox = new System.Windows.Forms.ComboBox();
-            this.MarkerPictureBox = new System.Windows.Forms.PictureBox();
+            this.MarkerSettingsButton = new System.Windows.Forms.Button();
+            this.ShowAllExpertMarkerButton = new System.Windows.Forms.Button();
             this.ClearAllMarkersButton = new System.Windows.Forms.Button();
             this.ShowCurrentUserMarkerButton = new System.Windows.Forms.Button();
             this.ShowAllMarkersButton = new System.Windows.Forms.Button();
             this.SaveMarkerButton = new System.Windows.Forms.Button();
             this.AddMarkerButton = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.PolygonTabPage = new System.Windows.Forms.TabPage();
             this.ShowCurrentExpertPolygonsButton = new System.Windows.Forms.Button();
             this.ClearAllPolygons = new System.Windows.Forms.Button();
             this.ShowCurrentUserPolygonsButton = new System.Windows.Forms.Button();
@@ -78,7 +79,7 @@
             this.PolygonSettingsButton = new System.Windows.Forms.Button();
             this.PolygonSaveButton = new System.Windows.Forms.Button();
             this.PolygonDrawButton = new System.Windows.Forms.Button();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.TubeTabPage = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
             this.TubeDescriptionTextBox = new System.Windows.Forms.TextBox();
             this.TubeNameTextBox = new System.Windows.Forms.TextBox();
@@ -135,16 +136,18 @@
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.PolylineToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.ComboBoxTextToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.MarkerManagmentButtonPanel = new System.Windows.Forms.Panel();
             this.MapObjectContextMenuStrip.SuspendLayout();
             this.PanelSideMenu.SuspendLayout();
             this.ElementsSideMenuPanel.SuspendLayout();
             this.AddItemTabControl.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.MarkerTabPage.SuspendLayout();
+            this.AddMarkerInfoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MarkerPictureBox)).BeginInit();
-            this.tabPage2.SuspendLayout();
+            this.PolygonTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PolygonColorPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TransparentNumericUpDown)).BeginInit();
-            this.tabPage3.SuspendLayout();
+            this.TubeTabPage.SuspendLayout();
             this.FiltrationSideMenuPanel.SuspendLayout();
             this.EconomicActivityGroupBox.SuspendLayout();
             this.IssuesGroupBox.SuspendLayout();
@@ -154,6 +157,7 @@
             this.CityGroupBox.SuspendLayout();
             this.CoordinatesFindGroupBox.SuspendLayout();
             this.MainStatusStrip.SuspendLayout();
+            this.MarkerManagmentButtonPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MapObjectContextMenuStrip
@@ -208,9 +212,9 @@
             // AddItemTabControl
             // 
             this.AddItemTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddItemTabControl.Controls.Add(this.tabPage1);
-            this.AddItemTabControl.Controls.Add(this.tabPage2);
-            this.AddItemTabControl.Controls.Add(this.tabPage3);
+            this.AddItemTabControl.Controls.Add(this.MarkerTabPage);
+            this.AddItemTabControl.Controls.Add(this.PolygonTabPage);
+            this.AddItemTabControl.Controls.Add(this.TubeTabPage);
             this.AddItemTabControl.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AddItemTabControl.Location = new System.Drawing.Point(3, 6);
             this.AddItemTabControl.Name = "AddItemTabControl";
@@ -219,29 +223,97 @@
             this.AddItemTabControl.TabIndex = 58;
             this.AddItemTabControl.SelectedIndexChanged += new System.EventHandler(this.AddItemTabControl_SelectedIndexChanged);
             // 
-            // tabPage1
+            // MarkerTabPage
             // 
-            this.tabPage1.BackColor = System.Drawing.SystemColors.Highlight;
-            this.tabPage1.Controls.Add(this.MarkerSettingsButton);
-            this.tabPage1.Controls.Add(this.ShowAllExpertMarkerButton);
-            this.tabPage1.Controls.Add(this.label9);
-            this.tabPage1.Controls.Add(this.label8);
-            this.tabPage1.Controls.Add(this.OwnershipTypeComboBox);
-            this.tabPage1.Controls.Add(this.EconomicActivityComboBox);
-            this.tabPage1.Controls.Add(this.MarkerPictureBox);
-            this.tabPage1.Controls.Add(this.ClearAllMarkersButton);
-            this.tabPage1.Controls.Add(this.ShowCurrentUserMarkerButton);
-            this.tabPage1.Controls.Add(this.ShowAllMarkersButton);
-            this.tabPage1.Controls.Add(this.SaveMarkerButton);
-            this.tabPage1.Controls.Add(this.AddMarkerButton);
-            this.tabPage1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tabPage1.ForeColor = System.Drawing.Color.White;
-            this.tabPage1.Location = new System.Drawing.Point(4, 27);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(282, 236);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Маркер";
+            this.MarkerTabPage.BackColor = System.Drawing.SystemColors.Highlight;
+            this.MarkerTabPage.Controls.Add(this.MarkerManagmentButtonPanel);
+            this.MarkerTabPage.Controls.Add(this.AddMarkerInfoPanel);
+            this.MarkerTabPage.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MarkerTabPage.ForeColor = System.Drawing.Color.White;
+            this.MarkerTabPage.Location = new System.Drawing.Point(4, 27);
+            this.MarkerTabPage.Name = "MarkerTabPage";
+            this.MarkerTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.MarkerTabPage.Size = new System.Drawing.Size(282, 236);
+            this.MarkerTabPage.TabIndex = 0;
+            this.MarkerTabPage.Text = "Маркер";
+            // 
+            // AddMarkerInfoPanel
+            // 
+            this.AddMarkerInfoPanel.Controls.Add(this.MarkerPictureBox);
+            this.AddMarkerInfoPanel.Controls.Add(this.EconomicActivityComboBox);
+            this.AddMarkerInfoPanel.Controls.Add(this.OwnershipTypeComboBox);
+            this.AddMarkerInfoPanel.Controls.Add(this.label9);
+            this.AddMarkerInfoPanel.Controls.Add(this.label8);
+            this.AddMarkerInfoPanel.Location = new System.Drawing.Point(1, 7);
+            this.AddMarkerInfoPanel.Name = "AddMarkerInfoPanel";
+            this.AddMarkerInfoPanel.Size = new System.Drawing.Size(280, 100);
+            this.AddMarkerInfoPanel.TabIndex = 73;
+            this.AddMarkerInfoPanel.Visible = false;
+            // 
+            // MarkerPictureBox
+            // 
+            this.MarkerPictureBox.Location = new System.Drawing.Point(203, 19);
+            this.MarkerPictureBox.Name = "MarkerPictureBox";
+            this.MarkerPictureBox.Size = new System.Drawing.Size(71, 71);
+            this.MarkerPictureBox.TabIndex = 2;
+            this.MarkerPictureBox.TabStop = false;
+            // 
+            // EconomicActivityComboBox
+            // 
+            this.EconomicActivityComboBox.BackColor = System.Drawing.SystemColors.Control;
+            this.EconomicActivityComboBox.DisplayMember = "1";
+            this.EconomicActivityComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.EconomicActivityComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.EconomicActivityComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.EconomicActivityComboBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.EconomicActivityComboBox.FormattingEnabled = true;
+            this.EconomicActivityComboBox.Location = new System.Drawing.Point(8, 21);
+            this.EconomicActivityComboBox.Name = "EconomicActivityComboBox";
+            this.EconomicActivityComboBox.Size = new System.Drawing.Size(186, 21);
+            this.EconomicActivityComboBox.TabIndex = 67;
+            this.EconomicActivityComboBox.ValueMember = "1";
+            this.EconomicActivityComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ComboBox_DrawItem);
+            this.EconomicActivityComboBox.SelectedIndexChanged += new System.EventHandler(this.EconomicActivityComboBox_SelectedIndexChanged);
+            this.EconomicActivityComboBox.DropDownClosed += new System.EventHandler(this.ComboBox_DropDownClosed);
+            this.EconomicActivityComboBox.MouseLeave += new System.EventHandler(this.ComboBox_MouseLeave);
+            // 
+            // OwnershipTypeComboBox
+            // 
+            this.OwnershipTypeComboBox.BackColor = System.Drawing.SystemColors.Control;
+            this.OwnershipTypeComboBox.DisplayMember = "1";
+            this.OwnershipTypeComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.OwnershipTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.OwnershipTypeComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.OwnershipTypeComboBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.OwnershipTypeComboBox.FormattingEnabled = true;
+            this.OwnershipTypeComboBox.Location = new System.Drawing.Point(8, 67);
+            this.OwnershipTypeComboBox.Name = "OwnershipTypeComboBox";
+            this.OwnershipTypeComboBox.Size = new System.Drawing.Size(186, 21);
+            this.OwnershipTypeComboBox.TabIndex = 65;
+            this.OwnershipTypeComboBox.ValueMember = "1";
+            this.OwnershipTypeComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ComboBox_DrawItem);
+            this.OwnershipTypeComboBox.DropDownClosed += new System.EventHandler(this.ComboBox_DropDownClosed);
+            this.OwnershipTypeComboBox.MouseLeave += new System.EventHandler(this.ComboBox_MouseLeave);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label9.Location = new System.Drawing.Point(8, 3);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(162, 15);
+            this.label9.TabIndex = 68;
+            this.label9.Text = "Вид економічної діяльності";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.label8.Location = new System.Drawing.Point(8, 49);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(104, 15);
+            this.label8.TabIndex = 66;
+            this.label8.Text = "Форма власності";
             // 
             // MarkerSettingsButton
             // 
@@ -251,7 +323,7 @@
             this.MarkerSettingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.MarkerSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MarkerSettingsButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.MarkerSettingsButton.Location = new System.Drawing.Point(188, 103);
+            this.MarkerSettingsButton.Location = new System.Drawing.Point(179, -4);
             this.MarkerSettingsButton.Name = "MarkerSettingsButton";
             this.MarkerSettingsButton.Size = new System.Drawing.Size(95, 42);
             this.MarkerSettingsButton.TabIndex = 72;
@@ -266,78 +338,13 @@
             this.ShowAllExpertMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.ShowAllExpertMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowAllExpertMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowAllExpertMarkerButton.Location = new System.Drawing.Point(9, 142);
+            this.ShowAllExpertMarkerButton.Location = new System.Drawing.Point(0, 35);
             this.ShowAllExpertMarkerButton.Name = "ShowAllExpertMarkerButton";
             this.ShowAllExpertMarkerButton.Size = new System.Drawing.Size(88, 41);
             this.ShowAllExpertMarkerButton.TabIndex = 69;
             this.ShowAllExpertMarkerButton.Text = "Вiдобразити по експерту";
             this.ShowAllExpertMarkerButton.UseVisualStyleBackColor = true;
             this.ShowAllExpertMarkerButton.Click += new System.EventHandler(this.ShowAllExpertMarkerButton_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label9.Location = new System.Drawing.Point(6, 3);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(162, 15);
-            this.label9.TabIndex = 68;
-            this.label9.Text = "Вид економічної діяльності";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label8.Location = new System.Drawing.Point(6, 49);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(104, 15);
-            this.label8.TabIndex = 66;
-            this.label8.Text = "Форма власності";
-            // 
-            // OwnershipTypeComboBox
-            // 
-            this.OwnershipTypeComboBox.BackColor = System.Drawing.SystemColors.Control;
-            this.OwnershipTypeComboBox.DisplayMember = "1";
-            this.OwnershipTypeComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.OwnershipTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.OwnershipTypeComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.OwnershipTypeComboBox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.OwnershipTypeComboBox.FormattingEnabled = true;
-            this.OwnershipTypeComboBox.Location = new System.Drawing.Point(6, 67);
-            this.OwnershipTypeComboBox.Name = "OwnershipTypeComboBox";
-            this.OwnershipTypeComboBox.Size = new System.Drawing.Size(186, 21);
-            this.OwnershipTypeComboBox.TabIndex = 65;
-            this.OwnershipTypeComboBox.ValueMember = "1";
-            this.OwnershipTypeComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ComboBox_DrawItem);
-            this.OwnershipTypeComboBox.DropDownClosed += new System.EventHandler(this.ComboBox_DropDownClosed);
-            this.OwnershipTypeComboBox.MouseLeave += new System.EventHandler(this.ComboBox_MouseLeave);
-            // 
-            // EconomicActivityComboBox
-            // 
-            this.EconomicActivityComboBox.BackColor = System.Drawing.SystemColors.Control;
-            this.EconomicActivityComboBox.DisplayMember = "1";
-            this.EconomicActivityComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.EconomicActivityComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.EconomicActivityComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EconomicActivityComboBox.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.EconomicActivityComboBox.FormattingEnabled = true;
-            this.EconomicActivityComboBox.Location = new System.Drawing.Point(6, 21);
-            this.EconomicActivityComboBox.Name = "EconomicActivityComboBox";
-            this.EconomicActivityComboBox.Size = new System.Drawing.Size(186, 21);
-            this.EconomicActivityComboBox.TabIndex = 67;
-            this.EconomicActivityComboBox.ValueMember = "1";
-            this.EconomicActivityComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ComboBox_DrawItem);
-            this.EconomicActivityComboBox.SelectedIndexChanged += new System.EventHandler(this.EconomicActivityComboBox_SelectedIndexChanged);
-            this.EconomicActivityComboBox.DropDownClosed += new System.EventHandler(this.ComboBox_DropDownClosed);
-            this.EconomicActivityComboBox.MouseLeave += new System.EventHandler(this.ComboBox_MouseLeave);
-            // 
-            // MarkerPictureBox
-            // 
-            this.MarkerPictureBox.Location = new System.Drawing.Point(201, 19);
-            this.MarkerPictureBox.Name = "MarkerPictureBox";
-            this.MarkerPictureBox.Size = new System.Drawing.Size(71, 71);
-            this.MarkerPictureBox.TabIndex = 2;
-            this.MarkerPictureBox.TabStop = false;
             // 
             // ClearAllMarkersButton
             // 
@@ -346,7 +353,7 @@
             this.ClearAllMarkersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.ClearAllMarkersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ClearAllMarkersButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ClearAllMarkersButton.Location = new System.Drawing.Point(96, 189);
+            this.ClearAllMarkersButton.Location = new System.Drawing.Point(87, 82);
             this.ClearAllMarkersButton.Name = "ClearAllMarkersButton";
             this.ClearAllMarkersButton.Size = new System.Drawing.Size(96, 41);
             this.ClearAllMarkersButton.TabIndex = 64;
@@ -361,7 +368,7 @@
             this.ShowCurrentUserMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.ShowCurrentUserMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowCurrentUserMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowCurrentUserMarkerButton.Location = new System.Drawing.Point(96, 142);
+            this.ShowCurrentUserMarkerButton.Location = new System.Drawing.Point(87, 35);
             this.ShowCurrentUserMarkerButton.Name = "ShowCurrentUserMarkerButton";
             this.ShowCurrentUserMarkerButton.Size = new System.Drawing.Size(96, 41);
             this.ShowCurrentUserMarkerButton.TabIndex = 62;
@@ -376,7 +383,7 @@
             this.ShowAllMarkersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.ShowAllMarkersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShowAllMarkersButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowAllMarkersButton.Location = new System.Drawing.Point(191, 142);
+            this.ShowAllMarkersButton.Location = new System.Drawing.Point(182, 35);
             this.ShowAllMarkersButton.Name = "ShowAllMarkersButton";
             this.ShowAllMarkersButton.Size = new System.Drawing.Size(85, 41);
             this.ShowAllMarkersButton.TabIndex = 61;
@@ -392,7 +399,7 @@
             this.SaveMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.SaveMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SaveMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SaveMarkerButton.Location = new System.Drawing.Point(102, 113);
+            this.SaveMarkerButton.Location = new System.Drawing.Point(93, 6);
             this.SaveMarkerButton.Name = "SaveMarkerButton";
             this.SaveMarkerButton.Size = new System.Drawing.Size(75, 23);
             this.SaveMarkerButton.TabIndex = 59;
@@ -407,7 +414,7 @@
             this.AddMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
             this.AddMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AddMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AddMarkerButton.Location = new System.Drawing.Point(14, 113);
+            this.AddMarkerButton.Location = new System.Drawing.Point(5, 6);
             this.AddMarkerButton.Name = "AddMarkerButton";
             this.AddMarkerButton.Size = new System.Drawing.Size(75, 23);
             this.AddMarkerButton.TabIndex = 58;
@@ -415,29 +422,29 @@
             this.AddMarkerButton.UseVisualStyleBackColor = true;
             this.AddMarkerButton.Click += new System.EventHandler(this.AddMarkerButton_Click);
             // 
-            // tabPage2
+            // PolygonTabPage
             // 
-            this.tabPage2.BackColor = System.Drawing.SystemColors.Highlight;
-            this.tabPage2.Controls.Add(this.ShowCurrentExpertPolygonsButton);
-            this.tabPage2.Controls.Add(this.ClearAllPolygons);
-            this.tabPage2.Controls.Add(this.ShowCurrentUserPolygonsButton);
-            this.tabPage2.Controls.Add(this.ShowAllPolygonsButton);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.PolygonColorTypeComboBox);
-            this.tabPage2.Controls.Add(this.PolygonColorPictureBox);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.TransparentNumericUpDown);
-            this.tabPage2.Controls.Add(this.PolygonSettingsButton);
-            this.tabPage2.Controls.Add(this.PolygonSaveButton);
-            this.tabPage2.Controls.Add(this.PolygonDrawButton);
-            this.tabPage2.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tabPage2.ForeColor = System.Drawing.Color.White;
-            this.tabPage2.Location = new System.Drawing.Point(4, 27);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(282, 236);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Полiгон";
+            this.PolygonTabPage.BackColor = System.Drawing.SystemColors.Highlight;
+            this.PolygonTabPage.Controls.Add(this.ShowCurrentExpertPolygonsButton);
+            this.PolygonTabPage.Controls.Add(this.ClearAllPolygons);
+            this.PolygonTabPage.Controls.Add(this.ShowCurrentUserPolygonsButton);
+            this.PolygonTabPage.Controls.Add(this.ShowAllPolygonsButton);
+            this.PolygonTabPage.Controls.Add(this.label4);
+            this.PolygonTabPage.Controls.Add(this.PolygonColorTypeComboBox);
+            this.PolygonTabPage.Controls.Add(this.PolygonColorPictureBox);
+            this.PolygonTabPage.Controls.Add(this.label3);
+            this.PolygonTabPage.Controls.Add(this.TransparentNumericUpDown);
+            this.PolygonTabPage.Controls.Add(this.PolygonSettingsButton);
+            this.PolygonTabPage.Controls.Add(this.PolygonSaveButton);
+            this.PolygonTabPage.Controls.Add(this.PolygonDrawButton);
+            this.PolygonTabPage.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.PolygonTabPage.ForeColor = System.Drawing.Color.White;
+            this.PolygonTabPage.Location = new System.Drawing.Point(4, 27);
+            this.PolygonTabPage.Name = "PolygonTabPage";
+            this.PolygonTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.PolygonTabPage.Size = new System.Drawing.Size(282, 236);
+            this.PolygonTabPage.TabIndex = 1;
+            this.PolygonTabPage.Text = "Полiгон";
             // 
             // ShowCurrentExpertPolygonsButton
             // 
@@ -609,25 +616,25 @@
             this.PolygonDrawButton.UseVisualStyleBackColor = false;
             this.PolygonDrawButton.Click += new System.EventHandler(this.PolygonDrawButton_Click);
             // 
-            // tabPage3
+            // TubeTabPage
             // 
-            this.tabPage3.BackColor = System.Drawing.SystemColors.Highlight;
-            this.tabPage3.Controls.Add(this.label5);
-            this.tabPage3.Controls.Add(this.TubeDescriptionTextBox);
-            this.tabPage3.Controls.Add(this.TubeNameTextBox);
-            this.tabPage3.Controls.Add(this.label1);
-            this.tabPage3.Controls.Add(this.ShowCurrentExpertTubesButton);
-            this.tabPage3.Controls.Add(this.ClearAllTubesButton);
-            this.tabPage3.Controls.Add(this.ShowCurrentUserTubesButton);
-            this.tabPage3.Controls.Add(this.ShowAllTubesButton);
-            this.tabPage3.Controls.Add(this.TubeSaveButton);
-            this.tabPage3.Controls.Add(this.TubeDrawButton);
-            this.tabPage3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tabPage3.Location = new System.Drawing.Point(4, 27);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(282, 236);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Водопровід";
+            this.TubeTabPage.BackColor = System.Drawing.SystemColors.Highlight;
+            this.TubeTabPage.Controls.Add(this.label5);
+            this.TubeTabPage.Controls.Add(this.TubeDescriptionTextBox);
+            this.TubeTabPage.Controls.Add(this.TubeNameTextBox);
+            this.TubeTabPage.Controls.Add(this.label1);
+            this.TubeTabPage.Controls.Add(this.ShowCurrentExpertTubesButton);
+            this.TubeTabPage.Controls.Add(this.ClearAllTubesButton);
+            this.TubeTabPage.Controls.Add(this.ShowCurrentUserTubesButton);
+            this.TubeTabPage.Controls.Add(this.ShowAllTubesButton);
+            this.TubeTabPage.Controls.Add(this.TubeSaveButton);
+            this.TubeTabPage.Controls.Add(this.TubeDrawButton);
+            this.TubeTabPage.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TubeTabPage.Location = new System.Drawing.Point(4, 27);
+            this.TubeTabPage.Name = "TubeTabPage";
+            this.TubeTabPage.Size = new System.Drawing.Size(282, 236);
+            this.TubeTabPage.TabIndex = 2;
+            this.TubeTabPage.Text = "Водопровід";
             // 
             // label5
             // 
@@ -1260,6 +1267,20 @@
             this.PolylineToolTip.InitialDelay = 400;
             this.PolylineToolTip.ReshowDelay = 100;
             // 
+            // MarkerManagmentButtonPanel
+            // 
+            this.MarkerManagmentButtonPanel.Controls.Add(this.SaveMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.AddMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.MarkerSettingsButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowAllMarkersButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowAllExpertMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowCurrentUserMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ClearAllMarkersButton);
+            this.MarkerManagmentButtonPanel.Location = new System.Drawing.Point(3, 113);
+            this.MarkerManagmentButtonPanel.Name = "MarkerManagmentButtonPanel";
+            this.MarkerManagmentButtonPanel.Size = new System.Drawing.Size(274, 117);
+            this.MarkerManagmentButtonPanel.TabIndex = 74;
+            // 
             // MapWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1279,15 +1300,16 @@
             this.PanelSideMenu.ResumeLayout(false);
             this.ElementsSideMenuPanel.ResumeLayout(false);
             this.AddItemTabControl.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.MarkerTabPage.ResumeLayout(false);
+            this.AddMarkerInfoPanel.ResumeLayout(false);
+            this.AddMarkerInfoPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MarkerPictureBox)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.PolygonTabPage.ResumeLayout(false);
+            this.PolygonTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PolygonColorPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TransparentNumericUpDown)).EndInit();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.TubeTabPage.ResumeLayout(false);
+            this.TubeTabPage.PerformLayout();
             this.FiltrationSideMenuPanel.ResumeLayout(false);
             this.FiltrationSideMenuPanel.PerformLayout();
             this.EconomicActivityGroupBox.ResumeLayout(false);
@@ -1301,6 +1323,7 @@
             this.CoordinatesFindGroupBox.PerformLayout();
             this.MainStatusStrip.ResumeLayout(false);
             this.MainStatusStrip.PerformLayout();
+            this.MarkerManagmentButtonPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1355,7 +1378,7 @@
         private System.Windows.Forms.CheckBox RegionCheckBox;
         private System.Windows.Forms.CheckBox TubeCheckBox;
         private System.Windows.Forms.TabControl AddItemTabControl;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage MarkerTabPage;
         private System.Windows.Forms.Button MarkerSettingsButton;
         private System.Windows.Forms.Button ShowAllExpertMarkerButton;
         private System.Windows.Forms.Label label9;
@@ -1368,7 +1391,7 @@
         private System.Windows.Forms.Button ShowAllMarkersButton;
         private System.Windows.Forms.Button SaveMarkerButton;
         private System.Windows.Forms.Button AddMarkerButton;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage PolygonTabPage;
         private System.Windows.Forms.Button ShowCurrentExpertPolygonsButton;
         private System.Windows.Forms.Button ClearAllPolygons;
         private System.Windows.Forms.Button ShowCurrentUserPolygonsButton;
@@ -1381,7 +1404,7 @@
         private System.Windows.Forms.Button PolygonSettingsButton;
         private System.Windows.Forms.Button PolygonSaveButton;
         private System.Windows.Forms.Button PolygonDrawButton;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage TubeTabPage;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox TubeDescriptionTextBox;
         private System.Windows.Forms.TextBox TubeNameTextBox;
@@ -1396,5 +1419,7 @@
         private System.Windows.Forms.CheckBox EconomicActivityCheckBox;
         private System.Windows.Forms.CheckedListBox EconomicActivityCheckedListBox;
         private System.Windows.Forms.ToolTip ComboBoxTextToolTip;
+        private System.Windows.Forms.Panel AddMarkerInfoPanel;
+        private System.Windows.Forms.Panel MarkerManagmentButtonPanel;
     }
 }

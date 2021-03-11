@@ -1218,7 +1218,7 @@
     </EndRouteDraw>
     <RemoveMarkerPoint>
       <summary>
-        Удаляет точку, если она существует.
+        Удаляет точку со всех слоёв, если она существует.
       </summary>
       <param name="screenPoint">
         Точка, на которой произошло нажатие мышки над компонентом <see cref="GMap.NET.WindowsForms.GMapControl"/>.
@@ -1229,7 +1229,7 @@
     </RemoveMarkerPoint>
     <RemoveMarkerPointLatLng>
       <summary>
-        Удаляет точку, если она существует.
+        Удаляет точку со всех слоёв, если она существует.
       </summary>
       <param name="coords">
         Координата точки.
@@ -1240,7 +1240,7 @@
     </RemoveMarkerPointLatLng>
     <RemoveMarkerMarker>
       <summary>
-        Удаляет точку, если она существует.
+        Удаляет точку со всех слоёв, если она существует.
       </summary>
       <param name="marker">
         Существующий маркер.
