@@ -63,6 +63,9 @@
     <Reference Include="Google.Protobuf, Version=3.13.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.Protobuf.3.13.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -99,67 +102,69 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReworkedMap\CompareForm.cs">
+    <Compile Include="CompareForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReworkedMap\CompareForm.Designer.cs">
+    <Compile Include="CompareForm.Designer.cs">
       <DependentUpon>CompareForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReworkedMap\CompareSettings.cs">
+    <Compile Include="CompareSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReworkedMap\CompareSettings.Designer.cs">
+    <Compile Include="CompareSettings.Designer.cs">
       <DependentUpon>CompareSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\WebHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReworkedMap\Core\Context.cs" />
-    <Compile Include="ReworkedMap\Core\IDescribable.cs" />
-    <Compile Include="ReworkedMap\Core\NamedGoogleMarker.cs" />
-    <Compile Include="ReworkedMap\Helpers\ComboBoxExtensions.cs" />
-    <Compile Include="ReworkedMap\Helpers\IEnumerableExtensions.cs" />
-    <Compile Include="ReworkedMap\Helpers\MapCache.cs" />
-    <Compile Include="ReworkedMap\Helpers\MapHelper.cs" />
-    <Compile Include="ReworkedMap\Helpers\TaskExtensions.cs" />
-    <Compile Include="ReworkedMap\HelpWindows\ItemConfigurationWindow.cs">
+    <Compile Include="Core\Context.cs" />
+    <Compile Include="Core\IDescribable.cs" />
+    <Compile Include="Core\NamedGoogleMarker.cs" />
+    <Compile Include="Helpers\Extensions\ComboBoxExtensions.cs" />
+    <Compile Include="Helpers\Extensions\ExcpetionExtensions.cs" />
+    <Compile Include="Helpers\Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Helpers\MapCache.cs" />
+    <Compile Include="Helpers\MapHelper.cs" />
+    <Compile Include="Helpers\Extensions\TaskExtensions.cs" />
+    <Compile Include="HelpWindows\ItemConfigurationWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReworkedMap\HelpWindows\ItemConfigurationWindow.Designer.cs">
+    <Compile Include="HelpWindows\ItemConfigurationWindow.Designer.cs">
       <DependentUpon>ItemConfigurationWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReworkedMap\Core\Map.cs" />
-    <Compile Include="ReworkedMap\HelpWindows\MultiBindingObjectEditor.cs">
+    <Compile Include="Core\Map.cs" />
+    <Compile Include="HelpWindows\MultiBindingObjectEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReworkedMap\HelpWindows\MultiBindingObjectEditor.Designer.cs">
+    <Compile Include="HelpWindows\MultiBindingObjectEditor.Designer.cs">
       <DependentUpon>MultiBindingObjectEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReworkedMap\MapWindow.cs">
+    <Compile Include="MapWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReworkedMap\MapWindow.Designer.cs">
+    <Compile Include="MapWindow.Designer.cs">
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReworkedMap\Services\FileLogger.cs" />
-    <Compile Include="ReworkedMap\Services\IController.cs" />
-    <Compile Include="ReworkedMap\Services\ILogger.cs" />
-    <Compile Include="ReworkedMap\UserControls\ItemInfo.cs">
+    <Compile Include="Services\FileLogger.cs" />
+    <Compile Include="Services\IController.cs" />
+    <Compile Include="Services\ILogger.cs" />
+    <Compile Include="UserControls\ItemInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ReworkedMap\UserControls\ItemInfo.Designer.cs">
+    <Compile Include="UserControls\ItemInfo.Designer.cs">
       <DependentUpon>ItemInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReworkedMap\UserControls\MedStatUserControl.cs">
+    <Compile Include="UserControls\MedStatUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ReworkedMap\UserControls\MedStatUserControl.Designer.cs">
+    <Compile Include="UserControls\MedStatUserControl.Designer.cs">
       <DependentUpon>MedStatUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReworkedMap\ViewModel\ChangeType.cs" />
-    <Compile Include="ReworkedMap\ViewModel\ControllerVM.cs" />
-    <EmbeddedResource Include="ReworkedMap\CompareForm.resx">
+    <Compile Include="ViewModel\ChangeType.cs" />
+    <Compile Include="ViewModel\ControllerVM.cs" />
+    <EmbeddedResource Include="CompareForm.resx">
       <DependentUpon>CompareForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReworkedMap\CompareSettings.resx">
+    <EmbeddedResource Include="CompareSettings.resx">
       <DependentUpon>CompareSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -172,19 +177,19 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="ReworkedMap\HelpWindows\ItemConfigurationWindow.resx">
+    <EmbeddedResource Include="HelpWindows\ItemConfigurationWindow.resx">
       <DependentUpon>ItemConfigurationWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReworkedMap\HelpWindows\MultiBindingObjectEditor.resx">
+    <EmbeddedResource Include="HelpWindows\MultiBindingObjectEditor.resx">
       <DependentUpon>MultiBindingObjectEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReworkedMap\MapWindow.resx">
+    <EmbeddedResource Include="MapWindow.resx">
       <DependentUpon>MapWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReworkedMap\UserControls\ItemInfo.resx">
+    <EmbeddedResource Include="UserControls\ItemInfo.resx">
       <DependentUpon>ItemInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReworkedMap\UserControls\MedStatUserControl.resx">
+    <EmbeddedResource Include="UserControls\MedStatUserControl.resx">
       <DependentUpon>MedStatUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />

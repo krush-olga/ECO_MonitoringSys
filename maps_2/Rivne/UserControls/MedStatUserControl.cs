@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,6 +21,14 @@ namespace UserMap.UserControls
 
         private System.Threading.Timer refreshTimer;
 
+        private Services.ILogger logger;
+
+#if DEBUG
+        private Size oldSize;
+        private ScrollBar horizontalMedStatScroll;
+#endif // DEBUG
+
+
         public MedStatUserControl() : this(-1)
         { }
         public MedStatUserControl(int objId)
@@ -30,6 +39,12 @@ namespace UserMap.UserControls
             FindObjectId = objId;
 
             refreshTimer = new System.Threading.Timer(RefreshButtonClickTimeOut, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+
+            logger = new Services.FileLogger();
+#if DEBUG
+            horizontalMedStatScroll = MedStatDataGridView.Controls.OfType<ScrollBar>().First();
+            oldSize = this.Size;
+#endif //DEBUG
         }
 
         /// <summary>
@@ -88,7 +103,7 @@ namespace UserMap.UserControls
         {
             string tables = "med_stat, med_stat_param, formulas, issues";
             string columns = "formulas.name_of_formula, formulas.description_of_formula, formulas.measurement_of_formula," +
-                             "med_stat.value, med_stat.year, issues.name, med_stat.nomer";
+                             "med_stat.value, med_stat.year, issues.name, med_stat.nomer, med_stat_param.value";
             string joinCond = "med_stat.nomer = med_stat_param.number_of_formula, " +
                               "med_stat.id_of_formula = formulas.id_of_formula, " +
                               "med_stat.issue_id = issues.issue_id";
@@ -161,19 +176,19 @@ namespace UserMap.UserControls
                                         Value = row[3].ToString(),
                                         FormulaMeasurment = row[2].ToString(),
                                         Year = row[4].ToString(),
+                                        ParamValue = row[7].ToString()
                                     };
                                 });
-                            }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                            })
                             .ContinueWith(result =>
                             {
-
                                 return result.Result.GroupBy(key => key.Id)
                                                     .Where(item => isSNC == item.Count())
                                                     .Select(item => item.First())
                                                     .ToList();
-                            }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                            })
                             .ContinueWith(result =>
-                            {
+                            { 
                                 var res = result.Result;
 
                                 if (res == null || !res.Any())
@@ -190,22 +205,22 @@ namespace UserMap.UserControls
                                 MedStatDataGridView.Columns[0].Visible = false;
                                 MedStatDataGridView.Columns[4].Visible = false;
                                 MedStatDataGridView.Columns[5].Visible = false;
+                                MedStatDataGridView.Columns[7].Visible = false;
 
                                 foreach (DataGridViewColumn column in MedStatDataGridView.Columns)
                                 {
                                     var columnHeader = column.HeaderCell.Value.ToString();
 
                                     if (columnHeader != "Id" && columnHeader != "FormulaDescription" &&
-                                        columnHeader != "Value" && columnHeader != "FormulaMeasurment")
+                                        columnHeader != "Value" && columnHeader != "FormulaMeasurment" &&
+                                        columnHeader != "ParamValue")
                                     {
                                         column.HeaderCell.Value = columnsName[index++];
                                     }
                                 }
 
-                            }, System.Threading.CancellationToken.None,
-                               TaskContinuationOptions.OnlyOnRanToCompletion,
-                               TaskScheduler.FromCurrentSynchronizationContext())
-                            .CatchErrorOrCancel(ex => System.Diagnostics.Debug.WriteLine(ex.Message));
+                            }, TaskScheduler.FromCurrentSynchronizationContext())
+                            .CatchAndLog(logger);
         }
         private Task SetRegionId()
         {
@@ -217,7 +232,8 @@ namespace UserMap.UserControls
                                     regionId = -1;
                                 else
                                     regionId = (int)resultId;
-                            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                            })
+                            .CatchAndLog(logger);
         }
         private Task LoadFiltrationYear()
         {
@@ -226,13 +242,12 @@ namespace UserMap.UserControls
                             {
                                 return result.Result.Select(row => new TreeNode(row[0].ToString()))
                                                     .ToArray();
-                            }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                            })
                             .ContinueWith(result =>
                             {
                                 MedStatYearsTreeView.Nodes.AddRange(result.Result);
-                            }, System.Threading.CancellationToken.None,
-                               TaskContinuationOptions.OnlyOnRanToCompletion,
-                               TaskScheduler.FromCurrentSynchronizationContext());
+                            }, TaskScheduler.FromCurrentSynchronizationContext())
+                            .CatchAndLog(logger);
         }
         private async Task LoadFiltrationIndicators()
         {
@@ -255,26 +270,19 @@ namespace UserMap.UserControls
                                                    {
                                                        var innerResult = value.GroupBy(innerKey => innerKey.Id,
                                                                                        innerValue => innerValue.Value)
+                                                                              .OrderBy(item => item.Key)
                                                                               .ToDictionary(innerKey => innerKey.Key,
                                                                                             innerValue => innerValue.ToList());
 
                                                        return innerResult;
                                                    });
                                                })
-                                               .CatchErrorOrCancel(exception =>
-                                               {
-                                                   if (exception is AggregateException aggregateException)
-                                                   {
-                                                       foreach (var ex in aggregateException.InnerExceptions)
-                                                       {
-                                                           System.Diagnostics.Debug.WriteLine(ex);
-                                                       }
-                                                   }
-                                                   else
-                                                   {
-                                                       System.Diagnostics.Debug.WriteLine(exception.Message);
-                                                   }
-                                               }, res => res);
+                                               .CatchAndLog(logger);
+
+            if (medStatResult == default)
+            {
+                return;
+            }
 
             StringBuilder formulasCond = new StringBuilder();
 
@@ -328,7 +336,7 @@ namespace UserMap.UserControls
                                                       });
 
                                 return res;
-                            }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                            })
                             .ContinueWith(result =>
                             {
                                 var nodes = new List<TreeNode>();
@@ -350,9 +358,8 @@ namespace UserMap.UserControls
                                 }
 
                                 MedStatIndicatorsTreeView.Nodes.AddRange(nodes.ToArray());
-                            }, System.Threading.CancellationToken.None,
-                                TaskContinuationOptions.OnlyOnRanToCompletion,
-                                TaskScheduler.FromCurrentSynchronizationContext())
+                            }, TaskScheduler.FromCurrentSynchronizationContext())
+                            .CatchAndLog(logger)
                             .ConfigureAwait(false);
         }
 
@@ -431,57 +438,62 @@ namespace UserMap.UserControls
         }
         private void MedStatUserControlTabControl_Resize(object sender, EventArgs e)
         {
-            if (MedStatDataGridView.ScrollBars == ScrollBars.Both ||
-                MedStatDataGridView.ScrollBars == ScrollBars.Horizontal)
-            {
-                var hScrollBar = MedStatDataGridView.Controls.OfType<ScrollBar>().First();
+            //bool isBackward = false;
+            //if (oldSize.Width > Width)
+            //{
+            //    isBackward = true;
+            //}
 
-                if (hScrollBar.Visible)
-                {
-                    MedStatDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right | AnchorStyles.Left;
-                    MedStatParamDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-                    MedStatParamLable.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-                }
-                else
-                {
-                    MedStatDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-                    MedStatParamDataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right | AnchorStyles.Left;
-                    MedStatParamLable.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-                }
+            //if (!isBackward && MedStatDataGridView.Rows.Count > 0 && !horizontalMedStatScroll.Visible)
+            //{
+            //    MedStatParamDataGridView.Anchor = AnchorStyles.Left | AnchorStyles.Top |
+            //                                      AnchorStyles.Bottom | AnchorStyles.Right;
+            //    MedStatDataGridView.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+            //    MedStatParamLable.Anchor = MedStatDataGridView.Anchor;
+            //}
+            //else if (isBackward && MedStatParamDataGridView.Size.Width == MedStatParamDataGridView.MinimumSize.Width)
+            //{
+            //    MedStatParamDataGridView.Anchor = AnchorStyles.Right | AnchorStyles.Top |
+            //                                      AnchorStyles.Bottom;
+            //    MedStatDataGridView.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
 
-                if (!hScrollBar.Visible && MedStatDataGridView.Width > 400)
-                {
-                    this.Resize -= MedStatUserControlTabControl_Resize;
-                }
-            }
+            //    var medStatDGVRight = MedStatDataGridView.Location.X + MedStatDataGridView.Width;
+
+            //    MedStatParamDataGridView.Location = new Point(medStatDGVRight + 10, MedStatDataGridView.Location.Y);
+            //}
+            //else if (MedStatParamDataGridView.Size.Width == MedStatParamDataGridView.MinimumSize.Width)
+            //{
+            //    MedStatParamDataGridView.Anchor = AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom;
+            //    MedStatDataGridView.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            //    MedStatParamLable.Anchor = MedStatParamDataGridView.Anchor;
+            //}
+
+            //oldSize = Size;
         }
 
         private void MedStatDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.Value == null || e.RowIndex == -1 || e.ColumnIndex == -1)
+            var dataGridView = sender as DataGridView;
+
+            if (e.Value == null || e.ColumnIndex == -1 || e.RowIndex == -1)
             {
                 return;
             }
 
-            if (sender is DataGridView dataGridView)
+            var currentRow = dataGridView.Rows[e.RowIndex];
+
+            switch (dataGridView.Tag.ToString())
             {
-                var currentRow = dataGridView.Rows[e.RowIndex];
-
-                switch (dataGridView.Tag.ToString())
-                {
-                    case "1":
-                        currentRow.Cells[e.ColumnIndex].ToolTipText = currentRow.Cells[3].Value.ToString();
-                        break;
-                    case "2":
-                        currentRow.Cells[e.ColumnIndex].ToolTipText = currentRow.Cells[1].Value.ToString();
-                        break;
-                    default:
-                        break;
-                }
-
+                case "1":
+                    currentRow.Cells[e.ColumnIndex].ToolTipText = currentRow.Cells[3].Value.ToString();
+                    //e.Value = e.Value + " на (" + currentRow.Cells[7].Value.ToString() + ")";
+                    break;
+                case "2":
+                    currentRow.Cells[e.ColumnIndex].ToolTipText = currentRow.Cells[1].Value.ToString();
+                    break;
+                default:
+                    break;
             }
-
-
         }
 
         private async void MedStatDataGridView_SelectionChanged(object sender, EventArgs e)
@@ -512,7 +524,7 @@ namespace UserMap.UserControls
                                        Measurement = row[2].ToString()
                                    };
                                }).ToList();
-                           }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                           })
                            .ContinueWith(result =>
                            {
                                var res = result.Result;
@@ -537,17 +549,8 @@ namespace UserMap.UserControls
                                {
                                    column.HeaderCell.Value = columnsName[index++];
                                }
-                           }, System.Threading.CancellationToken.None,
-                              TaskContinuationOptions.OnlyOnRanToCompletion,
-                              TaskScheduler.FromCurrentSynchronizationContext())
-                           .ContinueWith(result =>
-                            {
-                                if (result.IsCanceled)
-                                {
-                                    MessageBox.Show("Не вдалось завантажити дані.", "Помилка",
-                                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-                            }, TaskContinuationOptions.NotOnFaulted);
+                           }, TaskScheduler.FromCurrentSynchronizationContext())
+                           .CatchAndLog(logger);
         }
 
         private async void AcceptFiltrarionButton_Click(object sender, EventArgs e)
@@ -584,12 +587,24 @@ namespace UserMap.UserControls
                 {
                     foreach (TreeNode node in currentNode.Nodes)
                     {
+                        node.Tag = "_-1";
                         node.Checked = currentNode.Checked;
+                        node.Tag = "_-1";
                     }
                 }
                 if (currentNode.Parent != null && !currentNode.Parent.Checked)
                 {
                     currentNode.Parent.Checked = true;
+                }
+
+                if (currentNode.Nodes.Count == 0)
+                {
+                    var nodeFullPath = currentNode.FullPath;
+                    var nameIndex = SelectedIndicatorsListBox.Items.IndexOf(nodeFullPath);
+                    if (nameIndex == -1)
+                    {
+                        SelectedIndicatorsListBox.Items.Add(nodeFullPath);
+                    }
                 }
             }
             else
@@ -602,10 +617,15 @@ namespace UserMap.UserControls
                     }
                 }
 
-                if (currentNode.Parent != null && currentNode.Parent.Checked && 
+                if (currentNode.Parent != null && currentNode.Parent.Checked &&
                     !currentNode.Parent.Nodes.OfType<TreeNode>().Where(node => node.Checked).Any())
                 {
                     currentNode.Parent.Checked = false;
+                }
+
+                if (currentNode.Nodes.Count == 0)
+                {
+                    SelectedIndicatorsListBox.Items.Remove(currentNode.FullPath);
                 }
             }
 

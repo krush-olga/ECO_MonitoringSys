@@ -66,10 +66,28 @@ namespace UserMap.HelpWindows
         {
             var tabPages = ContentContainerTabControl.TabPages;
             tabPages.Add(pageName);
+            var newPage = tabPages[tabPages.Count - 1];
 
-            tabPages[tabPages.Count - 1].Controls.Add(content);
+            newPage.Controls.Add(content);
             content.Dock = DockStyle.Fill;
             content.Margin = new Padding(10);
+
+            int newMinWidth = this.MinimumSize.Width;
+            int newMinHeight = this.MinimumSize.Height;
+            int widthOffset = this.Width - ContentContainerTabControl.Width;
+            int heightOffset = this.Height - ContentContainerTabControl.Height;
+
+            if (newMinWidth < content.MinimumSize.Width + widthOffset)
+            {
+                newMinWidth = content.MinimumSize.Width + widthOffset;
+            }
+            
+            if (newMinHeight < content.MinimumSize.Height + heightOffset + 20)
+            {
+                newMinHeight = content.MinimumSize.Height + heightOffset + 20;
+            }
+
+            this.MinimumSize = new Size(newMinWidth, newMinHeight);
         }
 
         public Dictionary<Issue, IList<CalculationSeries>> GetIssuesAndSeries()

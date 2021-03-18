@@ -10,6 +10,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UserMap.Core;
 using UserMap.Helpers;
 
@@ -23,9 +25,8 @@ namespace UserMap
         private readonly GMap.NET.PointLatLng defaultMapStartCoord;
         private readonly Role expert;
         private readonly int userId;
-#if !DEBUG
+
         private readonly Services.ILogger logger;
-#endif
 
         private bool moveMode;
         private bool markerAddingMode;
@@ -66,9 +67,7 @@ namespace UserMap
             itemConfigurationWindow = null;
             drawContext = null;
 
-#if !DEBUG
             logger = new Services.FileLogger();
-#endif
         }
 
         private void InitialiazeAdditionalComponent()
@@ -212,7 +211,8 @@ namespace UserMap
                                                                                         .OfType<Data.Entity.Environment>()
                                                                                         .ToList());
                           }
-                      }, TaskScheduler.FromCurrentSynchronizationContext());
+                      }, TaskScheduler.FromCurrentSynchronizationContext())
+                      .CatchAndLog(logger);
         }
         private async Task FillCheckedListBoxFromDBAsync<TResult>(CheckedListBox checkedListBox, string table, string columns,
                                                                   string condition, Func<List<object>, TResult> func,
@@ -2096,6 +2096,63 @@ namespace UserMap
             if (comboBox != null)
             {
                 ComboBoxTextToolTip.Hide(comboBox);
+            }
+        }
+
+        private async void AddressFindButton_Click(object sender, EventArgs e)
+        {
+            if (AddressTextBox.Text == string.Empty)
+            {
+                MessageBox.Show("Ви не ввели адресу для пошуку.", "Помилка", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var _params = new Dictionary<string, string>();
+            _params.Add("format", "json");
+            _params.Add("countrycodes", "UA");
+            _params.Add("street", AddressTextBox.Text);
+            _params.Add("addressdetails", "1");
+            _params.Add("limit", "1");
+
+            string result = string.Empty;
+
+            try
+            {
+                result = await WebHelper.GetFromURL("https://nominatim.openstreetmap.org/search", _params);
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                DebugLog(ex);
+#else
+                MessageBox.Show("Помилка при отриманні інформації про адресу.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                logger.Log(ex);
+#endif
+                return;
+            }
+
+
+            var res = JsonConvert.DeserializeObject(result);
+
+
+            if (res is JArray jArray) 
+            {
+                if (jArray.Count == 0)
+                {
+                    MessageBox.Show("Введена адреса не знайдена.", "Помилка",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    var jObj = (JObject)jArray.First;
+
+                    var lonValue = jObj.Value<double>("lon");
+                    var latValue = jObj.Value<double>("lat");
+
+                    gMapControl.Zoom = 18;
+                    gMapControl.Position = new GMap.NET.PointLatLng(latValue, lonValue);
+                }
             }
         }
     }

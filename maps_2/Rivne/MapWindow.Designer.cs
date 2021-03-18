@@ -53,19 +53,20 @@
             this.ElementsSideMenuPanel = new System.Windows.Forms.Panel();
             this.AddItemTabControl = new System.Windows.Forms.TabControl();
             this.MarkerTabPage = new System.Windows.Forms.TabPage();
+            this.MarkerManagmentButtonPanel = new System.Windows.Forms.Panel();
+            this.SaveMarkerButton = new System.Windows.Forms.Button();
+            this.AddMarkerButton = new System.Windows.Forms.Button();
+            this.MarkerSettingsButton = new System.Windows.Forms.Button();
+            this.ShowAllMarkersButton = new System.Windows.Forms.Button();
+            this.ShowAllExpertMarkerButton = new System.Windows.Forms.Button();
+            this.ShowCurrentUserMarkerButton = new System.Windows.Forms.Button();
+            this.ClearAllMarkersButton = new System.Windows.Forms.Button();
             this.AddMarkerInfoPanel = new System.Windows.Forms.Panel();
             this.MarkerPictureBox = new System.Windows.Forms.PictureBox();
             this.EconomicActivityComboBox = new System.Windows.Forms.ComboBox();
             this.OwnershipTypeComboBox = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.MarkerSettingsButton = new System.Windows.Forms.Button();
-            this.ShowAllExpertMarkerButton = new System.Windows.Forms.Button();
-            this.ClearAllMarkersButton = new System.Windows.Forms.Button();
-            this.ShowCurrentUserMarkerButton = new System.Windows.Forms.Button();
-            this.ShowAllMarkersButton = new System.Windows.Forms.Button();
-            this.SaveMarkerButton = new System.Windows.Forms.Button();
-            this.AddMarkerButton = new System.Windows.Forms.Button();
             this.PolygonTabPage = new System.Windows.Forms.TabPage();
             this.ShowCurrentExpertPolygonsButton = new System.Windows.Forms.Button();
             this.ClearAllPolygons = new System.Windows.Forms.Button();
@@ -136,12 +137,15 @@
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.PolylineToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.ComboBoxTextToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.MarkerManagmentButtonPanel = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.AddressFindButton = new System.Windows.Forms.Button();
+            this.AddressTextBox = new System.Windows.Forms.TextBox();
             this.MapObjectContextMenuStrip.SuspendLayout();
             this.PanelSideMenu.SuspendLayout();
             this.ElementsSideMenuPanel.SuspendLayout();
             this.AddItemTabControl.SuspendLayout();
             this.MarkerTabPage.SuspendLayout();
+            this.MarkerManagmentButtonPanel.SuspendLayout();
             this.AddMarkerInfoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MarkerPictureBox)).BeginInit();
             this.PolygonTabPage.SuspendLayout();
@@ -157,7 +161,7 @@
             this.CityGroupBox.SuspendLayout();
             this.CoordinatesFindGroupBox.SuspendLayout();
             this.MainStatusStrip.SuspendLayout();
-            this.MarkerManagmentButtonPanel.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MapObjectContextMenuStrip
@@ -204,7 +208,7 @@
             // 
             this.ElementsSideMenuPanel.Controls.Add(this.AddItemTabControl);
             this.ElementsSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ElementsSideMenuPanel.Location = new System.Drawing.Point(0, 787);
+            this.ElementsSideMenuPanel.Location = new System.Drawing.Point(0, 838);
             this.ElementsSideMenuPanel.Name = "ElementsSideMenuPanel";
             this.ElementsSideMenuPanel.Size = new System.Drawing.Size(293, 281);
             this.ElementsSideMenuPanel.TabIndex = 10;
@@ -236,6 +240,127 @@
             this.MarkerTabPage.Size = new System.Drawing.Size(282, 236);
             this.MarkerTabPage.TabIndex = 0;
             this.MarkerTabPage.Text = "Маркер";
+            // 
+            // MarkerManagmentButtonPanel
+            // 
+            this.MarkerManagmentButtonPanel.Controls.Add(this.SaveMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.AddMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.MarkerSettingsButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowAllMarkersButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowAllExpertMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowCurrentUserMarkerButton);
+            this.MarkerManagmentButtonPanel.Controls.Add(this.ClearAllMarkersButton);
+            this.MarkerManagmentButtonPanel.Location = new System.Drawing.Point(3, 113);
+            this.MarkerManagmentButtonPanel.Name = "MarkerManagmentButtonPanel";
+            this.MarkerManagmentButtonPanel.Size = new System.Drawing.Size(274, 117);
+            this.MarkerManagmentButtonPanel.TabIndex = 74;
+            // 
+            // SaveMarkerButton
+            // 
+            this.SaveMarkerButton.Enabled = false;
+            this.SaveMarkerButton.FlatAppearance.BorderSize = 0;
+            this.SaveMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.SaveMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.SaveMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SaveMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SaveMarkerButton.Location = new System.Drawing.Point(93, 6);
+            this.SaveMarkerButton.Name = "SaveMarkerButton";
+            this.SaveMarkerButton.Size = new System.Drawing.Size(75, 23);
+            this.SaveMarkerButton.TabIndex = 59;
+            this.SaveMarkerButton.Text = "Зберегти";
+            this.SaveMarkerButton.UseVisualStyleBackColor = true;
+            this.SaveMarkerButton.Click += new System.EventHandler(this.SaveMarkerButton_Click);
+            // 
+            // AddMarkerButton
+            // 
+            this.AddMarkerButton.FlatAppearance.BorderSize = 0;
+            this.AddMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.AddMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.AddMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AddMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AddMarkerButton.Location = new System.Drawing.Point(5, 6);
+            this.AddMarkerButton.Name = "AddMarkerButton";
+            this.AddMarkerButton.Size = new System.Drawing.Size(75, 23);
+            this.AddMarkerButton.TabIndex = 58;
+            this.AddMarkerButton.Text = "Додати";
+            this.AddMarkerButton.UseVisualStyleBackColor = true;
+            this.AddMarkerButton.Click += new System.EventHandler(this.AddMarkerButton_Click);
+            // 
+            // MarkerSettingsButton
+            // 
+            this.MarkerSettingsButton.Enabled = false;
+            this.MarkerSettingsButton.FlatAppearance.BorderSize = 0;
+            this.MarkerSettingsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.MarkerSettingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.MarkerSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MarkerSettingsButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MarkerSettingsButton.Location = new System.Drawing.Point(179, -4);
+            this.MarkerSettingsButton.Name = "MarkerSettingsButton";
+            this.MarkerSettingsButton.Size = new System.Drawing.Size(95, 42);
+            this.MarkerSettingsButton.TabIndex = 72;
+            this.MarkerSettingsButton.Text = "Налаштування маркеру";
+            this.MarkerSettingsButton.UseVisualStyleBackColor = true;
+            this.MarkerSettingsButton.Click += new System.EventHandler(this.MarkerSettingsButton_Click);
+            // 
+            // ShowAllMarkersButton
+            // 
+            this.ShowAllMarkersButton.FlatAppearance.BorderSize = 0;
+            this.ShowAllMarkersButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowAllMarkersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowAllMarkersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowAllMarkersButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowAllMarkersButton.Location = new System.Drawing.Point(182, 35);
+            this.ShowAllMarkersButton.Name = "ShowAllMarkersButton";
+            this.ShowAllMarkersButton.Size = new System.Drawing.Size(85, 41);
+            this.ShowAllMarkersButton.TabIndex = 61;
+            this.ShowAllMarkersButton.Text = "Вiдобразити всi";
+            this.ShowAllMarkersButton.UseVisualStyleBackColor = true;
+            this.ShowAllMarkersButton.Click += new System.EventHandler(this.ShowAllMarkersButton_Click);
+            // 
+            // ShowAllExpertMarkerButton
+            // 
+            this.ShowAllExpertMarkerButton.FlatAppearance.BorderSize = 0;
+            this.ShowAllExpertMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowAllExpertMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowAllExpertMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowAllExpertMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowAllExpertMarkerButton.Location = new System.Drawing.Point(0, 35);
+            this.ShowAllExpertMarkerButton.Name = "ShowAllExpertMarkerButton";
+            this.ShowAllExpertMarkerButton.Size = new System.Drawing.Size(88, 41);
+            this.ShowAllExpertMarkerButton.TabIndex = 69;
+            this.ShowAllExpertMarkerButton.Text = "Вiдобразити по експерту";
+            this.ShowAllExpertMarkerButton.UseVisualStyleBackColor = true;
+            this.ShowAllExpertMarkerButton.Click += new System.EventHandler(this.ShowAllExpertMarkerButton_Click);
+            // 
+            // ShowCurrentUserMarkerButton
+            // 
+            this.ShowCurrentUserMarkerButton.FlatAppearance.BorderSize = 0;
+            this.ShowCurrentUserMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ShowCurrentUserMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ShowCurrentUserMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShowCurrentUserMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ShowCurrentUserMarkerButton.Location = new System.Drawing.Point(87, 35);
+            this.ShowCurrentUserMarkerButton.Name = "ShowCurrentUserMarkerButton";
+            this.ShowCurrentUserMarkerButton.Size = new System.Drawing.Size(96, 41);
+            this.ShowCurrentUserMarkerButton.TabIndex = 62;
+            this.ShowCurrentUserMarkerButton.Text = "Вiдобразити додані вами";
+            this.ShowCurrentUserMarkerButton.UseVisualStyleBackColor = true;
+            this.ShowCurrentUserMarkerButton.Click += new System.EventHandler(this.ShowCurrentUserMarkerButton_Click);
+            // 
+            // ClearAllMarkersButton
+            // 
+            this.ClearAllMarkersButton.FlatAppearance.BorderSize = 0;
+            this.ClearAllMarkersButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.ClearAllMarkersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
+            this.ClearAllMarkersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ClearAllMarkersButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ClearAllMarkersButton.Location = new System.Drawing.Point(87, 82);
+            this.ClearAllMarkersButton.Name = "ClearAllMarkersButton";
+            this.ClearAllMarkersButton.Size = new System.Drawing.Size(96, 41);
+            this.ClearAllMarkersButton.TabIndex = 64;
+            this.ClearAllMarkersButton.Text = "Очистити всі";
+            this.ClearAllMarkersButton.UseVisualStyleBackColor = true;
+            this.ClearAllMarkersButton.Click += new System.EventHandler(this.ClearAllMarkersButton_Click);
             // 
             // AddMarkerInfoPanel
             // 
@@ -314,113 +439,6 @@
             this.label8.Size = new System.Drawing.Size(104, 15);
             this.label8.TabIndex = 66;
             this.label8.Text = "Форма власності";
-            // 
-            // MarkerSettingsButton
-            // 
-            this.MarkerSettingsButton.Enabled = false;
-            this.MarkerSettingsButton.FlatAppearance.BorderSize = 0;
-            this.MarkerSettingsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.MarkerSettingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.MarkerSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MarkerSettingsButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.MarkerSettingsButton.Location = new System.Drawing.Point(179, -4);
-            this.MarkerSettingsButton.Name = "MarkerSettingsButton";
-            this.MarkerSettingsButton.Size = new System.Drawing.Size(95, 42);
-            this.MarkerSettingsButton.TabIndex = 72;
-            this.MarkerSettingsButton.Text = "Налаштування маркеру";
-            this.MarkerSettingsButton.UseVisualStyleBackColor = true;
-            this.MarkerSettingsButton.Click += new System.EventHandler(this.MarkerSettingsButton_Click);
-            // 
-            // ShowAllExpertMarkerButton
-            // 
-            this.ShowAllExpertMarkerButton.FlatAppearance.BorderSize = 0;
-            this.ShowAllExpertMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.ShowAllExpertMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.ShowAllExpertMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShowAllExpertMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowAllExpertMarkerButton.Location = new System.Drawing.Point(0, 35);
-            this.ShowAllExpertMarkerButton.Name = "ShowAllExpertMarkerButton";
-            this.ShowAllExpertMarkerButton.Size = new System.Drawing.Size(88, 41);
-            this.ShowAllExpertMarkerButton.TabIndex = 69;
-            this.ShowAllExpertMarkerButton.Text = "Вiдобразити по експерту";
-            this.ShowAllExpertMarkerButton.UseVisualStyleBackColor = true;
-            this.ShowAllExpertMarkerButton.Click += new System.EventHandler(this.ShowAllExpertMarkerButton_Click);
-            // 
-            // ClearAllMarkersButton
-            // 
-            this.ClearAllMarkersButton.FlatAppearance.BorderSize = 0;
-            this.ClearAllMarkersButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.ClearAllMarkersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.ClearAllMarkersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ClearAllMarkersButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ClearAllMarkersButton.Location = new System.Drawing.Point(87, 82);
-            this.ClearAllMarkersButton.Name = "ClearAllMarkersButton";
-            this.ClearAllMarkersButton.Size = new System.Drawing.Size(96, 41);
-            this.ClearAllMarkersButton.TabIndex = 64;
-            this.ClearAllMarkersButton.Text = "Очистити всі";
-            this.ClearAllMarkersButton.UseVisualStyleBackColor = true;
-            this.ClearAllMarkersButton.Click += new System.EventHandler(this.ClearAllMarkersButton_Click);
-            // 
-            // ShowCurrentUserMarkerButton
-            // 
-            this.ShowCurrentUserMarkerButton.FlatAppearance.BorderSize = 0;
-            this.ShowCurrentUserMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.ShowCurrentUserMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.ShowCurrentUserMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShowCurrentUserMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowCurrentUserMarkerButton.Location = new System.Drawing.Point(87, 35);
-            this.ShowCurrentUserMarkerButton.Name = "ShowCurrentUserMarkerButton";
-            this.ShowCurrentUserMarkerButton.Size = new System.Drawing.Size(96, 41);
-            this.ShowCurrentUserMarkerButton.TabIndex = 62;
-            this.ShowCurrentUserMarkerButton.Text = "Вiдобразити додані вами";
-            this.ShowCurrentUserMarkerButton.UseVisualStyleBackColor = true;
-            this.ShowCurrentUserMarkerButton.Click += new System.EventHandler(this.ShowCurrentUserMarkerButton_Click);
-            // 
-            // ShowAllMarkersButton
-            // 
-            this.ShowAllMarkersButton.FlatAppearance.BorderSize = 0;
-            this.ShowAllMarkersButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.ShowAllMarkersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.ShowAllMarkersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShowAllMarkersButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShowAllMarkersButton.Location = new System.Drawing.Point(182, 35);
-            this.ShowAllMarkersButton.Name = "ShowAllMarkersButton";
-            this.ShowAllMarkersButton.Size = new System.Drawing.Size(85, 41);
-            this.ShowAllMarkersButton.TabIndex = 61;
-            this.ShowAllMarkersButton.Text = "Вiдобразити всi";
-            this.ShowAllMarkersButton.UseVisualStyleBackColor = true;
-            this.ShowAllMarkersButton.Click += new System.EventHandler(this.ShowAllMarkersButton_Click);
-            // 
-            // SaveMarkerButton
-            // 
-            this.SaveMarkerButton.Enabled = false;
-            this.SaveMarkerButton.FlatAppearance.BorderSize = 0;
-            this.SaveMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.SaveMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.SaveMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SaveMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SaveMarkerButton.Location = new System.Drawing.Point(93, 6);
-            this.SaveMarkerButton.Name = "SaveMarkerButton";
-            this.SaveMarkerButton.Size = new System.Drawing.Size(75, 23);
-            this.SaveMarkerButton.TabIndex = 59;
-            this.SaveMarkerButton.Text = "Зберегти";
-            this.SaveMarkerButton.UseVisualStyleBackColor = true;
-            this.SaveMarkerButton.Click += new System.EventHandler(this.SaveMarkerButton_Click);
-            // 
-            // AddMarkerButton
-            // 
-            this.AddMarkerButton.FlatAppearance.BorderSize = 0;
-            this.AddMarkerButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.AddMarkerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(65)))), ((int)(((byte)(92)))));
-            this.AddMarkerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AddMarkerButton.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AddMarkerButton.Location = new System.Drawing.Point(5, 6);
-            this.AddMarkerButton.Name = "AddMarkerButton";
-            this.AddMarkerButton.Size = new System.Drawing.Size(75, 23);
-            this.AddMarkerButton.TabIndex = 58;
-            this.AddMarkerButton.Text = "Додати";
-            this.AddMarkerButton.UseVisualStyleBackColor = true;
-            this.AddMarkerButton.Click += new System.EventHandler(this.AddMarkerButton_Click);
             // 
             // PolygonTabPage
             // 
@@ -782,7 +800,7 @@
             // 
             this.ElementsSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.ElementsSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ElementsSideMenuButton.Location = new System.Drawing.Point(0, 757);
+            this.ElementsSideMenuButton.Location = new System.Drawing.Point(0, 808);
             this.ElementsSideMenuButton.Name = "ElementsSideMenuButton";
             this.ElementsSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.ElementsSideMenuButton.TabIndex = 9;
@@ -805,7 +823,7 @@
             this.FiltrationSideMenuPanel.Controls.Add(this.EnvironmentsGroupBox);
             this.FiltrationSideMenuPanel.Controls.Add(this.ShowLayoutButton);
             this.FiltrationSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.FiltrationSideMenuPanel.Location = new System.Drawing.Point(0, 323);
+            this.FiltrationSideMenuPanel.Location = new System.Drawing.Point(0, 374);
             this.FiltrationSideMenuPanel.Name = "FiltrationSideMenuPanel";
             this.FiltrationSideMenuPanel.Size = new System.Drawing.Size(293, 434);
             this.FiltrationSideMenuPanel.TabIndex = 8;
@@ -954,7 +972,7 @@
             this.FiltrationSideMenuButton.BackColor = System.Drawing.SystemColors.Control;
             this.FiltrationSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.FiltrationSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.FiltrationSideMenuButton.Location = new System.Drawing.Point(0, 293);
+            this.FiltrationSideMenuButton.Location = new System.Drawing.Point(0, 344);
             this.FiltrationSideMenuButton.Name = "FiltrationSideMenuButton";
             this.FiltrationSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.FiltrationSideMenuButton.TabIndex = 7;
@@ -970,7 +988,7 @@
             this.CompareSideMenuPanel.Controls.Add(this.DeleteCompareItemButton);
             this.CompareSideMenuPanel.Controls.Add(this.CompareButton);
             this.CompareSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.CompareSideMenuPanel.Location = new System.Drawing.Point(0, 186);
+            this.CompareSideMenuPanel.Location = new System.Drawing.Point(0, 237);
             this.CompareSideMenuPanel.Name = "CompareSideMenuPanel";
             this.CompareSideMenuPanel.Size = new System.Drawing.Size(293, 107);
             this.CompareSideMenuPanel.TabIndex = 5;
@@ -1018,7 +1036,7 @@
             // 
             this.CompareSideMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.CompareSideMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CompareSideMenuButton.Location = new System.Drawing.Point(0, 156);
+            this.CompareSideMenuButton.Location = new System.Drawing.Point(0, 207);
             this.CompareSideMenuButton.Name = "CompareSideMenuButton";
             this.CompareSideMenuButton.Size = new System.Drawing.Size(293, 30);
             this.CompareSideMenuButton.TabIndex = 4;
@@ -1029,12 +1047,13 @@
             // 
             // FindSideMenuPanel
             // 
+            this.FindSideMenuPanel.Controls.Add(this.groupBox1);
             this.FindSideMenuPanel.Controls.Add(this.CityGroupBox);
             this.FindSideMenuPanel.Controls.Add(this.CoordinatesFindGroupBox);
             this.FindSideMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.FindSideMenuPanel.Location = new System.Drawing.Point(0, 30);
             this.FindSideMenuPanel.Name = "FindSideMenuPanel";
-            this.FindSideMenuPanel.Size = new System.Drawing.Size(293, 126);
+            this.FindSideMenuPanel.Size = new System.Drawing.Size(293, 177);
             this.FindSideMenuPanel.TabIndex = 1;
             // 
             // CityGroupBox
@@ -1267,19 +1286,34 @@
             this.PolylineToolTip.InitialDelay = 400;
             this.PolylineToolTip.ReshowDelay = 100;
             // 
-            // MarkerManagmentButtonPanel
+            // groupBox1
             // 
-            this.MarkerManagmentButtonPanel.Controls.Add(this.SaveMarkerButton);
-            this.MarkerManagmentButtonPanel.Controls.Add(this.AddMarkerButton);
-            this.MarkerManagmentButtonPanel.Controls.Add(this.MarkerSettingsButton);
-            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowAllMarkersButton);
-            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowAllExpertMarkerButton);
-            this.MarkerManagmentButtonPanel.Controls.Add(this.ShowCurrentUserMarkerButton);
-            this.MarkerManagmentButtonPanel.Controls.Add(this.ClearAllMarkersButton);
-            this.MarkerManagmentButtonPanel.Location = new System.Drawing.Point(3, 113);
-            this.MarkerManagmentButtonPanel.Name = "MarkerManagmentButtonPanel";
-            this.MarkerManagmentButtonPanel.Size = new System.Drawing.Size(274, 117);
-            this.MarkerManagmentButtonPanel.TabIndex = 74;
+            this.groupBox1.Controls.Add(this.AddressFindButton);
+            this.groupBox1.Controls.Add(this.AddressTextBox);
+            this.groupBox1.Location = new System.Drawing.Point(6, 124);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(282, 47);
+            this.groupBox1.TabIndex = 88;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Пошук адресі";
+            // 
+            // AddressFindButton
+            // 
+            this.AddressFindButton.Location = new System.Drawing.Point(205, 19);
+            this.AddressFindButton.Name = "AddressFindButton";
+            this.AddressFindButton.Size = new System.Drawing.Size(77, 20);
+            this.AddressFindButton.TabIndex = 58;
+            this.AddressFindButton.Text = "Пошук";
+            this.AddressFindButton.UseVisualStyleBackColor = true;
+            this.AddressFindButton.Click += new System.EventHandler(this.AddressFindButton_Click);
+            // 
+            // AddressTextBox
+            // 
+            this.AddressTextBox.Location = new System.Drawing.Point(6, 19);
+            this.AddressTextBox.MaxLength = 256;
+            this.AddressTextBox.Name = "AddressTextBox";
+            this.AddressTextBox.Size = new System.Drawing.Size(167, 20);
+            this.AddressTextBox.TabIndex = 65;
             // 
             // MapWindow
             // 
@@ -1301,6 +1335,7 @@
             this.ElementsSideMenuPanel.ResumeLayout(false);
             this.AddItemTabControl.ResumeLayout(false);
             this.MarkerTabPage.ResumeLayout(false);
+            this.MarkerManagmentButtonPanel.ResumeLayout(false);
             this.AddMarkerInfoPanel.ResumeLayout(false);
             this.AddMarkerInfoPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MarkerPictureBox)).EndInit();
@@ -1323,7 +1358,8 @@
             this.CoordinatesFindGroupBox.PerformLayout();
             this.MainStatusStrip.ResumeLayout(false);
             this.MainStatusStrip.PerformLayout();
-            this.MarkerManagmentButtonPanel.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1421,5 +1457,8 @@
         private System.Windows.Forms.ToolTip ComboBoxTextToolTip;
         private System.Windows.Forms.Panel AddMarkerInfoPanel;
         private System.Windows.Forms.Panel MarkerManagmentButtonPanel;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button AddressFindButton;
+        private System.Windows.Forms.TextBox AddressTextBox;
     }
 }
