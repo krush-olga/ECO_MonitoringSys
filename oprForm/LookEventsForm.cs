@@ -149,7 +149,7 @@ namespace oprForm
                     db.UpdateRecord("event", cols, values);
 
                     MessageBox.Show($"Захід \"{ev.Name}\" було {(approved ? "підтверджено" : "відхилено")}", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
+
                     UpdateEvents();
                 }
                 catch (Exception ex)
@@ -167,7 +167,7 @@ namespace oprForm
         {
             if (eventsLB.SelectedItem is Event)
             {
-            
+
                 Event ev = eventsLB.SelectedItem as Event;
                 approveGB.Visible = true;
                 db.Connect();
@@ -224,7 +224,7 @@ namespace oprForm
 
         private void updateEvent(Event ev)
         {
-            
+
             dmCheck.Checked = ukrToBool(ev.DmVer);
             lawyerCheck.Checked = ukrToBool(ev.LawyerVer);
 
@@ -387,14 +387,14 @@ namespace oprForm
                     textBox5.Text = issue[0][1].ToString();
                 }
 
-              //  db.Disconnect();
+                //  db.Disconnect();
             }
 
-            
+
         }
 
         private void IssueListClick(object sender, EventArgs e)
-        { 
+        {
             OpenAddIssueForm();
         }
 

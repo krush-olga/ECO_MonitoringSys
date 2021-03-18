@@ -22,6 +22,11 @@ namespace Data.Entity
             var i = new Expert();
             i.Id = Int32.Parse(row[0].ToString());
             i.Name = row[1].ToString();
+            
+            if (row.Count > 2)
+            {
+                i.Role = (Role)Int32.Parse(row[2].ToString()); 
+            }
 
             return i;
         }

@@ -370,9 +370,9 @@
             this.label9.Location = new System.Drawing.Point(7, 82);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(112, 15);
+            this.label9.Size = new System.Drawing.Size(98, 15);
             this.label9.TabIndex = 23;
-            this.label9.Text = "Необхідно грошей";
+            this.label9.Text = "Вартість задачі";
             // 
             // issueLbl
             // 

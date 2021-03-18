@@ -134,39 +134,14 @@ namespace experts_jurist
         private void mainWin_Shown(object sender, EventArgs e)
         {
         }
-		private void alterTemplateToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (TemplateMDIChild == null)
-			{
-				TemplateMDIChild = new AlterTemplateForm();
-				TemplateMDIChild.MdiParent = this;
-				TemplateMDIChild.Show();
-				TemplateMDIChild.FormClosed += TemplateMDIChild_FormClosed;
-				TemplateMDIChild.WindowState = FormWindowState.Maximized;
-			}
-			TemplateMDIChild.BringToFront();
-		}
 
-		private void TemplateMDIChild_FormClosed(object sender, FormClosedEventArgs e)
+        private void TemplateMDIChild_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			TemplateMDIChild.Dispose();
 			TemplateMDIChild = null;
 		}
 
-		private void newTemplateToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (NewTemplateMDIChild == null)
-			{
-				NewTemplateMDIChild = new AddTemplateForm();
-				NewTemplateMDIChild.MdiParent = this;
-				NewTemplateMDIChild.Show();
-				NewTemplateMDIChild.FormClosed += NewTemplateMDIChild_FormClosed;
-				NewTemplateMDIChild.WindowState = FormWindowState.Maximized;
-			}
-			NewTemplateMDIChild.BringToFront();
-		}
-
-		private void NewTemplateMDIChild_FormClosed(object sender, FormClosedEventArgs e)
+        private void NewTemplateMDIChild_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			NewTemplateMDIChild.Dispose();
 			NewTemplateMDIChild = null;
@@ -207,6 +182,32 @@ namespace experts_jurist
                 AddFilesMDIChild.WindowState = FormWindowState.Maximized;
             }
             AddFilesMDIChild.BringToFront();
+        }
+
+        private void newTemplateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (NewTemplateMDIChild == null)
+            {
+                NewTemplateMDIChild = new AddTemplateForm();
+                NewTemplateMDIChild.MdiParent = this;
+                NewTemplateMDIChild.Show();
+                NewTemplateMDIChild.FormClosed += NewTemplateMDIChild_FormClosed;
+                NewTemplateMDIChild.WindowState = FormWindowState.Maximized;
+            }
+            NewTemplateMDIChild.BringToFront();
+        }
+
+        private void alterTemplateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TemplateMDIChild == null)
+            {
+                TemplateMDIChild = new AlterTemplateForm();
+                TemplateMDIChild.MdiParent = this;
+                TemplateMDIChild.Show();
+                TemplateMDIChild.FormClosed += TemplateMDIChild_FormClosed;
+                TemplateMDIChild.WindowState = FormWindowState.Maximized;
+            }
+            TemplateMDIChild.BringToFront();
         }
     }
 }

@@ -271,6 +271,7 @@
             this.webBrowser1.Location = new System.Drawing.Point(0, 19);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.ScriptErrorsSuppressed = true;
             this.webBrowser1.Size = new System.Drawing.Size(421, 243);
             this.webBrowser1.TabIndex = 18;
             // 
@@ -293,7 +294,7 @@
             this.ClientSize = new System.Drawing.Size(885, 536);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Name = "issues";
-            this.Text = "issues";
+            this.Text = "Задачі";
             this.Load += new System.EventHandler(this.issues_Load);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);

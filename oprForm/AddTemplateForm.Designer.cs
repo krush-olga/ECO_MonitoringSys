@@ -152,8 +152,7 @@
             // 
             // addButton
             // 
-            this.addButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.addButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.addButton.Location = new System.Drawing.Point(130, 415);
             this.addButton.Margin = new System.Windows.Forms.Padding(2);
             this.addButton.Name = "addButton";
@@ -165,8 +164,7 @@
             // 
             // removeButton
             // 
-            this.removeButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.removeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.removeButton.Location = new System.Drawing.Point(351, 415);
             this.removeButton.Margin = new System.Windows.Forms.Padding(2);
             this.removeButton.Name = "removeButton";

@@ -32,11 +32,12 @@
             this.RozrahTSM = new System.Windows.Forms.ToolStripMenuItem();
             this.ResultTSM = new System.Windows.Forms.ToolStripMenuItem();
             this.RedaktTSM = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.TemplateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.проМодульToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.проблемыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.NewTemplateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ChangeTemplateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,8 +47,7 @@
             this.RozrahTSM,
             this.ResultTSM,
             this.RedaktTSM,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
+            this.TemplateToolStripMenuItem,
             this.проМодульToolStripMenuItem,
             this.проблемыToolStripMenuItem,
             this.fileBaseToolStripMenuItem});
@@ -60,14 +60,14 @@
             // RozrahTSM
             // 
             this.RozrahTSM.Name = "RozrahTSM";
-            this.RozrahTSM.Size = new System.Drawing.Size(132, 20);
+            this.RozrahTSM.Size = new System.Drawing.Size(133, 20);
             this.RozrahTSM.Text = "Запропонувати захід";
             this.RozrahTSM.Click += new System.EventHandler(this.offer_Click);
             // 
             // ResultTSM
             // 
             this.ResultTSM.Name = "ResultTSM";
-            this.ResultTSM.Size = new System.Drawing.Size(165, 20);
+            this.ResultTSM.Size = new System.Drawing.Size(166, 20);
             this.ResultTSM.Text = "Перегляд та оцінка заходів";
             this.ResultTSM.Click += new System.EventHandler(this.estimate_Click);
             // 
@@ -78,19 +78,14 @@
             this.RedaktTSM.Text = "Пошук ";
             this.RedaktTSM.Click += new System.EventHandler(this.search_Click);
             // 
-            // toolStripMenuItem2
+            // TemplateToolStripMenuItem
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(103, 20);
-            this.toolStripMenuItem2.Text = "Новий шаблон";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.newTemplateToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(112, 20);
-            this.toolStripMenuItem3.Text = "Змiнити Шаблон";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.alterTemplateToolStripMenuItem_Click);
+            this.TemplateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NewTemplateToolStripMenuItem,
+            this.ChangeTemplateToolStripMenuItem});
+            this.TemplateToolStripMenuItem.Name = "TemplateToolStripMenuItem";
+            this.TemplateToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
+            this.TemplateToolStripMenuItem.Text = "Шаблони";
             // 
             // проМодульToolStripMenuItem
             // 
@@ -102,8 +97,8 @@
             // проблемыToolStripMenuItem
             // 
             this.проблемыToolStripMenuItem.Name = "проблемыToolStripMenuItem";
-            this.проблемыToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
-            this.проблемыToolStripMenuItem.Text = "Проблеми";
+            this.проблемыToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.проблемыToolStripMenuItem.Text = "Задачі";
             this.проблемыToolStripMenuItem.Click += new System.EventHandler(this.проблемыToolStripMenuItem_Click);
             // 
             // fileBaseToolStripMenuItem
@@ -112,6 +107,20 @@
             this.fileBaseToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
             this.fileBaseToolStripMenuItem.Text = "Файлова база";
             this.fileBaseToolStripMenuItem.Click += new System.EventHandler(this.fileBaseToolStripMenuItem_Click);
+            // 
+            // NewTemplateToolStripMenuItem
+            // 
+            this.NewTemplateToolStripMenuItem.Name = "NewTemplateToolStripMenuItem";
+            this.NewTemplateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.NewTemplateToolStripMenuItem.Text = "Новий шаблон";
+            this.NewTemplateToolStripMenuItem.Click += new System.EventHandler(this.newTemplateToolStripMenuItem_Click);
+            // 
+            // ChangeTemplateToolStripMenuItem
+            // 
+            this.ChangeTemplateToolStripMenuItem.Name = "ChangeTemplateToolStripMenuItem";
+            this.ChangeTemplateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ChangeTemplateToolStripMenuItem.Text = "Змінити шаблон";
+            this.ChangeTemplateToolStripMenuItem.Click += new System.EventHandler(this.alterTemplateToolStripMenuItem_Click);
             // 
             // mainWin
             // 
@@ -140,9 +149,10 @@
         private System.Windows.Forms.ToolStripMenuItem ResultTSM;
         private System.Windows.Forms.ToolStripMenuItem RedaktTSM;
         private System.Windows.Forms.ToolStripMenuItem проМодульToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+		private System.Windows.Forms.ToolStripMenuItem TemplateToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem проблемыToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileBaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem NewTemplateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ChangeTemplateToolStripMenuItem;
     }
 }

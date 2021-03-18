@@ -94,7 +94,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button2);
             this.Name = "addFiles";
-            this.Text = "addFiles";
+            this.Text = "Додавання файлів";
             this.ResumeLayout(false);
 
 		}

@@ -81,7 +81,7 @@ namespace oprForm
         }
         private void issuesLB_SelectedIndexChanged(object sender, EventArgs e)
         {//show
-            Text = issuesLB.SelectedIndex.ToString();
+            //Text = issuesLB.SelectedIndex.ToString();
             ShowIssue(issuesLB.SelectedItem as Issue);
         }
         
