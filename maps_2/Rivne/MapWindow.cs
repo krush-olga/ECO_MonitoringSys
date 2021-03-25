@@ -26,7 +26,7 @@ namespace UserMap
         private readonly Role expert;
         private readonly int userId;
 
-        private readonly Services.ILogger logger;
+        private Services.ILogger logger;
 
         private bool moveMode;
         private bool markerAddingMode;
@@ -447,20 +447,44 @@ namespace UserMap
         {
             var marker = (NamedGoogleMarker)reworkedMap.SelectedMarker;
 
-            bool isReadOnly = expert != Role.Admin || marker.Creator.Id != userId;
+            bool isReadOnly = expert != Role.Admin && marker.Creator.Id != userId;
 
             HelpWindows.MultiBindingObjectEditor multiBindingObjectEditor = new HelpWindows.MultiBindingObjectEditor(marker.Id, marker, isReadOnly);
+
+            UserControls.MainMarkerInfoUC mainMarkerInfoUC = null;
 
             if (((IDescribable)marker).Type == "Область" || expert == Role.Medic)
             {
                 var medStatUC = await UserControls.MedStatUserControl.CreateInstanceAsync(marker.Id);
 
                 multiBindingObjectEditor.AddNewPage("Медична статистика", medStatUC);
-            }
+            } 
+            else if (((IDescribable)marker).Type == "Маркер" && !isReadOnly)
+            {
+                mainMarkerInfoUC = new UserControls.MainMarkerInfoUC(marker.Id);
 
+                multiBindingObjectEditor.AddNewPage("Приналежність маркеру", mainMarkerInfoUC);
+            }
+           
             multiBindingObjectEditor.ShowDialog();
 
             var issues = multiBindingObjectEditor.GetIssuesAndSeries();
+
+            if (mainMarkerInfoUC != null && mainMarkerInfoUC.TypeOfObject != null)
+            {
+                var typeOfObject = mainMarkerInfoUC.TypeOfObject;
+
+                var newMarker = new NamedGoogleMarker(marker.Position, LoadImage(typeOfObject.ImageName), marker.Format, marker.Name, marker.Description);
+                newMarker.IsDependent = marker.IsDependent;
+                newMarker.Id = marker.Id;
+                newMarker.Creator = marker.Creator;
+                ((IDescribable)newMarker).Type = ((IDescribable)marker).Type;
+
+                reworkedMap.RemoveMarker(marker);
+                reworkedMap.AddMarker(newMarker, typeOfObject.Name);
+
+                marker = newMarker;
+            }
 
             foreach (var issue in issues)
             {
@@ -468,7 +492,9 @@ namespace UserMap
                 reworkedMap.AddMarker(marker, issue.Key.Name);
             }
 
-            ShowLayout();
+            if (issues.Count != 0)
+                AcceptFiltration();
+
 
             multiBindingObjectEditor.Dispose();
         }
@@ -666,7 +692,7 @@ namespace UserMap
 
         #region Filtering method group
 
-        private void ShowLayout()
+        private void AcceptFiltration()
         {
             bool isNothingSelected = true;
 
@@ -729,7 +755,7 @@ namespace UserMap
 
         private void ShowLayoutButton_Click(object sender, EventArgs e)
         {
-            ShowLayout();
+            AcceptFiltration();
         }
 
         private void HideAllLayoutButton_Click(object sender, EventArgs e)
@@ -776,7 +802,7 @@ namespace UserMap
             TubeDescriptionTextBox.Text = string.Empty;
 
             AddMarkerInfoPanel.Visible = false;
-            MarkerManagmentButtonPanel.Location = new Point(MarkerManagmentButtonPanel.Location.X, 
+            MarkerManagmentButtonPanel.Location = new Point(MarkerManagmentButtonPanel.Location.X,
                                                             (MarkerTabPage.Height - MarkerManagmentButtonPanel.Height) / 2);
 
             AddMarkerButton.Text = "Додати";
@@ -1100,7 +1126,7 @@ namespace UserMap
                     }
                 }
 
-                ShowLayout();
+                AcceptFiltration();
             }
             catch (Exception ex)
             {
@@ -1564,7 +1590,7 @@ namespace UserMap
                     }
                 }
 
-                ShowLayout();
+                AcceptFiltration();
             }
             catch (Exception ex)
             {
@@ -1749,7 +1775,7 @@ namespace UserMap
             {
                 itemConfigurationWindow = new HelpWindows.ItemConfigurationWindow(expert);
             }
-            
+
             if (itemConfigurationWindow.ShowDialog() == DialogResult.OK)
             {
                 PolygonSaveButton.Enabled = true;
@@ -2103,7 +2129,7 @@ namespace UserMap
         {
             if (AddressTextBox.Text == string.Empty)
             {
-                MessageBox.Show("Ви не ввели адресу для пошуку.", "Помилка", 
+                MessageBox.Show("Ви не ввели адресу для пошуку.", "Помилка",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
@@ -2136,7 +2162,7 @@ namespace UserMap
             var res = JsonConvert.DeserializeObject(result);
 
 
-            if (res is JArray jArray) 
+            if (res is JArray jArray)
             {
                 if (jArray.Count == 0)
                 {

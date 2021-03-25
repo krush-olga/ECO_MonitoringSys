@@ -27,7 +27,10 @@
                 components.Dispose();
             }
 
-            Helpers.MapCache.Remove("images");
+            if (Helpers.MapCache.ContainsKey("images"))
+            {
+                Helpers.MapCache.Remove("images");
+            }
 
             if (dBManager != null)
             {
@@ -115,6 +118,9 @@
             this.CompareButton = new System.Windows.Forms.Button();
             this.CompareSideMenuButton = new System.Windows.Forms.Button();
             this.FindSideMenuPanel = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.AddressFindButton = new System.Windows.Forms.Button();
+            this.AddressTextBox = new System.Windows.Forms.TextBox();
             this.CityGroupBox = new System.Windows.Forms.GroupBox();
             this.CitiesComboBox = new System.Windows.Forms.ComboBox();
             this.GoToCityButton = new System.Windows.Forms.Button();
@@ -137,9 +143,6 @@
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.PolylineToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.ComboBoxTextToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.AddressFindButton = new System.Windows.Forms.Button();
-            this.AddressTextBox = new System.Windows.Forms.TextBox();
             this.MapObjectContextMenuStrip.SuspendLayout();
             this.PanelSideMenu.SuspendLayout();
             this.ElementsSideMenuPanel.SuspendLayout();
@@ -158,10 +161,10 @@
             this.EnvironmentsGroupBox.SuspendLayout();
             this.CompareSideMenuPanel.SuspendLayout();
             this.FindSideMenuPanel.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.CityGroupBox.SuspendLayout();
             this.CoordinatesFindGroupBox.SuspendLayout();
             this.MainStatusStrip.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MapObjectContextMenuStrip
@@ -385,10 +388,11 @@
             // 
             // EconomicActivityComboBox
             // 
+            this.EconomicActivityComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.EconomicActivityComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.EconomicActivityComboBox.BackColor = System.Drawing.SystemColors.Control;
             this.EconomicActivityComboBox.DisplayMember = "1";
             this.EconomicActivityComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.EconomicActivityComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.EconomicActivityComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.EconomicActivityComboBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.EconomicActivityComboBox.FormattingEnabled = true;
@@ -404,10 +408,11 @@
             // 
             // OwnershipTypeComboBox
             // 
+            this.OwnershipTypeComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.OwnershipTypeComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.OwnershipTypeComboBox.BackColor = System.Drawing.SystemColors.Control;
             this.OwnershipTypeComboBox.DisplayMember = "1";
             this.OwnershipTypeComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.OwnershipTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.OwnershipTypeComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.OwnershipTypeComboBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.OwnershipTypeComboBox.FormattingEnabled = true;
@@ -1056,6 +1061,35 @@
             this.FindSideMenuPanel.Size = new System.Drawing.Size(293, 177);
             this.FindSideMenuPanel.TabIndex = 1;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.AddressFindButton);
+            this.groupBox1.Controls.Add(this.AddressTextBox);
+            this.groupBox1.Location = new System.Drawing.Point(6, 124);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(282, 47);
+            this.groupBox1.TabIndex = 88;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Пошук адресі";
+            // 
+            // AddressFindButton
+            // 
+            this.AddressFindButton.Location = new System.Drawing.Point(205, 19);
+            this.AddressFindButton.Name = "AddressFindButton";
+            this.AddressFindButton.Size = new System.Drawing.Size(77, 20);
+            this.AddressFindButton.TabIndex = 58;
+            this.AddressFindButton.Text = "Пошук";
+            this.AddressFindButton.UseVisualStyleBackColor = true;
+            this.AddressFindButton.Click += new System.EventHandler(this.AddressFindButton_Click);
+            // 
+            // AddressTextBox
+            // 
+            this.AddressTextBox.Location = new System.Drawing.Point(6, 19);
+            this.AddressTextBox.MaxLength = 256;
+            this.AddressTextBox.Name = "AddressTextBox";
+            this.AddressTextBox.Size = new System.Drawing.Size(167, 20);
+            this.AddressTextBox.TabIndex = 65;
+            // 
             // CityGroupBox
             // 
             this.CityGroupBox.Controls.Add(this.CitiesComboBox);
@@ -1286,35 +1320,6 @@
             this.PolylineToolTip.InitialDelay = 400;
             this.PolylineToolTip.ReshowDelay = 100;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.AddressFindButton);
-            this.groupBox1.Controls.Add(this.AddressTextBox);
-            this.groupBox1.Location = new System.Drawing.Point(6, 124);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(282, 47);
-            this.groupBox1.TabIndex = 88;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Пошук адресі";
-            // 
-            // AddressFindButton
-            // 
-            this.AddressFindButton.Location = new System.Drawing.Point(205, 19);
-            this.AddressFindButton.Name = "AddressFindButton";
-            this.AddressFindButton.Size = new System.Drawing.Size(77, 20);
-            this.AddressFindButton.TabIndex = 58;
-            this.AddressFindButton.Text = "Пошук";
-            this.AddressFindButton.UseVisualStyleBackColor = true;
-            this.AddressFindButton.Click += new System.EventHandler(this.AddressFindButton_Click);
-            // 
-            // AddressTextBox
-            // 
-            this.AddressTextBox.Location = new System.Drawing.Point(6, 19);
-            this.AddressTextBox.MaxLength = 256;
-            this.AddressTextBox.Name = "AddressTextBox";
-            this.AddressTextBox.Size = new System.Drawing.Size(167, 20);
-            this.AddressTextBox.TabIndex = 65;
-            // 
             // MapWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1353,13 +1358,13 @@
             this.CompareSideMenuPanel.ResumeLayout(false);
             this.CompareSideMenuPanel.PerformLayout();
             this.FindSideMenuPanel.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.CityGroupBox.ResumeLayout(false);
             this.CoordinatesFindGroupBox.ResumeLayout(false);
             this.CoordinatesFindGroupBox.PerformLayout();
             this.MainStatusStrip.ResumeLayout(false);
             this.MainStatusStrip.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
