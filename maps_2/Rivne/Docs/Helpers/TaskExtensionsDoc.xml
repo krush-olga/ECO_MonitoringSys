@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="taks_extensions">
+    <TaskExtension>
+      <summary>
+        Содержит в себе методы расширения для класса <see cref="System.Threading.Tasks.Task"/>
+      </summary>
+    </TaskExtension>
+    <CatchErrorOrCancel>
+      <summary>
+        Ловит ошибку или отменённую задачу и передаёт их исключение для дальнейшей обработки.
+        Если ошибки или отмены нет, то ничего не делает.
+      </summary>
+      <param name="task">
+        Задача, к которой будет применятся обработка.
+      </param>
+      <param name="exceptionHandler">
+        Обработчик исключения.
+      </param>
+      <exception cref="System.ArgumentNullException">Возникает, когда <paramref name="exceptionHandler"/> или <paramref name="task"/> равны <see langword="null"/></exception>
+    </CatchErrorOrCancel>
+    <CatchErrorOrCancelGeneric>
+      <summary>
+        <para>
+          Ловит ошибку или отменённую задачу и передаёт их исключение для дальнейшей обработки,
+          а результат задачи передаёт значением по-умолчанию для возвращаемым задачей типом.
+        </para>
+        <para>
+          Например, для ссылочного типа значение по-умолчанию будет <see langword="null"/>, 
+          в то время как для значимого типа будет значение пустого объекта, например, <code>new Point()</code> для T = <see cref="System.Drawing.Point"/>
+        </para>
+        <para>Если ошибки или отмены нет, то просто возвращает результат.</para>
+      </summary>
+      <typeparam name="T">
+        Начальный тип, возвращаемый задачей.
+      </typeparam>
+      <typeparam name="TResult">
+        Выходной тип, который будет возвращаться задачей после обработки в <paramref name="resultFunc"/>.
+      </typeparam>
+      <param name="task">
+        Задача, к которой будет применятся обработка.
+      </param>
+      <param name="exceptionHandler">
+        Обработчик исключения.
+      </param>
+      <param name="resultFunc">
+        Обработчик возвращаемого результата.
+      </param>
+      <exception cref="System.ArgumentNullException">
+        Возникает, когда <paramref name="exceptionHandler"/> или <paramref name="task"/> равны <see langword="null"/>
+      </exception>
+      <returns>
+        Результат работы задачи или значение по-умолчанию для указанного <typeparamref  name="TResult"/>.
+      </returns>
+    </CatchErrorOrCancelGeneric>
+    <CatchAndLog>
+      <summary>
+        Ловит ошибку или отменённую задачу и передаёт их логирует их с последующим выводом нужного сообщения пользователю.
+        Если текущая конфигурация решения для отладки (Debug), то логирует в консоль Visual Studio (Вид-&gt;Вывод или View-&gt;Output)
+      </summary>
+      <param name="task">
+        Задача, к которой будет применятся обработка.
+      </param>
+      <param name="logger">
+        Логер для логирования ошибки.
+      </param>
+    </CatchAndLog>
+    <CatchAndLogGeneric>
+      <summary>
+        <para>
+          Ловит ошибку или отменённую задачу и передаёт их логирует их с последующим выводом нужного сообщения пользователю.
+          Если текущая конфигурация решения для отладки (Debug), то логирует в консоль Visual Studio (Вид-&gt;Вывод или View-&gt;Output)
+        </para>
+        <para>
+          Например, для ссылочного типа значение по-умолчанию будет <see langword="null"/>,
+          в то время как для значимого типа будет значение пустого объекта, например, <code>new Point()</code> для T = <see cref="System.Drawing.Point"/>
+        </para>
+        <para>Если ошибки или отмены нет, то просто возвращает результат.</para>
+      </summary>
+      <typeparam name="TResult">
+        Начальный тип, возвращаемый задачей.
+      </typeparam>
+      <param name="task">
+        Задача, к которой будет применятся обработка.
+      </param>
+      <param name="logger">
+        Логер для логирования ошибки.
+      </param>
+      <returns>
+        Результат работы задачи или значение по-умолчанию для указанного <typeparamref  name="TResult"/>.
+      </returns>
+    </CatchAndLogGeneric>
+  </members>
+</docs>

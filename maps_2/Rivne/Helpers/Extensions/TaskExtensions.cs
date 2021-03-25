@@ -2,18 +2,19 @@
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using UserMap.Helpers;
 
 namespace UserMap.Helpers
 {
+    /// <include file='Docs/Helpers/TaskExtensionsDoc.xml' path='docs/members[@name="taks_extensions"]/TaskExtension/*'/>
     public static class TaskExtensions
     {
-        public static Task CatchErrorOrCancel(this Task task, Action<Exception> exceptionHandle)
+        /// <include file='Docs/Helpers/TaskExtensionsDoc.xml' path='docs/members[@name="taks_extensions"]/CatchErrorOrCancel/*'/>
+        public static Task CatchErrorOrCancel(this Task task, Action<Exception> exceptionHandler)
         {
-            if (exceptionHandle == null)
-            {
+            if (exceptionHandler == null)
                 throw new ArgumentNullException("exceptionHandle");
-            }
+            if (task == null)
+                throw new ArgumentNullException("task");
 
             return task.ContinueWith(result => 
             {
@@ -25,20 +26,21 @@ namespace UserMap.Helpers
                     }
                     catch (Exception ex)
                     {
-                        exceptionHandle(ex);
+                        exceptionHandler(ex);
                     }
                 }
                 else if (result.IsFaulted)
                 {
-                    exceptionHandle(result.Exception);
+                    exceptionHandler(result.Exception);
                 }
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        public static Task<TResult> CatchErrorOrCancel<T, TResult>(this Task<T> task, Action<Exception> exceptionHandle, 
+        /// <include file='Docs/Helpers/TaskExtensionsDoc.xml' path='docs/members[@name="taks_extensions"]/CatchErrorOrCancelGeneric/*'/>
+        public static Task<TResult> CatchErrorOrCancel<T, TResult>(this Task<T> task, Action<Exception> exceptionHandler, 
                                                                    Func<T, TResult> resultFunc)
         {
-            if (exceptionHandle == null)
+            if (exceptionHandler == null)
             {
                 throw new ArgumentNullException("exceptionHandle");
             }
@@ -53,14 +55,14 @@ namespace UserMap.Helpers
                     }
                     catch (Exception ex)
                     {
-                        exceptionHandle(ex);
+                        exceptionHandler(ex);
                     }
 
                     return resultFunc != null ? resultFunc(default) : default;
                 }
                 else if (result.IsFaulted)
                 {
-                    exceptionHandle(result.Exception);
+                    exceptionHandler(result.Exception);
                     return resultFunc != null ? resultFunc(default) : default;
                 }
                 else
@@ -70,23 +72,27 @@ namespace UserMap.Helpers
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        internal static Task CatchAndLog(this Task task, Services.ILogger logger)
+        /// <include file='Docs/Helpers/TaskExtensionsDoc.xml' path='docs/members[@name="taks_extensions"]/CatchAndLog/*'/>
+        internal static Task CatchAndLog(this Task task, Services.ILogger logger, string errorMessage = "")
         {
             return task.CatchErrorOrCancel(ex =>
              {
+                 if (string.IsNullOrEmpty(errorMessage))
+                     errorMessage = "Сталась помилка під час виконання запиту. ";
+
                  var innerException = ex.GetInnerestException();
                  if (innerException is SocketException socketException)
                  {
                      if (socketException.SocketErrorCode == SocketError.TimedOut)
                      {
-                         MessageBox.Show("Сталась помилка під час фільтрації статистики. " +
+                         MessageBox.Show(errorMessage +
                                          "Відсутнє підключення до інтернету.",
                                          "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                      }
                  }
                  else
                  {
-                     MessageBox.Show("Виникла помилка під час фільтрації статистики.",
+                     MessageBox.Show(errorMessage,
                                      "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                  }
 #if DEBUG
@@ -96,23 +102,27 @@ namespace UserMap.Helpers
 #endif
              });
         }
-        internal static Task<TResult> CatchAndLog<TResult>(this Task<TResult> task, Services.ILogger logger)
+        /// <include file='Docs/Helpers/TaskExtensionsDoc.xml' path='docs/members[@name="taks_extensions"]/CatchAndLogGeneric/*'/>
+        internal static Task<TResult> CatchAndLog<TResult>(this Task<TResult> task, Services.ILogger logger, string errorMessage = "")
         {
             return task.CatchErrorOrCancel(ex =>
             {
+                if (string.IsNullOrEmpty(errorMessage))
+                    errorMessage = "Сталась помилка під час виконання запиту. ";
+
                 var innerException = ex.GetInnerestException();
                 if (innerException is SocketException socketException)
                 {
                     if (socketException.SocketErrorCode == SocketError.TimedOut)
                     {
-                        MessageBox.Show("Сталась помилка під час фільтрації статистики. " +
+                        MessageBox.Show(errorMessage +
                                         "Відсутнє підключення до інтернету.",
                                         "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Виникла помилка під час фільтрації статистики.",
+                    MessageBox.Show(errorMessage,
                                     "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 #if DEBUG

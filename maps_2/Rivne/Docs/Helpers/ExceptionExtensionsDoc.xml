@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<docs>
+  <members name="exception_extensions">
+    <TaskExtension>
+      <summary>
+        Содержит в себе методы расширения для класса <see cref="System.Exception"/>.
+      </summary>
+    </TaskExtension>
+    <GetInnerestException>
+      <summary>
+        Получает самое вложенное исключение.
+      </summary>
+      <param name="target">
+        Исключение, с которого нужно получить вложенное исключение.
+      </param>
+      <returns>
+        Самое вложенное исключение или текущее исключение, если внутрнее исключение равно <see langword="null"/>.
+      </returns>
+    </GetInnerestException>
+    <SetStackTrace>
+      <summary>
+        Устанавливает новую трасировку стека для указанного исключения.
+      </summary>
+      <param name="target">
+        Исключение, для которого нужно ставить новую трасировку стека.
+      </param>
+      <param name="stack">
+        Новая трасировка стека.
+      </param>
+      <returns>
+        Исключение с утановленной новой страсировкой стека.
+      </returns>
+    </SetStackTrace>
+  </members>
+</docs>
