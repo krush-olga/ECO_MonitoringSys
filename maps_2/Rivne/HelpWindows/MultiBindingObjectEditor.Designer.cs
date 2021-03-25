@@ -304,6 +304,7 @@ namespace UserMap.HelpWindows
             this.AvgValueTextBox.Size = new System.Drawing.Size(124, 20);
             this.AvgValueTextBox.TabIndex = 44;
             this.AvgValueTextBox.Text = "0";
+            this.AvgValueTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // MaxValueTextBox
             // 
@@ -312,6 +313,7 @@ namespace UserMap.HelpWindows
             this.MaxValueTextBox.Size = new System.Drawing.Size(124, 20);
             this.MaxValueTextBox.TabIndex = 45;
             this.MaxValueTextBox.Text = "0";
+            this.MaxValueTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // label5
             // 
@@ -514,6 +516,7 @@ namespace UserMap.HelpWindows
             this.MinimumSize = new System.Drawing.Size(855, 400);
             this.Name = "MultiBindingObjectEditor";
             this.Text = "Додаткова інформація ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MultiBindingObjectEditor_FormClosing);
             this.Load += new System.EventHandler(this.MultiBindingObjectEditor_Load);
             this.EmissionTabPage.ResumeLayout(false);
             this.CurrentEmisionGroupBox.ResumeLayout(false);

@@ -26,6 +26,8 @@ namespace UserMap.HelpWindows
         private int objId;
         private Core.IDescribable describable;
 
+        private List<Services.ISavable> savables;
+        private Dictionary<int, int> savablesIndcies;
         private ControllerVM<Services.IController> controller;
         private Dictionary<int, List<CalculationSeries>> issuesSeries;
         private IDictionary<int, IEnumerable<int>> selectedSeries;
@@ -36,6 +38,11 @@ namespace UserMap.HelpWindows
         public MultiBindingObjectEditor(int objId, Core.IDescribable describable, bool isReadOnly)
         {
             InitializeComponent();
+
+            if (describable == null)
+            {
+                throw new ArgumentNullException("describable");
+            }
 
             bingingsSet = false;
             this.isReadOnly = isReadOnly;
@@ -48,11 +55,8 @@ namespace UserMap.HelpWindows
 
             dbManager = new DBManager();
 
-            if (describable == null)
-            {
-                throw new ArgumentNullException("describable");
-            }
-
+            savables = new List<Services.ISavable>();
+            savablesIndcies = new Dictionary<int, int>();
             issuesSeries = new Dictionary<int, List<CalculationSeries>>();
             selectedSeries = new Dictionary<int, IEnumerable<int>>();
 
@@ -62,32 +66,54 @@ namespace UserMap.HelpWindows
             logger = new Services.FileLogger();
         }
 
-        public void AddNewPage(string pageName, Control content)
+        /// <summary>
+        /// Добавляет новую страницу в елемент <see cref="TabControl"/> с контентом.
+        /// Контент может представлять <see cref="Control"/> и <see cref="Services.ISavable"/>.
+        /// </summary>
+        /// <param name="pageName">Название новой страницы.</param>
+        /// <param name="content">Контент, который будет пресутствовать на странице.</param>
+        public void AddNewPage(string pageName, object content)
         {
             var tabPages = ContentContainerTabControl.TabPages;
             tabPages.Add(pageName);
             var newPage = tabPages[tabPages.Count - 1];
 
-            newPage.Controls.Add(content);
-            content.Dock = DockStyle.Fill;
-            content.Margin = new Padding(10);
-
-            int newMinWidth = this.MinimumSize.Width;
-            int newMinHeight = this.MinimumSize.Height;
-            int widthOffset = this.Width - ContentContainerTabControl.Width;
-            int heightOffset = this.Height - ContentContainerTabControl.Height;
-
-            if (newMinWidth < content.MinimumSize.Width + widthOffset)
+            if (content is Services.ISavable savable)
             {
-                newMinWidth = content.MinimumSize.Width + widthOffset;
-            }
-            
-            if (newMinHeight < content.MinimumSize.Height + heightOffset + 20)
-            {
-                newMinHeight = content.MinimumSize.Height + heightOffset + 20;
+                savables.Add(savable);
+                savable.ElementChanged += Savable_ElementChanged;
+                savablesIndcies.Add(ContentContainerTabControl.TabPages.Count - 1, savables.Count - 1);
             }
 
-            this.MinimumSize = new Size(newMinWidth, newMinHeight);
+            if (content is Control control)
+            {
+                newPage.Controls.Add(control);
+                control.Dock = DockStyle.Fill;
+                control.Margin = new Padding(10);
+
+                int newMinWidth = this.MinimumSize.Width;
+                int newMinHeight = this.MinimumSize.Height;
+                int widthOffset = this.Width - ContentContainerTabControl.Width;
+                int heightOffset = this.Height - ContentContainerTabControl.Height;
+
+                if (newMinWidth < control.MinimumSize.Width + widthOffset)
+                {
+                    newMinWidth = control.MinimumSize.Width + widthOffset;
+                }
+
+                if (newMinHeight < control.MinimumSize.Height + heightOffset + 20)
+                {
+                    newMinHeight = control.MinimumSize.Height + heightOffset + 20;
+                }
+
+                this.MinimumSize = new Size(newMinWidth, newMinHeight);
+            }
+            else
+            {
+                Label label = new Label();
+                label.Text = content.ToString();
+                newPage.Controls.Add(label);
+            }
         }
 
         public Dictionary<Issue, IList<CalculationSeries>> GetIssuesAndSeries()
@@ -927,6 +953,23 @@ namespace UserMap.HelpWindows
             }
         }
 
+        private void CheckSavableInfo(Services.ISavable savable)
+        {
+            if (savable.HasChangedElements())
+            {
+                SaveToBDButton.Enabled = true;
+                RestoreButton.Enabled = true;
+            }
+        }
+
+        private void Savable_ElementChanged(object sender, EventArgs e)
+        {
+            if (savablesIndcies.ContainsKey(ContentContainerTabControl.SelectedIndex))
+            {
+                CheckSavableInfo(savables[savablesIndcies[ContentContainerTabControl.SelectedIndex]]);
+            }
+        }
+
         private void EmissionsDataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.Value == null)
@@ -1123,6 +1166,12 @@ namespace UserMap.HelpWindows
                     }
                     break;
                 default:
+                    if (savablesIndcies.ContainsKey(ContentContainerTabControl.SelectedIndex))
+                    {
+                        var savable = savables[savablesIndcies[ContentContainerTabControl.SelectedIndex]];
+
+                        savable.RestoreChanges();
+                    }
                     break;
             }
 
@@ -1142,6 +1191,12 @@ namespace UserMap.HelpWindows
                     await SaveEmissionsToDB();
                     break;
                 default:
+                    if (savablesIndcies.ContainsKey(ContentContainerTabControl.SelectedIndex))
+                    {
+                        var savable = savables[savablesIndcies[ContentContainerTabControl.SelectedIndex]];
+
+                        await savable.SaveChangesAsync();
+                    }
                     break;
             }
 
@@ -1152,13 +1207,21 @@ namespace UserMap.HelpWindows
         {
             SetControllerIndex();
 
-            if (ContentContainerTabControl.SelectedIndex >= controller.Elements.Count)
+            if (ContentContainerTabControl.SelectedIndex >= controller.Elements.Count
+                && !savablesIndcies.ContainsKey(ContentContainerTabControl.SelectedIndex))
             {
                 SaveToBDButton.Visible = false;
                 RestoreButton.Visible = false;
             }
             else
             {
+                if (savablesIndcies.ContainsKey(ContentContainerTabControl.SelectedIndex))
+                {
+                    var savable = savables[savablesIndcies[ContentContainerTabControl.SelectedIndex]];
+
+                    CheckSavableInfo(savable);
+                }
+
                 SaveToBDButton.Visible = true;
                 RestoreButton.Visible = true;
             }
@@ -1356,6 +1419,62 @@ namespace UserMap.HelpWindows
             }
 
             ChangeSaveToDBAndRestoreButton();
+        }
+
+        private void MultiBindingObjectEditor_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            bool changed = false;
+
+            foreach (var element in controller.Elements)
+            {
+                if (element is ControllerVM<KeyValuePair<Issue, ControllerVM<CalculationSeries>>> inner)
+                {
+                    foreach (var innerElem in inner.Elements)
+                    {
+                        changed = changed || innerElem.Value.ChangedELementsCount != 0;
+                    }
+                }
+
+                changed = changed || element.ChangedELementsCount != 0;
+            }
+
+            if (changed &&
+                MessageBox.Show("Існують незбережені зміни. Ви впевнені, що хочете вийти?", "Увага",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            foreach (var element in controller.Elements)
+            {
+                if (element is ControllerVM<KeyValuePair<Issue, ControllerVM<CalculationSeries>>> inner)
+                {
+                    foreach (var innerElem in inner.Elements)
+                    {
+                        innerElem.Value.RestoreElements();
+                    }
+                }
+
+                element.RestoreElements();
+            }
+        }
+
+        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != '-') && (e.KeyChar != ' '))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == ',') && ((sender as TextBox).Text.IndexOf(',') > -1))
+            {
+                e.Handled = true;
+            }
+            if ((e.KeyChar == '-') && ((sender as TextBox).Text.IndexOf('-') > -1))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
