@@ -60,11 +60,11 @@
     <Reference Include="GMap.NET.WindowsForms">
       <HintPath>..\package\GMap.NET.WindowsForms.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Protobuf, Version=3.13.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.Protobuf.3.13.0\lib\net45\Google.Protobuf.dll</HintPath>
+    <Reference Include="Google.Protobuf, Version=3.15.6.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Google.Protobuf.3.15.6\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -82,8 +82,8 @@
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Memory.4.5.4\lib\netstandard1.1\System.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -147,11 +147,24 @@
     <Compile Include="Services\FileLogger.cs" />
     <Compile Include="Services\IController.cs" />
     <Compile Include="Services\ILogger.cs" />
+    <Compile Include="Services\ISavable.cs" />
+    <Compile Include="UserControls\EmissionsUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\EmissionsUC.Designer.cs">
+      <DependentUpon>EmissionsUC.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\ItemInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\ItemInfo.Designer.cs">
       <DependentUpon>ItemInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MainMarkerInfoUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\MainMarkerInfoUC.Designer.cs">
+      <DependentUpon>MainMarkerInfoUC.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\MedStatUserControl.cs">
       <SubType>UserControl</SubType>
@@ -186,8 +199,14 @@
     <EmbeddedResource Include="MapWindow.resx">
       <DependentUpon>MapWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\EmissionsUC.resx">
+      <DependentUpon>EmissionsUC.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\ItemInfo.resx">
       <DependentUpon>ItemInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\MainMarkerInfoUC.resx">
+      <DependentUpon>MainMarkerInfoUC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\MedStatUserControl.resx">
       <DependentUpon>MedStatUserControl.cs</DependentUpon>
@@ -244,8 +263,10 @@
     <Content Include="Docs\Core\MapDoc.xml" />
     <Content Include="Docs\Core\NamedGoogleMarkerDoc.xml" />
     <Content Include="Docs\Helpers\ComboBoxExtensionsDoc.xml" />
+    <Content Include="Docs\Helpers\ExceptionExtensionsDoc.xml" />
     <Content Include="Docs\Helpers\IEnumerableExtensionsDoc.xml" />
     <Content Include="Docs\Helpers\MapHelperDoc.xml" />
+    <Content Include="Docs\Helpers\TaskExtensionsDoc.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
