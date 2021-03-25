@@ -31,7 +31,6 @@ namespace Data
             semaphoreSlim = new SemaphoreSlim(1);
         }
 
-        //Nikita
         public DBManager()
         {
             Initialize(null);
@@ -39,11 +38,6 @@ namespace Data
         public DBManager(String connectionString)
         {
             Initialize(connectionString);
-        }
-
-        ~DBManager()
-        {
-            Dispose();
         }
 
         private void Initialize(String connectionString)
@@ -63,6 +57,8 @@ namespace Data
             disposed = false;
             Connect();
         }
+
+        public bool ConnectionOpen => connection.State == System.Data.ConnectionState.Open;
 
         public void Connect()
         {
@@ -308,8 +304,6 @@ namespace Data
 
             return result;
         }
-
-        /// --IVAN
 
         public void DeleteFromDB(String table, String colName, String colValue)
         {
@@ -717,8 +711,13 @@ namespace Data
                 return await Task.Run(async () => await insertCmd.ExecuteScalarAsync()
                                                                  .ContinueWith(result =>
                                                                  {
-                                                                     string res = result.Result.ToString();
-                                                                     int.TryParse(res, out int number);
+                                                                     int number = -1;
+
+                                                                     if (result.Result != null)
+                                                                     {
+                                                                         string res = result.Result.ToString();
+                                                                         int.TryParse(res, out number);
+                                                                     }
 
                                                                      return number;
                                                                  })
@@ -810,6 +809,7 @@ namespace Data
                 }
 
                 disposed = true;
+                GC.SuppressFinalize(this);
             }
         }
     }
