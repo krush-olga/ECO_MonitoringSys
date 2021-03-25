@@ -6,6 +6,9 @@ using UserMap.ViewModel;
 
 namespace UserMap.Services
 {
+    /// <summary>
+    /// Контролер для управления набором объектов.
+    /// </summary>
     internal interface IController : INotifyPropertyChanged
     {
         IEnumerable<object> Elements { get; }
