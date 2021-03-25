@@ -17,7 +17,10 @@
 			{
 				components.Dispose();
 			}
-			base.Dispose(disposing);
+
+            db.Dispose();
+
+            base.Dispose(disposing);
 		}
 
 		#region Windows Form Designer generated code
@@ -28,6 +31,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             this.eventListGrid = new System.Windows.Forms.DataGridView();
             this.Resource = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -37,6 +41,9 @@
             this.totalPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label13 = new System.Windows.Forms.Label();
+            this.EventDocsFilterButton = new System.Windows.Forms.Button();
+            this.IssueDocsFilterButton = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.findIssueCondTB = new System.Windows.Forms.TextBox();
@@ -48,7 +55,7 @@
             this.approveGB = new System.Windows.Forms.GroupBox();
             this.previousBtn = new System.Windows.Forms.Button();
             this.nextIssueBtn = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.TemaTextBox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.issueListBtn = new System.Windows.Forms.Button();
             this.issueDescTB = new System.Windows.Forms.TextBox();
@@ -69,12 +76,13 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.EventCostTextBox = new System.Windows.Forms.TextBox();
+            this.EventNameTextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.EventDescTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.DocumentsSortToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.eventListGrid)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -85,6 +93,7 @@
             // 
             // eventListGrid
             // 
+            this.eventListGrid.AllowUserToAddRows = false;
             this.eventListGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.eventListGrid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.eventListGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -147,11 +156,14 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1188, 700);
+            this.tabControl1.Size = new System.Drawing.Size(1050, 548);
             this.tabControl1.TabIndex = 31;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label13);
+            this.tabPage1.Controls.Add(this.EventDocsFilterButton);
+            this.tabPage1.Controls.Add(this.IssueDocsFilterButton);
             this.tabPage1.Controls.Add(this.button5);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.findIssueCondTB);
@@ -173,17 +185,51 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage1.Size = new System.Drawing.Size(1180, 672);
+            this.tabPage1.Size = new System.Drawing.Size(1042, 520);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Головна";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(656, 231);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(80, 15);
+            this.label13.TabIndex = 39;
+            this.label13.Text = "Відобразити";
+            // 
+            // EventDocsFilterButton
+            // 
+            this.EventDocsFilterButton.Enabled = false;
+            this.EventDocsFilterButton.Location = new System.Drawing.Point(742, 249);
+            this.EventDocsFilterButton.Name = "EventDocsFilterButton";
+            this.EventDocsFilterButton.Size = new System.Drawing.Size(77, 28);
+            this.EventDocsFilterButton.TabIndex = 37;
+            this.EventDocsFilterButton.Text = "По заходу";
+            this.DocumentsSortToolTip.SetToolTip(this.EventDocsFilterButton, "Відображає документи для вибраного заходу");
+            this.EventDocsFilterButton.UseVisualStyleBackColor = true;
+            this.EventDocsFilterButton.Click += new System.EventHandler(this.EventDocsSortButton_Click);
+            // 
+            // IssueDocsFilterButton
+            // 
+            this.IssueDocsFilterButton.Enabled = false;
+            this.IssueDocsFilterButton.Location = new System.Drawing.Point(659, 249);
+            this.IssueDocsFilterButton.Name = "IssueDocsFilterButton";
+            this.IssueDocsFilterButton.Size = new System.Drawing.Size(77, 28);
+            this.IssueDocsFilterButton.TabIndex = 37;
+            this.IssueDocsFilterButton.Text = "По задачі";
+            this.DocumentsSortToolTip.SetToolTip(this.IssueDocsFilterButton, "Відображає документи пов\'язані зі всією задачею");
+            this.IssueDocsFilterButton.UseVisualStyleBackColor = true;
+            this.IssueDocsFilterButton.Click += new System.EventHandler(this.IssueDocsSortButton_Click);
+            // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(425, 250);
+            this.button5.Location = new System.Drawing.Point(327, 250);
             this.button5.Margin = new System.Windows.Forms.Padding(4);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(29, 27);
+            this.button5.Size = new System.Drawing.Size(59, 27);
             this.button5.TabIndex = 38;
             this.button5.Text = "+";
             this.button5.UseVisualStyleBackColor = true;
@@ -236,17 +282,17 @@
             // 
             this.eventsLB.FormattingEnabled = true;
             this.eventsLB.ItemHeight = 15;
-            this.eventsLB.Location = new System.Drawing.Point(315, 281);
+            this.eventsLB.Location = new System.Drawing.Point(228, 281);
             this.eventsLB.Margin = new System.Windows.Forms.Padding(4);
             this.eventsLB.Name = "eventsLB";
-            this.eventsLB.Size = new System.Drawing.Size(254, 229);
+            this.eventsLB.Size = new System.Drawing.Size(293, 229);
             this.eventsLB.TabIndex = 8;
             this.eventsLB.SelectedIndexChanged += new System.EventHandler(this.eventsLB_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(312, 257);
+            this.label1.Location = new System.Drawing.Point(225, 257);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(94, 15);
@@ -267,7 +313,7 @@
             // 
             this.approveGB.Controls.Add(this.previousBtn);
             this.approveGB.Controls.Add(this.nextIssueBtn);
-            this.approveGB.Controls.Add(this.textBox2);
+            this.approveGB.Controls.Add(this.TemaTextBox);
             this.approveGB.Controls.Add(this.label12);
             this.approveGB.Controls.Add(this.issueListBtn);
             this.approveGB.Controls.Add(this.issueDescTB);
@@ -307,14 +353,14 @@
             this.nextIssueBtn.UseVisualStyleBackColor = true;
             this.nextIssueBtn.Click += new System.EventHandler(this.NextIssueClick);
             // 
-            // textBox2
+            // TemaTextBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(140, 112);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(175, 21);
-            this.textBox2.TabIndex = 34;
+            this.TemaTextBox.Location = new System.Drawing.Point(140, 112);
+            this.TemaTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.TemaTextBox.Name = "TemaTextBox";
+            this.TemaTextBox.ReadOnly = true;
+            this.TemaTextBox.Size = new System.Drawing.Size(175, 21);
+            this.TemaTextBox.TabIndex = 34;
             // 
             // label12
             // 
@@ -427,10 +473,10 @@
             // 
             // approveBtn
             // 
-            this.approveBtn.Location = new System.Drawing.Point(698, 186);
+            this.approveBtn.Location = new System.Drawing.Point(826, 446);
             this.approveBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.approveBtn.Name = "approveBtn";
-            this.approveBtn.Size = new System.Drawing.Size(108, 30);
+            this.approveBtn.Size = new System.Drawing.Size(207, 30);
             this.approveBtn.TabIndex = 14;
             this.approveBtn.Text = "Підтвердити";
             this.approveBtn.UseVisualStyleBackColor = true;
@@ -438,10 +484,10 @@
             // 
             // disaproveBtn
             // 
-            this.disaproveBtn.Location = new System.Drawing.Point(698, 220);
+            this.disaproveBtn.Location = new System.Drawing.Point(826, 480);
             this.disaproveBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.disaproveBtn.Name = "disaproveBtn";
-            this.disaproveBtn.Size = new System.Drawing.Size(108, 30);
+            this.disaproveBtn.Size = new System.Drawing.Size(207, 30);
             this.disaproveBtn.TabIndex = 15;
             this.disaproveBtn.Text = "Відхилити";
             this.disaproveBtn.UseVisualStyleBackColor = true;
@@ -454,7 +500,7 @@
             this.issuesLB.Location = new System.Drawing.Point(826, 75);
             this.issuesLB.Margin = new System.Windows.Forms.Padding(4);
             this.issuesLB.Name = "issuesLB";
-            this.issuesLB.Size = new System.Drawing.Size(207, 184);
+            this.issuesLB.Size = new System.Drawing.Size(207, 199);
             this.issuesLB.TabIndex = 26;
             this.issuesLB.SelectedIndexChanged += new System.EventHandler(this.issuesLB_SelectedIndexChanged);
             // 
@@ -462,10 +508,10 @@
             // 
             this.docsLB.FormattingEnabled = true;
             this.docsLB.ItemHeight = 15;
-            this.docsLB.Location = new System.Drawing.Point(577, 281);
+            this.docsLB.Location = new System.Drawing.Point(529, 281);
             this.docsLB.Margin = new System.Windows.Forms.Padding(4);
             this.docsLB.Name = "docsLB";
-            this.docsLB.Size = new System.Drawing.Size(239, 229);
+            this.docsLB.Size = new System.Drawing.Size(290, 229);
             this.docsLB.TabIndex = 23;
             this.docsLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.docsLB_MouseDoubleClick);
             // 
@@ -476,14 +522,14 @@
             this.expertsLB.Location = new System.Drawing.Point(18, 281);
             this.expertsLB.Margin = new System.Windows.Forms.Padding(4);
             this.expertsLB.Name = "expertsLB";
-            this.expertsLB.Size = new System.Drawing.Size(289, 229);
+            this.expertsLB.Size = new System.Drawing.Size(202, 229);
             this.expertsLB.TabIndex = 25;
             this.expertsLB.SelectedIndexChanged += new System.EventHandler(this.expertsLB_SelectedIndexChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(574, 257);
+            this.label7.Location = new System.Drawing.Point(526, 257);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 15);
@@ -499,7 +545,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage2.Size = new System.Drawing.Size(1180, 672);
+            this.tabPage2.Size = new System.Drawing.Size(1042, 520);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Ресурси";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -515,10 +561,10 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.textBox6);
-            this.panel1.Controls.Add(this.textBox5);
+            this.panel1.Controls.Add(this.EventCostTextBox);
+            this.panel1.Controls.Add(this.EventNameTextBox);
             this.panel1.Controls.Add(this.label11);
-            this.panel1.Controls.Add(this.textBox4);
+            this.panel1.Controls.Add(this.EventDescTextBox);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(13, 11);
@@ -527,21 +573,23 @@
             this.panel1.Size = new System.Drawing.Size(860, 125);
             this.panel1.TabIndex = 11;
             // 
-            // textBox6
+            // EventCostTextBox
             // 
-            this.textBox6.Location = new System.Drawing.Point(117, 82);
-            this.textBox6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(297, 21);
-            this.textBox6.TabIndex = 14;
+            this.EventCostTextBox.Enabled = false;
+            this.EventCostTextBox.Location = new System.Drawing.Point(117, 82);
+            this.EventCostTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.EventCostTextBox.Name = "EventCostTextBox";
+            this.EventCostTextBox.Size = new System.Drawing.Size(297, 21);
+            this.EventCostTextBox.TabIndex = 14;
             // 
-            // textBox5
+            // EventNameTextBox
             // 
-            this.textBox5.Location = new System.Drawing.Point(117, 15);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(706, 21);
-            this.textBox5.TabIndex = 15;
+            this.EventNameTextBox.Enabled = false;
+            this.EventNameTextBox.Location = new System.Drawing.Point(117, 15);
+            this.EventNameTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.EventNameTextBox.Name = "EventNameTextBox";
+            this.EventNameTextBox.Size = new System.Drawing.Size(706, 21);
+            this.EventNameTextBox.TabIndex = 15;
             // 
             // label11
             // 
@@ -552,13 +600,14 @@
             this.label11.TabIndex = 13;
             this.label11.Text = "Вартість заходу";
             // 
-            // textBox4
+            // EventDescTextBox
             // 
-            this.textBox4.Location = new System.Drawing.Point(117, 48);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(706, 21);
-            this.textBox4.TabIndex = 14;
+            this.EventDescTextBox.Enabled = false;
+            this.EventDescTextBox.Location = new System.Drawing.Point(117, 48);
+            this.EventDescTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.EventDescTextBox.Name = "EventDescTextBox";
+            this.EventDescTextBox.Size = new System.Drawing.Size(706, 21);
+            this.EventDescTextBox.TabIndex = 14;
             // 
             // label4
             // 
@@ -581,13 +630,16 @@
             // LookEventsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1025, 749);
+            this.ClientSize = new System.Drawing.Size(1064, 561);
             this.Controls.Add(this.tabControl1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(1080, 600);
             this.Name = "LookEventsForm";
             this.Text = "Перегляд задач";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.LookEventsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.eventListGrid)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -612,12 +664,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn totalPriceCol;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox EventCostTextBox;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox EventNameTextBox;
+        private System.Windows.Forms.TextBox EventDescTextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TabPage tabPage1;
@@ -632,7 +684,7 @@
         private System.Windows.Forms.GroupBox approveGB;
         private System.Windows.Forms.Button previousBtn;
         private System.Windows.Forms.Button nextIssueBtn;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox TemaTextBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button issueListBtn;
         private System.Windows.Forms.TextBox issueDescTB;
@@ -650,5 +702,9 @@
         private System.Windows.Forms.ListBox docsLB;
         private System.Windows.Forms.ListBox expertsLB;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button EventDocsFilterButton;
+        private System.Windows.Forms.ToolTip DocumentsSortToolTip;
+        private System.Windows.Forms.Button IssueDocsFilterButton;
+        private System.Windows.Forms.Label label13;
     }
 }
