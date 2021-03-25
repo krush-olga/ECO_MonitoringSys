@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace UserMap.Helpers
 {
+    /// <include file='Docs/Helpers/ExceptionExtensionsDoc.xml' path='docs/members[@name="exception_extensions"]/TaskExtension/*'/>
     public static class ExceptionExtensions
     {
         private static readonly Func<Exception, StackTrace, Exception> _SetStackTrace;
@@ -14,11 +15,13 @@ namespace UserMap.Helpers
             _SetStackTrace = CreateExcpression();
         }
 
+        /// <include file='Docs/Helpers/ExceptionExtensionsDoc.xml' path='docs/members[@name="exception_extensions"]/SetStackTrace/*'/>
         public static Exception SetStackTrace(this Exception target, StackTrace stack) => _SetStackTrace(target, stack);
 
+        /// <include file='Docs/Helpers/ExceptionExtensionsDoc.xml' path='docs/members[@name="exception_extensions"]/GetInnerestException/*'/>
         public static Exception GetInnerestException(this Exception target)
         {
-            if (target.InnerException != null)
+            if (target != null && target.InnerException != null)
             {
                 return target.InnerException.GetInnerestException();
             }
@@ -26,6 +29,7 @@ namespace UserMap.Helpers
             return target;
         }
 
+        //Если интересно, то https://stackoverflow.com/questions/37093261/attach-stacktrace-to-exception-without-throwing-in-c-sharp-net/37093323
         private static Func<Exception, StackTrace, Exception> CreateExcpression()
         {
             ParameterExpression target = Expression.Parameter(typeof(Exception));
