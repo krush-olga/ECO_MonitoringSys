@@ -446,29 +446,37 @@ namespace UserMap
         private async void AdditionalInfo(object sender, EventArgs e)
         {
             var marker = (NamedGoogleMarker)reworkedMap.SelectedMarker;
+            var describable = (IDescribable)marker;
 
             bool isReadOnly = expert != Role.Admin && marker.Creator.Id != userId;
 
-            HelpWindows.MultiBindingObjectEditor multiBindingObjectEditor = new HelpWindows.MultiBindingObjectEditor(marker.Id, marker, isReadOnly);
+            var multiBindingObjectEditor = new HelpWindows.MultiBindingObjectEditor();
+
+            multiBindingObjectEditor.Text += $"{describable.Name} ({describable.Type})";
 
             UserControls.MainMarkerInfoUC mainMarkerInfoUC = null;
+            var issuesSeriesUC = new UserControls.IssueSeriesUC(marker.Id, marker);
 
-            if (((IDescribable)marker).Type == "Область" || expert == Role.Medic)
+            multiBindingObjectEditor.AddNewPage("Задачі", issuesSeriesUC);
+            multiBindingObjectEditor.AddNewPage("Викиди",new UserControls.EmissionsUC(marker.Id, marker));
+
+            if (describable.Type == "Область" || expert == Role.Medic)
             {
                 var medStatUC = await UserControls.MedStatUserControl.CreateInstanceAsync(marker.Id);
 
                 multiBindingObjectEditor.AddNewPage("Медична статистика", medStatUC);
             } 
-            else if (((IDescribable)marker).Type == "Маркер" && !isReadOnly)
+            else if (describable.Type == "Маркер" && !isReadOnly)
             {
                 mainMarkerInfoUC = new UserControls.MainMarkerInfoUC(marker.Id);
 
                 multiBindingObjectEditor.AddNewPage("Приналежність маркеру", mainMarkerInfoUC);
             }
-           
+
+            multiBindingObjectEditor.ReadOnly = isReadOnly;
             multiBindingObjectEditor.ShowDialog();
 
-            var issues = multiBindingObjectEditor.GetIssuesAndSeries();
+            var issues = issuesSeriesUC.GetIssuesAndSeries();
 
             if (mainMarkerInfoUC != null && mainMarkerInfoUC.TypeOfObject != null)
             {
@@ -478,7 +486,7 @@ namespace UserMap
                 newMarker.IsDependent = marker.IsDependent;
                 newMarker.Id = marker.Id;
                 newMarker.Creator = marker.Creator;
-                ((IDescribable)newMarker).Type = ((IDescribable)marker).Type;
+                ((IDescribable)newMarker).Type = describable.Type;
 
                 reworkedMap.RemoveMarker(marker);
                 reworkedMap.AddMarker(newMarker, typeOfObject.Name);
@@ -2137,6 +2145,7 @@ namespace UserMap
             var _params = new Dictionary<string, string>();
             _params.Add("format", "json");
             _params.Add("countrycodes", "UA");
+            _params.Add("city", CitiesComboBox.Text);
             _params.Add("street", AddressTextBox.Text);
             _params.Add("addressdetails", "1");
             _params.Add("limit", "1");
