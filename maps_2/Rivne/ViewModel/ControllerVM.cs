@@ -18,7 +18,7 @@ namespace UserMap.ViewModel
      *      ChangeType = что произошло с этим элементом.
      */
 
-    internal class ControllerVM<T> : IController
+    internal class ControllerVM<T>
     {
         private bool isAddedInternaly;
         private bool isAddingNewElem;
@@ -351,44 +351,5 @@ namespace UserMap.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
-
-        void IController.AddElement(object element)
-        {
-            if (element is T elem)
-            {
-                AddElement(elem);
-            }
-        }
-        void IController.StartAddingNewElement(object elem)
-        {
-            if (elem is T _elem)
-            {
-                StartAddingNewElement(_elem);
-            }
-        }
-        bool IController.RemoveEmission(object element)
-        {
-            if (element is T elem)
-            {
-                return RemoveElement(elem);
-            }
-
-            return false;
-        }
-
-        IEnumerable<object> IController.Elements => elements.OfType<object>();
-        ReadOnlyDictionary<object, KeyValuePair<object, ChangeType>> IController.ChangedElements 
-        {
-            get
-            {
-                var objRes = changedElements.ToDictionary(key => (object)key.Key, 
-                                                          value => new KeyValuePair<object, ChangeType>(value.Value.Key, 
-                                                                                                        value.Value.Value));
-
-                return new ReadOnlyDictionary<object, KeyValuePair<object, ChangeType>>(objRes);
-            }
-        }
-
-        object IController.CurrentElement => CurrentElement;
     }
 }

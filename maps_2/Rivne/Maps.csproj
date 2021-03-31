@@ -145,14 +145,20 @@
       <DependentUpon>MapWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Services\FileLogger.cs" />
-    <Compile Include="Services\IController.cs" />
     <Compile Include="Services\ILogger.cs" />
+    <Compile Include="Services\IReadOnlyable.cs" />
     <Compile Include="Services\ISavable.cs" />
     <Compile Include="UserControls\EmissionsUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\EmissionsUC.Designer.cs">
       <DependentUpon>EmissionsUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\IssueSeriesUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\IssueSeriesUC.Designer.cs">
+      <DependentUpon>IssueSeriesUC.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ItemInfo.cs">
       <SubType>UserControl</SubType>
@@ -202,6 +208,9 @@
     <EmbeddedResource Include="UserControls\EmissionsUC.resx">
       <DependentUpon>EmissionsUC.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\IssueSeriesUC.resx">
+      <DependentUpon>IssueSeriesUC.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\ItemInfo.resx">
       <DependentUpon>ItemInfo.cs</DependentUpon>
     </EmbeddedResource>
@@ -248,10 +257,6 @@
     <ProjectReference Include="..\..\DBManager\Data.csproj">
       <Project>{257cd47a-3e26-4817-b689-a01842c2174a}</Project>
       <Name>Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MedicForm\MedicForm\MedicForm.csproj">
-      <Project>{C4A47A15-4C7C-407A-971C-910BB6963505}</Project>
-      <Name>MedicForm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
