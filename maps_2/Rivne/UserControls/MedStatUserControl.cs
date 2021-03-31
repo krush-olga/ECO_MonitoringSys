@@ -188,7 +188,7 @@ namespace UserMap.UserControls
                                                     .ToList();
                             })
                             .ContinueWith(result =>
-                            { 
+                            {
                                 var res = result.Result;
 
                                 if (res == null || !res.Any())
@@ -299,7 +299,9 @@ namespace UserMap.UserControls
                     formulasCond.Append(" OR ");
                 }
             }
-            formulasCond.Remove(formulasCond.Length - 3, 3);
+
+            if (formulasCond.Length > 3)
+                formulasCond.Remove(formulasCond.Length - 3, 3);
 
             await dbManager.GetRowsAsync("formulas", "DISTINCT id_of_formula, name_of_formula, " +
                                          "measurement_of_formula", formulasCond.ToString())

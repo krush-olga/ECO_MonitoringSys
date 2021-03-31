@@ -10,10 +10,12 @@ using UserMap.Services;
 
 namespace UserMap.UserControls
 {
-    public partial class MainMarkerInfoUC : UserControl, ISavable
+    public partial class MainMarkerInfoUC : UserControl, ISavable, IReadOnlyable
     {
         private readonly DBManager dbManager;
         private readonly int editObjId;
+
+        private bool isReadOnly;
 
         private TypeOfObject previousTypeOfObject;
         private OwerType previousOwnerType;
@@ -33,8 +35,28 @@ namespace UserMap.UserControls
             logger = new FileLogger();
         }
 
-        public TypeOfObject TypeOfObject => (TypeOfObject)EconomicActivityComboBox.SelectedItem ?? previousTypeOfObject;
-        public OwerType OwerType => (OwerType)OwnerShipComboBox.SelectedItem ?? previousOwnerType;
+        public TypeOfObject TypeOfObject => (TypeOfObject)EconomicActivityComboBox.SelectedItem;
+        public OwerType OwerType => (OwerType)OwnerShipComboBox.SelectedItem;
+
+        public bool ReadOnly
+        {
+            get => isReadOnly;
+            set
+            {
+                isReadOnly = value;
+
+                if (isReadOnly)
+                {
+                    EconomicActivityComboBox.Enabled = false;
+                    OwnerShipComboBox.Enabled = false;
+                }
+                else
+                {
+                    EconomicActivityComboBox.Enabled = true;
+                    OwnerShipComboBox.Enabled = true;
+                }
+            }
+        }
 
         public bool HasChangedElements()
         {
