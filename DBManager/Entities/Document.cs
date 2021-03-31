@@ -5,9 +5,9 @@ namespace Data.Entity
 {
     public class Document
     {
-        public int event_id;
-        public string document_code;
-        public string description;
+        public int event_id { get; set; }
+        public string document_code { get; set; }
+        public string description { get; set; }
 
         public override string ToString()
         {
