@@ -569,35 +569,42 @@ namespace Data
 
         public async Task<List<List<Object>>> GetRowsAsync(String query)
         {
+            if (query == null)
+                throw new ArgumentNullException("query");
+
             MySqlCommand command = new MySqlCommand(query, connection);
             MySqlDataReader reader = null;
+            List<List<Object>> result = new List<List<Object>>();
 
             try
             {
                 await semaphoreSlim.WaitAsync();
 
-                return await Task.Run(async () => await command.ExecuteReaderAsync()
-                                                                .ContinueWith(res =>
-                                                                {
-                                                                    var result = new List<List<Object>>();
+                var task = Task.Run(() =>
+                {
+                    reader = command.ExecuteReader();
 
-                                                                    reader = (MySqlDataReader)res.Result;
+                    if (reader == null)
+                    {
+                        return result;
+                    }
 
-                                                                    while (reader.Read())
-                                                                    {
-                                                                        List<Object> row = new List<object>();
+                    while (reader.Read())
+                    {
+                        List<Object> row = new List<object>();
 
-                                                                        for (int i = 0; i < reader.FieldCount; i++)
-                                                                        {
-                                                                           row.Add(reader[i]);
-                                                                        }
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            row.Add(reader[i]);
+                        }
 
-                                                                        result.Add(row);
-                                                                    }
+                        result.Add(row);
+                    }
 
-                                                                    return result;
-                                                                })
-                                       );
+                    return result;
+                });
+
+                return await task;
             }
             catch
             {
