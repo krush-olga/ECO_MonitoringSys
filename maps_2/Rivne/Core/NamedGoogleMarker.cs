@@ -15,7 +15,6 @@ namespace UserMap.Core
         private string format;
         private string type;
         private Data.Entity.Expert creator;
-        private Role role;
 
         /// <include file='Docs/Core/NamedGoogleMarkerDoc.xml' path='docs/members[@name="named_google_marker"]/NamedGoogleMarkerCtor1/*'/>
         public NamedGoogleMarker(PointLatLng p, GMarkerGoogleType type) 
@@ -183,6 +182,5 @@ namespace UserMap.Core
         {
             base.ToolTipText = string.Format(format, name, description);
         }
-
     }
 }

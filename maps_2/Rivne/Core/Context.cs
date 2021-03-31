@@ -17,12 +17,12 @@ namespace UserMap.Core
         private bool disposed;
 
 #pragma warning disable CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
-        protected string figureName;
-
         protected readonly List<PointLatLng> pointCoords;
         protected readonly List<GMapMarker> polygonMarkers;
 
         protected readonly GMarkerGoogleType polygonPointsType;
+
+        protected string figureName;
 #pragma warning restore CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
 
         static DrawContext()
