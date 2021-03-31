@@ -83,12 +83,15 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.DocumentsSortToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.DocContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.OpenInBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.eventListGrid)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.approveGB.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.DocContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // eventListGrid
@@ -514,6 +517,7 @@
             this.docsLB.Size = new System.Drawing.Size(290, 229);
             this.docsLB.TabIndex = 23;
             this.docsLB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.docsLB_MouseDoubleClick);
+            this.docsLB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.docsLB_MouseDown);
             // 
             // expertsLB
             // 
@@ -627,6 +631,20 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Опис заходу";
             // 
+            // DocContextMenuStrip
+            // 
+            this.DocContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OpenInBrowserToolStripMenuItem});
+            this.DocContextMenuStrip.Name = "DocContextMenuStrip";
+            this.DocContextMenuStrip.Size = new System.Drawing.Size(182, 26);
+            // 
+            // OpenInBrowserToolStripMenuItem
+            // 
+            this.OpenInBrowserToolStripMenuItem.Name = "OpenInBrowserToolStripMenuItem";
+            this.OpenInBrowserToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.OpenInBrowserToolStripMenuItem.Text = "Відкрити у браузері";
+            this.OpenInBrowserToolStripMenuItem.Click += new System.EventHandler(this.OpenInBrowserToolStripMenuItem_Click);
+            // 
             // LookEventsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -650,6 +668,7 @@
             this.tabPage2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.DocContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
 		}
@@ -706,5 +725,7 @@
         private System.Windows.Forms.ToolTip DocumentsSortToolTip;
         private System.Windows.Forms.Button IssueDocsFilterButton;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ContextMenuStrip DocContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem OpenInBrowserToolStripMenuItem;
     }
 }

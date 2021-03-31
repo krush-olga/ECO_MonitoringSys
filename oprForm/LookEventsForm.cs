@@ -9,6 +9,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using LawFileBase;
+using Microsoft.Win32;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace oprForm
 {
@@ -21,8 +24,8 @@ namespace oprForm
 
         private List<Issue> issues;
         private Dictionary<Issue, Dictionary<Expert, List<Event>>> issuesInfos;
-        private Dictionary<Issue, List<string>> issuesDocs;
-        private Dictionary<Event, List<string>> eventsDocs;
+        private Dictionary<Issue, List<KeyValuePair<string, string>>> issuesDocs;
+        private Dictionary<Event, List<KeyValuePair<string, string>>> eventsDocs;
         private Dictionary<int, string> expertsNames;
 
         public LookEventsForm(int userId)
@@ -33,8 +36,8 @@ namespace oprForm
             issues = new List<Issue>();
             expertsNames = new Dictionary<int, string>();
             issuesInfos = new Dictionary<Issue, Dictionary<Expert, List<Event>>>();
-            issuesDocs = new Dictionary<Issue, List<string>>();
-            eventsDocs = new Dictionary<Event, List<string>>();
+            issuesDocs = new Dictionary<Issue, List<KeyValuePair<string, string>>>();
+            eventsDocs = new Dictionary<Event, List<KeyValuePair<string, string>>>();
 
             this.userId = userId;
 
@@ -70,6 +73,9 @@ namespace oprForm
             string joinConc = "event_resource.resource_id = resource.resource_id";
             string cond = "event_resource.event_id = " + eventId.ToString();
 
+            if (!db.ConnectionOpen)
+                db.Connect();
+
             return db.GetRowsUsingJoinAsync(tables, columns, joinConc, cond, JoinType.LEFT)
                      .ContinueWith(result =>
                      {
@@ -79,7 +85,7 @@ namespace oprForm
                          {
                              var res = result.Result;
 
-                             var resources = res.Select(row => 
+                             var resources = res.Select(row =>
                              {
                                  var resource = new Resource
                                  {
@@ -161,6 +167,7 @@ namespace oprForm
                 }
 
                 docsLB.DataSource = issuesDocs[issue];
+                docsLB.DisplayMember = "Value";
             }
             else
             {
@@ -245,7 +252,8 @@ namespace oprForm
                                       {
                                           var sm = new SearchManager();
 
-                                          var documentsNames = result.Result.Select(row => sm.GetPrewiew(row[0].ToString()))
+                                          var documentsNames = result.Result.Select(row => new KeyValuePair<string, string>(row[0].ToString(),
+                                                                                                                        sm.GetPrewiew(row[0].ToString())))
                                                                             .ToList();
 
                                           issuesDocs[issue] = documentsNames;
@@ -265,7 +273,10 @@ namespace oprForm
                                       SetExperts(eventTask.Result.Keys);
 
                                   if (documentsTask.IsCompleted)
+                                  {
                                       docsLB.DataSource = documentsTask.Result;
+                                      docsLB.DisplayMember = "Value";
+                                  }
                               }
                           }, TaskScheduler.FromCurrentSynchronizationContext());
             }
@@ -290,8 +301,9 @@ namespace oprForm
                         {
                             var sm = new SearchManager();
 
-                            var documentsNames = result.Result.Select(row => sm.GetPrewiew(row[0].ToString()))
-                                                            .ToList();
+                            var documentsNames = result.Result.Select(row => new KeyValuePair<string, string>(row[0].ToString(),
+                                                                              sm.GetPrewiew(row[0].ToString())))
+                                                              .ToList();
 
                             eventsDocs[@event] = documentsNames;
 
@@ -300,7 +312,10 @@ namespace oprForm
                         .ContinueWith(result =>
                         {
                             if (result.Result.Count != 0)
-                                docsLB.DataSource = result.Result;
+                            {
+                                docsLB.DataSource = result.Result.ToList();
+                                docsLB.DisplayMember = "Value";
+                            }
                             else
                                 docsLB.DataSource = null;
                         }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -471,9 +486,20 @@ namespace oprForm
         {
             if (eventsLB.SelectedItem != null && eventsLB.SelectedItem is Event ev)
             {
+                if (ev.DmVer != null)
+                {
+                    var approvedStr = approved ? "підтвердити" : "відхилити";
+                    var currentApprovedStr = ev.DmVer == "1" ? "підверджений" : "відхилений";
+
+                    MessageBox.Show($"Не можливо {approvedStr} захід так як він вже {currentApprovedStr}.", 
+                                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 try
                 {
-                    db.Connect();
+                    if (!db.ConnectionOpen)
+                        db.Connect();
 
                     ev.DmVer = approved ? "1" : "0";
 
@@ -491,10 +517,6 @@ namespace oprForm
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    db.Disconnect();
                 }
             }
         }
@@ -523,18 +545,41 @@ namespace oprForm
                 else if (!IssueDocsFilterButton.Enabled)
                 {
                     docsLB.DataSource = issuesDocs[issues[issueCounter]];
+                    docsLB.DisplayMember = "Value";
                 }
 
-                var eventCost = await GetEventInfo(_event.Id);
+                KeyValuePair<List<KeyValuePair<int, Resource>>, double> eventCost = default;
 
-                SynchronizationContext.Current.Post(obj => 
+                try
+                {
+                    eventCost = await GetEventInfo(_event.Id);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Не владось завантажити информацию по заходу.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                var currentSycnContext = SynchronizationContext.Current;
+
+                currentSycnContext.Post(obj =>
                 {
                     var __event = obj as Event;
 
                     EventNameTextBox.Text = __event.Name;
                     EventDescTextBox.Text = __event.Description;
+
+                    if (_event.DmVer != null)
+                    {
+                        approveBtn.Enabled = false;
+                        disaproveBtn.Enabled = false;
+                    }
+                    else
+                    {
+                        approveBtn.Enabled = true;
+                        disaproveBtn.Enabled = true;
+                    }
                 }, _event);
-                SynchronizationContext.Current.Post(SetEventInfo, eventCost);
+                currentSycnContext.Post(SetEventInfo, eventCost);
             }
         }
 
@@ -729,9 +774,69 @@ namespace oprForm
             var issue = issues[issueCounter];
 
             if (issuesDocs.ContainsKey(issue))
+            {
                 docsLB.DataSource = issuesDocs[issue];
+                docsLB.DisplayMember = "Value";
+            }
             else
                 docsLB.DataSource = null;
+        }
+
+        private static string GetPathToDefaultBrowser()
+        {
+            const string currentUserSubKey =
+            @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice";
+            using (RegistryKey userChoiceKey = Registry.CurrentUser.OpenSubKey(currentUserSubKey, false))
+            {
+                string progId = (userChoiceKey.GetValue("ProgId").ToString());
+                using (RegistryKey kp =
+                       Registry.ClassesRoot.OpenSubKey(progId + @"\shell\open\command", false))
+                {
+                    // Get default value and convert to EXE path.
+                    // It's stored as:
+                    //    "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" -- "%1"
+                    // So we want the first quoted string only
+                    string rawValue = (string)kp.GetValue("");
+                    Regex reg = new Regex("(?<=\").*?(?=\")");
+                    Match m = reg.Match(rawValue);
+                    return m.Success ? m.Value : "";
+                }
+            }
+        }
+
+        private void OpenInBrowserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (docsLB.SelectedItem == null)
+                return;
+
+            var item = (KeyValuePair<string, string>)docsLB.SelectedItem;
+
+            var filePath = Path.Combine(System.Environment.CurrentDirectory, @"FB\" + item.Key);
+            var fileExtension = string.Empty;
+
+            if (File.Exists(filePath + ".html"))
+            {
+                fileExtension = ".html";
+            }
+            else if (File.Exists(filePath + ".htm"))
+            {
+                fileExtension = ".htm";
+            }
+            else
+            {
+                MessageBox.Show("Вибранний документ не знайдено на комп'ютері.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var browserPath = GetPathToDefaultBrowser();
+
+            Process.Start(browserPath, "\"" + filePath + fileExtension + "\"");
+        }
+
+        private void docsLB_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                DocContextMenuStrip.Show(docsLB, e.Location);
         }
     }
 }
