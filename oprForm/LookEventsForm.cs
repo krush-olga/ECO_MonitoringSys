@@ -20,7 +20,7 @@ namespace oprForm
         private DBManager db;
         private AddIssueForm issueForm;
         private int issueCounter;
-        private int userId;
+        private Role role;
 
         private List<Issue> issues;
         private Dictionary<Issue, Dictionary<Expert, List<Event>>> issuesInfos;
@@ -28,7 +28,7 @@ namespace oprForm
         private Dictionary<Event, List<KeyValuePair<string, string>>> eventsDocs;
         private Dictionary<int, string> expertsNames;
 
-        public LookEventsForm(int userId)
+        public LookEventsForm(int expertId)
         {
             InitializeComponent();
             db = new DBManager();
@@ -39,7 +39,13 @@ namespace oprForm
             issuesDocs = new Dictionary<Issue, List<KeyValuePair<string, string>>>();
             eventsDocs = new Dictionary<Event, List<KeyValuePair<string, string>>>();
 
-            this.userId = userId;
+            role = (Role)expertId;
+
+            if (role != Role.Admin && role != Role.Analyst)
+            {
+                approveBtn.Visible = false;
+                disaproveBtn.Visible = false;
+            }
 
             UpdateIssues();
         }
@@ -709,7 +715,7 @@ namespace oprForm
 
         private void Button5_Click(object sender, EventArgs e)
         {
-            PlannedEventsForm child = new PlannedEventsForm(userId);
+            PlannedEventsForm child = new PlannedEventsForm((int)role);
             child.Show();
         }
 
