@@ -62,7 +62,7 @@ namespace UserMap.Core
         public GMapOverlay Overlay { get; protected set; }
 
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/PolygonPoints/*'/>
-        public IEnumerable<PointLatLng> PolygonPoints
+        public System.Collections.ObjectModel.ReadOnlyCollection<PointLatLng> PolygonPoints
         {
             get
             {

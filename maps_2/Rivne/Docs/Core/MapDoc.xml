@@ -1555,6 +1555,9 @@
       <param name="layoutId">
         Название нового слоя.
       </param>
+      <returns>
+        <see langword="true"/> если слой был создан. Если полигон уже существовал - <see langword="false"/>
+      </returns>
     </AddLayout>
     <RemoveLayout>
       <summary>
@@ -1563,6 +1566,9 @@
       <param name="layoutId">
         Название слоя для удаления.
       </param>
+      <returns>
+        <see langword="true"/> если слой был успешно удалён, иначе - <see langword="false"/>
+      </returns>
     </RemoveLayout>
     <ZoomPlus>
       <summary>

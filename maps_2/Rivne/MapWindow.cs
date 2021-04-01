@@ -1317,7 +1317,7 @@ namespace UserMap
                 var polyMarker = new NamedGoogleMarker(points[0],
                                                        GMap.NET.WindowsForms.Markers.GMarkerGoogleType.arrow,
                                                        "Назва: {0}\nОпис: {1}", objName,
-                                                       (string.IsNullOrEmpty(objDescription) ? "Опис відсутній." : objDescription));
+                                                       (string.IsNullOrEmpty(objDescription) ? "'Опис відсутній.'" : objDescription));
                 polyMarker.Id = ((int)lastId + 1);
                 polyMarker.Creator = new Expert { Name = "Потрібне перезавантаження маркеру" };
                 polyMarker.IsDependent = true;
