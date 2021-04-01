@@ -1165,27 +1165,34 @@ namespace UserMap.Core
         }
 
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddLayout/*'/>
-        public void AddLayout(string layoutId)
+        public bool AddLayout(string layoutId)
         {
+            bool result = false;
             var overlay = GetOverlayByIdOrNull(layoutId);
 
             if (overlay == null)
             {
                 overlay = new GMapOverlay(layoutId);
                 MapObject.Overlays.Add(overlay);
+
+                result = true;
             }
+
+            return result;
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveLayout/*'/>
-        public void RemoveLayout(string layoutId)
+        public bool RemoveLayout(string layoutId)
         {
+            bool result = false;
+
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
             if (overlay == null)
             {
-                return;
+                return false;
             }
 
-            MapObject.Overlays.Remove(overlay);
+            result = MapObject.Overlays.Remove(overlay);
 
             MapHelper.DisposeElements(overlay.Polygons);
             MapHelper.DisposeElements(overlay.Routes);
@@ -1196,6 +1203,8 @@ namespace UserMap.Core
             SelectedMarker = null;
             SelectedPolygon = null;
             SelectedRoute = null;
+
+            return result;
         }
 
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ZoomPlus/*'/>
