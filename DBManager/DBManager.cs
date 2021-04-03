@@ -16,6 +16,8 @@ namespace Data
         INNER,
     }
 
+    //При возможности это всё нужно перевести на параметризированные запросы, ибо на данный момент если 
+    //значение представляет число и оно не оборачиваеться в ' ', то возможно сделать атаку запросом.
     public class DBManager : IDisposable
     {
         private static SemaphoreSlim semaphoreSlim;
