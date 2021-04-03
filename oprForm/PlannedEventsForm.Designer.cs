@@ -157,7 +157,7 @@
             // 
             // issuesCB
             // 
-            this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.issuesCB.FormattingEnabled = true;
             this.issuesCB.Location = new System.Drawing.Point(603, 383);
             this.issuesCB.Margin = new System.Windows.Forms.Padding(2);

@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DBManager">
-      <HintPath>..\DBManager\bin\Debug\DBManager.dll</HintPath>
-    </Reference>
     <Reference Include="FileBase">
       <HintPath>..\LemmLab\FileBase\bin\Debug\FileBase.dll</HintPath>
     </Reference>

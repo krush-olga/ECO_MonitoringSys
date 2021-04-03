@@ -30,9 +30,9 @@
         {
             this.resLB = new System.Windows.Forms.ListBox();
             this.alterGB = new System.Windows.Forms.GroupBox();
-            this.issuesCB = new System.Windows.Forms.ComboBox();
             this.descTB = new System.Windows.Forms.TextBox();
             this.evNameTB = new System.Windows.Forms.TextBox();
+            this.issuesCB = new System.Windows.Forms.ComboBox();
             this.delBtn = new System.Windows.Forms.Button();
             this.addBtn = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -73,16 +73,6 @@
             this.alterGB.TabStop = false;
             this.alterGB.Visible = false;
             // 
-            // issuesCB
-            // 
-            this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.issuesCB.FormattingEnabled = true;
-            this.issuesCB.Location = new System.Drawing.Point(519, 365);
-            this.issuesCB.Margin = new System.Windows.Forms.Padding(2);
-            this.issuesCB.Name = "issuesCB";
-            this.issuesCB.Size = new System.Drawing.Size(279, 21);
-            this.issuesCB.TabIndex = 7;
-            // 
             // descTB
             // 
             this.descTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -104,6 +94,16 @@
             this.evNameTB.Size = new System.Drawing.Size(488, 20);
             this.evNameTB.TabIndex = 6;
             this.evNameTB.Text = "Назва заходу";
+            // 
+            // issuesCB
+            // 
+            this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.issuesCB.FormattingEnabled = true;
+            this.issuesCB.Location = new System.Drawing.Point(519, 365);
+            this.issuesCB.Margin = new System.Windows.Forms.Padding(2);
+            this.issuesCB.Name = "issuesCB";
+            this.issuesCB.Size = new System.Drawing.Size(279, 21);
+            this.issuesCB.TabIndex = 7;
             // 
             // delBtn
             // 

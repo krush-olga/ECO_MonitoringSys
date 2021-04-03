@@ -243,10 +243,6 @@
       <Project>{3153355e-107e-4752-8f30-03ee5e821b34}</Project>
       <Name>SearchAndBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\maps_2\Rivne\Maps.csproj">
-      <Project>{5d83facc-d62f-45c9-b1f0-ebc98e54ce58}</Project>
-      <Name>Maps</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

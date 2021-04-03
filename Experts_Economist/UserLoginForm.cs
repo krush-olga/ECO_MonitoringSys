@@ -70,6 +70,7 @@ namespace Experts_Economist
                     MessageBox.Show("Помилка, перевірте правильність вводу", "Помилка",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.None;
+                    return;
                 }
 
                 if (user[0][0].ToString() == "4")
