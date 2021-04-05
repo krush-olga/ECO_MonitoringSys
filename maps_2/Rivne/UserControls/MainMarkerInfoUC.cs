@@ -79,6 +79,10 @@ namespace UserMap.UserControls
             var economicActivities = (IEnumerable<TypeOfObject>)EconomicActivityComboBox.DataSource;
             var owneTypes = (IEnumerable<OwerType>)OwnerShipComboBox.DataSource;
 
+            if (economicActivities == null || owneTypes == null ||
+                previousTypeOfObject == null || previousOwnerType == null)
+                return;
+
             var previousEAIndex = economicActivities.IndexOf(economActivity => economActivity.Id == previousTypeOfObject.Id);
             var previousOTIndex = owneTypes.IndexOf(owneType => owneType.Id == previousOwnerType.Id);
 
