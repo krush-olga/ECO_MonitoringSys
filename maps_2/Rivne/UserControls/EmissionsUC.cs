@@ -469,6 +469,15 @@ namespace UserMap.UserControls
             ElementChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        private void SetToEmissionComboBoxItem<T>(ComboBox fromComboBox, Action<T, Emission> setAction)
+        {
+            var currentEmission = emissionsController.CurrentElement;
+            if (currentEmission != null)
+            {
+                setAction((T)fromComboBox.SelectedItem, currentEmission);
+            }
+        }
+
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != '-') && (e.KeyChar != ' '))
@@ -552,10 +561,9 @@ namespace UserMap.UserControls
             if (AddEmissionButton.Text == "Додати")
             {
                 emissionsController.StartAddingNewElement(new Emission());
-                ElementsComboBox.SelectedIndex = -1;
-                ElementsComboBox.SelectedIndex = 0;
-                EnvironmentsComboBox.SelectedIndex = -1;
-                EnvironmentsComboBox.SelectedIndex = 0;
+                SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox,
+                                                   (env, emission) => emission.Environment = env);
+                SetToEmissionComboBoxItem<Element>(ElementsComboBox, (elem, emission) => emission.Element = elem);
 
                 ChangeEmissionButton.Enabled = true;
                 isAddingMode = true;
@@ -620,19 +628,12 @@ namespace UserMap.UserControls
 
         private void EnvironmentsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var currentEmission = emissionsController.CurrentElement;
-            if (currentEmission != null)
-            {
-                currentEmission.Environment = (Data.Entity.Environment)EnvironmentsComboBox.SelectedItem;
-            }
+            SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox, 
+                                                               (env, emission) => emission.Environment = env);
         }
         private void ElementsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var currentEmission = emissionsController.CurrentElement;
-            if (currentEmission != null)
-            {
-                currentEmission.Element = (Element)ElementsComboBox.SelectedItem;
-            }
+            SetToEmissionComboBoxItem<Element>(ElementsComboBox, (elem, emission) => emission.Element = elem);
         }
 
         private void EmissionsDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
