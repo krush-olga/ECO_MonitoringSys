@@ -1,0 +1,9 @@
+body {
+	text-align: center;
+}
+
+img {
+	margin: 10px auto 20px;
+	display: block;
+	max-width: 900px;
+}
