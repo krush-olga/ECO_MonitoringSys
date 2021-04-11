@@ -3540,6 +3540,10 @@
       <Project>{257cd47a-3e26-4817-b689-a01842c2174a}</Project>
       <Name>Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HelpModule\HelpModule.csproj">
+      <Project>{232db101-3258-4e3a-aa4d-d9b25fe35602}</Project>
+      <Name>HelpModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\maps_2\Rivne\Maps.csproj">
       <Project>{5d83facc-d62f-45c9-b1f0-ebc98e54ce58}</Project>
       <Name>Maps</Name>
@@ -3893,7 +3897,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>XCOPY "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y</PostBuildEvent>
-    <PostBuildEvent>XCOPY "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y</PostBuildEvent>
+    <PostBuildEvent>XCOPY "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y
+XCOPY "$(SolutionDir)HelpModule\CHM\ECO_MonitoringSys2020.chm" "$(TargetDir)*" /S /Y
+XCOPY "$(SolutionDir)HelpModule\Scenarios" "$(TargetDir)\Scenarios\*" /S /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

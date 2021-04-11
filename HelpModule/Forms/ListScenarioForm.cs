@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using HelpModule.Models;
 
@@ -7,7 +9,7 @@ namespace HelpModule.Forms
 {
 	public partial class ListScenarioForm : Form
 	{
-		private string _path = "file:///D:/Project/ECO_MonitoringSys_new/HelpModule/Scenarios";
+		private string _path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scenarios");
 
 		private string _pathPages = "pages";
 

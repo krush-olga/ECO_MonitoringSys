@@ -2,7 +2,11 @@
 using UserMap;
 using oprForm;
 using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
+using HelpModule.Forms;
 using UserLoginForm;
 
 namespace Experts_Economist
@@ -435,6 +439,30 @@ namespace Experts_Economist
                 children.Close();
             }
         }
-    }
+
+		private void довідкаToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			string pathToHelp = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ECO_MonitoringSys2020.chm");
+			Help.ShowHelp(this, pathToHelp);
+        }
+
+		// Событие при нажатии на элемент меню Help-Сценарії
+        private void сценаріїToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// ищем форму ListScenarioForm, если ее нет то создаем и показываем
+			var form = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x.Name == "ListScenarioForm");
+			if (form == null)
+			{
+				form = new ListScenarioForm();
+				form.Show();
+				form.FormClosed += delegate
+				{
+					form.Dispose();
+					form = null;
+				};
+			}
+			form.BringToFront();
+        }
+	}
     
 }
