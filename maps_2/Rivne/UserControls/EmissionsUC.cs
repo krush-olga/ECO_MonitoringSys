@@ -55,9 +55,9 @@ namespace UserMap.UserControls
 
             emissionsController = new ControllerVM<Emission>();
 
-            YearNumericUpDown.Maximum = DateTime.Now.Year;
-
             editingElemIndex = -1;
+
+            SetYearConstraints();
         }
 
         public event EventHandler ElementChanged;
@@ -73,6 +73,22 @@ namespace UserMap.UserControls
             ResetDataGridView();
             EndEmissionAction();
             ToggleChangeAndRemoveButton();
+        }
+
+        private void SetYearConstraints()
+        {
+            var yearMin = System.Configuration.ConfigurationManager.AppSettings.Get("YearMinValue");
+            var yearMax = System.Configuration.ConfigurationManager.AppSettings.Get("YearMaxValue");
+
+            if (int.TryParse(yearMin, out int min))
+                YearNumericUpDown.Minimum = min;
+            else
+                YearNumericUpDown.Minimum = 1991;
+
+            if (int.TryParse(yearMax, out int max))
+                YearNumericUpDown.Maximum = max;
+            else
+                YearNumericUpDown.Maximum = DateTime.Now.Year + 1;
         }
 
         public Task SaveChangesAsync()
@@ -563,7 +579,12 @@ namespace UserMap.UserControls
                 emissionsController.StartAddingNewElement(new Emission());
                 SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox,
                                                    (env, emission) => emission.Environment = env);
-                SetToEmissionComboBoxItem<Element>(ElementsComboBox, (elem, emission) => emission.Element = elem);
+
+                var _emission = emissionsController.CurrentElement;
+                _emission.Element = (Element)ElementsComboBox?.Items[0];
+                _emission.Year = (int)YearNumericUpDown.Value;
+                _emission.Month = (int)MonthNumericUpDown.Value;
+                _emission.Day = (int)DayNumericUpDown.Value;
 
                 ChangeEmissionButton.Enabled = true;
                 isAddingMode = true;
