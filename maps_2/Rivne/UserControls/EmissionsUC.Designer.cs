@@ -110,7 +110,7 @@ namespace UserMap.UserControls
             this.CurrentEmisionGroupBox.Size = new System.Drawing.Size(563, 121);
             this.CurrentEmisionGroupBox.TabIndex = 73;
             this.CurrentEmisionGroupBox.TabStop = false;
-            this.CurrentEmisionGroupBox.Text = "Поточний викид";
+            this.CurrentEmisionGroupBox.Text = "Поточне забруднення";
             // 
             // EnvironmentsComboBox
             // 
@@ -196,9 +196,9 @@ namespace UserMap.UserControls
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(4, 19);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(133, 13);
+            this.label3.Size = new System.Drawing.Size(139, 13);
             this.label3.TabIndex = 41;
-            this.label3.Text = "Середовище заруднення";
+            this.label3.Text = "Середовище забруднення";
             // 
             // ElementsComboBox
             // 
