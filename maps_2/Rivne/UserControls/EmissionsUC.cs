@@ -55,9 +55,9 @@ namespace UserMap.UserControls
 
             emissionsController = new ControllerVM<Emission>();
 
-            YearNumericUpDown.Maximum = DateTime.Now.Year;
-
             editingElemIndex = -1;
+
+            SetYearConstraints();
         }
 
         public event EventHandler ElementChanged;
@@ -73,6 +73,22 @@ namespace UserMap.UserControls
             ResetDataGridView();
             EndEmissionAction();
             ToggleChangeAndRemoveButton();
+        }
+
+        private void SetYearConstraints()
+        {
+            var yearMin = System.Configuration.ConfigurationManager.AppSettings.Get("YearMinValue");
+            var yearMax = System.Configuration.ConfigurationManager.AppSettings.Get("YearMaxValue");
+
+            if (int.TryParse(yearMin, out int min))
+                YearNumericUpDown.Minimum = min;
+            else
+                YearNumericUpDown.Minimum = 1991;
+
+            if (int.TryParse(yearMax, out int max))
+                YearNumericUpDown.Maximum = max;
+            else
+                YearNumericUpDown.Maximum = DateTime.Now.Year + 1;
         }
 
         public Task SaveChangesAsync()
@@ -469,6 +485,15 @@ namespace UserMap.UserControls
             ElementChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        private void SetToEmissionComboBoxItem<T>(ComboBox fromComboBox, Action<T, Emission> setAction)
+        {
+            var currentEmission = emissionsController.CurrentElement;
+            if (currentEmission != null)
+            {
+                setAction((T)fromComboBox.SelectedItem, currentEmission);
+            }
+        }
+
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ',') && (e.KeyChar != '-') && (e.KeyChar != ' '))
@@ -552,10 +577,14 @@ namespace UserMap.UserControls
             if (AddEmissionButton.Text == "Додати")
             {
                 emissionsController.StartAddingNewElement(new Emission());
-                ElementsComboBox.SelectedIndex = -1;
-                ElementsComboBox.SelectedIndex = 0;
-                EnvironmentsComboBox.SelectedIndex = -1;
-                EnvironmentsComboBox.SelectedIndex = 0;
+                SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox,
+                                                   (env, emission) => emission.Environment = env);
+
+                var _emission = emissionsController.CurrentElement;
+                _emission.Element = (Element)ElementsComboBox?.Items[0];
+                _emission.Year = (int)YearNumericUpDown.Value;
+                _emission.Month = (int)MonthNumericUpDown.Value;
+                _emission.Day = (int)DayNumericUpDown.Value;
 
                 ChangeEmissionButton.Enabled = true;
                 isAddingMode = true;
@@ -620,19 +649,12 @@ namespace UserMap.UserControls
 
         private void EnvironmentsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var currentEmission = emissionsController.CurrentElement;
-            if (currentEmission != null)
-            {
-                currentEmission.Environment = (Data.Entity.Environment)EnvironmentsComboBox.SelectedItem;
-            }
+            SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox, 
+                                                               (env, emission) => emission.Environment = env);
         }
         private void ElementsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var currentEmission = emissionsController.CurrentElement;
-            if (currentEmission != null)
-            {
-                currentEmission.Element = (Element)ElementsComboBox.SelectedItem;
-            }
+            SetToEmissionComboBoxItem<Element>(ElementsComboBox, (elem, emission) => emission.Element = elem);
         }
 
         private void EmissionsDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)

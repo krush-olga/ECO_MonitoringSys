@@ -16,6 +16,7 @@ namespace UserMap.UserControls
     {
         private int regionId;
         private int findObjectId;
+        private int timerDelay;
 
         private Data.DBManager dbManager;
 
@@ -39,6 +40,8 @@ namespace UserMap.UserControls
             FindObjectId = objId;
 
             refreshTimer = new System.Threading.Timer(RefreshButtonClickTimeOut, null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+
+            timerDelay = -1;
 
             logger = new Services.FileLogger();
 #if DEBUG
@@ -565,7 +568,7 @@ namespace UserMap.UserControls
             await LoadFilteredMedStat();
 
             AcceptFiltrarionButton.Text = "Фільтрувати";
-            refreshTimer.Change(GetTimerDelay(), System.Threading.Timeout.Infinite);
+            refreshTimer.Change(timerDelay == -1 ? (timerDelay = GetTimerDelay()) : timerDelay, System.Threading.Timeout.Infinite);
         }
 
         private void RefreshButtonClickTimeOut(object sender)

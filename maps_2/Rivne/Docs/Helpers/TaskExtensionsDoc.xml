@@ -64,6 +64,9 @@
       <param name="logger">
         Логер для логирования ошибки.
       </param>
+      <param name="errorMessage">
+        Сообщение об ошибке на окне для отображения ошибки.
+      </param>
     </CatchAndLog>
     <CatchAndLogGeneric>
       <summary>
@@ -85,6 +88,9 @@
       </param>
       <param name="logger">
         Логер для логирования ошибки.
+      </param>
+      <param name="errorMessage">
+        Сообщение об ошибке на окне для отображения ошибки.
       </param>
       <returns>
         Результат работы задачи или значение по-умолчанию для указанного <typeparamref  name="TResult"/>.
