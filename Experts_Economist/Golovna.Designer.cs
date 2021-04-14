@@ -70,13 +70,14 @@
 			this.новийШаблонToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.змінитиШаблонToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ресурсиToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.довідкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.сценаріїToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.user_redakt_button = new System.Windows.Forms.Button();
 			this.menuStrip2 = new System.Windows.Forms.MenuStrip();
-			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.довідкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.сценаріїToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.selectMenuItemToolStrip = new System.Windows.Forms.ToolStripComboBox();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -90,9 +91,9 @@
             this.картаToolStripMenuItem,
             this.довідникToolStripMenuItem,
             this.WindowsMenuItem,
+            this.helpToolStripMenuItem,
             this.базаДанихToolStripMenuItem,
-            this.ресурсиToolStripMenuItem1,
-            this.helpToolStripMenuItem});
+            this.ресурсиToolStripMenuItem1});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.MdiWindowListItem = this.WindowsMenuItem;
 			this.menuStrip1.Name = "menuStrip1";
@@ -407,7 +408,7 @@
             this.новийШаблонToolStripMenuItem,
             this.змінитиШаблонToolStripMenuItem});
 			this.шаблонToolStripMenuItem.Name = "шаблонToolStripMenuItem";
-			this.шаблонToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.шаблонToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.шаблонToolStripMenuItem.Text = "Шаблон";
 			// 
 			// новийШаблонToolStripMenuItem
@@ -427,9 +428,33 @@
 			// ресурсиToolStripMenuItem2
 			// 
 			this.ресурсиToolStripMenuItem2.Name = "ресурсиToolStripMenuItem2";
-			this.ресурсиToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+			this.ресурсиToolStripMenuItem2.Size = new System.Drawing.Size(119, 22);
 			this.ресурсиToolStripMenuItem2.Text = "Ресурси";
 			this.ресурсиToolStripMenuItem2.Click += new System.EventHandler(this.ресурсиToolStripMenuItem_Click);
+			// 
+			// helpToolStripMenuItem
+			// 
+			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.довідкаToolStripMenuItem,
+            this.сценаріїToolStripMenuItem,
+            this.selectMenuItemToolStrip});
+			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.helpToolStripMenuItem.Text = "Help";
+			// 
+			// довідкаToolStripMenuItem
+			// 
+			this.довідкаToolStripMenuItem.Name = "довідкаToolStripMenuItem";
+			this.довідкаToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.довідкаToolStripMenuItem.Text = "Довідка";
+			this.довідкаToolStripMenuItem.Click += new System.EventHandler(this.довідкаToolStripMenuItem_Click);
+			// 
+			// сценаріїToolStripMenuItem
+			// 
+			this.сценаріїToolStripMenuItem.Name = "сценаріїToolStripMenuItem";
+			this.сценаріїToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.сценаріїToolStripMenuItem.Text = "Сценарії";
+			this.сценаріїToolStripMenuItem.Click += new System.EventHandler(this.сценаріїToolStripMenuItem_Click);
 			// 
 			// label1
 			// 
@@ -469,28 +494,40 @@
 			this.menuStrip2.Text = "menuStrip2";
 			this.menuStrip2.Visible = false;
 			// 
-			// helpToolStripMenuItem
+			// selectMenuItemToolStrip
 			// 
-			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.довідкаToolStripMenuItem,
-            this.сценаріїToolStripMenuItem});
-			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-			this.helpToolStripMenuItem.Text = "Help";
-			// 
-			// довідкаToolStripMenuItem
-			// 
-			this.довідкаToolStripMenuItem.Name = "довідкаToolStripMenuItem";
-			this.довідкаToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.довідкаToolStripMenuItem.Text = "Довідка";
-			this.довідкаToolStripMenuItem.Click += new System.EventHandler(this.довідкаToolStripMenuItem_Click);
-			// 
-			// сценаріїToolStripMenuItem
-			// 
-			this.сценаріїToolStripMenuItem.Name = "сценаріїToolStripMenuItem";
-			this.сценаріїToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.сценаріїToolStripMenuItem.Text = "Сценарії";
-			this.сценаріїToolStripMenuItem.Click += new System.EventHandler(this.сценаріїToolStripMenuItem_Click);
+			this.selectMenuItemToolStrip.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+			this.selectMenuItemToolStrip.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+			this.selectMenuItemToolStrip.Items.AddRange(new object[] {
+            "Задачі",
+            "Заходи",
+            "Змiнити Захiд",
+            "Новий захiд",
+            "Шаблон",
+            "Новий шаблон",
+            "Змінити шаблон",
+            "Ресурси",
+            "Розрахунок",
+            "Перегляд результатів",
+            "Результати нормування",
+            "Редактор формул",
+            "Карта",
+            "Довідник",
+            "Речовини",
+            "ГДК",
+            "Середовище",
+            "Забруднююча речовина",
+            "Вид екномічної діяльності",
+            "Ставки податків",
+            "Вікна",
+            "Каскадом",
+            "Вертикально",
+            "Горизонтально",
+            "Закрити поточне вікно",
+            "Закрити всі вікна"});
+			this.selectMenuItemToolStrip.Name = "selectMenuItemToolStrip";
+			this.selectMenuItemToolStrip.Size = new System.Drawing.Size(121, 23);
+			this.selectMenuItemToolStrip.SelectedIndexChanged += new System.EventHandler(this.selectMenuItemToolStrip_SelectedIndexChanged);
 			// 
 			// Golovna
 			// 
@@ -565,5 +602,6 @@
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem довідкаToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem сценаріїToolStripMenuItem;
+		private System.Windows.Forms.ToolStripComboBox selectMenuItemToolStrip;
 	}
 }

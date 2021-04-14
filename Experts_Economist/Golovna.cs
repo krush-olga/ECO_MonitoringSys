@@ -2,6 +2,8 @@
 using UserMap;
 using oprForm;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -40,6 +42,8 @@ namespace Experts_Economist
         private LookEventsForm look;
         private NormOfCalc norm;
 
+        private List<ToolStripMenuItem> _toolStripMenuItems = new List<ToolStripMenuItem>();
+
         private void Golovna_Load(object sender, EventArgs e)
         {
             label1.Text += " " + this.id_of_exp;
@@ -50,7 +54,13 @@ namespace Experts_Economist
                 user_redakt_button.Visible = true;
                 базаДанихToolStripMenuItem.Visible = true;
             }
-           
+
+            InitToolStripMenuItems();
+
+            menuStrip1.Items.OfType<ToolStripMenuItem>().ToList().ForEach(x =>
+            {
+	            x.MouseHover += (obj, arg) => ((ToolStripDropDownItem)obj).ShowDropDown();
+            });
         }
 
         private void MapMDIChild_FormClosed(object sender, FormClosedEventArgs e)
@@ -463,6 +473,58 @@ namespace Experts_Economist
 			}
 			form.BringToFront();
         }
+
+		private void selectMenuItemToolStrip_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			_toolStripMenuItems.ForEach(x=>x.BackColor = SystemColors.Control);
+			var selectedItem =
+				_toolStripMenuItems.FirstOrDefault(x => x.Text == selectMenuItemToolStrip.SelectedItem.ToString());
+			if (selectedItem != null)
+			{
+				selectedItem.BackColor = Color.CornflowerBlue;
+				ShowParentMenuItem(selectedItem);
+			}
+		}
+
+		private void ShowParentMenuItem(ToolStripItem item)
+		{
+			if (item.OwnerItem is ToolStripMenuItem parent)
+			{
+                parent.ShowDropDown();
+                ShowParentMenuItem(parent);
+			}
+		}
+
+
+        private void InitToolStripMenuItems()
+		{
+			foreach (ToolStripItem toolItem in menuStrip1.Items)
+			{
+				if (toolItem is ToolStripMenuItem toolStripMenuItem)
+				{
+					_toolStripMenuItems.Add(toolStripMenuItem);
+                }
+                _toolStripMenuItems.AddRange(GetItems(toolItem));
+			}
+        }
+
+        private IEnumerable<ToolStripMenuItem> GetItems(ToolStripItem item)
+		{
+			if (item is ToolStripMenuItem toolStripMenuItem)
+			{
+				foreach (ToolStripItem dropDownItem in toolStripMenuItem.DropDownItems)
+				{
+					if (dropDownItem is ToolStripMenuItem dropDownRecord)
+					{
+						if (dropDownRecord.HasDropDownItems)
+						{
+							foreach (var subItem in GetItems(dropDownItem))
+								yield return subItem;
+						}
+						yield return dropDownRecord;
+					}
+				}
+            }
+		}
 	}
-    
 }
