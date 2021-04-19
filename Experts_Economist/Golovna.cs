@@ -526,5 +526,17 @@ namespace Experts_Economist
 				}
             }
 		}
+
+		private void selectMenuItemToolStrip_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode != Keys.Enter && selectMenuItemToolStrip.SelectedIndex == -1)
+			{
+				return;
+			}
+
+			Help.ShowHelp(this,
+				Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+					"ECO_MonitoringSys2020.chm"), HelpNavigator.Topic, $"p{selectMenuItemToolStrip.SelectedIndex}.html");
+		}
 	}
 }
