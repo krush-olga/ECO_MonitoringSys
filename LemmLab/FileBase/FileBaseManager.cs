@@ -163,7 +163,7 @@ namespace FileBase
 		/// <returns>Зміст файлу.</returns>
 		public string[] GetHtm(string name)
         {
-            return File.ReadAllLines(location + name + ".html", Encoding.UTF8); 
+             return File.ReadAllLines(location + name + ".html", Encoding.UTF8); 
         }
         /// <summary>
         /// Отримання списку імен всіх зареєстрованих файлів.
