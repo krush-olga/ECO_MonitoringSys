@@ -451,7 +451,6 @@ namespace UserMap
             bool isReadOnly = expert != Role.Admin && marker.Creator.Id != userId;
 
             var multiBindingObjectEditor = new HelpWindows.MultiBindingObjectEditor();
-
             multiBindingObjectEditor.Text += $"{describable.Name} ({describable.Type})";
 
             UserControls.MainMarkerInfoUC mainMarkerInfoUC = null;
@@ -529,14 +528,11 @@ namespace UserMap
 
             if (e.Button == MouseButtons.Right && !markerAddingMode)
             {
+                //Если не админ и не включён режим рисовния фигуры, то убираем возможность удалять маркера
                 if (polygonAddingMode || tubeAddingMode || expert == Role.Admin)
-                {
                     MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = true;
-                }
                 else
-                {
                     MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = false;
-                }
 
                 MapObjectContextMenuStrip.Show(gMapControl, e.Location);
             }
@@ -700,6 +696,9 @@ namespace UserMap
 
         #region Filtering method group
 
+        /// <summary>
+        /// Применение фильтрации для карты в зависимости от выбраных объектов
+        /// </summary>
         private void AcceptFiltration()
         {
             bool isNothingSelected = true;
@@ -1109,12 +1108,14 @@ namespace UserMap
                         marker.Creator = new Expert { Name = "Дані відсутні" };
                     ((IDescribable)marker).Type = "Маркер";
 
+                    //Добавление маркеров по загрязнениям
                     var dependencies = mapObjectDependencies.Where(_row => !(_row[0] is DBNull) && (int)_row[0] == marker.Id);
                     foreach (var dependenciesRow in dependencies)
                     {
                         reworkedMap.AddMarker(marker, dependenciesRow[1].ToString());
                     }
 
+                    //Добавление маркеров по средам
                     var environment = emissions.Where(_row => !(_row[0] is DBNull) && (int)_row[1] == marker.Id);
                     foreach (var env in environment)
                     {
@@ -1232,6 +1233,7 @@ namespace UserMap
 
             try
             {
+                //Получение последнего существующего ID
                 object lastId = dBManager.GetValue("poligon", "MAX(Id_of_poligon)", "");
 
                 if (lastId != null && !(lastId is DBNull))
@@ -1240,6 +1242,7 @@ namespace UserMap
                 }
 
                 dBManager.StartTransaction();
+                //Добавление основной информации об полигоне в бд
                 await dBManager.InsertToBDAsync("poligon", polygonColumns, polygonValues);
 
                 var _points = points;
@@ -1254,10 +1257,13 @@ namespace UserMap
 
                     pointQuery.AppendFormat(" ({0}, {1}, {2}, {3}), ", tempLat, tempLng, polygonValues[0], tempOrderNumber);
                 }
+
+                //Добавление точек полигона
                 pointQuery.Remove(pointQuery.Length - 2, 1);
 
                 await dBManager.InsertToBDAsync(pointQuery.ToString());
 
+                //Если есть выбросы, то добавлем и их
                 if (emissions.Any())
                 {
                     StringBuilder emissionQuery = new StringBuilder("INSERT INTO emissions_on_map (idElement, idEnvironment, ValueAvg," +
@@ -1283,6 +1289,7 @@ namespace UserMap
                     await dBManager.InsertToBDAsync(emissionQuery.ToString());
                 }
 
+                //Если задачи с сериями, то добавляем и их
                 if (series.Any())
                 {
                     StringBuilder mapObjectDependenciesQuery = new StringBuilder("INSERT INTO map_object_dependencies " +
