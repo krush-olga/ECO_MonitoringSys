@@ -22,6 +22,19 @@ namespace Experts_Economist
         private delegate bool TextBoxErrorCondition(TextBox tb);
         GDKAction lambda;             //лямбда-функція, яка буде генеруватися для кожного RadioButton і виконується при натисканні кнопки "Виконати"
 
+        //Названия колонок для разлинчных таблиц
+        private readonly Dictionary<string, KeyValuePair<string[], string[]>> tableColumnsNamesWithDescription =
+            new Dictionary<string, KeyValuePair<string[], string[]>>
+            {
+                { "gdk", new KeyValuePair<string[], string[]>
+                    (
+                    new string[] { "Код", "Максимально разове ГДК", "Середньодобове ГДК", "Клас небезпеки", "ОБРВ", "Середовище" },
+                    new string[] { "Код", "Максимально разове ГДК", "Середньодобове ГДК", "Клас небезпеки", "Орієнтовно безпечний рівень впливу (ОБРВ) забруднючої середовище речовини", "Середовище, для якого визначені показники" }
+                    )
+                },
+            };
+        
+
         ~Dovidka()
         {
             db.Disconnect();
@@ -77,10 +90,37 @@ namespace Experts_Economist
             try
             {
                 connection.Open();
-                MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter($"select * from {tableName}", connection);
+
+                string query = string.Empty;
+                if (tableName.ToLower() == "gdk")
+                {
+                    query = "SELECT gdk.code, gdk.mpc_m_ot, gdk.mpc_avrg_d, gdk.danger_class, gdk.tsel, environment.name FROM " + 
+                            tableName + 
+                            " LEFT JOIN environment ON environment.id = gdk.environment";
+                }
+                else
+                {
+                    query = $"select * from {tableName}";
+                }
+
+                MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter(query, connection);
                 DataSet DS = new DataSet();
                 mySqlDataAdapter.Fill(DS);
                 gdkDataGrid.DataSource = DS.Tables[0];
+
+                var _tableName = tableName.ToLower();
+
+                if (tableColumnsNamesWithDescription.ContainsKey(_tableName))
+                {
+                    var columnsNames = tableColumnsNamesWithDescription[_tableName];
+
+                    for (int i = 0; i < columnsNames.Key.Length; i++)
+                    {
+                        gdkDataGrid.Columns[i].HeaderText = columnsNames.Key[i];
+                        gdkDataGrid.Columns[i].HeaderCell.ToolTipText = columnsNames.Value[i];
+                    }
+                }
+
 
                 //close connection
             }
