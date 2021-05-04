@@ -47,9 +47,13 @@ namespace experts_jurist
 			db.Connect();
 			this.currentIssueID = currentIssueID;
 			InitializeComponent();
+			SuppressScriptErrors(webBrowser1);
 		}
 
-
+		private void SuppressScriptErrors(WebBrowser browser)
+		{
+			browser.ScriptErrorsSuppressed = true;
+		}
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 		
@@ -72,6 +76,7 @@ namespace experts_jurist
 			
 			if (listBox2.SelectedIndex > -1)
 			{
+				
 				button5.Enabled = true;
 				listBox1.ClearSelected();
 				webBrowser1.DocumentText = SM.GetPage(listOfAttachedFi[listBox2.SelectedIndex].ToString());
@@ -190,8 +195,9 @@ namespace experts_jurist
 		}
 		private void button4_Click(object sender, EventArgs e)
 		{
-		
-			var listOfFi = SM.SearchLine(textBox2.Text);
+			var listOfFi = SM.SearchAll();
+			listOfFi = SM.SearchLine(textBox2.Text, listOfFi);
+
 			if (listOfFi.Count() == 0)
 			{
 				label5.Text = "Нічого не знайдено";

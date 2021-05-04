@@ -40,7 +40,10 @@ namespace experts_jurist
 
 		}
 
-
+		private void SuppressScriptErrors(WebBrowser browser)
+		{
+			browser.ScriptErrorsSuppressed = true;
+		}
 		private void button2_Click(object sender, EventArgs e)
 		{
 			doData();
@@ -88,7 +91,7 @@ namespace experts_jurist
 
 		private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
 		{
-		
+			SuppressScriptErrors(webBrowser1);
 			if (listBox2.SelectedIndex > -1)
 			{
 				textBox3.Text = (string)listOfAttachedRaws[listBox2.SelectedIndex][2];

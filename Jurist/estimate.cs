@@ -62,40 +62,20 @@ namespace experts_jurist
             SM = new SearchManager();
             ReloadData1();
 
-            SuppressScriptErrorsOnly(webBrowser1);
+           // SuppressScriptErrorsOnly(webBrowser1);
+
         }
-        
-        private void button3_Click(object sender, EventArgs e)
+
+        private void SuppressScriptErrors(WebBrowser browser)
         {
+            browser.ScriptErrorsSuppressed = true;
         }
+       
 
-
-        private void SuppressScriptErrorsOnly(WebBrowser browser)
-        {
-            // Ensure that ScriptErrorsSuppressed is set to false.
-            browser.ScriptErrorsSuppressed = false;
-
-            // Handle DocumentCompleted to gain access to the Document object.
-            browser.DocumentCompleted +=
-                new WebBrowserDocumentCompletedEventHandler(
-                    browser_DocumentCompleted);
-        }
-
-        private void browser_DocumentCompleted(object sender,
-            WebBrowserDocumentCompletedEventArgs e)
-        {
-            ((WebBrowser)sender).Document.Window.Error +=
-                new HtmlElementErrorEventHandler(Window_Error);
-        }
-
-        private void Window_Error(object sender,
-            HtmlElementErrorEventArgs e)
-        {
-            // Ignore the error and suppress the error dialog box. 
-            e.Handled = true;
-        }
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
+
             if (listOnEvents)
             {
                 if(listBox1.SelectedIndex != 0)
@@ -124,7 +104,7 @@ namespace experts_jurist
 			listOfIssues = db.GetRows("issues", "*", "");
             label2.Text = "Список проблем";
             textBox1.Text = "";
-            label1.Text = "";
+            label7.Text = "";
 			button1.Enabled = false;
             listBox1.Items.Clear();
             foreach (var row in listOfIssues)
@@ -134,7 +114,16 @@ namespace experts_jurist
         }
         private void ReloadData2()
         {
-            listOfEvents = db.GetRows("event", "*", "issue_id="+ currentIssue);
+
+            if (currentIssue != "")
+            {
+                CheckBoxes();
+            }
+            else
+            {
+                MessageBox.Show("Виберіть проблему");
+                return;
+            }
             label2.Text = "Список заходів";
             listBox1.Items.Clear();
             listBox1.Items.Add("← До проблем");
@@ -147,36 +136,111 @@ namespace experts_jurist
         {
             if (listBox1.SelectedIndex != -1)
             {
-				
 				try
 				{
-					listOfAttachedFi = db.GetRows("event_documents", "*", "event_id=" + DBUtil.ValidateForSQL(listOfEvents[listBox1.SelectedIndex - 1][0]));
+                    CheckBoxes();
+
+                    listOfAttachedFi = db.GetRows("event_documents", "*", "event_id=" + DBUtil.ValidateForSQL(listOfEvents[listBox1.SelectedIndex - 1][0]));
 					button1.Enabled = true;
 					ReloadAttached();
 				}
 				catch (Exception)
 				{
-
 				}
                 textBox1.Text = listOfEvents[listBox1.SelectedIndex-1][2].ToString();
-                switch (listOfEvents[listBox1.SelectedIndex-1][4].ToString())
+                switch (listOfEvents[listBox1.SelectedIndex - 1][3].ToString())
                 {
                     case "":
-                        label1.Text = "Законність не перевірена";
-                        label1.ForeColor = Color.DarkViolet;
+                    case "0":
+                    label7.Text = "Ні";
+                    label7.ForeColor = Color.Red;
+                    break;
+                    case "1":
+                    label7.Text = "Так";
+                    label7.ForeColor = Color.Green;
+                    break;
+                }
+                switch (listOfEvents[listBox1.SelectedIndex - 1][4].ToString())
+                {
+                    case "":
+                    case "0":
+                        label10.Text = "Ні";
+                        label10.ForeColor = Color.Red;
                         break;
                     case "1":
-                        label1.Text = "Законність перевірена та підтверджена";
-                        label1.ForeColor = Color.Green;
-                        break;
-                    case "0":
-                        label1.Text = "Законність перевірена та не підтверджена";
-                        label1.ForeColor = Color.Red;
+                        label10.Text = "Так";
+                        label10.ForeColor = Color.Green;
                         break;
                 }
+
             }
         }
         
+        private void CheckBoxes()
+        {
+            if (checkBox2.Checked)
+            {
+
+                if (checkBox4.Checked)
+                {
+                    listOfEvents = db.GetRows("event", "*", "dm_verification= 1 AND lawyer_vefirication= 1 AND issue_id = " + currentIssue); // mine
+                }
+                else if (checkBox5.Checked)
+                {
+                    listOfEvents = db.GetRows("event", "*", "dm_verification= 0 AND lawyer_vefirication= 1 AND issue_id = " + currentIssue); // mine
+                }
+                else 
+                {
+                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 1 AND issue_id = " + currentIssue); // mine
+                }
+            }
+
+            else if (checkBox3.Checked)
+            {
+                if (checkBox5.Checked)
+                {
+                    listOfEvents = db.GetRows("event", "*", "dm_verification= 0 AND lawyer_vefirication= 0 OR (dm_verification is null AND lawyer_vefirication is null) AND issue_id = " + currentIssue); // mine
+                }
+                else
+                {
+                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 0 OR dm_verification is null AND issue_id = " + currentIssue); // mine
+                }
+            }
+            else if (checkBox4.Checked)
+            {
+                if (checkBox2.Checked)
+                {
+                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 1 AND issue_id = " + currentIssue); // mine
+                }
+                else
+                {
+                    listOfEvents = db.GetRows("event", "*", "dm_verification= 1 AND issue_id = " + currentIssue); // mine
+                }
+            }
+            else if (checkBox5.Checked)
+            {
+                if (checkBox2.Checked)
+                {
+                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 1 AND dm_verification= 0 AND issue_id = " + currentIssue); // mine
+                }
+                else if (checkBox3.Checked)
+                {
+                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 0 AND dm_verification= 0 OR (dm_verification is null AND lawyer_vefirication is null) AND issue_id = " + currentIssue); // mine
+                }
+                else
+                {
+                    listOfEvents = db.GetRows("event", "*", "dm_verification= 0 or dm_verification is null AND issue_id = " + currentIssue); // mine
+                }
+            }
+            else if (checkBox1.Checked)
+            {
+                listOfEvents = db.GetRows("event", "*", "issue_id=" + currentIssue); // mine
+            }
+            else
+            {
+                listOfEvents = db.GetRows("event", "*", "issue_id=" + currentIssue); // mine
+            }
+        }
         
         private void ReloadAttached()
         {
@@ -206,13 +270,14 @@ namespace experts_jurist
            
             if (listBox2.SelectedIndex >= 0)
 			{
-				textBox3.Text = listOfAttachedFi[listBox2.SelectedIndex][2].ToString();
+                SuppressScriptErrors(webBrowser1);
+
+                textBox3.Text = listOfAttachedFi[listBox2.SelectedIndex][2].ToString();
                 webBrowser1.DocumentText = SM.GetPage(listOfAttachedFi[listBox2.SelectedIndex][1].ToString());
                 
             }
-            
+          
         }
-		
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -223,29 +288,11 @@ namespace experts_jurist
 			}
         }
 		
-
-		
-		
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void estimate_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-
-        }
 
 		private void splitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
 		{
@@ -256,5 +303,101 @@ namespace experts_jurist
 		{
 
 		}
-	}
+
+        private void splitContainer4_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked == true)
+            {
+                checkBox2.CheckState = 0;
+            }
+            if (checkBox3.Checked == true)
+            {
+                checkBox3.Checked = false;
+            }
+            if (checkBox4.Checked == true)
+            {
+                checkBox4.Checked = false;
+            }
+            if (checkBox5.Checked == true)
+            {
+                checkBox5.Checked = false;
+            }
+            ReloadData2();
+        }
+
+        private void checkBox2_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                checkBox1.Checked = false;
+            }
+            if (checkBox3.Checked == true)
+            {
+                checkBox3.Checked = false;
+            }
+            ReloadData2();
+        }
+
+        private void checkBox3_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                checkBox1.Checked = false;
+            }
+            if (checkBox2.Checked == true)
+            {
+                checkBox2.Checked = false;
+            }
+            if (checkBox4.Checked == true)
+            {
+                checkBox4.Checked = false;
+            }
+            if (checkBox5.Checked == false && checkBox3.Checked == true)
+            {
+                checkBox5.Checked = true;
+            }
+
+
+            ReloadData2();
+        }
+
+        private void checkBox4_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                checkBox1.Checked = false;
+            }
+            if (checkBox2.Checked == false && checkBox4.Checked == true)
+            {
+                checkBox2.Checked = true;
+            }
+            if (checkBox3.Checked == true)
+            {
+                checkBox3.Checked = false;
+            }
+            if (checkBox5.Checked == true)
+            {
+                checkBox5.Checked = false;
+            }
+            ReloadData2();
+        }
+
+        private void checkBox5_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                checkBox1.Checked = false;
+            }
+            if (checkBox4.Checked == true)
+            {
+                checkBox4.Checked = false;
+            }
+            ReloadData2();
+        }
+    }
 }

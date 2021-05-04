@@ -3897,9 +3897,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>XCOPY "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y</PostBuildEvent>
-    <PostBuildEvent>XCOPY "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y
-XCOPY "$(SolutionDir)HelpModule\CHM\ECO_MonitoringSys2020.chm" "$(TargetDir)*" /S /Y
-XCOPY "$(SolutionDir)HelpModule\Scenarios" "$(TargetDir)\Scenarios\*" /S /Y</PostBuildEvent>
+    <PostBuildEvent>C:\Windows\System32\xcopy.exe "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y
+C:\Windows\System32\xcopy.exe "$(SolutionDir)HelpModule\CHM\ECO_MonitoringSys2020.chm" "$(TargetDir)*" /S /Y
+C:\Windows\System32\xcopy.exe "$(SolutionDir)HelpModule\Scenarios" "$(TargetDir)\Scenarios\*" /S /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

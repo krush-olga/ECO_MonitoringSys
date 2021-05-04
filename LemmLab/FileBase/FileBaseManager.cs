@@ -78,11 +78,8 @@ namespace FileBase
         /// </summary>
         /// <returns>Список індексів та відповідних слів.</returns>
         public string[] GetDictionary()
-
         {
-           
             return File.ReadAllLines(location + "_dictionary", Encoding.UTF8);
-            
         }
 		/// <summary>
 		/// Отримання словнику всіх доступних слів та їх індексів.
@@ -120,8 +117,6 @@ namespace FileBase
 		public void AddFileToWord(int wordCode, string filename, int amount)
         {
 			Dictionary<string, int> docs = new Dictionary<string, int>();
-            ///try
-            //{
 
             if (File.Exists(location + "//TF//" + wordCode)) // mine
             { 
@@ -139,13 +134,11 @@ namespace FileBase
                     {
                         docs.Add(temp[0] + " " + temp[1], int.Parse(temp[2]));
                     }
-                   // docs.Add(temp[0] + " " + temp[1], int.Parse(temp[2])); // якщо назва скл. з №_імя
+                   
                    // docs.Add(temp[0], int.Parse(temp[1])); // якщо назва скл. з 1 строки
                 }
-                }
-			//}
-			//catch(Exception) { }
-
+            }
+			
             if (docs.ContainsKey(filename))
                 docs[filename] = amount;
             else
@@ -155,13 +148,36 @@ namespace FileBase
 
             }
 		}
-		
-		/// <summary>
-		/// Отримання змісту файлу з росширенням ".htm".
-		/// </summary>
-		/// <param name="name">Ім'я файлу без розширення ".htm".</param>
-		/// <returns>Зміст файлу.</returns>
-		public string[] GetHtm(string name)
+        /// <summary>
+        /// Зберігає основну інформацію з документу у файл
+        /// </summary>
+        /// <param name="filename">Назва (№) документу</param>
+        /// <param name="res">Список з основної інформації про документ</param>
+        public void AddAttributesToWord(string filename, List <string> res)
+        {
+            File.WriteAllLines(location + "//Attributes//" + filename, res, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Дістає необхідний рядок з документу
+        /// </summary>
+        /// <param name="filename">Назва документу</param>
+        /// <param name="code">Кількість рядків, які потрібно пропустити у документі до потрібної</param>
+        /// <returns></returns>
+        public string GetAttributes(string filename, int code)
+        {
+            IEnumerable<string> result = File.ReadLines(location + "//Attributes//" + filename, Encoding.UTF8).Skip(code).Take(1);
+            var a = result.ToArray();
+            return a[0];
+        }
+
+
+        /// <summary>
+        /// Отримання змісту файлу з росширенням ".htm".
+        /// </summary>
+        /// <param name="name">Ім'я файлу без розширення ".htm".</param>
+        /// <returns>Зміст файлу.</returns>
+        public string[] GetHtm(string name)
         {
             return File.ReadAllLines(location + name + ".html", Encoding.UTF8); 
         }

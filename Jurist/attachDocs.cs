@@ -40,48 +40,21 @@ namespace experts_jurist
 		 * 3 - прикріплено по новому
 		 */
 
-		public attachDocs()
-		{
-			db.Connect();
-			InitializeComponent();
-
-
-        }
 		public attachDocs(int currentEventID)
 		{
 			db.Connect();
 			this.currentEventID = currentEventID;
 			InitializeComponent();
+			SuppressScriptErrors(webBrowser1);
 
-			SuppressScriptErrorsOnly(webBrowser1);
 		}
 
-
-		// Hides script errors without hiding other dialog boxes.
-		private void SuppressScriptErrorsOnly(WebBrowser browser)
+		private void SuppressScriptErrors(WebBrowser browser)
 		{
-			// Ensure that ScriptErrorsSuppressed is set to false.
-			browser.ScriptErrorsSuppressed = false;
-
-			// Handle DocumentCompleted to gain access to the Document object.
-			browser.DocumentCompleted +=
-				new WebBrowserDocumentCompletedEventHandler(
-					browser_DocumentCompleted);
+			browser.ScriptErrorsSuppressed = true;
 		}
 
-		private void browser_DocumentCompleted(object sender,
-			WebBrowserDocumentCompletedEventArgs e)
-		{
-			((WebBrowser)sender).Document.Window.Error +=
-				new HtmlElementErrorEventHandler(Window_Error);
-		}
 
-		private void Window_Error(object sender,
-			HtmlElementErrorEventArgs e)
-		{
-			// Ignore the error and suppress the error dialog box. 
-			e.Handled = true;
-		}
 
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -105,6 +78,7 @@ namespace experts_jurist
 			
 			if (listBox2.SelectedIndex > -1)
 			{
+				
 				button5.Enabled = true;
 				listBox1.ClearSelected();
 				webBrowser1.DocumentText = SM.GetPage(listOfAttachedFi[listBox2.SelectedIndex].ToString());
@@ -212,7 +186,8 @@ namespace experts_jurist
 			if (listOfAttachedFi.Count() > 0)
 				button1.Enabled = true;
 			temp = db.GetRows("event", "name, description", "event_id=" + DBUtil.ValidateForSQL(currentEventID));
-			textBox2.Text =	(string)temp[0][1] + " " + (string)temp[0][0];
+			textBox2.Text = (string)temp[0][0]; // Mine
+
 			button4_Click(sender, e);
 		}
 		private void ReloadLists()
@@ -237,8 +212,9 @@ namespace experts_jurist
 		}
 		private void button4_Click(object sender, EventArgs e)
 		{
-		
-			var listOfFi = SM.SearchLine(textBox2.Text);
+			var listOfFi = SM.SearchAll();
+			listOfFi = SM.SearchLine(textBox2.Text, listOfFi);
+
 			if (listOfFi.Count() == 0)
 			{
 				label5.Text = "Нічого не знайдено";

@@ -9,6 +9,7 @@ namespace Experts_Economist
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
+        /// 
         [STAThread]
         private static void Main()
         {

@@ -22,11 +22,6 @@ namespace experts_jurist
 		private List<List<object>> listOfAttachedRaws = new List<List<object>>();
 		private List<string> listOfDelate = new List<string>();
 		
-		public analisResult()
-		{
-			db.Connect();
-			InitializeComponent();
-		}
 		public analisResult(int currentEventID, List<string> listOfAttachedFi, Dictionary<string, int> listOfAll)
 		{
 			db.Connect();
@@ -34,37 +29,50 @@ namespace experts_jurist
 			this.listOfAttachedFi = listOfAttachedFi;
 			this.listOfAll = listOfAll;
 			this.currentEventID = currentEventID;
+			
 		}
 		private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
 		{
 
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void SuppressScriptErrors(WebBrowser browser)
 		{
-
-			doData();
-			db.UpdateRecord("event",
-					new String[] {
-						"event_id",
-						"lawyer_vefirication"
-					}, new String[] {
-						DBUtil.ValidateForSQL(currentEventID),
-						"1"
-					});
-			DialogResult = DialogResult.OK;
+			browser.ScriptErrorsSuppressed = true;
 		}
 
 		private void button2_Click(object sender, EventArgs e)
 		{
+			string codeChecked ;
+			string codeApproved ;
+
+			if(checkBox2.Checked)
+            {
+				codeApproved = "1";
+				codeChecked = "1";
+			}
+			else if (checkBox1.Checked)
+			{
+				codeChecked = "1";
+				codeApproved = "0";
+			}
+            else
+            {
+				codeApproved = "0";
+				codeChecked = "0";
+			}
+
 			doData();
 			db.UpdateRecord("event",
 					new String[] {
 						"event_id",
-						"lawyer_vefirication"
-					}, new String[] {
+						"lawyer_vefirication",
+						"dm_verification"
+					},
+					new String[] {
 						DBUtil.ValidateForSQL(currentEventID),
-						"0"
+						codeChecked,
+						codeApproved
 					});
 			DialogResult = DialogResult.OK;
 		}
@@ -108,7 +116,9 @@ namespace experts_jurist
 
 		private void Form2_Load(object sender, EventArgs e)
 		{
+			textBox3.Enabled = false; // Mine
 			
+
 			foreach (var a in listOfAll)
 			{
 				if(a.Value==2)
@@ -144,13 +154,20 @@ namespace experts_jurist
 				}
 			}
 		}
+		
 
+		
+
+		
 		private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			
 			if (listBox2.SelectedIndex > -1)
 			{
+				SuppressScriptErrors(webBrowser1);
+				textBox3.Enabled = true;// Mine
 				textBox3.Text = (string)listOfAttachedRaws[listBox2.SelectedIndex][2];
+				
 				webBrowser1.DocumentText = SM.GetPage((string)listOfAttachedRaws[listBox2.SelectedIndex][1]);
 			}
 			else
@@ -167,8 +184,26 @@ namespace experts_jurist
 
 		private void button3_Click(object sender, EventArgs e)
 		{
+			DialogResult = DialogResult.None;
 			this.Close();
-			this.DialogResult = DialogResult.None;
 		}
-	}
+
+        private void checkBox2_Click(object sender, EventArgs e)
+        {
+			if(checkBox1.Checked == false)
+            {
+				checkBox1.Checked = true;
+
+			}
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+			if (checkBox2.Checked == true)
+			{
+				checkBox1.Checked = true;
+
+			}
+		}
+    }
 }

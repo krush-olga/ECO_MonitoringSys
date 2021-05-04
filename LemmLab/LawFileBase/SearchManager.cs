@@ -41,16 +41,17 @@ namespace LawFileBase
         /// </summary>
         /// <param name="word">Слово, по якому потрібно проводити пошук. Повинне бути в словнику.</param>
         /// <returns>Список TF/IDF-індексів та назв документів.</returns>
-        public Dictionary<string, double> GetDocsWithWordTFIDF(string word)
+        public Dictionary<string, double> GetDocsWithWordTFIDF(string word, string[] listOfFiles)
         {
             string[] li = LawBaseManager.GetDictionary();
             string filename = "";
+
             foreach (string g in li)
             {
-                if ((g.Split(' '))[1] == word) 
-                { 
-                    filename = (g.Split(' '))[0]; 
-                    break; 
+                if ((g.Split(' '))[1] == word)
+                {
+                    filename = (g.Split(' '))[0];
+                    break;
                 }
             }
             var res = new Dictionary<string, double>();
@@ -59,24 +60,67 @@ namespace LawFileBase
                 li = LawBaseManager.GetWordFile(filename);
                 string[] all = LawBaseManager.GetListOfFiles();
 
+                var temp1 = 0;
+
+                // сортування документів за номером
+                var resList = new Dictionary<string, int>(); 
+                foreach (var t in all)
+                {
+                    resList[t.Split(' ')[0] + " " + t.Split(' ')[1] + " " + t.Split(' ')[2]] = Numbers(t.Split(' ')[1]);
+                }
+                var sortedOneList = from pair in resList
+                                    orderby pair.Value ascending
+                                    select pair.Key;
+                sortedOneList = sortedOneList.ToArray();
+
+                if (listOfFiles.Length != all.Length)
+                {
+                    foreach (string doc in sortedOneList)
+                    {
+                        for (var i = temp1; i < listOfFiles.Length; i++)
+                        {
+                            if (listOfFiles[i] == doc.Split(' ')[0] + " " + doc.Split(' ')[1])
+                            {
+                                listOfFiles[i] += " " + doc.Split(' ')[2];
+                                break;
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    listOfFiles = all;
+                }
+                
                 foreach (var g in li)
                 {
                     try // mine
                     { 
-                      res.Add(g.Split(' ')[0] + " " + g.Split(' ')[1], Convert.ToDouble(g.Split(' ')[2]));
+                      
+                        for (int i = 0; i < listOfFiles.Length; i++)
+                        {
+                            var z = listOfFiles[i].Split(' ').ToArray();
+                            if (z[0] + " " + z[1] == g.Split(' ')[0] + " " + g.Split(' ')[1])
+                            {
+                                res.Add(g.Split(' ')[0] + " " + g.Split(' ')[1], Convert.ToDouble(g.Split(' ')[2]));
+                            }
+                        }
                     }
                     catch (FormatException) // mine
                     {
                         break;
                     }
                 }
-                foreach (var g in all)
+
+                foreach (var g in listOfFiles)
                 {
-                    if (res.ContainsKey(g.Split(' ')[0] + " " + g.Split(' ')[1])) // if (res.ContainsKey(g.Split(' ')[0]))
+                    if (res.ContainsKey(g.Split(' ')[0] + " " + g.Split(' ')[1])) 
                     {
-                        res[g.Split(' ')[0] + " " + g.Split(' ')[1]] *= (Math.Log((double)all.Length / (double)li.Length) + 0.01) / Convert.ToDouble(g.Split(' ')[2]); //Convert.ToDouble(g.Split(' ')[1])
+                        res[g.Split(' ')[0] + " " + g.Split(' ')[1]] *= (Math.Log((double)listOfFiles.Length / (double)li.Length) + 0.01) / Convert.ToDouble(g.Split(' ')[2]); //Convert.ToDouble(g.Split(' ')[1])
                     }
                 }
+
             }
             return res;
         }
@@ -106,7 +150,7 @@ namespace LawFileBase
         /// </summary>
         /// <param name="searchLine">Стрічка, по якій проводиться пошук.</param>
         /// <returns>Список з імен документів.</returns>
-        public string[] SearchLine(string searchLine)
+        public string[] SearchLine(string searchLine, string[] listOfFiles)
         {
 			var resList = new Dictionary<string, double>();
 			var wordsList = e.ToWords(searchLine);
@@ -117,26 +161,113 @@ namespace LawFileBase
 			}
 			foreach (var g in lemmList)
 			{
-				resList = CocQueris(resList, GetDocsWithWordTFIDF(g));
+				resList = CocQueris(resList, GetDocsWithWordTFIDF(g, listOfFiles));
 			}
 			var sortedOneList = from pair in resList
 								orderby pair.Value descending
 								select pair.Key;
 			return sortedOneList.ToArray();
+
         }
 		public string[] SearchAll()
         {
-			var resList = new Dictionary<string, double>();
-			var AllList = LawBaseManager.GetListOfFiles();
+            var resList = new Dictionary<string, int>();
+            var AllList = LawBaseManager.GetListOfFiles();
 			foreach (var t in AllList)
 			{
-				resList[t.Split(' ')[0] + " " + t.Split(' ')[1]] = 0;
-			}
-			var sortedOneList = from pair in resList
-								orderby pair.Value descending
-								select pair.Key;
+                resList[t.Split(' ')[0] + " " + t.Split(' ')[1]] = Numbers(t.Split(' ')[1]);
+            }
+            var sortedOneList = from pair in resList
+								orderby pair.Value ascending
+                                select pair.Key;
 			return sortedOneList.ToArray();
 		}
+        
+        public string[] FindType(string type, string[] listOfFiles)
+        {
+            var resList = new Dictionary<string, int>();
+            foreach (var doc in listOfFiles)
+            {
+                var typeOfDoc = LawBaseManager.GetAttributes(doc, 2).ToString();
+                if (typeOfDoc == type)
+                {
+                    resList[doc.Split(' ')[0] + " " + doc.Split(' ')[1]] = Numbers(doc.Split(' ')[1]);
+                }
+            }
+            var sortedOneList = from pair in resList
+                                orderby pair.Value ascending
+                                select pair.Key;
+            return sortedOneList.ToArray();
+        }
+
+        public string[] FindPublish(string publish, string[] listOfFiles)
+        { 
+            var resList = new Dictionary<string, int>();
+            foreach (var doc in listOfFiles)
+            {
+                var publishOfDoc = LawBaseManager.GetAttributes(doc, 3).ToString();
+                if (publishOfDoc == publish)
+                {
+                    resList[doc.Split(' ')[0] + " " + doc.Split(' ')[1]] = Numbers(doc.Split(' ')[1]);
+                }
+            }
+            var sortedOneList = from pair in resList
+                                orderby pair.Value ascending
+                                select pair.Key;
+            return sortedOneList.ToArray();
+        }
+
+        public string[] FindDate (List <string> firstdate, List<string> lastdate, string[] listOfFiles)
+        {
+            var resList = new Dictionary<string, int>();
+            var date1 = firstdate.ToArray();
+            var date2 = lastdate.ToArray();
+
+            foreach (var doc in listOfFiles)
+            {
+                var dateOfDoc = LawBaseManager.GetAttributes(doc, 4).ToString();
+                var dayMonthYear = dateOfDoc.Split('.');
+                var date = new DateTime(Convert.ToInt32(dayMonthYear[2]), Convert.ToInt32(dayMonthYear[1]), Convert.ToInt32(dayMonthYear[0]));
+
+                var startDate = new DateTime(Convert.ToInt32(date1[2]), Convert.ToInt32(date1[1]), Convert.ToInt32(date1[0]));
+                var endDate = new DateTime(Convert.ToInt32(date2[2]), Convert.ToInt32(date2[1]), Convert.ToInt32(date2[0]));
+
+                var checkInIsValid = date >= startDate && date < endDate;
+                if(checkInIsValid)
+                {
+                    resList[doc.Split(' ')[0] + " " + doc.Split(' ')[1]] = Numbers(doc.Split(' ')[1]);
+                }
+            }
+            var sortedOneList = from pair in resList
+                                orderby pair.Value ascending
+                                select pair.Key;
+            return sortedOneList.ToArray();
+        }
+
+
+        /// <summary>
+        /// Очищує номер документу в назві від зайвих символів, залишаючи тільки числа
+        /// </summary>
+        /// <param name="str">Стрічка для перевірки</param>
+        /// <returns></returns>
+        public int Numbers(string str)
+        {
+            List<char> clearStr = new List<char>();
+
+            foreach (var c in str)
+            {
+                if (c >= '0' && c <= '9')
+                {
+                    clearStr.Add(c);
+                }
+                else
+                {
+                    return Convert.ToInt32(String.Join("", clearStr));
+                }
+            }
+            return Convert.ToInt32(String.Join("", clearStr));
+        }
+
         /// <summary>
         /// Отримання назви законодавчого документу.
         /// </summary>
