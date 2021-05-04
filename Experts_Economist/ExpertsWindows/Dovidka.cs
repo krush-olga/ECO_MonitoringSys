@@ -379,12 +379,12 @@ namespace Experts_Economist
                             populateComboBox(ref environment_combo, db.connectionString,"environment", "name");
                             controls = new List<Control>
                             {
-                                createAutoSizedLabel("Code"), code_combo,
-                                createAutoSizedLabel("mpc_m_ot"), new TextBox(){ Name = "mpc_m_ot"},
-                                createAutoSizedLabel("mpc_avrg_d"), new TextBox(){ Name = "mpc_avrg_d"},
-                                createAutoSizedLabel("danger"), new TextBox(){ Name="danger"},
-                                createAutoSizedLabel("tsel"), new TextBox(){ Name="tsel"},
-                                createAutoSizedLabel("environment"), environment_combo,
+                                createAutoSizedLabel("Код"), code_combo,
+                                createAutoSizedLabel("Максимально разове ГДК"), new TextBox(){ Name = "mpc_m_ot"},
+                                createAutoSizedLabel("Середньодобове ГДК"), new TextBox(){ Name = "mpc_avrg_d"},
+                                createAutoSizedLabel("Клас небезпеки"), new TextBox(){ Name="danger"},
+                                createAutoSizedLabel("ОБРВ"), new TextBox(){ Name="tsel"},
+                                createAutoSizedLabel("Середовище"), environment_combo,
                             };
 
                             lambda = () => 
@@ -505,11 +505,11 @@ namespace Experts_Economist
                             populateComboBox(ref environment_combo, db.connectionString,"environment", "name");
                             controls = new List<Control>
                             {
-                                createAutoSizedLabel("Code"), code_combo,
-                                createAutoSizedLabel("mpc_m_ot"), new TextBox(){ Name = "mpc_m_ot"},
-                                createAutoSizedLabel("mpc_avrg_d"), new TextBox(){ Name = "mpc_avrg_d"},
-                                createAutoSizedLabel("danger"), new TextBox(){ Name="danger"},
-                                createAutoSizedLabel("tsel"), new TextBox(){ Name="tsel"},
+                                createAutoSizedLabel("Код"), code_combo,
+                                createAutoSizedLabel("Максимально разове ГДК"), new TextBox(){ Name = "mpc_m_ot"},
+                                createAutoSizedLabel("Середньодобове ГДК"), new TextBox(){ Name = "mpc_avrg_d"},
+                                createAutoSizedLabel("Клас небезпеки"), new TextBox(){ Name="danger"},
+                                createAutoSizedLabel("ОБРВ"), new TextBox(){ Name="tsel"},
                             };
 
                             lambda = () =>
