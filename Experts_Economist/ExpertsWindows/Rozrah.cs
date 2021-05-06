@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Data;
+using System.IO;
 using Data;
 using Data.Entity;
 using System.Linq;
+using System.Reflection;
 using Calculations;
 
 namespace Experts_Economist
@@ -279,6 +281,12 @@ namespace Experts_Economist
                 }
             }
             help = true;//вспомогательная переменная для проверки наличия строки Result с результатом исчисления
+
+            if (formulasLB.SelectedIndex == 0 || (formulasLB.SelectedIndex >= 5 && formulasLB.SelectedIndex < 31))
+            {
+	            Help.ShowHelp(this, Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+		            "ECO_MonitoringSys2020.chm"), HelpNavigator.Topic, "formulaspage4.html#f" + (1 + formulasLB.SelectedIndex));
+            }
         }
 
         private void Iterations_SelectedIndexChanged(object sender, EventArgs e)
