@@ -12,6 +12,7 @@ using UserMap.Services;
 using UserMap.Helpers;
 using UserMap.ViewModel;
 using Data.Entity;
+using System.Collections;
 
 namespace UserMap.UserControls
 {
@@ -26,6 +27,8 @@ namespace UserMap.UserControls
         private Core.IDescribable describable;
 
         private ControllerVM<Emission> emissionsController;
+
+        private Dictionary<Data.Entity.Environment, List<Element>> environmentsWithElements;
 
         private DBManager dbManager;
         private ILogger logger;
@@ -56,6 +59,8 @@ namespace UserMap.UserControls
             emissionsController = new ControllerVM<Emission>();
 
             editingElemIndex = -1;
+
+            environmentsWithElements = new Dictionary<Data.Entity.Environment, List<Element>>();
 
             SetYearConstraints();
         }
@@ -136,14 +141,19 @@ namespace UserMap.UserControls
             else
             {
                 tasks.Add(EnvironmentsComboBox.FillComboBoxFromBDAsync(dbManager, "environment", "*", "",
-                              row => Data.Helpers.Mapper.Map<Data.Entity.Environment>(row),
-                              displayComboBoxMember: "Name",
-                              valueComboBoxMember: "Id",
-                              falultAction: c =>
-                              {
-                                  c.Items.Clear();
-                                  c.Items.Add(new Data.Entity.Environment { Id = -1, Name = "Не вдалось завантажити середовища." });
-                              })
+                                                                        row => Data.Helpers.Mapper.Map<Data.Entity.Environment>(row),
+                                                                        displayComboBoxMember: "Name",
+                                                                        valueComboBoxMember: "Id",
+                                                                        falultAction: c =>
+                                                                        {
+                                                                            c.Items.Clear();
+                                                                            c.Items.Add(new Data.Entity.Environment { Id = -1, Name = "Не вдалось завантажити середовища." });
+                                                                        })
+                                               .ContinueWith(result =>
+                                                            {
+                                                                MapCache.Add("environment", ElementsComboBox.DataSource);
+                                                                EnvironmentsComboBox.SelectedIndex = 0;
+                                                            }, TaskScheduler.FromCurrentSynchronizationContext())
                     );
             }
 
@@ -165,8 +175,6 @@ namespace UserMap.UserControls
                               .ContinueWith(result => MapCache.Add("elements", ElementsComboBox.DataSource),
                                             TaskScheduler.FromCurrentSynchronizationContext())
                           );
-
-
             }
 
             if (tasks.Count != 0)
@@ -201,7 +209,8 @@ namespace UserMap.UserControls
 
             if (!isReadOnly)
             {
-                if (emissionsController.Elements.Any())
+                if (emissionsController.Elements.Any() &&
+                    EmissionsDataGridView.CurrentRow != null)
                 {
                     EnableEmissionEditAndDelete();
                 }
@@ -418,6 +427,15 @@ namespace UserMap.UserControls
             {
                 emissionsController.CurrentElementIndex = 0;
             }
+
+            if (EmissionsDataGridView.CurrentRow == null)
+            {
+                DisableEmissionEditAndDelete();
+            }
+            else
+            {
+                EnableEmissionEditAndDelete();
+            }
         }
 
         private void SetBinings()
@@ -448,6 +466,21 @@ namespace UserMap.UserControls
         private void ResetDataGridView()
         {
             ((BindingSource)EmissionsDataGridView.DataSource)?.ResetBindings(false);
+
+            if (EmissionsDataGridView.Rows.Count != 0)
+            {
+                EmissionsDataGridView.ClearSelection();
+                EmissionsDataGridView.Rows[EmissionsDataGridView.Rows.Count - 1].Selected = true;
+
+                if (editingElemIndex == EmissionsDataGridView.Rows.Count - 1)
+                {
+                    var vScrollBar = EmissionsDataGridView.Controls.OfType<ScrollBar>().ElementAt(1);
+                    if (vScrollBar.Visible)
+                    {
+                        vScrollBar.Value = vScrollBar.Maximum;
+                    }
+                }
+            }
         }
 
         private void StartEmissionAction()
@@ -483,6 +516,17 @@ namespace UserMap.UserControls
         private void OnElementChanged()
         {
             ElementChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ProcessEmptyComboBox(ComboBox comboBox)
+        {
+            if (((IList)comboBox.DataSource).Count == 0)
+            {
+                comboBox.Text = string.Empty;
+                ChangeEmissionButton.Enabled = false;
+            }
+            else
+                ChangeEmissionButton.Enabled = true;
         }
 
         private void SetToEmissionComboBoxItem<T>(ComboBox fromComboBox, Action<T, Emission> setAction)
@@ -542,10 +586,28 @@ namespace UserMap.UserControls
 
             if (dataGrid.CurrentRow == null)
             {
+                DisableEmissionEditAndDelete();
                 return;
+            }
+            else
+            {
+                EnableEmissionEditAndDelete();
             }
 
             var currentElemIndex = dataGrid.CurrentRow.Index;
+
+            if (editingElemIndex != -1 && currentElemIndex != editingElemIndex && 
+                dataGrid.Rows.Count > editingElemIndex)
+            {
+                foreach (DataGridViewCell cell in dataGrid.Rows[currentElemIndex].Cells)
+                {
+                    cell.Selected = false;
+                }
+
+                dataGrid.Rows[editingElemIndex].Selected = true;
+                dataGrid.Rows[editingElemIndex].Cells[0].Selected = true;
+                return;
+            }    
 
             emissionsController.CurrentElementIndex = currentElemIndex;
 
@@ -580,6 +642,8 @@ namespace UserMap.UserControls
                 SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox,
                                                    (env, emission) => emission.Environment = env);
 
+                editingElemIndex = emissionsController.Elements.Count - 1;
+
                 var _emission = emissionsController.CurrentElement;
                 _emission.Element = (Element)ElementsComboBox?.Items[0];
                 _emission.Year = (int)YearNumericUpDown.Value;
@@ -591,6 +655,8 @@ namespace UserMap.UserControls
 
                 SetBinings();
                 StartEmissionAction();
+
+                ProcessEmptyComboBox(EnvironmentsComboBox);
             }
             else
             {
@@ -613,10 +679,11 @@ namespace UserMap.UserControls
         {
             if (ChangeEmissionButton.Text == "Змінити")
             {
-                emissionsController.StartEditElement();
                 editingElemIndex = EmissionsDataGridView.CurrentRow.Index;
+                emissionsController.StartEditElement(editingElemIndex);
 
                 StartEmissionAction();
+                ProcessEmptyComboBox(EnvironmentsComboBox);
             }
             else if (ChangeEmissionButton.Text == "Зберегти")
             {
@@ -630,9 +697,9 @@ namespace UserMap.UserControls
 
                 EndEmissionAction();
                 OnElementChanged();
-            }
 
-            ResetDataGridView();
+                ResetDataGridView();
+            }
         }
         private void DeleteEmissionButton_Click(object sender, EventArgs e)
         {
@@ -649,7 +716,39 @@ namespace UserMap.UserControls
 
         private void EnvironmentsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox, 
+            var currentEnvironement = (Data.Entity.Environment)EnvironmentsComboBox.SelectedItem;
+
+            if (!environmentsWithElements.ContainsKey(currentEnvironement))
+            {
+                //Ожидаем загрузку элементов
+                Task.Run(() => { while (ElementsComboBox.DataSource == null) { } })
+                    .ContinueWith(result =>
+                    {
+                        return dbManager.GetRowsAsync("gdk", "code", "environment = " + currentEnvironement.Id);
+                    })
+                    .Unwrap()
+                    .ContinueWith(result =>
+                    {
+                        var res = result.Result;
+                        var elements = (IList<Element>)MapCache.GetItem("elements");
+
+                        var joinedElements = elements.Join(res, outer => outer.Code, inner => (int)inner[0],
+                                                                    (outer, inner) => outer)
+                                                     .ToList();
+
+                        environmentsWithElements.Add(currentEnvironement, joinedElements);
+                        ElementsComboBox.DataSource = joinedElements;
+
+                        ProcessEmptyComboBox(ElementsComboBox);
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            else
+            {
+                ElementsComboBox.DataSource = environmentsWithElements[currentEnvironement];
+                ProcessEmptyComboBox(ElementsComboBox);
+            }
+
+            SetToEmissionComboBoxItem<Data.Entity.Environment>(EnvironmentsComboBox,
                                                                (env, emission) => emission.Environment = env);
         }
         private void ElementsComboBox_SelectedIndexChanged(object sender, EventArgs e)

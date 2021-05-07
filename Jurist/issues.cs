@@ -50,11 +50,10 @@ namespace experts_jurist
 		{
 
 		}
-
-		private void button3_Click(object sender, EventArgs e)
+		private void SuppressScriptErrors(WebBrowser browser)
 		{
+			browser.ScriptErrorsSuppressed = true;
 		}
-
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (listBox1.SelectedIndex != -1)
@@ -128,6 +127,7 @@ namespace experts_jurist
 			
 			if (listBox2.SelectedIndex >= 0)
 			{
+				SuppressScriptErrors(webBrowser1);
 				textBox3.Text = listOfAttachedFi[listBox2.SelectedIndex][2].ToString();
 				webBrowser1.DocumentText = SM.GetPage(listOfAttachedFi[listBox2.SelectedIndex][1].ToString());
 

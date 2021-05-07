@@ -90,7 +90,12 @@ namespace LawFileBase
 						if (but is CheckBox)
 							if (((CheckBox)but).Checked)
 								choosedWords.Add(((CheckBox)but).Text);
+
 					string[] allWords = LM.ToWordsHTML(pageText);
+
+					List<string> attrib = LM.attributes(pageText, FileOpen.SafeFileName.Replace(".html", "")); ////////
+					FBM.AddAttributesToWord(FileOpen.SafeFileName.Replace(".html", ""), attrib);
+
 					int wordsCount = (from a in allWords where choosedWords.Contains(a) select a).Count();
 					FBM.AddToListOfFiles(FileOpen.SafeFileName, wordsCount);
 					HashSet<string> choosedLemms = new HashSet<string>(from a in choosedWords select LM.ToLemm(a));

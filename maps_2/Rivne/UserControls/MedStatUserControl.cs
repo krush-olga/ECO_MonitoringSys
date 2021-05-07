@@ -102,6 +102,9 @@ namespace UserMap.UserControls
             }
         }
 
+        /// <summary>
+        /// Загрузка мед. статистики в зависимости от выбранных фильтров.
+        /// </summary>
         private Task LoadFilteredMedStat()
         {
             string tables = "med_stat, med_stat_param, formulas, issues";
@@ -262,8 +265,10 @@ namespace UserMap.UserControls
 
             var medStatResult = await dbManager.GetRowsUsingJoinAsync(medStatTables, medStatColumns, medStatJoinCond,
                                                                       medStatCond, Data.JoinType.INNER)
-                                               .ContinueWith(result =>
+                                               //Получаем сгруппированные параметры для мед. статистики в зависимости от формулы
+                                               .ContinueWith(result =>  
                                                {
+                                                   //Группировка по формулам (med_stat.id_of_formula)
                                                    return result.Result.GroupBy(key => (int)key[1], value => new
                                                    {
                                                        Id = (int)value[0],
@@ -271,6 +276,8 @@ namespace UserMap.UserControls
                                                    })
                                                    .ToDictionary(key => key.Key, value =>
                                                    {
+                                                       //Группируем и сортируем уже по med_stat_param.id_of_param, 
+                                                       // ибо на один id_of_param может быть несколько значений
                                                        var innerResult = value.GroupBy(innerKey => innerKey.Id,
                                                                                        innerValue => innerValue.Value)
                                                                               .OrderBy(item => item.Key)
@@ -308,6 +315,9 @@ namespace UserMap.UserControls
 
             await dbManager.GetRowsAsync("formulas", "DISTINCT id_of_formula, name_of_formula, " +
                                          "measurement_of_formula", formulasCond.ToString())
+                            //Т.к.  med_stat_param.id_of_param и med_stat.id_of_formula по сути представляют одно и тоже,
+                            //то делаем соединения medStatResult с результирующим набором для сопоставления с 
+                            //id_of_formula у формулы.
                             .ContinueWith(result =>
                             {
                                 var typedResult = result.Result.Select(row => new
@@ -318,9 +328,11 @@ namespace UserMap.UserControls
                                     Values = (List<string>)null
                                 });
 
+                                //Здесь outer.Id - formulas.id_of_formula, а inner.Key - med_stat.id_of_formula 
                                 var res = typedResult.Join(medStatResult, outer => outer.Id, inner => inner.Key,
                                                       (row, inner) =>
                                                       {
+                                                          //Здесь outer.Key - med_stat_param.id_of_param, а _inner.Id - formulas.id_of_formula 
                                                           var paramNames = inner.Value.Join(typedResult, outer => outer.Key,
                                                                                             _inner => _inner.Id, (param, tResult) =>
                                                                                             {
@@ -443,6 +455,7 @@ namespace UserMap.UserControls
         }
         private void MedStatUserControlTabControl_Resize(object sender, EventArgs e)
         {
+            //Кому не лень - попробуйте приделать расширение гридов в зависимости от их переполнения
             //bool isBackward = false;
             //if (oldSize.Width > Width)
             //{
