@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using Data;
+using HelpModule;
 
 namespace Experts_Economist
 {
@@ -124,5 +126,47 @@ namespace Experts_Economist
             неПриховуватиToolStripMenuItem1.Visible = true;
             неПриховуватиToolStripMenuItem.Visible = false;
         }
-    }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = button1,
+					Text = "Оберіть папку для експорту файлу"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = schemaCB,
+					Text = "Оберіть схему з випадаючого списку"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = loginTB,
+					Text = "Введіть логін"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = passwordTB,
+					Text = "Введіть пароль"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = exportBtn,
+					Text = "Натисніть на кнопку \"Експортувати\""
+                }
+			});
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
+	}
 }

@@ -239,6 +239,10 @@
       <Project>{257CD47A-3E26-4817-B689-A01842C2174A}</Project>
       <Name>Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HelpModule\HelpModule.csproj">
+      <Project>{232db101-3258-4e3a-aa4d-d9b25fe35602}</Project>
+      <Name>HelpModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LemmLab\LawFileBase\SearchAndBase.csproj">
       <Project>{3153355e-107e-4752-8f30-03ee5e821b34}</Project>
       <Name>SearchAndBase</Name>

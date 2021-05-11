@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using Data;
 using System.IO;
+using HelpModule;
 
 namespace Experts_Economist
 {
@@ -120,5 +122,55 @@ namespace Experts_Economist
             }
             return isConn;
         }
-    }
+
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
+
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = serverTB,
+						Text = "Введіть ім'я сервера"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = databaseTB,
+						Text = "Введіть ім'я бази даних"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = loginTB,
+						Text = "Введіть логін"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = passwordTB,
+						Text = "Введіть пароль"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = connectBtn,
+						Text = "Натисніть на кнопку \"Підключитися\""
+					}
+				});
+            }, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "Topic10.html");
+			});
+			frm.ShowDialog();
+            
+        }
+	}
 }

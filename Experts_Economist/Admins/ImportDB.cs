@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using Data;
 using System.IO;
 using System.Text;
+using HelpModule;
 
 namespace Experts_Economist
 {
@@ -237,5 +239,67 @@ namespace Experts_Economist
                 delimeterTB.Enabled = true;
             }
         }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = button2,
+					Text = "Оберіть файл для імпорту"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = tableCB,
+					Text = "Оберіть таблицю з випадаючого списку"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = delimeterTB,
+					Text = "Вкажіть роздільник якщо потрібно"
+                },
+				new InteractiveToolTipModel
+				{
+					Control = radioButton2,
+					Text = "Оберіть тип файлу"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = tableColumnsListView,
+					Text = "Оберіть колонки таблиці"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = userColumnsListView,
+					Text = "Оберіть значення"
+                },
+				new InteractiveToolTipModel
+				{
+					Control = mapButton,
+					Text = "Натисніть на кнопку \"Зв'язати обрані\""
+                },
+				new InteractiveToolTipModel
+				{
+					Control = mapList,
+					Text = "Перевірте дані"
+				},
+                new InteractiveToolTipModel
+				{
+					Control = doneButton,
+					Text = "Натисніть на кнопку \"Імпортувати\""
+                }
+			});
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

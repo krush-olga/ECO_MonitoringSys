@@ -10,6 +10,7 @@ using Data.Entity;
 using System.Linq;
 using System.Reflection;
 using Calculations;
+using HelpModule;
 
 namespace Experts_Economist
 {
@@ -281,12 +282,6 @@ namespace Experts_Economist
                 }
             }
             help = true;//вспомогательная переменная для проверки наличия строки Result с результатом исчисления
-
-            if (formulasLB.SelectedIndex == 0 || (formulasLB.SelectedIndex >= 5 && formulasLB.SelectedIndex < 31))
-            {
-	            Help.ShowHelp(this, Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-		            "ECO_MonitoringSys2020.chm"), HelpNavigator.Topic, "formulaspage4.html#f" + (1 + formulasLB.SelectedIndex));
-            }
         }
 
         private void Iterations_SelectedIndexChanged(object sender, EventArgs e)
@@ -1053,5 +1048,58 @@ namespace Experts_Economist
                 mainForm.CancelButton = exit_btn;
             }
         }
+
+		private void formulas_idLB_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			Dictionary<int, string> formulas = GetFormulasHelp();
+			var index = int.Parse(formulas_idLB.SelectedItem.ToString());
+            if (formulas.ContainsKey(index))
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, $"{formulas[index]}#f{formulas_idLB.SelectedItem}");
+			}
+        }
+
+		private Dictionary<int, string> GetFormulasHelp()
+			=> new Dictionary<int, string>
+			{
+				[31] = "formulaspage4.html",
+				[34] = "formulaspage4.html",
+				[49] = "formulaspage4.html",
+				[50] = "formulaspage4.html",
+				[51] = "formulaspage4.html",
+				[52] = "formulaspage4.html",
+				[63] = "formulaspage4.html",
+				[64] = "formulaspage4.html",
+				[65] = "formulaspage4.html",
+				[66] = "formulaspage4.html",
+				[67] = "formulaspage4.html",
+				[71] = "formulaspage4.html",
+				[75] = "formulaspage4.html",
+				[92] = "formulaspage4.html",
+				[93] = "formulaspage4.html",
+				[98] = "formulaspage4.html",
+				[102] = "formulaspage4.html",
+				[106] = "formulaspage4.html",
+				[110] = "formulaspage4.html",
+				[115] = "formulaspage4.html",
+				[123] = "formulaspage4.html",
+				[130] = "formulaspage4.html",
+				[131] = "formulaspage4.html",
+				[138] = "formulaspage4.html",
+				[141] = "formulaspage4.html",
+				[145] = "formulaspage4.html",
+				[146] = "formulaspage4.html",
+				[20] = "formulaspage7.html",
+				[25] = "formulaspage7.html",
+				[29] = "formulaspage7.html",
+				[248] = "formulaspage2.html",
+				[249] = "formulaspage2.html",
+				[253] = "formulaspage2.html",
+				[256] = "formulaspage2.html",
+				[258] = "formulaspage2.html",
+				[1] = "formulaspage6.html",
+				[167] = "formulaspage6.html",
+            };
+
     }
 }

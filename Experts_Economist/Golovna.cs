@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using HelpModule;
 using HelpModule.Forms;
 using UserLoginForm;
 
@@ -452,8 +453,7 @@ namespace Experts_Economist
 
 		private void довідкаToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string pathToHelp = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "ECO_MonitoringSys2020.chm");
-			Help.ShowHelp(this, pathToHelp);
+			Help.ShowHelp(this, Config.PathToHelp);
         }
 
 		// Событие при нажатии на элемент меню Help-Сценарії
@@ -534,9 +534,7 @@ namespace Experts_Economist
 				return;
 			}
 
-			Help.ShowHelp(this,
-				Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-					"ECO_MonitoringSys2020.chm"), HelpNavigator.Topic, $"p{selectMenuItemToolStrip.SelectedIndex}.html");
+			Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, $"p{selectMenuItemToolStrip.SelectedIndex}.html");
 		}
 	}
 }

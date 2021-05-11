@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Data;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
 using System.Text;
+using HelpModule;
 
 namespace Experts_Economist
 {
     public partial class Dovidka : Form
     {
-
-        private string tableName;
+	    private string tableName;
         private int id_of_exp = 0;
         private DBManager db = new DBManager();
         private List<RadioButton> radioButtons;
@@ -868,6 +871,206 @@ namespace Experts_Economist
         {
 
         }
+
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
+
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
+
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+	        var frm = new HelpToolTipForm(delegate
+	        {
+		        if (id_of_exp != 0)
+			        return;
+		        if (!searchRadio.Checked && !addRadio.Checked && !editRadio.Checked && !deleteRadio.Checked)
+			        StartTutorialProcess();
+		        else
+			        StartTutorialRd();
+            }, delegate
+	        {
+		        string page = "";
+		        if (this.tableName == "elements")
+		        {
+			        page = "p13.html";
+		        }
+		        else if (this.tableName == "gdk")
+		        {
+			        page = "p14.html";
+                }
+		        else if (this.tableName == "environment")
+		        {
+			        page = "p15.html";
+                }
+		        else if (this.tableName == "emissions")
+		        {
+			        page = "p16.html";
+                }
+		        else if (this.tableName == "tax_values")
+		        {
+			        page = "p17.html";
+                }
+		        else
+		        {
+                    return;
+		        }
+
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, page);
+            });
+	        frm.ShowDialog();
+            
+		}
+
+		private void StartTutorialProcess()
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+                new InteractiveToolTipModel
+                {
+                    Control = workMode,
+                    Text = "Оберіть режим роботи",
+                    IsNotFinal = true,
+                    AfterHandler = AfterWorkModeChecked
+                }
+			});
+
+        }
+
+		private void AfterWorkModeChecked()
+		{
+			if (!searchRadio.Checked && !addRadio.Checked && !editRadio.Checked && !deleteRadio.Checked)
+			{
+				searchRadio.CheckedChanged += WorkModeCheckedHandler;
+				addRadio.CheckedChanged += WorkModeCheckedHandler;
+				editRadio.CheckedChanged += WorkModeCheckedHandler;
+				deleteRadio.CheckedChanged += WorkModeCheckedHandler;
+			}
+            else
+				StartTutorialRd();
+		}
+
+		private void StartTutorialRd()
+		{
+			if (searchRadio.Checked)
+			{
+				tutorialSearch();
+			}
+			else if (addRadio.Checked)
+			{
+				tutorialAdd();
+			}
+			else if (editRadio.Checked)
+			{
+				tutorialEdit();
+			}
+			else if (deleteRadio.Checked)
+			{
+				tutorialDelete();
+			}
+        }
+
+		private void WorkModeCheckedHandler(object sender, EventArgs e)
+		{
+			searchRadio.CheckedChanged -= WorkModeCheckedHandler;
+			addRadio.CheckedChanged -= WorkModeCheckedHandler;
+			editRadio.CheckedChanged -= WorkModeCheckedHandler;
+			deleteRadio.CheckedChanged -= WorkModeCheckedHandler;
+			var rd = (RadioButton) sender;
+			if (rd == searchRadio)
+			{
+				tutorialSearch();
+			}
+            else if (rd == addRadio)
+			{
+				tutorialAdd();
+            }
+			else if (rd == editRadio)
+			{
+				tutorialEdit();
+            }
+			else if (rd == deleteRadio)
+			{
+				tutorialDelete();
+            }
+        }
+
+		private void tutorialSearch()
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = flowLayoutPanel1,
+					Text = "Заповніть дані для пошуку"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = doneBtn,
+					Text = "Натисніть на кнопку \"Виконати\""
+                }
+            });
+        }
+
+		private void tutorialAdd()
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = flowLayoutPanel1,
+					Text = "Заповніть дані"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = doneBtn,
+					Text = "Натисніть на кнопку \"Додати\""
+                }
+			});
+		}
+
+		private void tutorialEdit()
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = gdkDataGrid,
+					Text = "Оберіть необхідний рядок"
+				},
+                new InteractiveToolTipModel
+				{
+					Control = flowLayoutPanel1,
+					Text = "Відредагуйте дані"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = doneBtn,
+					Text = "Натисніть на кнопку \"Редагувати\""
+				}
+			});
+		}
+
+		private void tutorialDelete()
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = gdkDataGrid,
+					Text = "Оберіть необхідний рядок"
+                },
+				new InteractiveToolTipModel
+				{
+					Control = doneBtn,
+					Text = "Натисніть на кнопку \"Видалити\""
+                }
+			});
+		}
     }
 
 }
