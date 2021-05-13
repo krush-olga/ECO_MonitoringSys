@@ -33,6 +33,7 @@ namespace oprForm
             nameTB.Text = "";
             descrTB.Text = "";
             TemaTB.Text = "";
+            cmbBxTema.Text = ""; // add for UI
         }
 
         private void addBtn_Click(object sender, EventArgs e)
@@ -40,7 +41,8 @@ namespace oprForm
             if (nameTB.Text != "")
             {
                 string[] fields = { "name", "description", "Tema" };
-                string[] values = { DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descrTB.Text), DBUtil.AddQuotes(TemaTB.Text) };
+                string[] values = { DBUtil.AddQuotes(nameTB.Text), DBUtil.AddQuotes(descrTB.Text), 
+                    DBUtil.AddQuotes(cmbBxTema.Text/*TemaTB.Text*/) }; // add for UI
 
                 db.InsertToBD("issues", fields, values);
                 RefreshIssues();
@@ -58,9 +60,11 @@ namespace oprForm
 
                 string[] cols = { "issue_id", "name", "description", "Tema" };
                 string[] values = { item.Id.ToString(), DBUtil.AddQuotes(nameTB.Text),
-                    DBUtil.AddQuotes(descrTB.Text), DBUtil.AddQuotes(TemaTB.Text) };
+                    DBUtil.AddQuotes(descrTB.Text), 
+                    DBUtil.AddQuotes(cmbBxTema.Text/*TemaTB.Text*/) }; // add for UI
+ 
 
-                db.UpdateRecord("issues", cols, values);
+                 db.UpdateRecord("issues", cols, values);
                 RefreshIssues();
             }
             else
@@ -78,6 +82,7 @@ namespace oprForm
             nameTB.Text = issue.Name;
             descrTB.Text = issue.Description;
             TemaTB.Text = issue.Tema;
+            cmbBxTema.Text= issue.Tema; //add for UI
         }
         private void issuesLB_SelectedIndexChanged(object sender, EventArgs e)
         {//show

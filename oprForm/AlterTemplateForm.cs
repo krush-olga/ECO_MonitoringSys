@@ -4,16 +4,72 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using System.Drawing;
+
+
 namespace oprForm
 {
     public partial class AlterTemplateForm : Form
     {
         private DBManager db = new DBManager();
 
+        /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
+        TextBox[] txtBxMas = new TextBox[2]; //= { txtBxTemplate, txtBxRes, evNameTB, descTB };
+        string[] placeholderMas = { "Пошук по шаблонам", "Пошук по ресурсам" };
+
+        private void PlaceholderTxtBx(TextBox txtBxName, string placeholder)
+        {
+            txtBxName.ForeColor = SystemColors.GrayText;
+            txtBxName.Text = placeholder;
+            txtBxName.Leave += TxtBx_Leave;
+            txtBxName.Enter += TxtBx_Enter;
+        }
+
+        private void TxtBx_Enter(object sender, EventArgs e)
+        {
+            // throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+            bool check = false;
+            for (int i = 0; i < placeholderMas.Length; i++) if (txtBx.Text == placeholderMas[i]) check = true;
+            if (check)
+            {
+                txtBx.Text = "";
+                txtBx.ForeColor = SystemColors.WindowText;
+            }
+        }
+
+        private void TxtBx_Leave(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+            string placeholder = "";
+
+            if (txtBx.Text.Length == 0)
+            {
+                for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
+                txtBx.Text = placeholder;
+                txtBx.ForeColor = SystemColors.GrayText;
+            }
+
+        }
+        /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
+
         public AlterTemplateForm()
         {
             InitializeComponent();
             db.Connect();
+
+            /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+            txtBxMas[0] = txtBxTemplate;
+            txtBxMas[1] = txtBxRes;
+            for (int i = 0; i < txtBxMas.Length; i++) PlaceholderTxtBx(txtBxMas[i], placeholderMas[i]);
+
+            /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
             var obj = db.GetRows("event_template", "*", "");
             var events = new List<Event>();
             foreach (var row in obj)

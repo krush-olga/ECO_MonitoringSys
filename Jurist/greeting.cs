@@ -22,7 +22,7 @@ namespace experts_jurist
             string userName = db.GetValue("user", "user_name", "id_of_user=" + id).ToString();
             string curDir = Directory.GetCurrentDirectory();
             var urit = new Uri("about/jurist_about.htm?name=" + userName, UriKind.Relative);
-            webBrowser1.Navigate(curDir+ "/about/jurist_about.htm?name=" + userName);
+            //webBrowser1.Navigate(curDir+ "/about/jurist_about.htm?name=" + userName);
         }
 
         private void greeting_Load(object sender, EventArgs e)

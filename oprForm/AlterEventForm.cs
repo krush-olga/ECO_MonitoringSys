@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using System.Drawing;
+using System.Linq;
+
 namespace oprForm
 {
     public partial class AlterEventForm : Form
@@ -12,10 +15,64 @@ namespace oprForm
         private int valueCol = 2;
         private int descCol = 1;
 
+        private Event[] originalEvents;
+        private Resource[] originalResource;
+
+        /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
+        TextBox[] txtBxMas = new TextBox[2]; //= { txtBxTemplate, txtBxRes, evNameTB, descTB };
+        string[] placeholderMas = { "Пошук по заходам", "Пошук по ресурсам"};
+
+        private void PlaceholderTxtBx(TextBox txtBxName, string placeholder)
+        {
+            txtBxName.ForeColor = SystemColors.GrayText;
+            txtBxName.Text = placeholder;
+            txtBxName.Leave += TxtBx_Leave;
+            txtBxName.Enter += TxtBx_Enter;
+        }
+
+        private void TxtBx_Enter(object sender, EventArgs e)
+        {
+            // throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+            bool check = false;
+            for (int i = 0; i < placeholderMas.Length; i++) if (txtBx.Text == placeholderMas[i]) check = true;
+            if (check)
+            {
+                txtBx.Text = "";
+                txtBx.ForeColor = SystemColors.WindowText;
+            }
+        }
+
+        private void TxtBx_Leave(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+            string placeholder = "";
+
+            if (txtBx.Text.Length == 0)
+            {
+                for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
+                txtBx.Text = placeholder;
+                txtBx.ForeColor = SystemColors.GrayText;
+            }
+
+        }
+        /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
         public AlterEventForm()
         {
             InitializeComponent();
             db.Connect();
+
+            /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+            txtBxMas[0] = txtBxTemplate;
+            txtBxMas[1] = txtBxRes;
+            for (int i = 0; i < txtBxMas.Length; i++) PlaceholderTxtBx(txtBxMas[i], placeholderMas[i]);
+
+            /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
 
             getEvents();
 
@@ -27,7 +84,10 @@ namespace oprForm
                 issues.Add(IssueMapper.Map(row));
             }
 
-            issuesCB.Items.AddRange(issues.ToArray());
+            var _issues = issues.ToArray();
+            issuesCB.Items.AddRange(_issues);
+            findIssueCB.Items.Add(new Issue { Id = -1, Name = "Оберіть задачу" });
+            findIssueCB.Items.AddRange(_issues);
             issuesCB.SelectedIndex = 0;
 
             var res = db.GetRows("resource", "*", "");
@@ -36,7 +96,9 @@ namespace oprForm
             {
                 resources.Add(ResourceMapper.Map(row));
             }
-            resLB.Items.AddRange(resources.ToArray());
+            originalResource = resources.ToArray();
+
+            resLB.Items.AddRange(originalResource);
 
             db.Disconnect();
         }
@@ -50,8 +112,9 @@ namespace oprForm
             {
                 events.Add(EventMapper.Map(row));
             }
+            originalEvents = events.ToArray();
 
-            eventsLB.Items.AddRange(events.ToArray());
+            eventsLB.Items.AddRange(originalEvents);
         }
 
         private void eventsLB_SelectedIndexChanged(object sender, EventArgs e)
@@ -154,6 +217,17 @@ namespace oprForm
             }
         }
 
+        private void SetEventLBFiltration()
+        {
+            var lowerTemplateText = txtBxTemplate.ForeColor == SystemColors.GrayText ? string.Empty : txtBxTemplate.Text.ToLower();
+            var findIssue = findIssueCB.SelectedItem as Issue;
+
+            eventsLB.Items.Clear();
+            eventsLB.Items.AddRange(originalEvents.Where(_event => _event.Name.ToLower().Contains(lowerTemplateText) && 
+                                                                   (findIssue?.Id == - 1 || _event.IssueId == findIssue?.Id))
+                                                  .ToArray());
+        }
+
         private void delBtn_Click(object sender, EventArgs e)
         {
             var confirm = MessageBox.Show("Видалити захiд?", "Видалення", MessageBoxButtons.YesNo);
@@ -221,6 +295,33 @@ namespace oprForm
                     return;
             }
             eventListGrid.Rows.Add(res, res.Description);
+        }
+
+        private void FindButton_Click(object sender, EventArgs e)
+        {
+            if (sender is Button button)
+            {
+                switch (button.Tag.ToString())
+                {
+                    case "1":
+                        SetEventLBFiltration();
+                        break;
+                    case "2":
+                        var lowerResultText = txtBxRes.ForeColor == SystemColors.GrayText ? string.Empty : txtBxRes.Text.ToLower();
+
+                        resLB.Items.Clear();
+                        resLB.Items.AddRange(originalResource.Where(resource => resource.Name.ToLower().Contains(lowerResultText))
+                                                             .ToArray());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void findIssueCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetEventLBFiltration();
         }
     }
 }

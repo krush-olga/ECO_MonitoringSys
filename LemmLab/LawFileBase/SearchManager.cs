@@ -117,7 +117,7 @@ namespace LawFileBase
                 {
                     if (res.ContainsKey(g.Split(' ')[0] + " " + g.Split(' ')[1])) 
                     {
-                        res[g.Split(' ')[0] + " " + g.Split(' ')[1]] *= (Math.Log((double)listOfFiles.Length / (double)li.Length) + 0.01) / Convert.ToDouble(g.Split(' ')[2]); //Convert.ToDouble(g.Split(' ')[1])
+                        res[g.Split(' ')[0] + " " + g.Split(' ')[1]] *= (Math.Log((double)all.Length / (double)li.Length) + 0.01) / Convert.ToDouble(g.Split(' ')[2]);
                     }
                 }
 
@@ -284,16 +284,69 @@ namespace LawFileBase
         /// <returns>Зміст законодавчого документу.</returns>
         public string GetPage(string name)
         {
+            var list = LawBaseManager.GetHtml(name);
+            var page = Formatting(list);
 
-            var list = LawBaseManager.GetHtm(name);
-            string page = "";
-            foreach(var g in list)
+            if (page == "")
             {
-                page += g;
+                return LawBaseManager.GetHtml_(name);
             }
             return page;
         }
-		public void doit()
+
+        /// <summary>
+        /// Додає абзаци в місцях некоректного виведення документів
+        /// </summary>
+        /// <param name="list">Масив стрічок документу</param>
+        /// <returns></returns>
+        public string Formatting(string[] list)
+        {
+            string page = "";
+            bool temp = false;
+            foreach (var g in list)
+            {
+                bool tt = false;
+                if (temp)
+                {
+                    if (g.Contains("-----"))
+                    {
+                        page += "<br>";
+                        tt = true;
+                    }
+                    if (g.Contains("   |"))
+                    {
+                        page += "<br>";
+                    }
+                    if (g.Contains("______"))
+                    {
+                        page += "<br>";
+                    }
+                    page += g;
+
+                    if (tt)
+                    {
+                        page += "<br>";
+                    }
+                }
+
+                if (g.Contains("<div class=\"clearfix\">"))
+                {
+                    temp = false;
+                    continue;
+                }
+                if (g.Contains("</aside>"))
+                {
+                    temp = true;
+                }
+                if (g.Contains("<div id=\"orfoWindow\" class=\"modal fade\">"))
+                {
+                    temp = false;
+                }
+            }
+            return page;
+        }
+
+        public void doit()
 		{
 			//LawBaseManager.doit();
 		}

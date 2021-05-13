@@ -52,6 +52,15 @@
     <Compile Include="addFiles.Designer.cs">
       <DependentUpon>addFiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="DeleteDoc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeleteDoc.Designer.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SearchManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +77,11 @@
   <ItemGroup>
     <EmbeddedResource Include="addFiles.resx">
       <DependentUpon>addFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeleteDoc.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

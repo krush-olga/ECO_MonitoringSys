@@ -216,6 +216,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ResourcesForm.resx">
       <DependentUpon>ResourcesForm.cs</DependentUpon>
@@ -247,6 +248,9 @@
       <Project>{3153355e-107e-4752-8f30-03ee5e821b34}</Project>
       <Name>SearchAndBase</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imgonline-com-ua-Resize-Ojr6EQ8xE2H.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

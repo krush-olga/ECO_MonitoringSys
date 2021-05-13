@@ -377,6 +377,61 @@ namespace UserMap.UserControls
                                           TaskContinuationOptions.OnlyOnRanToCompletion,
                                           TaskScheduler.FromCurrentSynchronizationContext());
         }
+        private Task LoadSeriesInfo()
+        {
+            var selectedSeries = SeriesCheckedListBox.CheckedItems.OfType<CalculationSeries>();
+
+            CalculationsResultDataGridView.Rows.Clear();
+
+            if (!selectedSeries.Any())
+            {
+                return Task.FromResult(0);
+            }
+
+            string tables = "calculations_result, formulas";
+            string columns = "calculations_result.calculation_number, formulas.name_of_formula, " +
+                             "calculations_result.result, formulas.description_of_formula, " +
+                             "calculations_result.date_of_calculation";
+            string joinCondition = "calculations_result.id_of_formula = formulas.id_of_formula";
+            StringBuilder condition = new StringBuilder();
+
+            foreach (var _selectedSeries in selectedSeries)
+            {
+                condition.Append("calculations_result.calculation_number = ");
+                condition.Append(_selectedSeries.Id);
+                condition.Append(" OR ");
+            }
+            condition.Remove(condition.Length - 3, 2);
+
+            return dbManager.GetRowsUsingJoinAsync(tables, columns, joinCondition, condition.ToString(), JoinType.INNER)
+                            .ContinueWith(result =>
+                           {
+                               return result.Result.Select(row => new
+                               {
+                                   SeriesName = (int)row[0],
+                                   Formula = row[1].ToString(),
+                                   Result = row[2].ToString(),
+                                   FormulaDescription = row[3].ToString(),
+                                   Date = row[4]
+                               }).ToList();
+                           }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                            .ContinueWith(result =>
+                           {
+                               foreach (var item in result.Result)
+                               {
+                                   var row = new DataGridViewRow();
+                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = selectedSeries.First(_series => _series.Id == item.SeriesName).Name });
+                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.Formula });
+                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.Result });
+                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.FormulaDescription });
+                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.Date });
+
+                                   CalculationsResultDataGridView.Rows.Add(row);
+                               }
+                           }, System.Threading.CancellationToken.None,
+                              TaskContinuationOptions.OnlyOnRanToCompletion,
+                              TaskScheduler.FromCurrentSynchronizationContext());
+        }
         private async Task<List<CalculationSeries>> LoadSeriesByIssue(int issueId)
         {
             string condition = $"issue_id = {issueId}";
@@ -535,6 +590,8 @@ namespace UserMap.UserControls
 #endif
             }
 
+            await LoadSeriesInfo();
+
             isLoading = false;
         }
 
@@ -583,57 +640,7 @@ namespace UserMap.UserControls
 
         private async void RefreshCalcResButton_Click(object sender, EventArgs e)
         {
-            var selectedSeries = SeriesCheckedListBox.CheckedItems.OfType<CalculationSeries>();
-
-            CalculationsResultDataGridView.Rows.Clear();
-            if (!selectedSeries.Any())
-            {
-                return;
-            }
-
-            string tables = "calculations_result, formulas";
-            string columns = "calculations_result.calculation_number, formulas.name_of_formula, " +
-                             "calculations_result.result, formulas.description_of_formula, " +
-                             "calculations_result.date_of_calculation";
-            string joinCondition = "calculations_result.id_of_formula = formulas.id_of_formula";
-            StringBuilder condition = new StringBuilder();
-
-            foreach (var _selectedSeries in selectedSeries)
-            {
-                condition.Append("calculations_result.calculation_number = ");
-                condition.Append(_selectedSeries.Id);
-                condition.Append(" OR ");
-            }
-            condition.Remove(condition.Length - 3, 2);
-
-            await dbManager.GetRowsUsingJoinAsync(tables, columns, joinCondition, condition.ToString(), JoinType.INNER)
-                           .ContinueWith(result =>
-                           {
-                               return result.Result.Select(row => new
-                               {
-                                   SeriesName = (int)row[0],
-                                   Formula = row[1].ToString(),
-                                   Result = row[2].ToString(),
-                                   FormulaDescription = row[3].ToString(),
-                                   Date = row[4]
-                               }).ToList();
-                           }, TaskContinuationOptions.OnlyOnRanToCompletion)
-                           .ContinueWith(result =>
-                           {
-                               foreach (var item in result.Result)
-                               {
-                                   var row = new DataGridViewRow();
-                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = selectedSeries.First(_series => _series.Id == item.SeriesName).Name });
-                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.Formula });
-                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.Result });
-                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.FormulaDescription });
-                                   row.Cells.Add(new DataGridViewTextBoxCell { Value = item.Date });
-
-                                   CalculationsResultDataGridView.Rows.Add(row);
-                               }
-                           }, System.Threading.CancellationToken.None,
-                              TaskContinuationOptions.OnlyOnRanToCompletion,
-                              TaskScheduler.FromCurrentSynchronizationContext());
+            await LoadSeriesInfo();
         }
 
         private void SeriesCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)

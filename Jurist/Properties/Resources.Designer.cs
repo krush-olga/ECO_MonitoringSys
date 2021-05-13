@@ -73,9 +73,9 @@ namespace Jurist.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_down1 {
+        internal static System.Drawing.Bitmap arrow_up {
             get {
-                object obj = ResourceManager.GetObject("arrow_down1", resourceCulture);
+                object obj = ResourceManager.GetObject("arrow_up", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace Jurist.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap arrow_up {
+        internal static System.Drawing.Bitmap lawyer4 {
             get {
-                object obj = ResourceManager.GetObject("arrow_up", resourceCulture);
+                object obj = ResourceManager.GetObject("lawyer4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

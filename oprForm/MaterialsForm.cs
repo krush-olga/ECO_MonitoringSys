@@ -73,7 +73,7 @@ namespace oprForm
                         {
                             if (ex.Number == 1451)
                             {
-                                MessageBox.Show("Ресурс використовуэться");
+                                MessageBox.Show("Ресурс використовується");
                             }
                         }
                         finally
@@ -143,5 +143,6 @@ namespace oprForm
                 textBoxes[i].Text = cells[i].Value.ToString();
             }
         }
+
     }
 }

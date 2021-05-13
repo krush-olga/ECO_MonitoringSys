@@ -1,8 +1,11 @@
 ﻿using Data;
 using Data.Entity;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
+
+using System.Drawing;
 
 namespace oprForm
 {
@@ -13,14 +16,75 @@ namespace oprForm
         private int valueCol = 2;
         private int descCol = 1;
 
+        private Event[] originalEvents;
+        private Resource[] originalResource;
+        
+
         public PlannedEventsForm(int userId)
         {
             InitializeComponent();
             user = userId;
+
+            originalEvents = new Event[0];
+            originalResource = new Resource[0];
         }
+
+
+        /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
+        TextBox[] txtBxMas = new TextBox[4]; //= { txtBxTemplate, txtBxRes, evNameTB, descTB };
+        string[] placeholderMas = { "Пошук по шаблону", "Пошук по ресурсам", "Введіть назву заходу", "Введіть опис заходу" };
+
+        private void PlaceholderTxtBx(TextBox txtBxName, string placeholder)
+        {
+            txtBxName.ForeColor = SystemColors.GrayText;
+            txtBxName.Text = placeholder;
+            txtBxName.Leave += TxtBx_Leave;
+            txtBxName.Enter += TxtBx_Enter;
+        }
+
+        private void TxtBx_Enter(object sender, EventArgs e)
+        {
+           // throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+            bool check = false;
+            for (int i = 0; i < placeholderMas.Length; i++) if (txtBx.Text == placeholderMas[i]) check = true;
+            if (check)
+            {
+                txtBx.Text = "";
+                txtBx.ForeColor = SystemColors.WindowText;
+            }
+        }
+
+        private void TxtBx_Leave(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+            string placeholder = "";
+
+             if (txtBx.Text.Length == 0)
+            {
+                for(int i=0;i<txtBxMas.Length;i++) if (txtBx.Name==txtBxMas[i].Name) placeholder = placeholderMas[i];
+                txtBx.Text = placeholder;
+                txtBx.ForeColor = SystemColors.GrayText;
+            }
+
+        }
+        /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
 
         private void PlannedEventsForm_Load(object sender, EventArgs e)
         {
+            /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+            txtBxMas[0] = txtBxTemplate;
+            txtBxMas[1] = txtBxRes;
+            txtBxMas[2] = evNameTB;
+            txtBxMas[3] = descTB;
+            for (int i=0; i< txtBxMas.Length;i++) PlaceholderTxtBx(txtBxMas[i], placeholderMas[i]);
+           
+            /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
             db.Connect();
             var obj = db.GetRows("event_template", "*", "");
             var events = new List<Event>();
@@ -28,8 +92,9 @@ namespace oprForm
             {
                 events.Add(EventTemplateMapper.Map(row));
             }
+            originalEvents = events.ToArray();
 
-            eventsLB.Items.AddRange(events.ToArray());
+            eventsLB.Items.AddRange(originalEvents);
 
             issuesCB.Items.Clear();
             var iss = db.GetRows("issues", "*", "");
@@ -48,7 +113,10 @@ namespace oprForm
             {
                 resources.Add(ResourceMapper.Map(row));
             }
-            resLB.Items.AddRange(resources.ToArray());
+
+            originalResource = resources.ToArray();
+
+            resLB.Items.AddRange(originalResource);
 
             db.Disconnect();
         }
@@ -138,6 +206,7 @@ namespace oprForm
                     eventListGrid.Rows.Add(r, r.Description);
                 }
                 descTB.Text = ev.Description;
+                descTB.ForeColor = SystemColors.WindowText; //add UI
 
                 db.Disconnect();
             }
@@ -205,8 +274,9 @@ namespace oprForm
                 {
                     events.Add(EventTemplateMapper.Map(row));
                 }
+                originalEvents = events.ToArray();
 
-                eventsLB.Items.AddRange(events.ToArray());
+                eventsLB.Items.AddRange(originalEvents);
                 db.Disconnect();
             }
             else
@@ -226,6 +296,33 @@ namespace oprForm
                     return;
             }
             eventListGrid.Rows.Add(res, res.Description);
+        }
+
+        private void FindButton_Click(object sender, EventArgs e)
+        {
+            if (sender is Button button)
+            {
+                switch (button.Tag.ToString())
+                {
+                    case "1":
+
+                        var lowerTemplateText = txtBxTemplate.ForeColor == SystemColors.GrayText ? string.Empty : txtBxTemplate.Text.ToLower();
+
+                        eventsLB.Items.Clear();
+                        eventsLB.Items.AddRange(originalEvents.Where(_event => _event.Name.ToLower().Contains(lowerTemplateText))
+                                                              .ToArray());
+                        break;
+                    case "2":
+                        var lowerResultText = txtBxRes.ForeColor == SystemColors.GrayText ? string.Empty : txtBxRes.Text.ToLower();
+
+                        resLB.Items.Clear();
+                        resLB.Items.AddRange(originalResource.Where(resource => resource.Name.ToLower().Contains(lowerResultText))
+                                                             .ToArray());
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

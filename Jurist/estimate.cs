@@ -199,11 +199,11 @@ namespace experts_jurist
             {
                 if (checkBox5.Checked)
                 {
-                    listOfEvents = db.GetRows("event", "*", "dm_verification= 0 AND lawyer_vefirication= 0 OR (dm_verification is null AND lawyer_vefirication is null) AND issue_id = " + currentIssue); // mine
+                    listOfEvents = db.GetRows("event", "*", "dm_verification= 0 AND lawyer_vefirication= 0 AND issue_id = " + currentIssue + " OR (dm_verification is null AND lawyer_vefirication is null) AND issue_id = " + currentIssue); // mine
                 }
                 else
                 {
-                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 0 OR dm_verification is null AND issue_id = " + currentIssue); // mine
+                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 0 AND issue_id = " + currentIssue + " OR dm_verification is null AND issue_id = " + currentIssue); // mine
                 }
             }
             else if (checkBox4.Checked)
@@ -225,11 +225,11 @@ namespace experts_jurist
                 }
                 else if (checkBox3.Checked)
                 {
-                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 0 AND dm_verification= 0 OR (dm_verification is null AND lawyer_vefirication is null) AND issue_id = " + currentIssue); // mine
+                    listOfEvents = db.GetRows("event", "*", "lawyer_vefirication= 0 AND dm_verification= 0 AND issue_id = " + currentIssue + " OR (dm_verification is null AND lawyer_vefirication is null) AND issue_id = " + currentIssue); // mine
                 }
                 else
                 {
-                    listOfEvents = db.GetRows("event", "*", "dm_verification= 0 or dm_verification is null AND issue_id = " + currentIssue); // mine
+                    listOfEvents = db.GetRows("event", "*", "dm_verification= 0 AND issue_id = " + currentIssue + " OR dm_verification is null AND issue_id = " + currentIssue); // mine
                 }
             }
             else if (checkBox1.Checked)

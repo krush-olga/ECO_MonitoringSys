@@ -29,70 +29,58 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.RozrahTSM = new System.Windows.Forms.ToolStripMenuItem();
-            this.ResultTSM = new System.Windows.Forms.ToolStripMenuItem();
-            this.RedaktTSM = new System.Windows.Forms.ToolStripMenuItem();
-            this.TemplateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.проМодульToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.базаДанихЗаконодавчихДокументівToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Search = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddingDoc = new System.Windows.Forms.ToolStripMenuItem();
             this.проблемыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.NewTemplateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ChangeTemplateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.заходиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.переглядТаОцінкаЗаходівToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.запропонуватиЗахідToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.шаблониToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.редагуванняШаблонівToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.доданняНовихШаблонівToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.довідкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.проМодульToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.видаленняДокументуЗБазиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RozrahTSM,
-            this.ResultTSM,
-            this.RedaktTSM,
-            this.TemplateToolStripMenuItem,
-            this.проМодульToolStripMenuItem,
+            this.базаДанихЗаконодавчихДокументівToolStripMenuItem,
             this.проблемыToolStripMenuItem,
-            this.fileBaseToolStripMenuItem});
+            this.заходиToolStripMenuItem,
+            this.довідкаToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1068, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // RozrahTSM
+            // базаДанихЗаконодавчихДокументівToolStripMenuItem
             // 
-            this.RozrahTSM.Name = "RozrahTSM";
-            this.RozrahTSM.Size = new System.Drawing.Size(133, 20);
-            this.RozrahTSM.Text = "Запропонувати захід";
-            this.RozrahTSM.Click += new System.EventHandler(this.offer_Click);
+            this.базаДанихЗаконодавчихДокументівToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Search,
+            this.AddingDoc,
+            this.видаленняДокументуЗБазиToolStripMenuItem});
+            this.базаДанихЗаконодавчихДокументівToolStripMenuItem.Name = "базаДанихЗаконодавчихДокументівToolStripMenuItem";
+            this.базаДанихЗаконодавчихДокументівToolStripMenuItem.Size = new System.Drawing.Size(219, 20);
+            this.базаДанихЗаконодавчихДокументівToolStripMenuItem.Text = "База даних законодавчих документів";
             // 
-            // ResultTSM
+            // Search
             // 
-            this.ResultTSM.Name = "ResultTSM";
-            this.ResultTSM.Size = new System.Drawing.Size(166, 20);
-            this.ResultTSM.Text = "Перегляд та оцінка заходів";
-            this.ResultTSM.Click += new System.EventHandler(this.estimate_Click);
+            this.Search.Name = "Search";
+            this.Search.Size = new System.Drawing.Size(244, 22);
+            this.Search.Text = "Пошук та перегляд документів";
+            this.Search.Click += new System.EventHandler(this.search_Click);
             // 
-            // RedaktTSM
+            // AddingDoc
             // 
-            this.RedaktTSM.Name = "RedaktTSM";
-            this.RedaktTSM.Size = new System.Drawing.Size(61, 20);
-            this.RedaktTSM.Text = "Пошук ";
-            this.RedaktTSM.Click += new System.EventHandler(this.search_Click);
-            // 
-            // TemplateToolStripMenuItem
-            // 
-            this.TemplateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.NewTemplateToolStripMenuItem,
-            this.ChangeTemplateToolStripMenuItem});
-            this.TemplateToolStripMenuItem.Name = "TemplateToolStripMenuItem";
-            this.TemplateToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
-            this.TemplateToolStripMenuItem.Text = "Шаблони";
-            // 
-            // проМодульToolStripMenuItem
-            // 
-            this.проМодульToolStripMenuItem.Name = "проМодульToolStripMenuItem";
-            this.проМодульToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
-            this.проМодульToolStripMenuItem.Text = "Про модуль";
-            this.проМодульToolStripMenuItem.Click += new System.EventHandler(this.проМодульToolStripMenuItem_Click);
+            this.AddingDoc.Name = "AddingDoc";
+            this.AddingDoc.Size = new System.Drawing.Size(244, 22);
+            this.AddingDoc.Text = "Додання нового документу";
+            this.AddingDoc.Click += new System.EventHandler(this.AddingDoc_Click);
             // 
             // проблемыToolStripMenuItem
             // 
@@ -101,26 +89,74 @@
             this.проблемыToolStripMenuItem.Text = "Задачі";
             this.проблемыToolStripMenuItem.Click += new System.EventHandler(this.проблемыToolStripMenuItem_Click);
             // 
-            // fileBaseToolStripMenuItem
+            // заходиToolStripMenuItem
             // 
-            this.fileBaseToolStripMenuItem.Name = "fileBaseToolStripMenuItem";
-            this.fileBaseToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
-            this.fileBaseToolStripMenuItem.Text = "Файлова база";
-            this.fileBaseToolStripMenuItem.Click += new System.EventHandler(this.fileBaseToolStripMenuItem_Click);
+            this.заходиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.переглядТаОцінкаЗаходівToolStripMenuItem,
+            this.запропонуватиЗахідToolStripMenuItem,
+            this.шаблониToolStripMenuItem});
+            this.заходиToolStripMenuItem.Name = "заходиToolStripMenuItem";
+            this.заходиToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.заходиToolStripMenuItem.Text = "Заходи";
             // 
-            // NewTemplateToolStripMenuItem
+            // переглядТаОцінкаЗаходівToolStripMenuItem
             // 
-            this.NewTemplateToolStripMenuItem.Name = "NewTemplateToolStripMenuItem";
-            this.NewTemplateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.NewTemplateToolStripMenuItem.Text = "Новий шаблон";
-            this.NewTemplateToolStripMenuItem.Click += new System.EventHandler(this.newTemplateToolStripMenuItem_Click);
+            this.переглядТаОцінкаЗаходівToolStripMenuItem.Name = "переглядТаОцінкаЗаходівToolStripMenuItem";
+            this.переглядТаОцінкаЗаходівToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.переглядТаОцінкаЗаходівToolStripMenuItem.Text = "Перегляд та оцінка заходів";
+            this.переглядТаОцінкаЗаходівToolStripMenuItem.Click += new System.EventHandler(this.estimate_Click);
             // 
-            // ChangeTemplateToolStripMenuItem
+            // запропонуватиЗахідToolStripMenuItem
             // 
-            this.ChangeTemplateToolStripMenuItem.Name = "ChangeTemplateToolStripMenuItem";
-            this.ChangeTemplateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ChangeTemplateToolStripMenuItem.Text = "Змінити шаблон";
-            this.ChangeTemplateToolStripMenuItem.Click += new System.EventHandler(this.alterTemplateToolStripMenuItem_Click);
+            this.запропонуватиЗахідToolStripMenuItem.Name = "запропонуватиЗахідToolStripMenuItem";
+            this.запропонуватиЗахідToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.запропонуватиЗахідToolStripMenuItem.Text = "Запропонувати захід";
+            this.запропонуватиЗахідToolStripMenuItem.Click += new System.EventHandler(this.offer_Click);
+            // 
+            // шаблониToolStripMenuItem
+            // 
+            this.шаблониToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.редагуванняШаблонівToolStripMenuItem,
+            this.доданняНовихШаблонівToolStripMenuItem});
+            this.шаблониToolStripMenuItem.Name = "шаблониToolStripMenuItem";
+            this.шаблониToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.шаблониToolStripMenuItem.Text = "Шаблони";
+            // 
+            // редагуванняШаблонівToolStripMenuItem
+            // 
+            this.редагуванняШаблонівToolStripMenuItem.Name = "редагуванняШаблонівToolStripMenuItem";
+            this.редагуванняШаблонівToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.редагуванняШаблонівToolStripMenuItem.Text = "Редагування шаблонів";
+            this.редагуванняШаблонівToolStripMenuItem.Click += new System.EventHandler(this.alterTemplateToolStripMenuItem_Click);
+            // 
+            // доданняНовихШаблонівToolStripMenuItem
+            // 
+            this.доданняНовихШаблонівToolStripMenuItem.Name = "доданняНовихШаблонівToolStripMenuItem";
+            this.доданняНовихШаблонівToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.доданняНовихШаблонівToolStripMenuItem.Text = "Додання нових шаблонів";
+            this.доданняНовихШаблонівToolStripMenuItem.Click += new System.EventHandler(this.newTemplateToolStripMenuItem_Click);
+            // 
+            // довідкаToolStripMenuItem
+            // 
+            this.довідкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.проМодульToolStripMenuItem1});
+            this.довідкаToolStripMenuItem.Name = "довідкаToolStripMenuItem";
+            this.довідкаToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.довідкаToolStripMenuItem.Text = "Довідка";
+            // 
+            // проМодульToolStripMenuItem1
+            // 
+            this.проМодульToolStripMenuItem1.Name = "проМодульToolStripMenuItem1";
+            this.проМодульToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.проМодульToolStripMenuItem1.Text = "Про модуль";
+            this.проМодульToolStripMenuItem1.Click += new System.EventHandler(this.About_Click);
+            // 
+            // видаленняДокументуЗБазиToolStripMenuItem
+            // 
+            this.видаленняДокументуЗБазиToolStripMenuItem.Name = "видаленняДокументуЗБазиToolStripMenuItem";
+            this.видаленняДокументуЗБазиToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
+            this.видаленняДокументуЗБазиToolStripMenuItem.Text = "Видалення документу ";
+            this.видаленняДокументуЗБазиToolStripMenuItem.Click += new System.EventHandler(this.DeletingDoc_Click);
             // 
             // mainWin
             // 
@@ -145,14 +181,18 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem RozrahTSM;
-        private System.Windows.Forms.ToolStripMenuItem ResultTSM;
-        private System.Windows.Forms.ToolStripMenuItem RedaktTSM;
-        private System.Windows.Forms.ToolStripMenuItem проМодульToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem TemplateToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem проблемыToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fileBaseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem NewTemplateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ChangeTemplateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem базаДанихЗаконодавчихДокументівToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Search;
+        private System.Windows.Forms.ToolStripMenuItem AddingDoc;
+        private System.Windows.Forms.ToolStripMenuItem заходиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem переглядТаОцінкаЗаходівToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem запропонуватиЗахідToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem довідкаToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem проМодульToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem шаблониToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem редагуванняШаблонівToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem доданняНовихШаблонівToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem видаленняДокументуЗБазиToolStripMenuItem;
     }
 }
