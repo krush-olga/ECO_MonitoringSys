@@ -152,6 +152,9 @@ namespace UserMap.UserControls
                                                .ContinueWith(result =>
                                                             {
                                                                 MapCache.Add("environment", ElementsComboBox.DataSource);
+
+                                                                //Необходимо для начальной фильтрации
+                                                                EnvironmentsComboBox.SelectedIndex = -1;
                                                                 EnvironmentsComboBox.SelectedIndex = 0;
                                                             }, TaskScheduler.FromCurrentSynchronizationContext())
                     );
@@ -737,6 +740,9 @@ namespace UserMap.UserControls
                                                      .ToList();
 
                         environmentsWithElements.Add(currentEnvironement, joinedElements);
+
+                        //Нужно для сброса размера выпадающего елемента
+                        ElementsComboBox.DataSource = null;
                         ElementsComboBox.DataSource = joinedElements;
 
                         ProcessEmptyComboBox(ElementsComboBox);
@@ -744,6 +750,8 @@ namespace UserMap.UserControls
             }
             else
             {
+                //Нужно для сброса размера выпадающего елемента
+                ElementsComboBox.DataSource = null;
                 ElementsComboBox.DataSource = environmentsWithElements[currentEnvironement];
                 ProcessEmptyComboBox(ElementsComboBox);
             }
