@@ -171,9 +171,9 @@
             this.onlyExpCB.Location = new System.Drawing.Point(484, 24);
             this.onlyExpCB.Margin = new System.Windows.Forms.Padding(2);
             this.onlyExpCB.Name = "onlyExpCB";
-            this.onlyExpCB.Size = new System.Drawing.Size(169, 17);
+            this.onlyExpCB.Size = new System.Drawing.Size(175, 17);
             this.onlyExpCB.TabIndex = 9;
-            this.onlyExpCB.Text = "Тільки есперта користувача";
+            this.onlyExpCB.Text = "Тільки експерта користувача";
             this.onlyExpCB.UseVisualStyleBackColor = true;
             this.onlyExpCB.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 

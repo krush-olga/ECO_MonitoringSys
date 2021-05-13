@@ -168,8 +168,9 @@ namespace oprForm
 
                     SynchronizationContext.Current.Send(obj => issueCostTB.Text = obj + " грн", totalCost);
                 }
-                finally
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex);
                 }
 
                 docsLB.DataSource = issuesDocs[issue];
@@ -673,6 +674,10 @@ namespace oprForm
 
             if (issuesLB.SelectedItem is Issue issue)
             {
+                issueTB.Text = issue.Name;
+                issueDescTB.Text = issue.Description;
+                TemaTextBox.Text = issue.Tema;
+
                 await SetIssueInfo(issue);
             }
         }
@@ -690,9 +695,9 @@ namespace oprForm
             }
             else
             {
-                var findIssues = issues.Where(issue => issue.Name.Contains(findIssueCondTB.Text) ||
-                                                       issue.Description.Contains(findIssueCondTB.Text) ||
-                                                       issue.Tema.Contains(findIssueCondTB.Text));
+                var findIssues = issues.Where(issue => issue.Name.ToLower().Contains(findIssueCondTB.Text.ToLower()) ||
+                                                       issue.Description.ToLower().Contains(findIssueCondTB.Text.ToLower()) ||
+                                                       issue.Tema.ToLower().Contains(findIssueCondTB.Text.ToLower()));
 
                 if (!findIssues.Any())
                 {

@@ -127,6 +127,16 @@ namespace oprForm
             {
                 Event ev = templatesLB.SelectedItem as Event;
                 db.Connect();
+
+                var ress = db.GetRows("template_resource", "resource_id", "template_id=" + ev.Id);
+                foreach (var resId in ress)
+                {
+                    string resCols = "template_id";
+                    string resValues = ev.Id + " AND resource_id=" + resId[0].ToString();
+
+                    db.DeleteFromDB("template_resource", resCols, resValues);
+                }
+
                 db.DeleteFromDB("event_template", "template_id", ev.Id.ToString());
                 db.Disconnect();
 

@@ -22,6 +22,7 @@ namespace oprForm
         private void PlannedEventsForm_Load(object sender, EventArgs e)
         {
             db.Connect();
+            resLB.Items.Clear();
             var obj = db.GetRows("event_template", "*", "");
             var events = new List<Event>();
             foreach (var row in obj)
@@ -55,8 +56,22 @@ namespace oprForm
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (eventsLB.SelectedItem == null || issuesCB.SelectedItem == null)
+            if (eventsLB.SelectedItem == null)
             {
+                MessageBox.Show("Неможливо додати новий захід. Виберіть необхідний шаблон!", "Помилка", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (issuesCB.SelectedItem == null)
+            {
+                MessageBox.Show("Неможливо додати новий захід. Виберіть необхідну задачу!", "Помилка",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (evNameTB.Text == string.Empty)
+            {
+                MessageBox.Show("Назва заходу не може бути відсутня.", "Помилка",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -137,6 +152,7 @@ namespace oprForm
                 {
                     eventListGrid.Rows.Add(r, r.Description);
                 }
+                evNameTB.Text = ev.Name;
                 descTB.Text = ev.Description;
 
                 db.Disconnect();

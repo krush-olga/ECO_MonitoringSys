@@ -33,12 +33,6 @@
 		{
             this.components = new System.ComponentModel.Container();
             this.eventListGrid = new System.Windows.Forms.DataGridView();
-            this.Resource = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unitsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.priceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label13 = new System.Windows.Forms.Label();
@@ -85,6 +79,12 @@
             this.DocumentsSortToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DocContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.OpenInBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Resource = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unitsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.priceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalPriceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.eventListGrid)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -113,42 +113,6 @@
             this.eventListGrid.ReadOnly = true;
             this.eventListGrid.Size = new System.Drawing.Size(853, 225);
             this.eventListGrid.TabIndex = 10;
-            // 
-            // Resource
-            // 
-            this.Resource.HeaderText = "Назва";
-            this.Resource.Name = "Resource";
-            this.Resource.ReadOnly = true;
-            // 
-            // Description
-            // 
-            this.Description.HeaderText = "Опис";
-            this.Description.Name = "Description";
-            this.Description.ReadOnly = true;
-            // 
-            // Value
-            // 
-            this.Value.HeaderText = "Кількість";
-            this.Value.Name = "Value";
-            this.Value.ReadOnly = true;
-            // 
-            // unitsCol
-            // 
-            this.unitsCol.HeaderText = "Одиниці Виміру";
-            this.unitsCol.Name = "unitsCol";
-            this.unitsCol.ReadOnly = true;
-            // 
-            // priceCol
-            // 
-            this.priceCol.HeaderText = "Ціна";
-            this.priceCol.Name = "priceCol";
-            this.priceCol.ReadOnly = true;
-            // 
-            // totalPriceCol
-            // 
-            this.totalPriceCol.HeaderText = "Повна Ціна";
-            this.totalPriceCol.Name = "totalPriceCol";
-            this.totalPriceCol.ReadOnly = true;
             // 
             // tabControl1
             // 
@@ -645,6 +609,42 @@
             this.OpenInBrowserToolStripMenuItem.Text = "Відкрити у браузері";
             this.OpenInBrowserToolStripMenuItem.Click += new System.EventHandler(this.OpenInBrowserToolStripMenuItem_Click);
             // 
+            // Resource
+            // 
+            this.Resource.HeaderText = "Назва";
+            this.Resource.Name = "Resource";
+            this.Resource.ReadOnly = true;
+            // 
+            // Description
+            // 
+            this.Description.HeaderText = "Опис";
+            this.Description.Name = "Description";
+            this.Description.ReadOnly = true;
+            // 
+            // Value
+            // 
+            this.Value.HeaderText = "Кількість";
+            this.Value.Name = "Value";
+            this.Value.ReadOnly = true;
+            // 
+            // unitsCol
+            // 
+            this.unitsCol.HeaderText = "Одиниці Виміру";
+            this.unitsCol.Name = "unitsCol";
+            this.unitsCol.ReadOnly = true;
+            // 
+            // priceCol
+            // 
+            this.priceCol.HeaderText = "Ціна";
+            this.priceCol.Name = "priceCol";
+            this.priceCol.ReadOnly = true;
+            // 
+            // totalPriceCol
+            // 
+            this.totalPriceCol.HeaderText = "Вартість";
+            this.totalPriceCol.Name = "totalPriceCol";
+            this.totalPriceCol.ReadOnly = true;
+            // 
             // LookEventsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -675,12 +675,6 @@
 
 		#endregion
 		private System.Windows.Forms.DataGridView eventListGrid;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Resource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
-        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn totalPriceCol;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox EventCostTextBox;
@@ -727,5 +721,11 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.ContextMenuStrip DocContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem OpenInBrowserToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Resource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
+        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn totalPriceCol;
     }
 }

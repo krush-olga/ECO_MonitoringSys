@@ -114,6 +114,7 @@ namespace experts_jurist
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            listOfFi = SM.SearchAll();
             var tempList = SM.SearchLine(textBox1.Text, listOfFi);
 
             if (tempList.Count() > 0)
@@ -132,6 +133,11 @@ namespace experts_jurist
             comboBox6.SelectedIndex = 0;
             comboBox7.SelectedIndex = 0;
             comboBox8.SelectedIndex = 0;
+
+            comboBox2.Text = "Орган, що видав документ";
+            comboBox2.ForeColor = Color.Gray;
+            comboBox1.Text = "Тип документу";
+            comboBox1.ForeColor = Color.Gray;
 
             comboBox1.Items.Add("Всі");
             comboBox2.Items.Add("Всі");
@@ -273,31 +279,38 @@ namespace experts_jurist
 
             foreach (var doc in listOfFi)
             {
-                var a = Convert.ToInt32(FBM.GetAttributes(doc, 4).ToString().Split('.')[0]);
-                var b = Convert.ToInt32(FBM.GetAttributes(doc, 4).ToString().Split('.')[1]);
-                var c = Convert.ToInt32(FBM.GetAttributes(doc, 4).ToString().Split('.')[2]);
-                var all = "";
-
-                all = String.Join(".", a, b, c);
-
-                if (a > 0 && a < 10)
-                {
-                    all = String.Join(".", "0" + a, b, c);
-                }
-                if (b > 0 && b < 10)
-                {
-                    all = String.Join(".", a, "0" + b, c);
-                }
-                if ((a > 0 && a < 10) && (b > 0 && b < 10))
-                {
-                    all = String.Join(".", "0" + a, "0" + b, c);
-                }
-
-                DateTime t1 = DateTime.ParseExact(all, "dd.mm.yyyy", CultureInfo.InvariantCulture);
-
+                var all = FBM.GetAttributes(doc, 4).ToString();
+                DateTime t1 = DateTime.ParseExact(all, "d.M.yyyy", CultureInfo.CurrentCulture);
                 resList[doc.Split(' ')[0] + " " + doc.Split(' ')[1]] = t1;
-
             }
+
+            //foreach (var doc in listOfFi)
+            //{
+            //    var a = Convert.ToInt32(FBM.GetAttributes(doc, 4).ToString().Split('.')[0]);
+            //    var b = Convert.ToInt32(FBM.GetAttributes(doc, 4).ToString().Split('.')[1]);
+            //    var c = Convert.ToInt32(FBM.GetAttributes(doc, 4).ToString().Split('.')[2]);
+            //    var all = "";
+
+            //    all = String.Join(".", a, b, c);
+
+            //    if (a > 0 && a < 10)
+            //    {
+            //        all = String.Join(".", "0" + a, b, c);
+            //    }
+            //    if (b > 0 && b < 10)
+            //    {
+            //        all = String.Join(".", a, "0" + b, c);
+            //    }
+            //    if ((a > 0 && a < 10) && (b > 0 && b < 10))
+            //    {
+            //        all = String.Join(".", "0" + a, "0" + b, c);
+            //    }
+
+            //    DateTime t1 = DateTime.ParseExact(all, "dd.mm.yyyy", CultureInfo.InvariantCulture);
+
+            //    resList[doc.Split(' ')[0] + " " + doc.Split(' ')[1]] = t1;
+
+            //}
 
             var sortedOneList = from pair in resList
                                 orderby pair.Value ascending

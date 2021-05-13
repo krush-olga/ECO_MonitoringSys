@@ -71,9 +71,16 @@ namespace oprForm
 
         private void addBtn_Click(object sender, EventArgs e)
         {
+            if (nameTB.Text == string.Empty)
+            {
+                MessageBox.Show("Назва шаблону не може бути відсутня.", 
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             db.Connect();
             string temName = DBUtil.AddQuotes(nameTB.Text);
-            string temDesc = DBUtil.AddQuotes(descTB.Text);
+            string temDesc = descTB.Text == string.Empty ? "\"Опис відсутній.\"" : DBUtil.AddQuotes(descTB.Text);
 
             string[] evFields = new string[] { "name", "description", "expert_id" };
             string[] evValues = new string[] { temName, temDesc, user.ToString() };

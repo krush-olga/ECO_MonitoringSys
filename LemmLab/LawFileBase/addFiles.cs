@@ -38,7 +38,7 @@ namespace LawFileBase
 		}
 		private void button1_Click(object sender, EventArgs e)
 		{
-			
+			chooseWords = false;
 
 			if (FileOpen.ShowDialog(this) == DialogResult.OK)
 			{
