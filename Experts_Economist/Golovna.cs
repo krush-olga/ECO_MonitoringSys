@@ -279,7 +279,7 @@ namespace Experts_Economist
         {
             if (dovidkaEmissions == null)
             {
-                dovidkaEmissions = new Dovidka("emissions", id_of_exp);
+                dovidkaEmissions = new Dovidka("emission", id_of_exp);
                 dovidkaEmissions.Text = "ДОВІДКА - ЗАБРУДНЕННЯ";
                 dovidkaEmissions.MdiParent = this;
                 dovidkaEmissions.Show();
