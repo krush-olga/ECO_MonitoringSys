@@ -41,7 +41,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(171, 43);
             this.button1.TabIndex = 0;
-            this.button1.Text = "вибрать файл";
+            this.button1.Text = "Вибрати файл";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -52,7 +52,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(176, 43);
             this.button2.TabIndex = 0;
-            this.button2.Text = "добавить в базу";
+            this.button2.Text = "Добавити в базу";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -71,7 +71,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(152, 45);
             this.button3.TabIndex = 1;
-            this.button3.Text = "Показать слова индексации";
+            this.button3.Text = "Показати слова індексації";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 

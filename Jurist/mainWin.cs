@@ -25,6 +25,8 @@ namespace experts_jurist
 		private AddTemplateForm NewTemplateMDIChild;
 		private AlterTemplateForm TemplateMDIChild;
 
+        private DeleteDoc DeleteDocMDIChild;
+
         private int userId;
         private bool closeIt = false;
         public mainWin(int id)
@@ -93,8 +95,11 @@ namespace experts_jurist
 		
         private void NewEventMDIChild_FormClosed(object sender, FormClosedEventArgs e)
         {
-			NewEventMDIChild.MdiParent = this;
-			NewEventMDIChild.Show();
+			//NewEventMDIChild.MdiParent = this;
+			//NewEventMDIChild.Show();
+
+            NewEventMDIChild.Dispose();
+            NewEventMDIChild = null;
         }
 
         private void mainWin_Load(object sender, EventArgs e)
@@ -110,19 +115,6 @@ namespace experts_jurist
                 GreetMDIChild.WindowState = FormWindowState.Maximized;
 
             }
-        }
-
-        private void проМодульToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (GreetMDIChild == null)
-            {
-                GreetMDIChild = new greeting(userId);
-                GreetMDIChild.MdiParent = this;
-                GreetMDIChild.Show();
-                GreetMDIChild.FormClosed += GreetMDIChild_FormClosed;
-                GreetMDIChild.WindowState = FormWindowState.Maximized;
-            }
-            GreetMDIChild.BringToFront();
         }
 
         private void GreetMDIChild_FormClosed(object sender, FormClosedEventArgs e)
@@ -160,29 +152,7 @@ namespace experts_jurist
 			IssuesMDIChild.BringToFront();
 		}
 
-		private void IssuesMDIChild_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			IssuesMDIChild?.Dispose();
-			IssuesMDIChild = null;
-		}
 
-        private void fileBaseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (AddFilesMDIChild == null)
-            {
-                AddFilesMDIChild = new addFiles();
-                AddFilesMDIChild.MdiParent = this;
-                AddFilesMDIChild.Show();
-                AddFilesMDIChild.FormClosed += (s, arg) => 
-                {
-                    AddFilesMDIChild?.Dispose();
-                    AddFilesMDIChild = null;
-                };
-
-                AddFilesMDIChild.WindowState = FormWindowState.Maximized;
-            }
-            AddFilesMDIChild.BringToFront();
-        }
 
         private void newTemplateToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -208,6 +178,62 @@ namespace experts_jurist
                 TemplateMDIChild.WindowState = FormWindowState.Maximized;
             }
             TemplateMDIChild.BringToFront();
+        }
+
+        private void AddingDoc_Click(object sender, EventArgs e)
+        {
+            if (AddFilesMDIChild == null)
+            {
+                AddFilesMDIChild = new addFiles();
+                AddFilesMDIChild.MdiParent = this;
+                AddFilesMDIChild.Show();
+                AddFilesMDIChild.FormClosed += (s, arg) =>
+                {
+                    AddFilesMDIChild?.Dispose();
+                    AddFilesMDIChild = null;
+                };
+
+                AddFilesMDIChild.WindowState = FormWindowState.Maximized;
+            }
+            AddFilesMDIChild.BringToFront();
+        }
+
+        private void IssuesMDIChild_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            IssuesMDIChild?.Dispose();
+            IssuesMDIChild = null;
+        }
+
+
+        private void About_Click(object sender, EventArgs e)
+        {
+            if (GreetMDIChild == null)
+            {
+                GreetMDIChild = new greeting(userId);
+                GreetMDIChild.MdiParent = this;
+                GreetMDIChild.Show();
+                GreetMDIChild.FormClosed += GreetMDIChild_FormClosed;
+                GreetMDIChild.WindowState = FormWindowState.Maximized;
+            }
+            GreetMDIChild.BringToFront();
+        }
+
+        private void DeletingDoc_Click(object sender, EventArgs e)
+        {
+            if (DeleteDocMDIChild == null)
+            {
+                DeleteDocMDIChild = new DeleteDoc();
+                DeleteDocMDIChild.MdiParent = this;
+                DeleteDocMDIChild.Show();
+                DeleteDocMDIChild.FormClosed += (s, arg) =>
+                {
+                    DeleteDocMDIChild?.Dispose();
+                    DeleteDocMDIChild = null;
+                };
+
+                DeleteDocMDIChild.WindowState = FormWindowState.Maximized;
+            }
+            DeleteDocMDIChild.BringToFront();
         }
     }
 }

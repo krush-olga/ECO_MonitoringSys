@@ -177,10 +177,22 @@ namespace FileBase
         /// </summary>
         /// <param name="name">Ім'я файлу без розширення ".htm".</param>
         /// <returns>Зміст файлу.</returns>
-        public string[] GetHtm(string name)
+        public string[] GetHtml(string name)
         {
             return File.ReadAllLines(location + name + ".html", Encoding.UTF8); 
         }
+
+        /// <summary>
+        /// Отримання змісту файлу з росширенням ".html"
+        /// </summary>
+        /// <param name="name">Ім'я файлу</param>
+        /// <returns>Зміст файлу одним рядком</returns>
+        public string GetHtml_(string name)
+        {
+            var reader = new StreamReader(File.OpenRead(location + name + ".html"), Encoding.UTF8);
+            return reader.ReadToEnd();
+        }
+
         /// <summary>
         /// Отримання списку імен всіх зареєстрованих файлів.
         /// </summary>
@@ -263,7 +275,7 @@ namespace FileBase
 		/// <returns>Назву документу.</returns>
 		public string GetName(string name )
         {
-            var mFile = GetHtm(name);
+            var mFile = GetHtml(name);
           //  var re0 = new Regex("<div class=\"page-header\"><h1>(.*)</h1></div>"); // Mine
             var re1 = new Regex("<title>(.*)</title>");                              // Mine
             /*  var re1 = new Regex("<span class=rvts70>(.*)</span>");
