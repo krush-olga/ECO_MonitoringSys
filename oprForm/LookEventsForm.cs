@@ -13,6 +13,8 @@ using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 
+using System.Drawing;
+
 namespace oprForm
 {
     public partial class LookEventsForm : Form
@@ -28,10 +30,56 @@ namespace oprForm
         private Dictionary<Event, List<KeyValuePair<string, string>>> eventsDocs;
         private Dictionary<int, string> expertsNames;
 
+        /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
+        TextBox txtBxSearch; 
+        string placeholder = "Введіть параметри для пошуку";
+
+        private void PlaceholderTxtBx(TextBox txtBxName, string placeholder)
+        {
+            txtBxName.ForeColor = SystemColors.GrayText;
+            txtBxName.Text = placeholder;
+            txtBxName.Leave += TxtBx_Leave;
+            txtBxName.Enter += TxtBx_Enter;
+        }
+
+        private void TxtBx_Enter(object sender, EventArgs e)
+        {
+            // throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+            if (txtBx.Text == placeholder) 
+            {
+                txtBx.Text = "";
+                txtBx.ForeColor = SystemColors.WindowText;
+            }
+        }
+
+        private void TxtBx_Leave(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+
+            TextBox txtBx = sender as TextBox;
+
+            if (txtBx.Text.Length == 0)
+            {
+                if (txtBx.Name == txtBxSearch.Name) txtBx.Text = placeholder;
+                txtBx.ForeColor = SystemColors.GrayText;
+            }
+
+        }
+        /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+
         public LookEventsForm(int expertId)
         {
             InitializeComponent();
             db = new DBManager();
+
+            /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
+            txtBxSearch = findIssueCondTB;
+            PlaceholderTxtBx(txtBxSearch, placeholder);
+
+            /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
 
             issues = new List<Issue>();
             expertsNames = new Dictionary<int, string>();
@@ -168,9 +216,8 @@ namespace oprForm
 
                     SynchronizationContext.Current.Send(obj => issueCostTB.Text = obj + " грн", totalCost);
                 }
-                catch (Exception ex)
+                finally
                 {
-                    Debug.WriteLine(ex);
                 }
 
                 docsLB.DataSource = issuesDocs[issue];
@@ -563,7 +610,7 @@ namespace oprForm
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Не владось завантажити информацию по заходу.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не владось завантажити інформацію по заходу.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 var currentSycnContext = SynchronizationContext.Current;
@@ -571,6 +618,12 @@ namespace oprForm
                 currentSycnContext.Post(obj =>
                 {
                     var __event = obj as Event;
+
+                    //begin add for UI
+                    txtBxTask.Text = issueTB.Text; 
+                    cmbBxEventName.DataSource = eventsLB.Items;
+                    //end add for UI
+
 
                     EventNameTextBox.Text = __event.Name;
                     EventDescTextBox.Text = __event.Description;
@@ -689,15 +742,16 @@ namespace oprForm
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            if (findIssueCondTB.Text == "")
+            if (findIssueCondTB.Text == string.Empty)
             {
                 MessageBox.Show("Поле пошуку пусте.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                var findIssues = issues.Where(issue => issue.Name.ToLower().Contains(findIssueCondTB.Text.ToLower()) ||
-                                                       issue.Description.ToLower().Contains(findIssueCondTB.Text.ToLower()) ||
-                                                       issue.Tema.ToLower().Contains(findIssueCondTB.Text.ToLower()));
+                var lowerFindIssueText = findIssueCondTB.Text.ToLower();
+                var findIssues = issues.Where(issue => issue.Name.ToLower().Contains(lowerFindIssueText) ||
+                                                       issue.Description.ToLower().Contains(lowerFindIssueText) ||
+                                                       issue.Tema.ToLower().Contains(lowerFindIssueText));
 
                 if (!findIssues.Any())
                 {
@@ -727,13 +781,9 @@ namespace oprForm
         private async void NextIssueClick(object sender, EventArgs e)
         {
             if (issueCounter < issues.Count - 1)
-            {
                 issueCounter++;
-            }
             else if (issueCounter == issues.Count - 1)
-            {
                 issueCounter = 0;
-            }
 
             var currentIssue = issues[issueCounter];
 
@@ -748,13 +798,9 @@ namespace oprForm
         private async void PreviousIssueClick(object sender, EventArgs e)
         {
             if (issueCounter > 0)
-            {
                 issueCounter--;
-            }
             else if (issueCounter == 0)
-            {
                 issueCounter = issues.Count - 1;
-            }
 
             var currentIssue = issues[issueCounter];
 
@@ -835,7 +881,7 @@ namespace oprForm
             }
             else
             {
-                MessageBox.Show("Вибранний документ не знайдено на комп'ютері.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Обранний документ не знайдено на комп'ютері.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

@@ -28,21 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.materialListGrid = new System.Windows.Forms.DataGridView();
             this.Resource = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.resourcesLB = new System.Windows.Forms.ListBox();
             this.addBtn = new System.Windows.Forms.Button();
             this.descTB = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.nameTB = new System.Windows.Forms.TextBox();
             this.templatesLB = new System.Windows.Forms.ListBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.addGB = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.btnRes = new System.Windows.Forms.Button();
+            this.txtBxRes = new System.Windows.Forms.TextBox();
+            this.btnSearchTemplate = new System.Windows.Forms.Button();
+            this.txtBxTemplate = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.contextMenuRes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.додатиНовийРесурсToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.materialListGrid)).BeginInit();
             this.addGB.SuspendLayout();
+            this.contextMenuRes.SuspendLayout();
             this.SuspendLayout();
             // 
             // materialListGrid
@@ -51,11 +61,10 @@
             this.materialListGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.materialListGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Resource});
-            this.materialListGrid.Location = new System.Drawing.Point(316, 38);
-            this.materialListGrid.Margin = new System.Windows.Forms.Padding(4);
+            this.materialListGrid.Location = new System.Drawing.Point(344, 34);
             this.materialListGrid.Name = "materialListGrid";
             this.materialListGrid.ReadOnly = true;
-            this.materialListGrid.Size = new System.Drawing.Size(490, 404);
+            this.materialListGrid.Size = new System.Drawing.Size(275, 325);
             this.materialListGrid.TabIndex = 13;
             this.materialListGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.materialListGrid_CellContentClick);
             // 
@@ -69,72 +78,65 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 22);
+            this.label1.Location = new System.Drawing.Point(4, 20);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 17);
+            this.label1.Size = new System.Drawing.Size(85, 13);
             this.label1.TabIndex = 12;
             this.label1.Text = "Назва шаблону";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(165, 17);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 17);
-            this.label3.TabIndex = 19;
-            this.label3.Text = "Ресурси";
             // 
             // resourcesLB
             // 
             this.resourcesLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.resourcesLB.ContextMenuStrip = this.contextMenuRes;
             this.resourcesLB.FormattingEnabled = true;
-            this.resourcesLB.ItemHeight = 16;
-            this.resourcesLB.Location = new System.Drawing.Point(168, 38);
-            this.resourcesLB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.resourcesLB.Location = new System.Drawing.Point(180, 56);
+            this.resourcesLB.Margin = new System.Windows.Forms.Padding(2);
             this.resourcesLB.Name = "resourcesLB";
-            this.resourcesLB.Size = new System.Drawing.Size(131, 404);
+            this.resourcesLB.Size = new System.Drawing.Size(160, 303);
             this.resourcesLB.TabIndex = 18;
             this.resourcesLB.DoubleClick += new System.EventHandler(this.resourcesLB_DoubleClick);
             // 
             // addBtn
             // 
             this.addBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.addBtn.Location = new System.Drawing.Point(696, 19);
-            this.addBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.addBtn.Location = new System.Drawing.Point(494, 15);
+            this.addBtn.Margin = new System.Windows.Forms.Padding(2);
             this.addBtn.Name = "addBtn";
-            this.addBtn.Size = new System.Drawing.Size(84, 26);
+            this.addBtn.Size = new System.Drawing.Size(105, 25);
             this.addBtn.TabIndex = 17;
-            this.addBtn.Text = "Зберегти";
+            this.addBtn.Text = "Зберегти зміни";
             this.addBtn.UseVisualStyleBackColor = true;
             this.addBtn.Click += new System.EventHandler(this.addBtn_Click);
             // 
             // descTB
             // 
             this.descTB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.descTB.Location = new System.Drawing.Point(163, 49);
-            this.descTB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.descTB.Location = new System.Drawing.Point(93, 47);
+            this.descTB.Margin = new System.Windows.Forms.Padding(2);
             this.descTB.Name = "descTB";
-            this.descTB.Size = new System.Drawing.Size(470, 22);
+            this.descTB.Size = new System.Drawing.Size(397, 20);
             this.descTB.TabIndex = 16;
             // 
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 49);
+            this.label2.Location = new System.Drawing.Point(4, 50);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(42, 17);
+            this.label2.Size = new System.Drawing.Size(79, 13);
             this.label2.TabIndex = 15;
-            this.label2.Text = "Опис";
+            this.label2.Text = "Опис шаблону";
             // 
             // nameTB
             // 
             this.nameTB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.nameTB.Location = new System.Drawing.Point(163, 19);
-            this.nameTB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.nameTB.Location = new System.Drawing.Point(93, 17);
+            this.nameTB.Margin = new System.Windows.Forms.Padding(2);
             this.nameTB.Name = "nameTB";
-            this.nameTB.Size = new System.Drawing.Size(470, 22);
+            this.nameTB.Size = new System.Drawing.Size(397, 20);
             this.nameTB.TabIndex = 14;
             // 
             // templatesLB
@@ -142,22 +144,12 @@
             this.templatesLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.templatesLB.FormattingEnabled = true;
-            this.templatesLB.ItemHeight = 16;
-            this.templatesLB.Location = new System.Drawing.Point(20, 38);
-            this.templatesLB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.templatesLB.Location = new System.Drawing.Point(16, 56);
+            this.templatesLB.Margin = new System.Windows.Forms.Padding(2);
             this.templatesLB.Name = "templatesLB";
-            this.templatesLB.Size = new System.Drawing.Size(142, 404);
+            this.templatesLB.Size = new System.Drawing.Size(160, 303);
             this.templatesLB.TabIndex = 20;
             this.templatesLB.SelectedIndexChanged += new System.EventHandler(this.templatesLB_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(17, 17);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(67, 17);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "Шаблони";
             // 
             // addGB
             // 
@@ -167,11 +159,11 @@
             this.addGB.Controls.Add(this.descTB);
             this.addGB.Controls.Add(this.addBtn);
             this.addGB.Controls.Add(this.label1);
-            this.addGB.Location = new System.Drawing.Point(20, 449);
-            this.addGB.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.addGB.Location = new System.Drawing.Point(15, 365);
+            this.addGB.Margin = new System.Windows.Forms.Padding(2);
             this.addGB.Name = "addGB";
-            this.addGB.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.addGB.Size = new System.Drawing.Size(786, 97);
+            this.addGB.Padding = new System.Windows.Forms.Padding(2);
+            this.addGB.Size = new System.Drawing.Size(604, 79);
             this.addGB.TabIndex = 22;
             this.addGB.TabStop = false;
             this.addGB.Visible = false;
@@ -179,34 +171,121 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(696, 49);
-            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button1.Location = new System.Drawing.Point(494, 44);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(84, 26);
+            this.button1.Size = new System.Drawing.Size(105, 25);
             this.button1.TabIndex = 18;
-            this.button1.Text = "Видалити";
+            this.button1.Text = "Видалити шаблон";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnRes
+            // 
+            this.btnRes.Image = global::oprForm.Properties.Resources.imgonline_com_ua_Resize_Ojr6EQ8xE2H;
+            this.btnRes.Location = new System.Drawing.Point(319, 33);
+            this.btnRes.Name = "btnRes";
+            this.btnRes.Size = new System.Drawing.Size(23, 22);
+            this.btnRes.TabIndex = 29;
+            this.btnRes.UseVisualStyleBackColor = true;
+            // 
+            // txtBxRes
+            // 
+            this.txtBxRes.Location = new System.Drawing.Point(181, 34);
+            this.txtBxRes.Name = "txtBxRes";
+            this.txtBxRes.Size = new System.Drawing.Size(138, 20);
+            this.txtBxRes.TabIndex = 28;
+            this.txtBxRes.Tag = "";
+            // 
+            // btnSearchTemplate
+            // 
+            this.btnSearchTemplate.Image = global::oprForm.Properties.Resources.imgonline_com_ua_Resize_Ojr6EQ8xE2H;
+            this.btnSearchTemplate.Location = new System.Drawing.Point(152, 33);
+            this.btnSearchTemplate.Name = "btnSearchTemplate";
+            this.btnSearchTemplate.Size = new System.Drawing.Size(23, 22);
+            this.btnSearchTemplate.TabIndex = 27;
+            this.btnSearchTemplate.UseVisualStyleBackColor = true;
+            // 
+            // txtBxTemplate
+            // 
+            this.txtBxTemplate.Location = new System.Drawing.Point(15, 34);
+            this.txtBxTemplate.Name = "txtBxTemplate";
+            this.txtBxTemplate.Size = new System.Drawing.Size(138, 20);
+            this.txtBxTemplate.TabIndex = 26;
+            this.txtBxTemplate.Tag = "";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(184, 16);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(111, 13);
+            this.label5.TabIndex = 25;
+            this.label5.Text = "Всі доступні ресурси";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(341, 16);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(176, 13);
+            this.label6.TabIndex = 24;
+            this.label6.Text = "Перелік ресурсів шаблону заходу";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(17, 17);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(136, 13);
+            this.label7.TabIndex = 23;
+            this.label7.Text = "Перелік шаблонів заходiв";
+            // 
+            // contextMenuRes
+            // 
+            this.contextMenuRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.додатиНовийРесурсToolStripMenuItem,
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem});
+            this.contextMenuRes.Name = "contextMenuRes";
+            this.contextMenuRes.Size = new System.Drawing.Size(256, 70);
+            // 
+            // додатиНовийРесурсToolStripMenuItem
+            // 
+            this.додатиНовийРесурсToolStripMenuItem.Name = "додатиНовийРесурсToolStripMenuItem";
+            this.додатиНовийРесурсToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.додатиНовийРесурсToolStripMenuItem.Text = "Створити новий ресурс ";
+            // 
+            // переглянутиДетальнуІнформаціюToolStripMenuItem
+            // 
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Name = "переглянутиДетальнуІнформаціюToolStripMenuItem";
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Text = "Перегляд інформації про ресурс";
+            // 
             // AlterTemplateForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(827, 553);
+            this.ClientSize = new System.Drawing.Size(637, 449);
+            this.Controls.Add(this.btnRes);
+            this.Controls.Add(this.txtBxRes);
+            this.Controls.Add(this.btnSearchTemplate);
+            this.Controls.Add(this.txtBxTemplate);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.addGB);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.templatesLB);
             this.Controls.Add(this.materialListGrid);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.resourcesLB);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "AlterTemplateForm";
-            this.Padding = new System.Windows.Forms.Padding(10);
-            this.Text = "Змінити шаблон";
+            this.Padding = new System.Windows.Forms.Padding(8);
+            this.Text = "Редагування шаблонів заходів";
             this.Load += new System.EventHandler(this.AlterTemplateForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.materialListGrid)).EndInit();
             this.addGB.ResumeLayout(false);
             this.addGB.PerformLayout();
+            this.contextMenuRes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -217,15 +296,23 @@
         private System.Windows.Forms.DataGridView materialListGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn Resource;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox resourcesLB;
         private System.Windows.Forms.Button addBtn;
         private System.Windows.Forms.TextBox descTB;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox nameTB;
         private System.Windows.Forms.ListBox templatesLB;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox addGB;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnRes;
+        private System.Windows.Forms.TextBox txtBxRes;
+        private System.Windows.Forms.Button btnSearchTemplate;
+        private System.Windows.Forms.TextBox txtBxTemplate;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ContextMenuStrip contextMenuRes;
+        private System.Windows.Forms.ToolStripMenuItem додатиНовийРесурсToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem переглянутиДетальнуІнформаціюToolStripMenuItem;
     }
 }

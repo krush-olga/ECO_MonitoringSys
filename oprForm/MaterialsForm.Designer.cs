@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.resDGV = new System.Windows.Forms.DataGridView();
             this.nameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.priceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,6 +46,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.resDGV)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -62,35 +64,39 @@
             this.priceCol,
             this.unitsCol,
             this.descCol});
-            this.resDGV.Location = new System.Drawing.Point(8, 219);
+            this.resDGV.Location = new System.Drawing.Point(8, 222);
             this.resDGV.Margin = new System.Windows.Forms.Padding(2);
             this.resDGV.Name = "resDGV";
             this.resDGV.ReadOnly = true;
             this.resDGV.RowTemplate.Height = 28;
-            this.resDGV.Size = new System.Drawing.Size(644, 292);
+            this.resDGV.Size = new System.Drawing.Size(644, 274);
             this.resDGV.TabIndex = 0;
             this.resDGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resDGV_CellClick);
             // 
             // nameCol
             // 
+            this.nameCol.FillWeight = 35F;
             this.nameCol.HeaderText = "Назва";
             this.nameCol.Name = "nameCol";
             this.nameCol.ReadOnly = true;
             // 
             // priceCol
             // 
+            this.priceCol.FillWeight = 15F;
             this.priceCol.HeaderText = "Ціна";
             this.priceCol.Name = "priceCol";
             this.priceCol.ReadOnly = true;
             // 
             // unitsCol
             // 
-            this.unitsCol.HeaderText = "Одиниці виміру";
+            this.unitsCol.FillWeight = 15F;
+            this.unitsCol.HeaderText = "Одиниця виміру";
             this.unitsCol.Name = "unitsCol";
             this.unitsCol.ReadOnly = true;
             // 
             // descCol
             // 
+            this.descCol.FillWeight = 35F;
             this.descCol.HeaderText = "Опис";
             this.descCol.Name = "descCol";
             this.descCol.ReadOnly = true;
@@ -98,7 +104,7 @@
             // saveBtn
             // 
             this.saveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveBtn.Location = new System.Drawing.Point(576, 42);
+            this.saveBtn.Location = new System.Drawing.Point(576, 47);
             this.saveBtn.Margin = new System.Windows.Forms.Padding(2);
             this.saveBtn.Name = "saveBtn";
             this.saveBtn.Size = new System.Drawing.Size(76, 24);
@@ -110,19 +116,21 @@
             // delBtn
             // 
             this.delBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.delBtn.Location = new System.Drawing.Point(576, 76);
+            this.delBtn.Location = new System.Drawing.Point(576, 77);
             this.delBtn.Margin = new System.Windows.Forms.Padding(2);
             this.delBtn.Name = "delBtn";
             this.delBtn.Size = new System.Drawing.Size(76, 24);
             this.delBtn.TabIndex = 2;
             this.delBtn.Text = "Видалити";
+            this.toolTip1.SetToolTip(this.delBtn, "Видаляться ресурси, що виділені в таблиці.\r\nДля виділення натисніть на зліва пуст" +
+        "у клінику\r\nодного чи декількох рядків.");
             this.delBtn.UseVisualStyleBackColor = true;
             this.delBtn.Click += new System.EventHandler(this.delBtn_Click);
             // 
             // addBtn
             // 
             this.addBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.addBtn.Location = new System.Drawing.Point(576, 10);
+            this.addBtn.Location = new System.Drawing.Point(576, 16);
             this.addBtn.Margin = new System.Windows.Forms.Padding(2);
             this.addBtn.Name = "addBtn";
             this.addBtn.Size = new System.Drawing.Size(76, 24);
@@ -135,39 +143,39 @@
             // 
             this.nameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.nameTB.Location = new System.Drawing.Point(84, 12);
+            this.nameTB.Location = new System.Drawing.Point(99, 12);
             this.nameTB.Margin = new System.Windows.Forms.Padding(2);
             this.nameTB.Name = "nameTB";
-            this.nameTB.Size = new System.Drawing.Size(469, 20);
+            this.nameTB.Size = new System.Drawing.Size(454, 20);
             this.nameTB.TabIndex = 4;
             // 
             // measureTB
             // 
             this.measureTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.measureTB.Location = new System.Drawing.Point(84, 63);
+            this.measureTB.Location = new System.Drawing.Point(99, 40);
             this.measureTB.Margin = new System.Windows.Forms.Padding(2);
             this.measureTB.Name = "measureTB";
-            this.measureTB.Size = new System.Drawing.Size(469, 20);
+            this.measureTB.Size = new System.Drawing.Size(454, 20);
             this.measureTB.TabIndex = 5;
             // 
             // descriptionTB
             // 
             this.descriptionTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.descriptionTB.Location = new System.Drawing.Point(84, 90);
+            this.descriptionTB.Location = new System.Drawing.Point(99, 100);
             this.descriptionTB.Margin = new System.Windows.Forms.Padding(2);
             this.descriptionTB.Multiline = true;
             this.descriptionTB.Name = "descriptionTB";
-            this.descriptionTB.Size = new System.Drawing.Size(469, 101);
+            this.descriptionTB.Size = new System.Drawing.Size(455, 71);
             this.descriptionTB.TabIndex = 6;
             // 
             // priceTB
             // 
-            this.priceTB.Location = new System.Drawing.Point(84, 39);
+            this.priceTB.Location = new System.Drawing.Point(99, 67);
             this.priceTB.Margin = new System.Windows.Forms.Padding(2);
             this.priceTB.Name = "priceTB";
-            this.priceTB.Size = new System.Drawing.Size(98, 20);
+            this.priceTB.Size = new System.Drawing.Size(454, 20);
             this.priceTB.TabIndex = 7;
             // 
             // panel1
@@ -185,13 +193,13 @@
             this.panel1.Location = new System.Drawing.Point(9, 10);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(563, 205);
+            this.panel1.Size = new System.Drawing.Size(563, 185);
             this.panel1.TabIndex = 8;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 93);
+            this.label4.Location = new System.Drawing.Point(12, 100);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 13);
@@ -201,22 +209,22 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 66);
+            this.label3.Location = new System.Drawing.Point(12, 43);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 13);
+            this.label3.Size = new System.Drawing.Size(83, 13);
             this.label3.TabIndex = 10;
-            this.label3.Text = "Одн вимір";
+            this.label3.Text = "Одиниці виміру";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 39);
+            this.label2.Location = new System.Drawing.Point(12, 70);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 13);
+            this.label2.Size = new System.Drawing.Size(71, 13);
             this.label2.TabIndex = 9;
-            this.label2.Text = "Ціна";
+            this.label2.Text = "Ціна за 1 од.";
             // 
             // label1
             // 
@@ -224,15 +232,15 @@
             this.label1.Location = new System.Drawing.Point(12, 12);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 13);
+            this.label1.Size = new System.Drawing.Size(82, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Назва";
+            this.label1.Text = "Назва ресурсу";
             // 
             // MaterialsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(662, 520);
+            this.ClientSize = new System.Drawing.Size(662, 507);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.delBtn);
             this.Controls.Add(this.resDGV);
@@ -267,5 +275,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn descCol;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
