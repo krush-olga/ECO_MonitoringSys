@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HelpModule;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UserMap.Core;
@@ -2197,5 +2198,70 @@ namespace UserMap
                 }
             }
         }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = MarkerTabPage,
+						Text = "Розпочнемо з елементу Маркер"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = AddMarkerButton,
+						Text = "Натисніть на кнопку \"Додати\""
+					},
+					new InteractiveToolTipModel
+					{
+						Control = EconomicActivityComboBox,
+						Text = "Заповніть Вид економічної діяльності"
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = OwnershipTypeComboBox,
+						Text = "Заповніть Форма власності"
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = gMapControl,
+						Text = "Двічі натисніть на карту щоб поставити маркер"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = MarkerSettingsButton,
+						Text = "Натисніть на кнопку \"Налаштування маркеру\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = SaveMarkerButton,
+						Text = "Після цього натисніть на кнопку \"Зберегти\""
+					},
+					new InteractiveToolTipModel
+					{
+						Control = AddMarkerButton,
+						Text = "Якщо хочете відмінити додавання маркеру натисніть на кнопку \"Відміна\""
+					}
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p11.html");
+			});
+			frm.ShowDialog();
+        }
+
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

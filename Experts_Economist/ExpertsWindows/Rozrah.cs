@@ -50,6 +50,8 @@ namespace Experts_Economist
 
             //вызываем при первом открытии формы функцию refresh, которая обновляет элементы со списками, таблицу, номер расчета
             Get_values();
+
+            formulas_idLB.SelectedIndexChanged += formulas_idLB_SelectedIndexChanged;
         }
 
         //функция для забивания данных в список формул, и номера расчета
@@ -1049,17 +1051,17 @@ namespace Experts_Economist
             }
         }
 
-		private void formulas_idLB_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			Dictionary<int, string> formulas = GetFormulasHelp();
-			var index = int.Parse(formulas_idLB.SelectedItem.ToString());
-            if (formulas.ContainsKey(index))
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, $"{formulas[index]}#f{formulas_idLB.SelectedItem}");
-			}
+        private void formulas_idLB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+	        Dictionary<int, string> formulas = GetFormulasHelp();
+	        var index = int.Parse(formulas_idLB.SelectedItem.ToString());
+	        if (formulas.ContainsKey(index))
+	        {
+		        Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, $"{formulas[index]}#f{formulas_idLB.SelectedItem}");
+	        }
         }
 
-		private Dictionary<int, string> GetFormulasHelp()
+        private Dictionary<int, string> GetFormulasHelp()
 			=> new Dictionary<int, string>
 			{
 				[31] = "formulaspage4.html",
@@ -1101,5 +1103,53 @@ namespace Experts_Economist
 				[167] = "formulaspage6.html",
             };
 
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = formulasLB,
+						Text = "Оберіть формулу зі списку формул"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = name_of_seriesCB,
+						Text = "Оберіть серії"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = issueTB,
+						Text = "Оберіть задачу"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = normDGV,
+						Text = "Заповніть стовпчик \"Значення\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = Save_values,
+						Text = "Натисніть на кнопку \"Порахувати та зберегти\""
+                    }
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p7.html");
+			});
+			frm.ShowDialog();
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

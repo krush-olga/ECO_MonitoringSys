@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 using System.Drawing;
+using HelpModule;
 
 namespace oprForm
 {
@@ -324,5 +325,49 @@ namespace oprForm
                 }
             }
         }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = evNameTB,
+						Text = "Для початку треба ввести назву нового заходу"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = descTB,
+						Text = "Ввести опис заходу"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = issuesCB,
+						Text = "Обрати задачу з випадаючого списку"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = addBtn,
+						Text = "Натиснути на кнопку \"Додати захід\""
+                    }
+				});
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p3.html");
+			});
+			frm.ShowDialog();
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

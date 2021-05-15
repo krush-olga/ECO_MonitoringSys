@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="InteractiveToolTipCreator.cs" />
     <Compile Include="InteractiveToolTipModel.cs" />
+    <Compile Include="Models\GolovnaHintModel.cs" />
     <Compile Include="Models\Scenario.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

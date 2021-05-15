@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 using System.Drawing;
+using HelpModule;
 
 namespace oprForm
 {
@@ -166,6 +167,58 @@ namespace oprForm
             RemoveResourceFromGrid();
         }
 
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = nameTB,
+						Text = "Для початку треба ввести назву нового шаблону"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = descTB,
+						Text = "Ввести опис шаблону"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = resourcesLB,
+						Text = "Обрати ресурси натиснувши двічи по ресурсу"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = addButton,
+						Text = "Або натиснувши на кнопку \"Додати ресурс до переліку\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = removeButton,
+						Text = "Щоб видалити ресурс зі списку для шаблона натисніть на кнопку \"Видалити ресурс з переліку\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = saveToDBBtn,
+						Text = "В кінці натисніть на кнопку \"Зберегти шаблон\""
+                    }
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p4.html");
+			});
+			frm.ShowDialog();
+        }
 
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using HelpModule.Controls;
 
@@ -36,9 +37,16 @@ namespace HelpModule
 					var nextItem = items[i + 1];
 					ttc.LinkLabel.LinkClicked += delegate
 					{
-						currentItem.AfterHandler?.Invoke();
-						itt.Hide();
-						ittNext.Show(ttcNext, nextItem.Control, nextItem.Control.Width - _offset, 0);
+						try
+						{
+							currentItem.AfterHandler?.Invoke();
+							itt.Hide();
+							ittNext.Show(ttcNext, nextItem.Control, nextItem.Control.Width - _offset, 0);
+						}
+						catch
+						{
+							// ignored
+						}
 					};
 				}
 				else
@@ -47,8 +55,15 @@ namespace HelpModule
 						ttc.LinkLabel.Text = "Завершити";
 					ttc.LinkLabel.LinkClicked += delegate
 					{
-						currentItem.AfterHandler?.Invoke();
-						itt.Hide();
+						try
+						{
+							currentItem.AfterHandler?.Invoke();
+							itt.Hide();
+						}
+						catch
+						{
+							// ignored
+						}
 					};
 				}
 			}

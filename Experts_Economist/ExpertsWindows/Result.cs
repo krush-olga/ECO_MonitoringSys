@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Calculations;
+using HelpModule;
 
 namespace Experts_Economist
 {
@@ -1828,5 +1829,101 @@ namespace Experts_Economist
             }
         }
 
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = DGV,
+						Text = "Оберіть формулу зі списку формул"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = Panel_redakt,
+						Text = "Натисніть на кнопку \"Редагування серії\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = issueTB,
+						Text = "Стає доступною зміна поля \"Задача, пов'язана з серією\""
+					},
+					new InteractiveToolTipModel
+					{
+						Control = DGV,
+						Text = "Стає доступною колонка \"Значення\""
+					},
+					new InteractiveToolTipModel
+					{
+						Control = desc_of_seriesTB,
+						Text = "Стає доступною зміна поля \"Опис\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = change_desc,
+						Text = "Натисніть на кнопку \"Зберегти зміни\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = chartButt,
+						Text = "Щоб відобразити графіки натисніть на цю кнопку",
+                        IsNotFinal = true,
+                        AfterHandler = AfterClickOnChart
+                    }
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p8.html");
+			});
+			frm.ShowDialog();
+        }
+
+		private void AfterClickOnChart()
+		{
+			if (isOpenChart)
+			{
+				ContinueTutorial();
+			}
+			else
+			{
+				chartButt.Click += CheckOpenChart;
+			}
+        }
+
+		private void CheckOpenChart(object sender, EventArgs e)
+		{
+			chartButt.Click -= CheckOpenChart;
+			ContinueTutorial();
+		}
+
+
+		private void ContinueTutorial()
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = chartsList,
+					Text = "Оберіть графік"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = newChartButt,
+					Text = "Натисніть на кнопку \"Відобразити графік\""
+                }
+			});
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

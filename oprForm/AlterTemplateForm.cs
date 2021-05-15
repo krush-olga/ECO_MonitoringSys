@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 using System.Drawing;
+using HelpModule;
 
 
 namespace oprForm
@@ -179,10 +180,9 @@ namespace oprForm
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (templatesLB.SelectedItem is Event)
+            if (templatesLB.SelectedItem is Event ev)
             {
-                Event ev = templatesLB.SelectedItem as Event;
-                db.Connect();
+	            db.Connect();
                 db.DeleteFromDB("event_template", "template_id", ev.Id.ToString());
                 db.Disconnect();
 
@@ -190,14 +190,89 @@ namespace oprForm
             }
         }
 
-        private void materialListGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = templatesLB,
+						Text = "Оберіть шаблон",
+                        IsNotFinal = true,
+                        AfterHandler = AfterSelectTemplate
+                    }
+				});
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p5.html");
+			});
+			frm.ShowDialog();
         }
 
-        private void AlterTemplateForm_Load(object sender, EventArgs e)
-        {
+		private void AfterSelectTemplate()
+		{
+			if (templatesLB.SelectedIndex != -1)
+			{
+				ContinueTutorial();
+			}
+			else
+			{
+				templatesLB.SelectedIndexChanged += SelectTemplatesLB;
+			}
+		}
 
+		private void SelectTemplatesLB(object sender, EventArgs e)
+		{
+			if (templatesLB.SelectedIndex != -1)
+			{
+				templatesLB.SelectedIndexChanged -= SelectTemplatesLB;
+				ContinueTutorial();
+			}
+		}
+
+
+        private void ContinueTutorial()
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = nameTB,
+					Text = "Змініть назву шаблону якщо потрібно"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = descTB,
+					Text = "Змініть опис шаблону якщо потрібно"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = resourcesLB,
+					Text = "Змініть перелік ресурсів якщо потрібно"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = addBtn,
+					Text = "Натисніть на кнопку \"Зберегти зміни\""
+				},
+				new InteractiveToolTipModel
+				{
+					Control = button1,
+					Text = "Щоб видалити шаблон натисніть на кнопку \"Видалити шаблон\""
+				}
+			});
         }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

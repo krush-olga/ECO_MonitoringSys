@@ -2,7 +2,9 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
+using HelpModule;
 
 namespace Experts_Economist
 {
@@ -441,5 +443,79 @@ namespace Experts_Economist
         {
 
         }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = formulasLB,
+						Text = "Оберіть формулу зі списку формул"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = bind_compLB,
+						Text = "Оберіть параметри формули"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = Bind,
+						Text = "Ця кнопка відповідає за додавання параметра до формули"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = Unbind,
+						Text = "Ця кнопка відповідає за видалення параметра з формули"
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = formula_nameTB,
+						Text = "Це поле відповідає за назву формули"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = formula_measureTB,
+						Text = "Це поле відповідає за одиниці вимірювання"
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = formula_explTB,
+						Text = "Це поле відповідає за опис формули"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = add1,
+						Text = "Щоб добавити нову формулу натисніть на кнопку \"Додати\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = del1,
+						Text = "Щоб видалити формулу натисніть на кнопку \"Видалити\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = update1,
+						Text = "Щоб змінити формулу натисніть на кнопку \"Змінити\""
+					}
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p10.html");
+			});
+			frm.ShowDialog();
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

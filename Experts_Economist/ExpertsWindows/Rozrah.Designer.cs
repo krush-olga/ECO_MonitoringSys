@@ -69,6 +69,7 @@
 			this.result = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.addNewSeriesButton = new System.Windows.Forms.Button();
 			this.AllowPatametrTextCB = new System.Windows.Forms.CheckBox();
+			this.startTutorial = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.formulasDGV)).BeginInit();
 			this.contextMenuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.Iterations)).BeginInit();
@@ -150,7 +151,6 @@
 			this.formulas_idLB.Size = new System.Drawing.Size(27, 381);
 			this.formulas_idLB.TabIndex = 10;
 			this.formulas_idLB.Visible = false;
-			this.formulas_idLB.SelectedIndexChanged += new System.EventHandler(this.formulas_idLB_SelectedIndexChanged);
 			// 
 			// series_over
 			// 
@@ -433,12 +433,25 @@
 			// AllowPatametrTextCB
 			// 
 			this.AllowPatametrTextCB.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-			this.AllowPatametrTextCB.Location = new System.Drawing.Point(862, 1);
+			this.AllowPatametrTextCB.Location = new System.Drawing.Point(838, 1);
 			this.AllowPatametrTextCB.Name = "AllowPatametrTextCB";
 			this.AllowPatametrTextCB.Size = new System.Drawing.Size(233, 24);
 			this.AllowPatametrTextCB.TabIndex = 65;
 			this.AllowPatametrTextCB.Text = "Дозволити введення строкових значень";
 			this.AllowPatametrTextCB.UseVisualStyleBackColor = true;
+			// 
+			// startTutorial
+			// 
+			this.startTutorial.AutoSize = true;
+			this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.startTutorial.Location = new System.Drawing.Point(1087, 2);
+			this.startTutorial.Name = "startTutorial";
+			this.startTutorial.Size = new System.Drawing.Size(18, 20);
+			this.startTutorial.TabIndex = 66;
+			this.startTutorial.Text = "?";
+			this.startTutorial.Click += new System.EventHandler(this.startTutorial_Click);
+			this.startTutorial.MouseEnter += new System.EventHandler(this.startTutorial_MouseEnter);
+			this.startTutorial.MouseLeave += new System.EventHandler(this.startTutorial_MouseLeave);
 			// 
 			// Rozrah
 			// 
@@ -446,6 +459,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1107, 461);
 			this.ContextMenuStrip = this.contextMenuStrip1;
+			this.Controls.Add(this.startTutorial);
 			this.Controls.Add(this.AllowPatametrTextCB);
 			this.Controls.Add(this.addNewSeriesButton);
 			this.Controls.Add(this.normDGV);
@@ -527,6 +541,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn result;
         private System.Windows.Forms.Button addNewSeriesButton;
         private System.Windows.Forms.CheckBox AllowPatametrTextCB;
-    }
+		private System.Windows.Forms.Label startTutorial;
+	}
 }
 

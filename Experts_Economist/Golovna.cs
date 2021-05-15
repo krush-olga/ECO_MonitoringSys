@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using HelpModule;
 using HelpModule.Forms;
+using HelpModule.Models;
 using UserLoginForm;
 
 namespace Experts_Economist
@@ -536,5 +537,170 @@ namespace Experts_Economist
 
 			Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, $"p{selectMenuItemToolStrip.SelectedIndex}.html");
 		}
-	}
+
+		private int _tutorial;
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			_tutorial = 0;
+            if (!panel1.Visible)
+			{
+				panel1.Visible = true;
+				linkLabel1.Click += TutorialClick;
+                ShowTutorial(GetHints().FirstOrDefault());
+			}
+			else
+			{
+				_toolStripMenuItems.ForEach(x => x.BackColor = SystemColors.Control);
+				panel1.Visible = false;
+				linkLabel1.Click -= TutorialClick;
+			}
+
+		}
+
+		private void ShowTutorial(GolovnaHintModel model)
+		{
+			_toolStripMenuItems.ForEach(x => x.BackColor = SystemColors.Control);
+			var selectedItem =
+				_toolStripMenuItems.FirstOrDefault(x => x.Text == model.CurrentItem.ToString());
+			if (selectedItem != null)
+			{
+				selectedItem.BackColor = Color.CornflowerBlue;
+				ShowParentMenuItem(selectedItem);
+			}
+			label3.Text = model.Text;
+            _tutorial++;
+            if (_tutorial == GetHints().Count())
+            {
+	            linkLabel1.Text = "Завершити";
+            }
+        }
+
+		private void TutorialClick(object sender, EventArgs e)
+		{
+			GolovnaHintModel[] hints = GetHints().ToArray();
+			if (_tutorial == hints.Length)
+			{
+				_toolStripMenuItems.ForEach(x => x.BackColor = SystemColors.Control);
+				panel1.Visible = false;
+				linkLabel1.Click -= TutorialClick;
+				_tutorial = 0;
+				linkLabel1.Text = "Далі";
+                return;
+			}
+            if (_tutorial < hints.Length)
+				ShowTutorial(hints[_tutorial]);
+            
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
+
+		private IEnumerable<GolovnaHintModel> GetHints()
+			=> new List<GolovnaHintModel>
+			{
+				new GolovnaHintModel
+				{
+					CurrentItem = переглядПроблемToolStripMenuItem,
+                    Text = "Пункт меню \"Задачі\" дозволяє створити нову задачу, переглянути чи відредагувати існуючі задачі"
+				},
+				new GolovnaHintModel
+				{
+					CurrentItem = toolStripMenuItem2,
+                    Text = "Пункт меню \"Змінити захід\" дозволяє переглянути та змінити існуючі заходи"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = eventsToolStripMenuItem,
+                    Text = "Пункт меню \"Новий захід\" дозволяє створити новий захід з ресурсами"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = toolStripMenuItem3,
+					Text = "Пункт меню \"Новий шаблон\" дозволяє додати новий шаблон"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = toolStripMenuItem6,
+					Text = "Пункт меню \"Змінити шаблон\" дозволяє відредагувати існуючий шаблон"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = ресурсиToolStripMenuItem,
+					Text = "Пункт меню \"Ресурси\" дозволяє створити новий ресурс, переглянути чи відредагувати існуючі ресурси"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = RozrahTSM,
+					Text = "Пункт меню \"Розрахунок\" дозволяє переглянути формули та порахувати формули і зберегти значення"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = ResultTSM,
+					Text = "Пункт меню \"Перегляд результатів\" довзляє переглянути всі розраховані формули"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = картаToolStripMenuItem,
+					Text = "Пункт меню \"Карта\" відкриває вікно \"Карта\""
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = речовиниToolStripMenuItem,
+					Text = "Пункт меню \"Речовини\" відкриває вікно \"Довідник\" по речовинам"
+                },
+                new GolovnaHintModel
+				{
+					CurrentItem = гДКToolStripMenuItem,
+					Text = "Пункт меню \"ГДК\" відкриває вікно \"Довідник\" по ГДК"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = середовищеToolStripMenuItem,
+					Text = "Пункт меню \"Середовище\" відкриває вікно \"Довідник\" по середовищу"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = видЕкномічноїДіяльностіToolStripMenuItem,
+					Text = "Пункт меню \"Вид екномічної діяльності\" відкриває вікно \"Перегляд економічної діяльності\""
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = ставкиПодатківToolStripMenuItem,
+					Text = "Пункт меню \"Ставки податків\" відкриває вікно \"Довіднка - податки\""
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = CascadeMenuItem,
+					Text = "Пункт меню \"Каскадом\" розташовує відкриті вікна каскадом"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = VerticalMenuItem,
+					Text = "Пункт меню \"Вертикально\" розташовує відкриті вікна вертикально"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = HorizontalMenuItem,
+					Text = "Пункт меню \"Горизонтально\" розташовує відкриті вікна горизонтально"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = CloseCurrentWindowMenuItem,
+					Text = "Пункт меню \"Закрити поточне вікно\" призначений для закриття вікна, яке наразі є активним"
+                },
+				new GolovnaHintModel
+				{
+					CurrentItem = CloseAllWindowsMenuItem,
+					Text = "Пункт меню \"Закрити всі вікна\" призначений для закриття всіх відкритих вікон на робочій області"
+                }
+            };
+    }
 }

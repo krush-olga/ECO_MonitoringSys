@@ -938,8 +938,7 @@ namespace Experts_Economist
                     AfterHandler = AfterWorkModeChecked
                 }
 			});
-
-        }
+		}
 
 		private void AfterWorkModeChecked()
 		{

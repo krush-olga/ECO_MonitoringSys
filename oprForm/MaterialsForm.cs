@@ -3,8 +3,10 @@ using Data.Entity;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Linq;
+using HelpModule;
 
 namespace oprForm
 {
@@ -144,5 +146,63 @@ namespace oprForm
             }
         }
 
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = panel1,
+						Text = "Щоб додати новий ресурс заповніть поля"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = addBtn,
+						Text = "Натисніть на кнопку \"Додати\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = resDGV,
+						Text = "Для редагування ресурса оберіть із списку ресурс"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = panel1,
+						Text = "Змініть дані"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = saveBtn,
+						Text = "Натисніть на кнопку \"Редагувати\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = resDGV,
+						Text = "Щоб видалити ресурс оберіть ресурс \"Видалити\""
+					},
+					new InteractiveToolTipModel
+					{
+						Control = delBtn,
+						Text = "Натисніть на кнопку \"Видалити шаблон\""
+                    }
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p6.html");
+			});
+			frm.ShowDialog();
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

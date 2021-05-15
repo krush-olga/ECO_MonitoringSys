@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 
 using System.Drawing;
+using HelpModule;
 
 namespace oprForm
 {
@@ -895,5 +896,84 @@ namespace oprForm
             if (e.Button == MouseButtons.Right)
                 DocContextMenuStrip.Show(docsLB, e.Location);
         }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = approveGB,
+						Text = "Це дані про поточну задачу"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = nextIssueBtn,
+						Text = "Цими кнопка можно переключатися між задачами"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = issueListBtn,
+						Text = "Для додання, редагування, видалення задачі потрібно натиснути на цю кнопку"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = findIssueCondTB,
+						Text = "Це поле відповідає за пошук задачі"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = groupBox2,
+						Text = "Цей блок відповідає за фільтрування заходів"
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = approveBtn,
+						Text = "Щоб підтвердити захід натисніть на кнопку \"Підтвердити захід\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = disaproveBtn,
+						Text = "Щоб відхилити захід натисніть на кнопку \"Відхилити захід\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = expertsLB,
+						Text = "Тут можна бачити блок \"Перелік експертів\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = eventsLB,
+						Text = "Тут можна бачити блок \"Перелік заходiв\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = button5,
+						Text = "Щоб додати новий захід натисніть на цю кнопку"
+					},
+                    new InteractiveToolTipModel
+					{
+						Control = docsLB,
+						Text = "Тут можна бачити блок \"Перелік юр. документів\""
+                    }
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p0.html");
+			});
+			frm.ShowDialog();
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }

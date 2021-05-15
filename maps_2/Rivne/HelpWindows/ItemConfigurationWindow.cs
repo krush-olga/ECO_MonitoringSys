@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HelpModule;
 using UserMap.Helpers;
 
 namespace UserMap.HelpWindows
@@ -764,5 +766,72 @@ namespace UserMap.HelpWindows
                 SeriesCheckedListBox.SelectedIndex = 0;
             }
         }
+
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+			{
+				new InteractiveToolTipModel
+				{
+					Control = IssueCheckBox,
+					Text = "Маркер можна привязать к задачі"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = IssuesCheckedListBox,
+					Text = "Після цього обрати задачі"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = SeriesCheckedListBox,
+					Text = "Обрати серії"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = EmissionCheckBox,
+					Text = "Можна привязати к викидам"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = ElementsCheckedListBox,
+					Text = "Після цього обрати елементи"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = groupBox1,
+					Text = "Також заповнити інформацію про елемент"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = ObjectNameTextBox,
+					Text = "Заповніть поле Назва"
+				},
+				new InteractiveToolTipModel
+				{
+					Control = ObjectDescriptionTextBox,
+					Text = "Заповніть поле Опис якщо потрібно"
+                },
+				new InteractiveToolTipModel
+				{
+					Control = m_AcceptButton,
+					Text = "Натисніть на кнопку \"Підтвердити\""
+                },
+				new InteractiveToolTipModel
+				{
+					Control = m_CancelButton,
+					Text = "Або натисніть на кнопку \"Відміна\""
+                }
+            });
+        }
+
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 }
