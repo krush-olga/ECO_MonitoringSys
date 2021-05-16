@@ -30,10 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.resDGV = new System.Windows.Forms.DataGridView();
-            this.nameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.priceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.unitsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.descCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.saveBtn = new System.Windows.Forms.Button();
             this.delBtn = new System.Windows.Forms.Button();
             this.addBtn = new System.Windows.Forms.Button();
@@ -47,6 +43,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.nameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.unitsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.priceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.descCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.resDGV)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -61,8 +61,8 @@
             this.resDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.resDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.nameCol,
-            this.priceCol,
             this.unitsCol,
+            this.priceCol,
             this.descCol});
             this.resDGV.Location = new System.Drawing.Point(8, 222);
             this.resDGV.Margin = new System.Windows.Forms.Padding(2);
@@ -72,34 +72,6 @@
             this.resDGV.Size = new System.Drawing.Size(644, 274);
             this.resDGV.TabIndex = 0;
             this.resDGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.resDGV_CellClick);
-            // 
-            // nameCol
-            // 
-            this.nameCol.FillWeight = 35F;
-            this.nameCol.HeaderText = "Назва";
-            this.nameCol.Name = "nameCol";
-            this.nameCol.ReadOnly = true;
-            // 
-            // priceCol
-            // 
-            this.priceCol.FillWeight = 15F;
-            this.priceCol.HeaderText = "Ціна";
-            this.priceCol.Name = "priceCol";
-            this.priceCol.ReadOnly = true;
-            // 
-            // unitsCol
-            // 
-            this.unitsCol.FillWeight = 15F;
-            this.unitsCol.HeaderText = "Одиниця виміру";
-            this.unitsCol.Name = "unitsCol";
-            this.unitsCol.ReadOnly = true;
-            // 
-            // descCol
-            // 
-            this.descCol.FillWeight = 35F;
-            this.descCol.HeaderText = "Опис";
-            this.descCol.Name = "descCol";
-            this.descCol.ReadOnly = true;
             // 
             // saveBtn
             // 
@@ -236,6 +208,34 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Назва ресурсу";
             // 
+            // nameCol
+            // 
+            this.nameCol.FillWeight = 35F;
+            this.nameCol.HeaderText = "Назва";
+            this.nameCol.Name = "nameCol";
+            this.nameCol.ReadOnly = true;
+            // 
+            // unitsCol
+            // 
+            this.unitsCol.FillWeight = 15F;
+            this.unitsCol.HeaderText = "Одиниця виміру";
+            this.unitsCol.Name = "unitsCol";
+            this.unitsCol.ReadOnly = true;
+            // 
+            // priceCol
+            // 
+            this.priceCol.FillWeight = 15F;
+            this.priceCol.HeaderText = "Ціна за одиницю виміру";
+            this.priceCol.Name = "priceCol";
+            this.priceCol.ReadOnly = true;
+            // 
+            // descCol
+            // 
+            this.descCol.FillWeight = 35F;
+            this.descCol.HeaderText = "Опис";
+            this.descCol.Name = "descCol";
+            this.descCol.ReadOnly = true;
+            // 
             // MaterialsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -271,10 +271,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn descCol;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn descCol;
     }
 }

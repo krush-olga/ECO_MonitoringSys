@@ -37,15 +37,15 @@
             this.descTB = new System.Windows.Forms.TextBox();
             this.saveToDBBtn = new System.Windows.Forms.Button();
             this.resourcesLB = new System.Windows.Forms.ListBox();
+            this.contextMenuRes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.додатиНовийРесурсToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label4 = new System.Windows.Forms.Label();
             this.addButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
             this.btnRes = new System.Windows.Forms.Button();
             this.txtBxRes = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.contextMenuRes = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.додатиНовийРесурсToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.materialListGrid)).BeginInit();
             this.contextMenuRes.SuspendLayout();
             this.SuspendLayout();
@@ -135,6 +135,26 @@
             this.resourcesLB.TabIndex = 10;
             this.resourcesLB.DoubleClick += new System.EventHandler(this.resourcesLB_DoubleClick);
             // 
+            // contextMenuRes
+            // 
+            this.contextMenuRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.додатиНовийРесурсToolStripMenuItem,
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem});
+            this.contextMenuRes.Name = "contextMenuRes";
+            this.contextMenuRes.Size = new System.Drawing.Size(256, 48);
+            // 
+            // додатиНовийРесурсToolStripMenuItem
+            // 
+            this.додатиНовийРесурсToolStripMenuItem.Name = "додатиНовийРесурсToolStripMenuItem";
+            this.додатиНовийРесурсToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.додатиНовийРесурсToolStripMenuItem.Text = "Створити новий ресурс ";
+            // 
+            // переглянутиДетальнуІнформаціюToolStripMenuItem
+            // 
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Name = "переглянутиДетальнуІнформаціюToolStripMenuItem";
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Text = "Перегляд інформації про ресурс";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -179,6 +199,7 @@
             this.btnRes.Size = new System.Drawing.Size(23, 22);
             this.btnRes.TabIndex = 18;
             this.btnRes.UseVisualStyleBackColor = true;
+            this.btnRes.Click += new System.EventHandler(this.btnRes_Click);
             // 
             // txtBxRes
             // 
@@ -196,26 +217,6 @@
             this.label5.Size = new System.Drawing.Size(111, 13);
             this.label5.TabIndex = 16;
             this.label5.Text = "Всі доступні ресурси";
-            // 
-            // contextMenuRes
-            // 
-            this.contextMenuRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.додатиНовийРесурсToolStripMenuItem,
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem});
-            this.contextMenuRes.Name = "contextMenuRes";
-            this.contextMenuRes.Size = new System.Drawing.Size(256, 48);
-            // 
-            // додатиНовийРесурсToolStripMenuItem
-            // 
-            this.додатиНовийРесурсToolStripMenuItem.Name = "додатиНовийРесурсToolStripMenuItem";
-            this.додатиНовийРесурсToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.додатиНовийРесурсToolStripMenuItem.Text = "Створити новий ресурс ";
-            // 
-            // переглянутиДетальнуІнформаціюToolStripMenuItem
-            // 
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Name = "переглянутиДетальнуІнформаціюToolStripMenuItem";
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Text = "Перегляд інформації про ресурс";
             // 
             // AddTemplateForm
             // 

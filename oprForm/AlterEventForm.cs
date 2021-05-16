@@ -42,6 +42,7 @@ namespace oprForm
             {
                 txtBx.Text = "";
                 txtBx.ForeColor = SystemColors.WindowText;
+                txtBx.Tag = 1;
             }
         }
 
@@ -57,6 +58,7 @@ namespace oprForm
                 for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
                 txtBx.Text = placeholder;
                 txtBx.ForeColor = SystemColors.GrayText;
+                txtBx.Tag = null;
             }
 
         }
@@ -124,6 +126,8 @@ namespace oprForm
             {
                 if (eventsLB.SelectedItem is Event)
                 {
+                    eventsLB.Focus();
+
                     Event ev = eventsLB.SelectedItem as Event;
                     alterGB.Visible = true;
                     db.Connect();
@@ -240,15 +244,25 @@ namespace oprForm
                 getEvents();
                 db.Disconnect();
                 eventListGrid.Rows.Clear();
+
+                MessageBox.Show("Захід успішно видалений.","Інформація", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void addBtn_Click(object sender, EventArgs e)
         {
+            if (evNameTB.Text == string.Empty)
+            {
+                MessageBox.Show("Відсутня назва заходу. Введіть назву заходу!",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var ev = eventsLB.SelectedItem as Event;
+            var desc = descTB.Tag == null || !(descTB.Tag is int) ? "'Опис відсутній.'" : DBUtil.AddQuotes(descTB.Text);
             db.Connect();
             string[] cols = { "event_id", "name", "description", "issue_id" };
-            string[] values = { ev.Id.ToString(), DBUtil.AddQuotes(evNameTB.Text), DBUtil.AddQuotes(descTB.Text), (issuesCB.SelectedItem as Issue).Id.ToString() };
+            string[] values = { ev.Id.ToString(), DBUtil.AddQuotes(evNameTB.Text), desc, (issuesCB.SelectedItem as Issue).Id.ToString() };
 
             db.UpdateRecord("event", cols, values);
 
@@ -282,7 +296,11 @@ namespace oprForm
                 db.DeleteFromDB("event_resource", resCols, resValues);
             }
 
+            getEvents();
+
             db.Disconnect();
+
+            MessageBox.Show("Захід успішно змінений.", "Інформація", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void addMaterial(object sender, EventArgs e)

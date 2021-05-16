@@ -37,6 +37,7 @@ namespace oprForm
             {
                 txtBx.Text = "";
                 txtBx.ForeColor = SystemColors.WindowText;
+                txtBx.Tag = null;
             }
         }
 
@@ -52,6 +53,7 @@ namespace oprForm
                 for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
                 txtBx.Text = placeholder;
                 txtBx.ForeColor = SystemColors.GrayText;
+                txtBx.Tag = 1;
             }
 
         }

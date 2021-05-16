@@ -38,7 +38,7 @@ namespace oprForm
 
             foreach (var r in res)
             {
-                resDGV.Rows.Add(r, r.Price, r.Unit, r.Description);
+                resDGV.Rows.Add(r, r.Unit, r.Price, r.Description);
             }
 
             db.Disconnect();
@@ -102,10 +102,12 @@ namespace oprForm
 
                 MessageBox.Show("Дані успішно додано");
                 getMaterials();
-            } catch {
+            }
+            catch
+            {
                 MessageBox.Show("Деякі дані введено невірно");
             }
-                       
+
         }
 
         private void addBtn_Click(object sender, EventArgs e)
@@ -134,13 +136,21 @@ namespace oprForm
 
         private void resDGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            cur_row= resDGV.CurrentCell.RowIndex;
+            cur_row = resDGV.CurrentCell.RowIndex;
             var cells = resDGV.Rows[cur_row].Cells;
             var textBoxes = panel1.Controls.OfType<TextBox>().ToArray();
 
             for (int i = 0; i < cells.Count; i++)
             {
-                textBoxes[i].Text = cells[i].Value.ToString();
+                if (i == 1)
+                {
+                    textBoxes[1].Text = cells[2].Value.ToString();
+                    textBoxes[2].Text = cells[1].Value.ToString();
+                }
+                else if (i == 2)
+                    continue;
+                else
+                    textBoxes[i].Text = cells[i].Value.ToString();
             }
         }
 

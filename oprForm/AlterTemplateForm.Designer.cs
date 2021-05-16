@@ -33,6 +33,9 @@
             this.Resource = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.resourcesLB = new System.Windows.Forms.ListBox();
+            this.contextMenuRes = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.додатиНовийРесурсToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addBtn = new System.Windows.Forms.Button();
             this.descTB = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -47,12 +50,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.contextMenuRes = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.додатиНовийРесурсToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.materialListGrid)).BeginInit();
-            this.addGB.SuspendLayout();
             this.contextMenuRes.SuspendLayout();
+            this.addGB.SuspendLayout();
             this.SuspendLayout();
             // 
             // materialListGrid
@@ -97,6 +97,26 @@
             this.resourcesLB.Size = new System.Drawing.Size(160, 303);
             this.resourcesLB.TabIndex = 18;
             this.resourcesLB.DoubleClick += new System.EventHandler(this.resourcesLB_DoubleClick);
+            // 
+            // contextMenuRes
+            // 
+            this.contextMenuRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.додатиНовийРесурсToolStripMenuItem,
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem});
+            this.contextMenuRes.Name = "contextMenuRes";
+            this.contextMenuRes.Size = new System.Drawing.Size(256, 48);
+            // 
+            // додатиНовийРесурсToolStripMenuItem
+            // 
+            this.додатиНовийРесурсToolStripMenuItem.Name = "додатиНовийРесурсToolStripMenuItem";
+            this.додатиНовийРесурсToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.додатиНовийРесурсToolStripMenuItem.Text = "Створити новий ресурс ";
+            // 
+            // переглянутиДетальнуІнформаціюToolStripMenuItem
+            // 
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Name = "переглянутиДетальнуІнформаціюToolStripMenuItem";
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Text = "Перегляд інформації про ресурс";
             // 
             // addBtn
             // 
@@ -200,7 +220,7 @@
             // btnSearchTemplate
             // 
             this.btnSearchTemplate.Image = global::oprForm.Properties.Resources.imgonline_com_ua_Resize_Ojr6EQ8xE2H;
-            this.btnSearchTemplate.Location = new System.Drawing.Point(152, 33);
+            this.btnSearchTemplate.Location = new System.Drawing.Point(153, 33);
             this.btnSearchTemplate.Name = "btnSearchTemplate";
             this.btnSearchTemplate.Size = new System.Drawing.Size(23, 22);
             this.btnSearchTemplate.TabIndex = 27;
@@ -241,26 +261,6 @@
             this.label7.TabIndex = 23;
             this.label7.Text = "Перелік шаблонів заходiв";
             // 
-            // contextMenuRes
-            // 
-            this.contextMenuRes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.додатиНовийРесурсToolStripMenuItem,
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem});
-            this.contextMenuRes.Name = "contextMenuRes";
-            this.contextMenuRes.Size = new System.Drawing.Size(256, 70);
-            // 
-            // додатиНовийРесурсToolStripMenuItem
-            // 
-            this.додатиНовийРесурсToolStripMenuItem.Name = "додатиНовийРесурсToolStripMenuItem";
-            this.додатиНовийРесурсToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.додатиНовийРесурсToolStripMenuItem.Text = "Створити новий ресурс ";
-            // 
-            // переглянутиДетальнуІнформаціюToolStripMenuItem
-            // 
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Name = "переглянутиДетальнуІнформаціюToolStripMenuItem";
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.переглянутиДетальнуІнформаціюToolStripMenuItem.Text = "Перегляд інформації про ресурс";
-            // 
             // AlterTemplateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -283,9 +283,9 @@
             this.Text = "Редагування шаблонів заходів";
             this.Load += new System.EventHandler(this.AlterTemplateForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.materialListGrid)).EndInit();
+            this.contextMenuRes.ResumeLayout(false);
             this.addGB.ResumeLayout(false);
             this.addGB.PerformLayout();
-            this.contextMenuRes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

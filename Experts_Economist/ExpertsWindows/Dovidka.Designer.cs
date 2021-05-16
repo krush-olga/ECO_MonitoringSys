@@ -58,6 +58,7 @@
             this.gdkDataGrid.TabIndex = 3;
             this.gdkDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gdkDataGrid_CellClick);
             this.gdkDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gdkDataGrid_CellContentClick);
+            this.gdkDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gdkDataGrid_CellFormatting);
             // 
             // workMode
             // 
