@@ -604,103 +604,133 @@ namespace Experts_Economist
 		}
 
 		private IEnumerable<GolovnaHintModel> GetHints()
-			=> new List<GolovnaHintModel>
-			{
-				new GolovnaHintModel
-				{
-					CurrentItem = переглядПроблемToolStripMenuItem,
+		{
+			var result = new List<GolovnaHintModel>
+            {
+                new GolovnaHintModel
+                {
+                    CurrentItem = переглядПроблемToolStripMenuItem,
                     Text = "Пункт меню \"Задачі\" дозволяє створити нову задачу, переглянути чи відредагувати існуючі задачі"
-				},
-				new GolovnaHintModel
-				{
-					CurrentItem = toolStripMenuItem2,
-                    Text = "Пункт меню \"Змінити захід\" дозволяє переглянути та змінити існуючі заходи"
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = eventsToolStripMenuItem,
-                    Text = "Пункт меню \"Новий захід\" дозволяє створити новий захід з ресурсами"
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = toolStripMenuItem3,
-					Text = "Пункт меню \"Новий шаблон\" дозволяє додати новий шаблон"
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = toolStripMenuItem6,
-					Text = "Пункт меню \"Змінити шаблон\" дозволяє відредагувати існуючий шаблон"
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = ресурсиToolStripMenuItem,
-					Text = "Пункт меню \"Ресурси\" дозволяє створити новий ресурс, переглянути чи відредагувати існуючі ресурси"
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = RozrahTSM,
-					Text = "Пункт меню \"Розрахунок\" дозволяє переглянути формули та порахувати формули і зберегти значення"
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = ResultTSM,
-					Text = "Пункт меню \"Перегляд результатів\" довзляє переглянути всі розраховані формули"
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = картаToolStripMenuItem,
-					Text = "Пункт меню \"Карта\" відкриває вікно \"Карта\""
-                },
-				new GolovnaHintModel
-				{
-					CurrentItem = речовиниToolStripMenuItem,
-					Text = "Пункт меню \"Речовини\" відкриває вікно \"Довідник\" по речовинам"
                 },
                 new GolovnaHintModel
-				{
-					CurrentItem = гДКToolStripMenuItem,
-					Text = "Пункт меню \"ГДК\" відкриває вікно \"Довідник\" по ГДК"
+                {
+                    CurrentItem = toolStripMenuItem2,
+                    Text = "Пункт меню \"Змінити захід\" дозволяє переглянути та змінити існуючі заходи"
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = середовищеToolStripMenuItem,
-					Text = "Пункт меню \"Середовище\" відкриває вікно \"Довідник\" по середовищу"
+                new GolovnaHintModel
+                {
+                    CurrentItem = eventsToolStripMenuItem,
+                    Text = "Пункт меню \"Новий захід\" дозволяє створити новий захід з ресурсами"
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = видЕкномічноїДіяльностіToolStripMenuItem,
-					Text = "Пункт меню \"Вид екномічної діяльності\" відкриває вікно \"Перегляд економічної діяльності\""
+                new GolovnaHintModel
+                {
+                    CurrentItem = toolStripMenuItem3,
+                    Text = "Пункт меню \"Новий шаблон\" дозволяє додати новий шаблон"
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = ставкиПодатківToolStripMenuItem,
-					Text = "Пункт меню \"Ставки податків\" відкриває вікно \"Довіднка - податки\""
+                new GolovnaHintModel
+                {
+                    CurrentItem = toolStripMenuItem6,
+                    Text = "Пункт меню \"Змінити шаблон\" дозволяє відредагувати існуючий шаблон"
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = CascadeMenuItem,
-					Text = "Пункт меню \"Каскадом\" розташовує відкриті вікна каскадом"
+                new GolovnaHintModel
+                {
+                    CurrentItem = ресурсиToolStripMenuItem,
+                    Text = "Пункт меню \"Ресурси\" дозволяє створити новий ресурс, переглянути чи відредагувати існуючі ресурси"
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = VerticalMenuItem,
-					Text = "Пункт меню \"Вертикально\" розташовує відкриті вікна вертикально"
+                new GolovnaHintModel
+                {
+                    CurrentItem = RozrahTSM,
+                    Text = "Пункт меню \"Розрахунок\" дозволяє переглянути формули та порахувати формули і зберегти значення"
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = HorizontalMenuItem,
-					Text = "Пункт меню \"Горизонтально\" розташовує відкриті вікна горизонтально"
+                new GolovnaHintModel
+                {
+                    CurrentItem = ResultTSM,
+                    Text = "Пункт меню \"Перегляд результатів\" довзляє переглянути всі розраховані формули"
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = CloseCurrentWindowMenuItem,
-					Text = "Пункт меню \"Закрити поточне вікно\" призначений для закриття вікна, яке наразі є активним"
+                new GolovnaHintModel
+                {
+                    CurrentItem = картаToolStripMenuItem,
+                    Text = "Пункт меню \"Карта\" відкриває вікно \"Карта\""
                 },
-				new GolovnaHintModel
-				{
-					CurrentItem = CloseAllWindowsMenuItem,
-					Text = "Пункт меню \"Закрити всі вікна\" призначений для закриття всіх відкритих вікон на робочій області"
+                new GolovnaHintModel
+                {
+                    CurrentItem = гДКToolStripMenuItem,
+                    Text = "Пункт меню \"Речовини\" відкриває вікно \"Довідник\" по речовинам"
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = речовиниToolStripMenuItem,
+                    Text = "Пункт меню \"ГДК\" відкриває вікно \"Довідник\" по ГДК"
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = середовищеToolStripMenuItem,
+                    Text = "Пункт меню \"Середовище\" відкриває вікно \"Довідник\" по середовищу"
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = видЕкномічноїДіяльностіToolStripMenuItem,
+                    Text = "Пункт меню \"Вид екномічної діяльності\" відкриває вікно \"Перегляд економічної діяльності\""
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = ставкиПодатківToolStripMenuItem,
+                    Text = "Пункт меню \"Ставки податків\" відкриває вікно \"Довіднка - податки\""
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = CascadeMenuItem,
+                    Text = "Пункт меню \"Каскадом\" розташовує відкриті вікна каскадом"
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = VerticalMenuItem,
+                    Text = "Пункт меню \"Вертикально\" розташовує відкриті вікна вертикально"
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = HorizontalMenuItem,
+                    Text = "Пункт меню \"Горизонтально\" розташовує відкриті вікна горизонтально"
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = CloseCurrentWindowMenuItem,
+                    Text = "Пункт меню \"Закрити поточне вікно\" призначений для закриття вікна, яке наразі є активним"
+                },
+                new GolovnaHintModel
+                {
+                    CurrentItem = CloseAllWindowsMenuItem,
+                    Text = "Пункт меню \"Закрити всі вікна\" призначений для закриття всіх відкритих вікон на робочій області"
                 }
             };
+
+			if (id_of_exp == 0)
+			{
+				result.AddRange(
+					new[]
+					{
+						new GolovnaHintModel
+						{
+							CurrentItem = підключитисяToolStripMenuItem,
+							Text =
+								"Пункт меню \"Підключитися\" відкриває вікно з змінною параметрів підключення до бази даних"
+						},
+						new GolovnaHintModel
+						{
+							CurrentItem = імпортуватиToolStripMenuItem,
+							Text =
+								"Пункт меню \"Імпортувати\" дозволяє імпортувати дані в базу данних в двох форматах SQL та CSV"
+						},
+						new GolovnaHintModel
+						{
+							CurrentItem = експортуватиToolStripMenuItem,
+							Text =
+								"Пункт меню \"Експортувати\" дозволяє експортувати дані із бази данних в двох форматах SQL та CSV"
+						}
+					});
+			}
+
+			return result;
+		}
     }
 }

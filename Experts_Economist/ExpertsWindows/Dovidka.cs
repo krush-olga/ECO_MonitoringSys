@@ -725,6 +725,8 @@ namespace Experts_Economist
                 default:
                     break;
             }
+
+            SetEventHandlersForControls(ref controls);
             //після ініціалізації всіх компонетів додаємо їх на робочу панель
             flowLayoutPanel1.Controls.AddRange(controls.ToArray());
 
@@ -1070,6 +1072,100 @@ namespace Experts_Economist
                 }
 			});
 		}
+
+		private void SetEventHandlersForControls(ref List<Control> controls)
+		{
+			foreach (Control control in controls)
+			{
+				if (control is TextBox tb)
+				{
+					if (tb.Name == "code")
+					{
+						tb.Click += delegate
+                        {
+							CreateToolTip("Порядковий номер {0} у таблиці (цілі числа)", tb);
+						};
+					}
+                    else if (tb.Name == "short")
+					{
+						tb.Click += delegate
+                        {
+							CreateToolTip("Коротка назва {0} (обмеження до 50 символів)", tb);
+						};
+					}
+					else if (tb.Name == "formual")
+					{
+						tb.Click += delegate
+                        {
+							CreateToolTip("Формула {0} (обмеження до 100 символів)", tb);
+						};
+					}
+					else if (tb.Name == "name")
+					{
+						tb.Click += delegate
+                        {
+							CreateToolTip("Повна назва {0} (обмеження до 100 символів)", tb);
+						};
+					}
+					else if (tb.Name == "measure")
+					{
+						tb.Click += delegate
+                        {
+							CreateToolTip("Одиниця вимірювання {0} (обмеження до 20 символів)", tb);
+						};
+					}
+					else if (tb.Name == "cas")
+					{
+						tb.Click += delegate
+                        {
+							CreateToolTip("Унікальний числовий ідентифікатор речовини (обмеження до 45 символів)", tb);
+						};
+					}
+					else if (tb.Name == "id")
+					{
+						tb.Click += delegate
+						{
+							CreateToolTip("Порядковий номер середовища в таблиці", tb);
+						};
+					}
+                }
+                else if (control is CheckBox checkBox)
+				{
+					if (checkBox.Name == "rigid")
+					{
+						checkBox.MouseHover += delegate
+						{
+							CreateToolTip("Розчинність (поставити відмітку, якщо речовина розчинна)", checkBox);
+						};
+					}
+					else if (checkBox.Name == "voc")
+					{
+						checkBox.MouseHover += delegate
+                        {
+							CreateToolTip("Газоподібні органічні речовини (поставити відмітку, якщо речовина є газоподібною)", checkBox);
+						};
+					}
+					else if (checkBox.Name == "hydro")
+					{
+						checkBox.MouseHover += delegate
+                        {
+							CreateToolTip("Вуглеводнева сполука (поставити мітку, якщо речовина містить в складі та формулі лише «С» - вуглець та «Н» - водень)", checkBox);
+						};
+					}
+                }
+			}
+		}
+
+		private void CreateToolTip(string text, Control control)
+		{
+			if (tableName == "elements")
+				text = string.Format(text, "речовини");
+            else if (tableName == "gdk")
+				text = string.Format(text, "гдк");
+			else if (tableName == "environment")
+				text = string.Format(text, "середовища");
+            new ToolTip().Show(text, control, 0, control.Height, 2000);
+        }
     }
 
 }
