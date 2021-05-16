@@ -19,10 +19,10 @@ namespace HelpModule.Forms
 		private static Dictionary<int, Scenario> GetPathByScenarios
 			=> new Dictionary<int, Scenario>
 			{
-				[0] = new Scenario { Name = "Полигон", Pages =10 },
+				[0] = new Scenario { Name = "Система", Pages = 18 },
 				[1] = new Scenario { Name = "Маркер", Pages = 14 },
-				[2] = new Scenario { Name = "Область", Pages = 14 },
-				[3] = new Scenario { Name = "Система", Pages = 18 }
+				[2] = new Scenario { Name = "Полигон", Pages = 10 },
+				[3] = new Scenario { Name = "Область", Pages = 14 }
 			};
 		public ListScenarioForm()
 		{

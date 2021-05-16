@@ -220,7 +220,7 @@
 			// btnSearchTemplate
 			// 
 			this.btnSearchTemplate.Image = global::oprForm.Properties.Resources.imgonline_com_ua_Resize_Ojr6EQ8xE2H;
-			this.btnSearchTemplate.Location = new System.Drawing.Point(152, 33);
+			this.btnSearchTemplate.Location = new System.Drawing.Point(153, 33);
 			this.btnSearchTemplate.Name = "btnSearchTemplate";
 			this.btnSearchTemplate.Size = new System.Drawing.Size(23, 22);
 			this.btnSearchTemplate.TabIndex = 27;
@@ -268,7 +268,7 @@
 			this.startTutorial.Location = new System.Drawing.Point(616, 3);
 			this.startTutorial.Name = "startTutorial";
 			this.startTutorial.Size = new System.Drawing.Size(18, 20);
-			this.startTutorial.TabIndex = 30;
+			this.startTutorial.TabIndex = 69;
 			this.startTutorial.Text = "?";
 			this.startTutorial.Click += new System.EventHandler(this.startTutorial_Click);
 			this.startTutorial.MouseEnter += new System.EventHandler(this.startTutorial_MouseEnter);

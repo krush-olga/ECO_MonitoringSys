@@ -74,10 +74,10 @@ namespace HelpModule.Forms
 			this.scenarios.FormattingEnabled = true;
 			this.scenarios.ItemHeight = 17;
 			this.scenarios.Items.AddRange(new object[] {
-            "Полигон (Еколог)",
-            "Маркер (Еколог)",
-            "Область",
-            "Сценарій роботи системи"});
+            "Сценарій роботи системи",
+            "Як добавити маркер на карту",
+            "Як добавити полігон на карту",
+            "Як добавити область на карту"});
 			this.scenarios.Location = new System.Drawing.Point(9, 107);
 			this.scenarios.Margin = new System.Windows.Forms.Padding(2);
 			this.scenarios.Name = "scenarios";

@@ -89,7 +89,7 @@
 			this.nameTB.Location = new System.Drawing.Point(102, 14);
 			this.nameTB.Margin = new System.Windows.Forms.Padding(2);
 			this.nameTB.Name = "nameTB";
-			this.nameTB.Size = new System.Drawing.Size(443, 20);
+			this.nameTB.Size = new System.Drawing.Size(450, 20);
 			this.nameTB.TabIndex = 6;
 			// 
 			// label2
@@ -109,7 +109,7 @@
 			this.descTB.Location = new System.Drawing.Point(102, 42);
 			this.descTB.Margin = new System.Windows.Forms.Padding(2);
 			this.descTB.Name = "descTB";
-			this.descTB.Size = new System.Drawing.Size(443, 20);
+			this.descTB.Size = new System.Drawing.Size(450, 20);
 			this.descTB.TabIndex = 8;
 			// 
 			// saveToDBBtn
@@ -200,6 +200,7 @@
 			this.btnRes.Size = new System.Drawing.Size(23, 22);
 			this.btnRes.TabIndex = 18;
 			this.btnRes.UseVisualStyleBackColor = true;
+			this.btnRes.Click += new System.EventHandler(this.btnRes_Click);
 			// 
 			// txtBxRes
 			// 
@@ -222,10 +223,10 @@
 			// 
 			this.startTutorial.AutoSize = true;
 			this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.startTutorial.Location = new System.Drawing.Point(558, 3);
+			this.startTutorial.Location = new System.Drawing.Point(558, 2);
 			this.startTutorial.Name = "startTutorial";
 			this.startTutorial.Size = new System.Drawing.Size(18, 20);
-			this.startTutorial.TabIndex = 26;
+			this.startTutorial.TabIndex = 67;
 			this.startTutorial.Text = "?";
 			this.startTutorial.Click += new System.EventHandler(this.startTutorial_Click);
 			this.startTutorial.MouseEnter += new System.EventHandler(this.startTutorial_MouseEnter);

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AlterEventForm));
 			this.resLB = new System.Windows.Forms.ListBox();
 			this.contextMenuRes = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.додатиНовийРесурсToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +65,8 @@
 			// 
 			// resLB
 			// 
+			this.resLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.resLB.ContextMenuStrip = this.contextMenuRes;
 			this.resLB.FormattingEnabled = true;
 			this.resLB.Location = new System.Drawing.Point(183, 47);
@@ -144,6 +147,8 @@
 			// 
 			// descTB
 			// 
+			this.descTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.descTB.Location = new System.Drawing.Point(90, 39);
 			this.descTB.Multiline = true;
 			this.descTB.Name = "descTB";
@@ -152,6 +157,8 @@
 			// 
 			// evNameTB
 			// 
+			this.evNameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.evNameTB.Location = new System.Drawing.Point(90, 16);
 			this.evNameTB.Multiline = true;
 			this.evNameTB.Name = "evNameTB";
@@ -160,6 +167,8 @@
 			// 
 			// issuesCB
 			// 
+			this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.issuesCB.FormattingEnabled = true;
 			this.issuesCB.Location = new System.Drawing.Point(90, 63);
 			this.issuesCB.Margin = new System.Windows.Forms.Padding(2);
@@ -201,6 +210,9 @@
 			// eventListGrid
 			// 
 			this.eventListGrid.AllowUserToAddRows = false;
+			this.eventListGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.eventListGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.eventListGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.eventListGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -239,6 +251,8 @@
 			// 
 			// eventsLB
 			// 
+			this.eventsLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.eventsLB.FormattingEnabled = true;
 			this.eventsLB.Location = new System.Drawing.Point(17, 73);
 			this.eventsLB.Name = "eventsLB";
@@ -257,6 +271,7 @@
 			// 
 			// btnSearchTemplate
 			// 
+			this.btnSearchTemplate.Image = ((System.Drawing.Image)(resources.GetObject("btnSearchTemplate.Image")));
 			this.btnSearchTemplate.Location = new System.Drawing.Point(154, 24);
 			this.btnSearchTemplate.Name = "btnSearchTemplate";
 			this.btnSearchTemplate.Size = new System.Drawing.Size(23, 22);
@@ -275,6 +290,7 @@
 			// 
 			// btnRes
 			// 
+			this.btnRes.Image = ((System.Drawing.Image)(resources.GetObject("btnRes.Image")));
 			this.btnRes.Location = new System.Drawing.Point(321, 24);
 			this.btnRes.Name = "btnRes";
 			this.btnRes.Size = new System.Drawing.Size(23, 22);
@@ -306,10 +322,10 @@
 			// 
 			this.startTutorial.AutoSize = true;
 			this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.startTutorial.Location = new System.Drawing.Point(806, 2);
+			this.startTutorial.Location = new System.Drawing.Point(806, 3);
 			this.startTutorial.Name = "startTutorial";
 			this.startTutorial.Size = new System.Drawing.Size(18, 20);
-			this.startTutorial.TabIndex = 24;
+			this.startTutorial.TabIndex = 68;
 			this.startTutorial.Text = "?";
 			this.startTutorial.Click += new System.EventHandler(this.startTutorial_Click);
 			this.startTutorial.MouseEnter += new System.EventHandler(this.startTutorial_MouseEnter);

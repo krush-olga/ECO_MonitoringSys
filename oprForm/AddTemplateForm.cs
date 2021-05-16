@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 using System.Drawing;
+using System.Linq;
 using HelpModule;
 
 namespace oprForm
@@ -16,6 +17,7 @@ namespace oprForm
         private int valueCol = 2;
         private int descCol = 1;
 
+        private Resource[] originalResources;
         /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
 
         TextBox[] txtBxMas = new TextBox[3]; //= { txtBxTemplate, txtBxRes, evNameTB, descTB };
@@ -40,6 +42,7 @@ namespace oprForm
             {
                 txtBx.Text = "";
                 txtBx.ForeColor = SystemColors.WindowText;
+                txtBx.Tag = 1;
             }
         }
 
@@ -55,6 +58,7 @@ namespace oprForm
                 for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
                 txtBx.Text = placeholder;
                 txtBx.ForeColor = SystemColors.GrayText;
+                txtBx.Tag = null;
             }
 
         }
@@ -71,6 +75,7 @@ namespace oprForm
             txtBxMas[2] = descTB;
             for (int i = 0; i < txtBxMas.Length; i++) PlaceholderTxtBx(txtBxMas[i], placeholderMas[i]);
 
+            originalResources = new Resource[0];
             /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
         }
 
@@ -112,7 +117,9 @@ namespace oprForm
                 resources.Add(ResourceMapper.Map(row));
             }
 
-            resourcesLB.Items.AddRange(resources.ToArray());
+            originalResources = resources.ToArray();
+
+            resourcesLB.Items.AddRange(originalResources);
             db.Disconnect();
         }
 
@@ -127,9 +134,16 @@ namespace oprForm
 
         private void addBtn_Click(object sender, EventArgs e)
         {
+            if (nameTB.Tag == null || !(nameTB.Tag is int))
+            {
+                MessageBox.Show("Відсутня назва шаблону. Введіть назву шаблону!",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             db.Connect();
             string temName = DBUtil.AddQuotes(nameTB.Text);
-            string temDesc = DBUtil.AddQuotes(descTB.Text);
+            string temDesc = descTB.Tag == null || !(descTB.Tag is int) ? "'Опис відсутній.'" : DBUtil.AddQuotes(descTB.Text);
 
             string[] evFields = new string[] { "name", "description", "expert_id" };
             string[] evValues = new string[] { temName, temDesc, user.ToString() };
@@ -167,58 +181,67 @@ namespace oprForm
             RemoveResourceFromGrid();
         }
 
-		private void startTutorial_Click(object sender, EventArgs e)
-		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = nameTB,
-						Text = "Для початку треба ввести назву нового шаблону"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = descTB,
-						Text = "Ввести опис шаблону"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = resourcesLB,
-						Text = "Обрати ресурси натиснувши двічи по ресурсу"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = addButton,
-						Text = "Або натиснувши на кнопку \"Додати ресурс до переліку\""
-                    },
-					new InteractiveToolTipModel
-					{
-						Control = removeButton,
-						Text = "Щоб видалити ресурс зі списку для шаблона натисніть на кнопку \"Видалити ресурс з переліку\""
-                    },
-					new InteractiveToolTipModel
-					{
-						Control = saveToDBBtn,
-						Text = "В кінці натисніть на кнопку \"Зберегти шаблон\""
-                    }
-                });
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p4.html");
-			});
-			frm.ShowDialog();
+        private void btnRes_Click(object sender, EventArgs e)
+        {
+            var findText = txtBxRes.Tag == null || !(txtBxRes.Tag is int) ? string.Empty : txtBxRes.Text.ToLower();
+
+            resourcesLB.Items.Clear();
+            resourcesLB.Items.AddRange(originalResources.Where(resource => resourcesLB.Name.ToLower().Contains(findText))
+                                                        .ToArray());
         }
 
-		private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+	        var frm = new HelpToolTipForm(delegate
+	        {
+		        new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+		        {
+			        new InteractiveToolTipModel
+			        {
+				        Control = nameTB,
+				        Text = "Для початку треба ввести назву нового шаблону"
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = descTB,
+				        Text = "Ввести опис шаблону"
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = resourcesLB,
+				        Text = "Обрати ресурси натиснувши двічи по ресурсу"
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = addButton,
+				        Text = "Або натиснувши на кнопку \"Додати ресурс до переліку\""
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = removeButton,
+				        Text = "Щоб видалити ресурс зі списку для шаблона натисніть на кнопку \"Видалити ресурс з переліку\""
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = saveToDBBtn,
+				        Text = "В кінці натисніть на кнопку \"Зберегти шаблон\""
+			        }
+		        });
+	        }, delegate
+	        {
+		        Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p4.html");
+	        });
+	        frm.ShowDialog();
+        }
 
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
+
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
     }
 }

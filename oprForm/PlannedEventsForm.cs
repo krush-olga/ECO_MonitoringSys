@@ -19,7 +19,7 @@ namespace oprForm
 
         private Event[] originalEvents;
         private Resource[] originalResource;
-        
+
 
         public PlannedEventsForm(int userId)
         {
@@ -46,7 +46,7 @@ namespace oprForm
 
         private void TxtBx_Enter(object sender, EventArgs e)
         {
-           // throw new NotImplementedException();
+            // throw new NotImplementedException();
 
             TextBox txtBx = sender as TextBox;
             bool check = false;
@@ -55,6 +55,7 @@ namespace oprForm
             {
                 txtBx.Text = "";
                 txtBx.ForeColor = SystemColors.WindowText;
+                txtBx.Tag = 1;
             }
         }
 
@@ -65,11 +66,12 @@ namespace oprForm
             TextBox txtBx = sender as TextBox;
             string placeholder = "";
 
-             if (txtBx.Text.Length == 0)
+            if (txtBx.Text.Length == 0)
             {
-                for(int i=0;i<txtBxMas.Length;i++) if (txtBx.Name==txtBxMas[i].Name) placeholder = placeholderMas[i];
+                for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
                 txtBx.Text = placeholder;
                 txtBx.ForeColor = SystemColors.GrayText;
+                txtBx.Tag = null;
             }
 
         }
@@ -82,8 +84,8 @@ namespace oprForm
             txtBxMas[1] = txtBxRes;
             txtBxMas[2] = evNameTB;
             txtBxMas[3] = descTB;
-            for (int i=0; i< txtBxMas.Length;i++) PlaceholderTxtBx(txtBxMas[i], placeholderMas[i]);
-           
+            for (int i = 0; i < txtBxMas.Length; i++) PlaceholderTxtBx(txtBxMas[i], placeholderMas[i]);
+
             /* End - Серая подсказка для TextBox, когда пустое TextBox.Text*/
 
             db.Connect();
@@ -124,11 +126,24 @@ namespace oprForm
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (eventsLB.SelectedItem == null || issuesCB.SelectedItem == null)
+            if (eventsLB.SelectedItem == null)
             {
+                MessageBox.Show("Виберіть шаблон заходу.",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
+            if (issuesCB.SelectedItem == null)
+            {
+                MessageBox.Show("Відсутня задача. Виберіть задачу для заходу.",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (evNameTB.Tag == null || eventsLB.Text == string.Empty || !(evNameTB.Tag is int))
+            {
+                MessageBox.Show("Відсутня назва заходу. Введіть назву заходу!", 
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (user == 0)
             {
                 MessageBox.Show("Адмін не може додавати нові заходи.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -142,7 +157,7 @@ namespace oprForm
             {
                 db.Connect();
                 string evName = DBUtil.AddQuotes(evNameTB.Text);
-                string evDesc = DBUtil.AddQuotes(descTB.Text);
+                string evDesc = descTB.Tag == null || !(descTB.Tag is int) ? "'Опис відсутній.'" : DBUtil.AddQuotes(descTB.Text);
 
                 string[] evFields = new string[] { "name", "description", "id_of_user", "issue_id" };
 
@@ -173,7 +188,7 @@ namespace oprForm
 
                 MessageBox.Show("Захід " + evNameTB.Text + " додано.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -307,14 +322,14 @@ namespace oprForm
                 {
                     case "1":
 
-                        var lowerTemplateText = txtBxTemplate.ForeColor == SystemColors.GrayText ? string.Empty : txtBxTemplate.Text.ToLower();
+                        var lowerTemplateText = txtBxTemplate.Tag == null || !(txtBxTemplate.Tag is int) ? string.Empty : txtBxTemplate.Text.ToLower();
 
                         eventsLB.Items.Clear();
                         eventsLB.Items.AddRange(originalEvents.Where(_event => _event.Name.ToLower().Contains(lowerTemplateText))
                                                               .ToArray());
                         break;
                     case "2":
-                        var lowerResultText = txtBxRes.ForeColor == SystemColors.GrayText ? string.Empty : txtBxRes.Text.ToLower();
+                        var lowerResultText = txtBxRes.Tag == null || !(txtBxRes.Tag is int) ? string.Empty : txtBxRes.Text.ToLower();
 
                         resLB.Items.Clear();
                         resLB.Items.AddRange(originalResource.Where(resource => resource.Name.ToLower().Contains(lowerResultText))
@@ -326,48 +341,48 @@ namespace oprForm
             }
         }
 
-		private void startTutorial_Click(object sender, EventArgs e)
-		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = evNameTB,
-						Text = "Для початку треба ввести назву нового заходу"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = descTB,
-						Text = "Ввести опис заходу"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = issuesCB,
-						Text = "Обрати задачу з випадаючого списку"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = addBtn,
-						Text = "Натиснути на кнопку \"Додати захід\""
-                    }
-				});
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p3.html");
-			});
-			frm.ShowDialog();
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+	        var frm = new HelpToolTipForm(delegate
+	        {
+		        new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+		        {
+			        new InteractiveToolTipModel
+			        {
+				        Control = evNameTB,
+				        Text = "Для початку треба ввести назву нового заходу"
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = descTB,
+				        Text = "Ввести опис заходу"
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = issuesCB,
+				        Text = "Обрати задачу з випадаючого списку"
+			        },
+			        new InteractiveToolTipModel
+			        {
+				        Control = addBtn,
+				        Text = "Натиснути на кнопку \"Додати захід\""
+			        }
+		        });
+	        }, delegate
+	        {
+		        Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p3.html");
+	        });
+	        frm.ShowDialog();
         }
 
-		private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
 
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
     }
 }

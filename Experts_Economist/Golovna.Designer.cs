@@ -416,7 +416,7 @@ namespace Experts_Economist
             this.новийШаблонToolStripMenuItem,
             this.змінитиШаблонToolStripMenuItem});
 			this.шаблонToolStripMenuItem.Name = "шаблонToolStripMenuItem";
-			this.шаблонToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.шаблонToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.шаблонToolStripMenuItem.Text = "Шаблон";
 			// 
 			// новийШаблонToolStripMenuItem
@@ -436,7 +436,7 @@ namespace Experts_Economist
 			// ресурсиToolStripMenuItem2
 			// 
 			this.ресурсиToolStripMenuItem2.Name = "ресурсиToolStripMenuItem2";
-			this.ресурсиToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+			this.ресурсиToolStripMenuItem2.Size = new System.Drawing.Size(119, 22);
 			this.ресурсиToolStripMenuItem2.Text = "Ресурси";
 			this.ресурсиToolStripMenuItem2.Click += new System.EventHandler(this.ресурсиToolStripMenuItem_Click);
 			// 
@@ -592,10 +592,12 @@ namespace Experts_Economist
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.menuStrip2);
 			this.IsMdiContainer = true;
+			this.KeyPreview = true;
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Golovna";
 			this.Text = "Головна";
 			this.Load += new System.EventHandler(this.Golovna_Load);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Golovna_KeyDown);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.panel1.ResumeLayout(false);

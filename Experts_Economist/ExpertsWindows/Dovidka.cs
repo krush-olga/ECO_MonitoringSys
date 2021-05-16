@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using Data;
 using System.Text.RegularExpressions;
@@ -16,7 +14,8 @@ namespace Experts_Economist
 {
     public partial class Dovidka : Form
     {
-	    private string tableName;
+
+        private string tableName;
         private int id_of_exp = 0;
         private DBManager db = new DBManager();
         private List<RadioButton> radioButtons;
@@ -25,19 +24,45 @@ namespace Experts_Economist
         private delegate bool TextBoxErrorCondition(TextBox tb);
         GDKAction lambda;             //лямбда-функція, яка буде генеруватися для кожного RadioButton і виконується при натисканні кнопки "Виконати"
 
-        //Названия колонок для разлинчных таблиц
+        //Названия колонок для различных таблиц.
+        //Идёт в виде: первый массив названия, а второй - описание. Если описания нет ставится null и оно
+        //дублирует название колонки.
+        //Возможно вынести в отдельный файл или делать выборку с настройкой для каждой колонки псевдонима.
+        //Например, SELECT code as Код ...
         private readonly Dictionary<string, KeyValuePair<string[], string[]>> tableColumnsNamesWithDescription =
             new Dictionary<string, KeyValuePair<string[], string[]>>
             {
-                { "gdk", new KeyValuePair<string[], string[]>
+                {
+                    "gdk", new KeyValuePair<string[], string[]>
                     (
                     new string[] { "Код", "Максимально разове ГДК", "Середньодобове ГДК", "Клас небезпеки", "ОБРВ", "Середовище" },
-                    new string[] { "Код", "Максимально разове ГДК", "Середньодобове ГДК", "Клас небезпеки", "Орієнтовно безпечний рівень впливу (ОБРВ) забруднючої середовище речовини", "Середовище, для якого визначені показники" }
+                    new string[] { null, null, null, null, "(ОБРВ) Орієнтовно безпечний рівень впливу забруднючої середовище речовини", "Середовище, для якого визначені показники" }
+                    )
+                },
+                {
+                    "elements", new KeyValuePair<string[], string[]>
+                    (
+                    new string[] { "Код", "Назва", "Коротка назва", "Одиниця виміру", "rigid", "ЛОР", "Вуглець", "Формула", "УЧІР"},
+                    new string[] { null, null, null, null, "Опис та назва відсутні. Необхідно додати опис та назву.", "Летючі органічні речовини", null, null, "Унікальний чисельний ідентифікатор речовин" }
+                    )
+                },
+                {
+                    "environment", new KeyValuePair<string[], string[]>
+                    (
+                    new string[] { "Идентифікатор", "Назва", "До якого середовища прикріплена", },
+                    new string[] { null, null, "До якого середовища прикріплена (або є підсередовищем)" }
+                    )
+                },
+                {
+                    "tax_values", new KeyValuePair<string[], string[]>
+                    (
+                    new string[] { "Ідентифікатор елементу", "Податок", "Середовище", },
+                    new string[] { null, null, null }
                     )
                 },
             };
-        
 
+        
         ~Dovidka()
         {
             db.Disconnect();
@@ -95,11 +120,19 @@ namespace Experts_Economist
                 connection.Open();
 
                 string query = string.Empty;
-                if (tableName.ToLower() == "gdk")
+                var lowerTableName = tableName.ToLower();
+
+                if (lowerTableName == "gdk")
                 {
-                    query = "SELECT gdk.code, gdk.mpc_m_ot, gdk.mpc_avrg_d, gdk.danger_class, gdk.tsel, environment.name FROM " + 
-                            tableName + 
+                    query = "SELECT gdk.code, gdk.mpc_m_ot, gdk.mpc_avrg_d, gdk.danger_class, gdk.tsel, environment.name FROM " +
+                            tableName +
                             " LEFT JOIN environment ON environment.id = gdk.environment";
+                }
+                else if (lowerTableName == "environment")
+                {
+                    query = "SELECT env1.id, env1.name, env2.name " +
+                            "FROM environment as env1 " +
+                            "LEFT JOIN environment as env2 ON env2.Id = env1.AttachEnv ORDER BY env1.id";
                 }
                 else
                 {
@@ -111,16 +144,17 @@ namespace Experts_Economist
                 mySqlDataAdapter.Fill(DS);
                 gdkDataGrid.DataSource = DS.Tables[0];
 
-                var _tableName = tableName.ToLower();
-
-                if (tableColumnsNamesWithDescription.ContainsKey(_tableName))
+                if (tableColumnsNamesWithDescription.ContainsKey(lowerTableName))
                 {
-                    var columnsNames = tableColumnsNamesWithDescription[_tableName];
+                    var columnsNames = tableColumnsNamesWithDescription[lowerTableName];
+                    var length = columnsNames.Key.Length > gdkDataGrid.Columns.Count ? gdkDataGrid.Columns.Count : columnsNames.Key.Length;
 
                     for (int i = 0; i < columnsNames.Key.Length; i++)
                     {
-                        gdkDataGrid.Columns[i].HeaderText = columnsNames.Key[i];
-                        gdkDataGrid.Columns[i].HeaderCell.ToolTipText = columnsNames.Value[i];
+                        var column = gdkDataGrid.Columns[i];
+
+                        column.HeaderText = columnsNames.Key[i];
+                        column.HeaderCell.ToolTipText = columnsNames.Value[i] ?? column.HeaderText;
                     }
                 }
 
@@ -168,7 +202,7 @@ namespace Experts_Economist
         }
 
         //функції перевірки на помилки
-        private bool checkTextBoxesForAnErrorWhere(IEnumerable<TextBox> textBoxes,TextBoxErrorCondition doesHaveAnError)
+        private bool checkTextBoxesForAnErrorWhere(IEnumerable<TextBox> textBoxes, TextBoxErrorCondition doesHaveAnError)
         {
             return textBoxes.Any(textBox => doesHaveAnError(textBox));
         }
@@ -177,7 +211,7 @@ namespace Experts_Economist
 
             string errorStr = String.Empty;
             var errorInTextBoxes = textBoxes.Where(textBox => doesHaveAnErrorIn(textBox));
-            foreach(var textBox in errorInTextBoxes)
+            foreach (var textBox in errorInTextBoxes)
             {
                 errorStr += $"{textBox.Name}, ";
             }
@@ -191,7 +225,7 @@ namespace Experts_Economist
 
             //отримуємо всі поля вводу
             var textBoxes = flowLayoutPanel1.Controls.OfType<TextBox>();
-            
+
             //змінна, яка призначеня для зберігання числових полів вводу
             IEnumerable<TextBox> numericTextBoxes = Enumerable.Empty<TextBox>();
 
@@ -213,18 +247,18 @@ namespace Experts_Economist
 
             if (checkTextBoxesForAnErrorWhere(textBoxes, textBoxesIsEmpty))                    //Якщо хоча б один TextBox пустий, то формуємо строку з іменем пустих полів 
             {
-                errorStr = $"Декілька або одне поле має невірний формат введених даних\nПоля: {formAnErrorStringWhere(textBoxes,textBoxesIsEmpty)}";
+                errorStr = $"Декілька або одне поле має невірний формат введених даних\nПоля: {formAnErrorStringWhere(textBoxes, textBoxesIsEmpty)}";
             }
-            else if(checkTextBoxesForAnErrorWhere(numericTextBoxes, textBoxesIsNotInt))        //Якщо хоча б в один TextBox введено не числове значення, то формуємо строку з іменами полів де є помилки
+            else if (checkTextBoxesForAnErrorWhere(numericTextBoxes, textBoxesIsNotInt))        //Якщо хоча б в один TextBox введено не числове значення, то формуємо строку з іменами полів де є помилки
             {
                 errorStr = $"Декілька або одне поле має невірний формат введених даних\nПоля: {formAnErrorStringWhere(numericTextBoxes, textBoxesIsNotInt)}";
             }
 
             //повертаємо значення false, що свідчить про відсутність помилок у полях вводу
-            else {numericTextBoxes.ToList().ForEach((textBox) => textBox.Text = textBox.Text.Trim().Replace(',', '.')); return false; }
+            else { numericTextBoxes.ToList().ForEach((textBox) => textBox.Text = textBox.Text.Trim().Replace(',', '.')); return false; }
 
             //виводимо помилку, якщо одна з функцій перевірки 
-            MessageBox.Show(errorStr, "УВАГА!");        
+            MessageBox.Show(errorStr, "УВАГА!");
             return true;
         }
 
@@ -255,22 +289,22 @@ namespace Experts_Economist
 
                         controls = new List<Control>                                               //формуємо набір компонентів
                             {
-                                createAutoSizedLabel("Code"), new TextBox(){Name="code"},
-                                createAutoSizedLabel("Name"), new TextBox(){Name="name"},
-                                createAutoSizedLabel("Short"), new TextBox(){Name="short"},
-                                createAutoSizedLabel("Measure"), new TextBox(){Name="measure"},
-                                createAutoSizedLabel("Formula"), new TextBox(){Name="formual"},
-                                createAutoSizedLabel("CAS"), new TextBox(){Name="cas"}, createAutoSizedLabel(""),
+                                createAutoSizedLabel("Код"), new TextBox(){Name="code"},
+                                createAutoSizedLabel("Назва"), new TextBox(){Name="name"},
+                                createAutoSizedLabel("Коротка назва"), new TextBox(){Name="short"},
+                                createAutoSizedLabel("Одиниця виміру"), new TextBox(){Name="measure"},
+                                createAutoSizedLabel("Формула"), new TextBox(){Name="formual"},
+                                createAutoSizedLabel("УЧІР"), new TextBox(){Name="cas"}, createAutoSizedLabel(""),
                                 new CheckBox(){Name="rigid", Text="rigid",AutoSize = true},
-                                new CheckBox(){Name="voc", Text="voc",AutoSize = true},
-                                new CheckBox(){Name="hydro",Text="hydro", AutoSize = true},
+                                new CheckBox(){Name="voc", Text="ЛОР",AutoSize = true},
+                                new CheckBox(){Name="hydro",Text="Вуглець", AutoSize = true},
                             };
 
                         lambda = () =>                  //створюємо подію для цього режиму роботи
                         {
                             if (gdkDataGrid.DataSource == null && !(gdkDataGrid.DataSource is DataTable))
                             {
-                                MessageBox.Show($"Неможливо виконати пошук.\nТаблиця порожня", "Помилка!", 
+                                MessageBox.Show($"Неможливо виконати пошук.\nТаблиця порожня", "Помилка!",
                                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return;
                             }
@@ -290,7 +324,7 @@ namespace Experts_Economist
                                 $"{checkBoxes[2].Checked}",$"'{textBoxes[4].Text}'",$"'{textBoxes[5].Text}'" };
                             try
                             {
-                                var result = db.GetRows("elements", "*", 
+                                var result = db.GetRows("elements", "*",
                                                         $"({string.IsNullOrEmpty(textBoxes[0].Text)} OR code = '{textBoxes[0].Text}' OR code LIKE '{textBoxes[0].Text}') AND " +
                                                         $"({string.IsNullOrEmpty(textBoxes[1].Text)} OR name = '{textBoxes[1].Text}' OR name LIKE '{textBoxes[1].Text}') AND " +
                                                         $"({string.IsNullOrEmpty(textBoxes[2].Text)} OR short_name = '{textBoxes[2].Text}' OR short_name LIKE '{textBoxes[2].Text}') AND " +
@@ -335,17 +369,17 @@ namespace Experts_Economist
 
                         if (tableName == "elements")
                         {
-                                controls = new List<Control>                                               //формуємо набір компонентів
+                            controls = new List<Control>                                               //формуємо набір компонентів
                             {
-                                createAutoSizedLabel("Code"), new TextBox(){Name="code"},
-                                createAutoSizedLabel("Name"), new TextBox(){Name="name"},
-                                createAutoSizedLabel("Short"), new TextBox(){Name="short"},
-                                createAutoSizedLabel("Measure"), new TextBox(){Name="measure"},
-                                createAutoSizedLabel("Formula"), new TextBox(){Name="formual"},
-                                createAutoSizedLabel("CAS"), new TextBox(){Name="cas"}, createAutoSizedLabel(""),
+                                createAutoSizedLabel("Код"), new TextBox(){Name="code"},
+                                createAutoSizedLabel("Назва"), new TextBox(){Name="name"},
+                                createAutoSizedLabel("Коротка назва"), new TextBox(){Name="short"},
+                                createAutoSizedLabel("Одиниця виміру"), new TextBox(){Name="measure"},
+                                createAutoSizedLabel("Формула"), new TextBox(){Name="formual"},
+                                createAutoSizedLabel("УЧІР"), new TextBox(){Name="cas"}, createAutoSizedLabel(""),
                                 new CheckBox(){Name="rigid", Text="rigid",AutoSize = true},
-                                new CheckBox(){Name="voc", Text="voc",AutoSize = true},
-                                new CheckBox(){Name="hydro",Text="hydro", AutoSize = true},
+                                new CheckBox(){Name="voc", Text="ЛОР",AutoSize = true},
+                                new CheckBox(){Name="hydro",Text="Вуглець", AutoSize = true},
                             };
 
                             lambda = () =>                  //створюємо подію для цього режиму роботи
@@ -363,7 +397,7 @@ namespace Experts_Economist
                                 string[] fieldValues = {$"{textBoxes[0].Text}",$"'{textBoxes[1].Text}'",$"'{textBoxes[2].Text}'",
                                 $"'{textBoxes[3].Text}'",$"{checkBoxes[0].Checked}",$"{checkBoxes[1].Checked}",
                                 $"{checkBoxes[2].Checked}",$"'{textBoxes[4].Text}'",$"'{textBoxes[5].Text}'" };
-                            try
+                                try
                                 {
                                     //додаємо значення до бд
                                     db.InsertToBDWithoutId("elements", fieldNames, fieldValues);
@@ -374,12 +408,12 @@ namespace Experts_Economist
                                 }
                             };
                         }
-                        else if(tableName == "gdk")
+                        else if (tableName == "gdk")
                         {
-                            ComboBox code_combo = new ComboBox() { Name="code"};
-                            populateComboBox(ref code_combo, db.connectionString,"elements", "code");
-                            ComboBox environment_combo = new ComboBox() { Name="environment"};
-                            populateComboBox(ref environment_combo, db.connectionString,"environment", "name");
+                            ComboBox code_combo = new ComboBox() { Name = "code" };
+                            populateComboBox(ref code_combo, db.connectionString, "elements", "code");
+                            ComboBox environment_combo = new ComboBox() { Name = "environment" };
+                            populateComboBox(ref environment_combo, db.connectionString, "environment", "name");
                             controls = new List<Control>
                             {
                                 createAutoSizedLabel("Код"), code_combo,
@@ -390,7 +424,7 @@ namespace Experts_Economist
                                 createAutoSizedLabel("Середовище"), environment_combo,
                             };
 
-                            lambda = () => 
+                            lambda = () =>
                             {
                                 var textBoxes = flowLayoutPanel1.Controls.OfType<TextBox>().ToArray();
                                 var comboBoxes = flowLayoutPanel1.Controls.OfType<ComboBox>().ToArray();
@@ -404,19 +438,20 @@ namespace Experts_Economist
                                     MessageBox.Show($"Неможливо створити запис\n{exception.Message}", "Помилка!");
                                 }
                             };
-                        }else if(tableName == "environment")
+                        }
+                        else if (tableName == "environment")
                         {
                             controls = new List<Control>
                             {
                                 createAutoSizedLabel("ID"), new TextBox(){Name="id"},
-                                createAutoSizedLabel("Name"), new TextBox(){Name="name"}
+                                createAutoSizedLabel("Назва"), new TextBox(){Name="name"}
                             };
 
-                            lambda = () => 
+                            lambda = () =>
                             {
                                 var textBoxes = flowLayoutPanel1.Controls.OfType<TextBox>().ToArray();
-                                string[] fieldNames = { "id","name"};
-                                string[] fieldValues = {$"{textBoxes[0].Text}",$"'{textBoxes[1].Text}'" };
+                                string[] fieldNames = { "id", "name" };
+                                string[] fieldValues = { $"{textBoxes[0].Text}", $"'{textBoxes[1].Text}'" };
 
                                 try
                                 {
@@ -427,17 +462,18 @@ namespace Experts_Economist
                                     MessageBox.Show($"Неможливо створити запис\n{exception.Message}", "Помилка!");
                                 }
                             };
-                        }else if (tableName == "tax_values")
+                        }
+                        else if (tableName == "tax_values")
                         {
-                                ComboBox code_combo = new ComboBox() { Name="id_of_element"};
-                                populateComboBox(ref code_combo, db.connectionString, "elements", "name");
-                                ComboBox env_combo = new ComboBox() { Name="environment"};
-                                populateComboBox(ref env_combo, db.connectionString, "environment", "name");
+                            ComboBox code_combo = new ComboBox() { Name = "id_of_element" };
+                            populateComboBox(ref code_combo, db.connectionString, "elements", "name");
+                            ComboBox env_combo = new ComboBox() { Name = "environment" };
+                            populateComboBox(ref env_combo, db.connectionString, "environment", "name");
                             controls = new List<Control>
                             {
-                                createAutoSizedLabel("ELEMENT"), code_combo,
-                                createAutoSizedLabel("TAX VALUE"), new TextBox(){Name="tax value"},
-                                createAutoSizedLabel("ENVIRONMENT"), env_combo
+                                createAutoSizedLabel("Елемент"), code_combo,
+                                createAutoSizedLabel("Податкова вартість"), new TextBox(){Name="tax value"},
+                                createAutoSizedLabel("Середовище"), env_combo
                             };
                             lambda = () =>
                             {
@@ -466,15 +502,15 @@ namespace Experts_Economist
                         {
                             controls = new List<Control>
                             {
-                                createAutoSizedLabel("Code"), new TextBox(){Name="code"},
-                                createAutoSizedLabel("Name"), new TextBox(){Name="name"},
-                                createAutoSizedLabel("Short"), new TextBox(){Name="short"},
-                                createAutoSizedLabel("Measure"), new TextBox(){Name="measure"},
-                                createAutoSizedLabel("Formula"), new TextBox(){Name="formual"},
-                                createAutoSizedLabel("CAS"), new TextBox(){Name="cas"}, createAutoSizedLabel(""),
+                                createAutoSizedLabel("Код"), new TextBox(){Name="code"},
+                                createAutoSizedLabel("Назва"), new TextBox(){Name="name"},
+                                createAutoSizedLabel("Коротка назва"), new TextBox(){Name="short"},
+                                createAutoSizedLabel("Одиниця виміру"), new TextBox(){Name="measure"},
+                                createAutoSizedLabel("Формула"), new TextBox(){Name="formual"},
+                                createAutoSizedLabel("УЧІР"), new TextBox(){Name="cas"}, createAutoSizedLabel(""),
                                 new CheckBox(){Name="rigid", Text="rigid",AutoSize = true},
-                                new CheckBox(){Name="voc", Text="voc",AutoSize = true},
-                                new CheckBox(){Name="hydro",Text="hydro", AutoSize = true},
+                                new CheckBox(){Name="voc", Text="ЛОР",AutoSize = true},
+                                new CheckBox(){Name="hydro",Text="Вуглець", AutoSize = true},
                             };
 
                             lambda = () =>
@@ -503,9 +539,9 @@ namespace Experts_Economist
                         else if (tableName == "gdk")
                         {
                             ComboBox code_combo = new ComboBox() { Name = "code" };
-                            populateComboBox(ref code_combo, db.connectionString,"elements", "code");
+                            populateComboBox(ref code_combo, db.connectionString, "elements", "code");
                             ComboBox environment_combo = new ComboBox() { Name = "environment" };
-                            populateComboBox(ref environment_combo, db.connectionString,"environment", "name");
+                            populateComboBox(ref environment_combo, db.connectionString, "environment", "name");
                             controls = new List<Control>
                             {
                                 createAutoSizedLabel("Код"), code_combo,
@@ -520,7 +556,7 @@ namespace Experts_Economist
                                 var textBoxes = flowLayoutPanel1.Controls.OfType<TextBox>().ToArray();
                                 var comboBoxes = flowLayoutPanel1.Controls.OfType<ComboBox>().ToArray();
 
-                                textBoxes.ToList().ForEach(textBox => textBox.Text = textBox.Text.Replace(',','.') );
+                                textBoxes.ToList().ForEach(textBox => textBox.Text = textBox.Text.Replace(',', '.'));
 
                                 try
                                 {
@@ -528,7 +564,7 @@ namespace Experts_Economist
                                     var record_ID = gdkDataGrid.Rows[rowIndex].Cells[0].Value.ToString();
 
                                     var environment_ID = db.GetValue("environment", "id", $"name = '{comboBoxes[1].Text}'");
-                                    
+
                                     string[] colNames = { "code", "mpc_m_ot", "mpc_avrg_d", "danger_class", "tsel", "environment" };
                                     string[] colValues = { $"{comboBoxes[0].Text}", $"{textBoxes[0].Text}", $"{textBoxes[1].Text}", $"{textBoxes[2].Text}", $"{textBoxes[3].Text}", $"{environment_ID}" };
 
@@ -545,7 +581,7 @@ namespace Experts_Economist
                             controls = new List<Control>
                             {
                                 createAutoSizedLabel("ID"), new TextBox(){Name="id"},
-                                createAutoSizedLabel("Name"), new TextBox(){Name="name"}
+                                createAutoSizedLabel("Назва"), new TextBox(){Name="name"}
                             };
 
                             lambda = () =>
@@ -556,8 +592,8 @@ namespace Experts_Economist
                                     var record_ID = db.GetValue("environment", "id", $"name = '{gdkDataGrid.Rows[rowIndex].Cells[1].Value.ToString()}'");
                                     var textBoxes = flowLayoutPanel1.Controls.OfType<TextBox>().ToArray();
 
-                                    string[] colNames = { "id","name" };
-                                    string[] colValues = {$"{textBoxes[0].Text}",$"'{textBoxes[1].Text}'" };
+                                    string[] colNames = { "id", "name" };
+                                    string[] colValues = { $"{textBoxes[0].Text}", $"'{textBoxes[1].Text}'" };
 
                                     db.UpdateRecord("environment", colNames, colValues);
                                 }
@@ -566,7 +602,8 @@ namespace Experts_Economist
                                     MessageBox.Show($"Помилка оновлення даних!\n{ex.Message}", "Помилка");
                                 }
                             };
-                        }else if (tableName == "tax_values")
+                        }
+                        else if (tableName == "tax_values")
                         {
                             ComboBox code_combo = new ComboBox() { Name = "id_of_element" };
                             populateComboBox(ref code_combo, db.connectionString, "elements", "name");
@@ -574,9 +611,9 @@ namespace Experts_Economist
                             populateComboBox(ref env_combo, db.connectionString, "environment", "name");
                             controls = new List<Control>
                             {
-                                createAutoSizedLabel("id_of_element"), code_combo,
-                                createAutoSizedLabel("tax"), new TextBox(){Name="tax"},
-                                createAutoSizedLabel("environment"), env_combo
+                                createAutoSizedLabel("Елемент"), code_combo,
+                                createAutoSizedLabel("Податкова вартість"), new TextBox(){Name="tax"},
+                                createAutoSizedLabel("Середовище"), env_combo
                             };
                             lambda = () =>
                             {
@@ -587,10 +624,10 @@ namespace Experts_Economist
 
                                     textBoxes.ToList().ForEach(textBox => textBox.Text = textBox.Text.Replace(',', '.'));
 
-                                    string[] colNames = { "id_of_element", "tax", "environment"};
+                                    string[] colNames = { "id_of_element", "tax", "environment" };
                                     var tmp = db.GetValue("elements", "code", $"name = '{comboBoxes[0].Text}'");
                                     var env_ID = db.GetValue("environment", "id", $"name = '{comboBoxes[1].Text}'");
-                                    string[] colValues = { $"{tmp}", $"{textBoxes[0].Text}", $"{env_ID}"};
+                                    string[] colValues = { $"{tmp}", $"{textBoxes[0].Text}", $"{env_ID}" };
 
                                     db.UpdateRecord("tax_values", colNames, colValues);
                                 }
@@ -610,7 +647,7 @@ namespace Experts_Economist
                         {
                             controls = new List<Control>
                             {
-                                createAutoSizedLabel("Code"), new TextBox(){Name="code"}
+                                createAutoSizedLabel("Код"), new TextBox(){Name="code"}
                                 //createAutoSizedLabel("Name"), new TextBox(){Name="name"},
                                 //createAutoSizedLabel("Short"), new TextBox(){Name="short"},
                                 //createAutoSizedLabel("Measure"), new TextBox(){Name="measure"},
@@ -631,7 +668,7 @@ namespace Experts_Economist
                                     var record_ID = gdkDataGrid.Rows[rowIndex].Cells[0].Value.ToString();
 
                                     //MessageBox.Show(record_ID.ToString());
-                                    
+
                                     //string[] colValues = { record_ID.ToString(), $"'{nameTB.Text.Trim()}'", $"'{categoryCB.Text.Trim()}'", GDK_TB.Text.Trim(), $"'{measureTB.Text.Trim() }'", minTB.Text.Trim(), maxTB.Text.Trim() };
                                     db.DeleteFromDB("elements", "code", record_ID.ToString());
 
@@ -645,7 +682,7 @@ namespace Experts_Economist
                         else if (tableName == "gdk")
                         {
                             ComboBox code_combo = new ComboBox();
-                            populateComboBox(ref code_combo, db.connectionString,"elements", "code");
+                            populateComboBox(ref code_combo, db.connectionString, "elements", "code");
                             controls = new List<Control>
                             {
                                 createAutoSizedLabel("Code"), code_combo,
@@ -673,7 +710,7 @@ namespace Experts_Economist
                             controls = new List<Control>
                             {
                                 createAutoSizedLabel("ID"), new TextBox(){Name="id"},
-                                createAutoSizedLabel("Name"), new TextBox(){Name="name"}
+                                createAutoSizedLabel("Назва"), new TextBox(){Name="name"}
                             };
 
                             lambda = () =>
@@ -694,13 +731,14 @@ namespace Experts_Economist
                                     MessageBox.Show($"Помилка оновлення даних!\n{ex.Message}", "Помилка");
                                 }
                             };
-                        }else if (tableName == "tax_values")
+                        }
+                        else if (tableName == "tax_values")
                         {
                             ComboBox code_combo = new ComboBox();
                             populateComboBox(ref code_combo, db.connectionString, "tax_values", "id_of_element");
                             controls = new List<Control>
                             {
-                                createAutoSizedLabel("ID OF ELEMENT"), code_combo
+                                createAutoSizedLabel("Ідентифікатор елементу"), code_combo
                             };
                             lambda = () =>
                             {
@@ -735,19 +773,7 @@ namespace Experts_Economist
             oldValue = selected;
         }
 
-
-
         //_____Сгенеровані функції______
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void DovidkaGDK_Load(object sender, EventArgs e)
         {
@@ -755,20 +781,6 @@ namespace Experts_Economist
             radioButtons = new List<RadioButton> { searchRadio, addRadio, editRadio, deleteRadio };
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void searchRadio_CheckedChanged(object sender, EventArgs e)
-        {
-           //RadioButton selected = radioButtons.Single((elem)=> elem.Checked);
-        }
 
         //функція для виконання дії обраного режиму роботи
         private void doneBtn_Click(object sender, EventArgs e)
@@ -798,11 +810,6 @@ namespace Experts_Economist
                 MessageBox.Show("Оберіть режим роботи!", "Увага!");
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         //подія, яка виникає при натисканні правою кнопкою миші на таблицю
         private void gdkDataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -825,7 +832,7 @@ namespace Experts_Economist
                         //заповнюємо все поля для вводу значеннями з таблиці
                         for (int i = 1; i <= textBoxes.Length; i++)
                         {
-                            textBoxes[i-1].Text = textCells[i].Value.ToString();
+                            textBoxes[i - 1].Text = textCells[i].Value.ToString();
                         }
 
                         var checkBoxes = flowLayoutPanel1.Controls.OfType<CheckBox>().ToArray();    //отримуємо всі поля для вводу типу ChechBox
@@ -837,7 +844,7 @@ namespace Experts_Economist
                             checkBoxes[i].Checked = (bool)checkCells[i].Value;
                         }
                     }
-                    else if(tableName == "tax_values")
+                    else if (tableName == "tax_values")
                     {
                         comboBoxes[0].Text = db.GetValue("elements", "name", $"code = '{textCells[0].Value.ToString()}'").ToString();
                         textBoxes[0].Text = textCells[1].Value.ToString();
@@ -860,11 +867,11 @@ namespace Experts_Economist
                             checkBoxes[i].Checked = (bool)checkCells[i].Value;
                         }
                     }
-                    
+
                 }
                 catch (NullReferenceException ex)
                 {
-                    MessageBox.Show($"Не вдалося завантажити дані!\n{ex.Message} ","Увага!");
+                    MessageBox.Show($"Не вдалося завантажити дані!\n{ex.Message} ", "Увага!");
                 }
             }
         }
@@ -874,64 +881,59 @@ namespace Experts_Economist
 
         }
 
-        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        private void gdkDataGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-        }
-
-        private void startTutorial_MouseLeave(object sender, EventArgs e)
-        {
-	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+            e.Value = e.Value is DBNull ? "-" : e.Value;
         }
 
         private void startTutorial_Click(object sender, EventArgs e)
         {
-	        var frm = new HelpToolTipForm(delegate
-	        {
-		        if (id_of_exp != 0)
-			        return;
-		        if (!searchRadio.Checked && !addRadio.Checked && !editRadio.Checked && !deleteRadio.Checked)
-			        StartTutorialProcess();
-		        else
-			        StartTutorialRd();
-            }, delegate
-	        {
-		        string page = "";
-		        if (this.tableName == "elements")
-		        {
-			        page = "p13.html";
-		        }
-		        else if (this.tableName == "gdk")
-		        {
-			        page = "p14.html";
-                }
-		        else if (this.tableName == "environment")
-		        {
-			        page = "p15.html";
-                }
-		        else if (this.tableName == "emissions")
-		        {
-			        page = "p16.html";
-                }
-		        else if (this.tableName == "tax_values")
-		        {
-			        page = "p17.html";
-                }
-		        else
-		        {
+            var frm = new HelpToolTipForm(delegate
+            {
+                if (id_of_exp != 0)
                     return;
-		        }
+                if (!searchRadio.Checked && !addRadio.Checked && !editRadio.Checked && !deleteRadio.Checked)
+                    StartTutorialProcess();
+                else
+                    StartTutorialRd();
+            }, delegate
+            {
+                string page = "";
+                if (this.tableName == "elements")
+                {
+                    page = "p13.html";
+                }
+                else if (this.tableName == "gdk")
+                {
+                    page = "p14.html";
+                }
+                else if (this.tableName == "environment")
+                {
+                    page = "p15.html";
+                }
+                else if (this.tableName == "emissions")
+                {
+                    page = "p16.html";
+                }
+                else if (this.tableName == "tax_values")
+                {
+                    page = "p17.html";
+                }
+                else
+                {
+                    return;
+                }
 
                 Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, page);
             });
-	        frm.ShowDialog();
-            
-		}
+            frm.ShowDialog();
 
-		private void StartTutorialProcess()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
+        }
+
+        private void StartTutorialProcess()
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
                 new InteractiveToolTipModel
                 {
                     Control = workMode,
@@ -939,233 +941,243 @@ namespace Experts_Economist
                     IsNotFinal = true,
                     AfterHandler = AfterWorkModeChecked
                 }
-			});
-		}
+            });
+        }
 
-		private void AfterWorkModeChecked()
-		{
-			if (!searchRadio.Checked && !addRadio.Checked && !editRadio.Checked && !deleteRadio.Checked)
-			{
-				searchRadio.CheckedChanged += WorkModeCheckedHandler;
-				addRadio.CheckedChanged += WorkModeCheckedHandler;
-				editRadio.CheckedChanged += WorkModeCheckedHandler;
-				deleteRadio.CheckedChanged += WorkModeCheckedHandler;
-			}
+        private void AfterWorkModeChecked()
+        {
+            if (!searchRadio.Checked && !addRadio.Checked && !editRadio.Checked && !deleteRadio.Checked)
+            {
+                searchRadio.CheckedChanged += WorkModeCheckedHandler;
+                addRadio.CheckedChanged += WorkModeCheckedHandler;
+                editRadio.CheckedChanged += WorkModeCheckedHandler;
+                deleteRadio.CheckedChanged += WorkModeCheckedHandler;
+            }
             else
-				StartTutorialRd();
-		}
-
-		private void StartTutorialRd()
-		{
-			if (searchRadio.Checked)
-			{
-				tutorialSearch();
-			}
-			else if (addRadio.Checked)
-			{
-				tutorialAdd();
-			}
-			else if (editRadio.Checked)
-			{
-				tutorialEdit();
-			}
-			else if (deleteRadio.Checked)
-			{
-				tutorialDelete();
-			}
+                StartTutorialRd();
         }
 
-		private void WorkModeCheckedHandler(object sender, EventArgs e)
-		{
-			searchRadio.CheckedChanged -= WorkModeCheckedHandler;
-			addRadio.CheckedChanged -= WorkModeCheckedHandler;
-			editRadio.CheckedChanged -= WorkModeCheckedHandler;
-			deleteRadio.CheckedChanged -= WorkModeCheckedHandler;
-			var rd = (RadioButton) sender;
-			if (rd == searchRadio)
-			{
-				tutorialSearch();
-			}
+        private void StartTutorialRd()
+        {
+            if (searchRadio.Checked)
+            {
+                tutorialSearch();
+            }
+            else if (addRadio.Checked)
+            {
+                tutorialAdd();
+            }
+            else if (editRadio.Checked)
+            {
+                tutorialEdit();
+            }
+            else if (deleteRadio.Checked)
+            {
+                tutorialDelete();
+            }
+        }
+
+        private void WorkModeCheckedHandler(object sender, EventArgs e)
+        {
+            searchRadio.CheckedChanged -= WorkModeCheckedHandler;
+            addRadio.CheckedChanged -= WorkModeCheckedHandler;
+            editRadio.CheckedChanged -= WorkModeCheckedHandler;
+            deleteRadio.CheckedChanged -= WorkModeCheckedHandler;
+            var rd = (RadioButton)sender;
+            if (rd == searchRadio)
+            {
+                tutorialSearch();
+            }
             else if (rd == addRadio)
-			{
-				tutorialAdd();
+            {
+                tutorialAdd();
             }
-			else if (rd == editRadio)
-			{
-				tutorialEdit();
+            else if (rd == editRadio)
+            {
+                tutorialEdit();
             }
-			else if (rd == deleteRadio)
-			{
-				tutorialDelete();
+            else if (rd == deleteRadio)
+            {
+                tutorialDelete();
             }
         }
 
-		private void tutorialSearch()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
-				new InteractiveToolTipModel
-				{
-					Control = flowLayoutPanel1,
-					Text = "Заповніть дані для пошуку"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = doneBtn,
-					Text = "Натисніть на кнопку \"Виконати\""
+        private void tutorialSearch()
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+                new InteractiveToolTipModel
+                {
+                    Control = flowLayoutPanel1,
+                    Text = "Заповніть дані для пошуку"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = doneBtn,
+                    Text = "Натисніть на кнопку \"Виконати\""
                 }
             });
         }
 
-		private void tutorialAdd()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
-				new InteractiveToolTipModel
-				{
-					Control = flowLayoutPanel1,
-					Text = "Заповніть дані"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = doneBtn,
-					Text = "Натисніть на кнопку \"Додати\""
-                }
-			});
-		}
-
-		private void tutorialEdit()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
-				new InteractiveToolTipModel
-				{
-					Control = gdkDataGrid,
-					Text = "Оберіть необхідний рядок"
-				},
+        private void tutorialAdd()
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
                 new InteractiveToolTipModel
-				{
-					Control = flowLayoutPanel1,
-					Text = "Відредагуйте дані"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = doneBtn,
-					Text = "Натисніть на кнопку \"Редагувати\""
-				}
-			});
-		}
-
-		private void tutorialDelete()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
-				new InteractiveToolTipModel
-				{
-					Control = gdkDataGrid,
-					Text = "Оберіть необхідний рядок"
+                {
+                    Control = flowLayoutPanel1,
+                    Text = "Заповніть дані"
                 },
-				new InteractiveToolTipModel
-				{
-					Control = doneBtn,
-					Text = "Натисніть на кнопку \"Видалити\""
+                new InteractiveToolTipModel
+                {
+                    Control = doneBtn,
+                    Text = "Натисніть на кнопку \"Додати\""
                 }
-			});
-		}
+            });
+        }
 
-		private void SetEventHandlersForControls(ref List<Control> controls)
-		{
-			foreach (Control control in controls)
-			{
-				if (control is TextBox tb)
-				{
-					if (tb.Name == "code")
-					{
-						tb.Click += delegate
+        private void tutorialEdit()
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+                new InteractiveToolTipModel
+                {
+                    Control = gdkDataGrid,
+                    Text = "Оберіть необхідний рядок"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = flowLayoutPanel1,
+                    Text = "Відредагуйте дані"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = doneBtn,
+                    Text = "Натисніть на кнопку \"Редагувати\""
+                }
+            });
+        }
+
+        private void tutorialDelete()
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+                new InteractiveToolTipModel
+                {
+                    Control = gdkDataGrid,
+                    Text = "Оберіть необхідний рядок"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = doneBtn,
+                    Text = "Натисніть на кнопку \"Видалити\""
+                }
+            });
+        }
+
+        private void SetEventHandlersForControls(ref List<Control> controls)
+        {
+            foreach (Control control in controls)
+            {
+                if (control is TextBox tb)
+                {
+                    if (tb.Name == "code")
+                    {
+                        tb.Click += delegate
                         {
-							CreateToolTip("Порядковий номер {0} у таблиці (цілі числа)", tb);
-						};
-					}
+                            CreateToolTip("Порядковий номер {0} у таблиці (цілі числа)", tb);
+                        };
+                    }
                     else if (tb.Name == "short")
-					{
-						tb.Click += delegate
+                    {
+                        tb.Click += delegate
                         {
-							CreateToolTip("Коротка назва {0} (обмеження до 50 символів)", tb);
-						};
-					}
-					else if (tb.Name == "formual")
-					{
-						tb.Click += delegate
+                            CreateToolTip("Коротка назва {0} (обмеження до 50 символів)", tb);
+                        };
+                    }
+                    else if (tb.Name == "formual")
+                    {
+                        tb.Click += delegate
                         {
-							CreateToolTip("Формула {0} (обмеження до 100 символів)", tb);
-						};
-					}
-					else if (tb.Name == "name")
-					{
-						tb.Click += delegate
+                            CreateToolTip("Формула {0} (обмеження до 100 символів)", tb);
+                        };
+                    }
+                    else if (tb.Name == "name")
+                    {
+                        tb.Click += delegate
                         {
-							CreateToolTip("Повна назва {0} (обмеження до 100 символів)", tb);
-						};
-					}
-					else if (tb.Name == "measure")
-					{
-						tb.Click += delegate
+                            CreateToolTip("Повна назва {0} (обмеження до 100 символів)", tb);
+                        };
+                    }
+                    else if (tb.Name == "measure")
+                    {
+                        tb.Click += delegate
                         {
-							CreateToolTip("Одиниця вимірювання {0} (обмеження до 20 символів)", tb);
-						};
-					}
-					else if (tb.Name == "cas")
-					{
-						tb.Click += delegate
+                            CreateToolTip("Одиниця вимірювання {0} (обмеження до 20 символів)", tb);
+                        };
+                    }
+                    else if (tb.Name == "cas")
+                    {
+                        tb.Click += delegate
                         {
-							CreateToolTip("Унікальний числовий ідентифікатор речовини (обмеження до 45 символів)", tb);
-						};
-					}
-					else if (tb.Name == "id")
-					{
-						tb.Click += delegate
-						{
-							CreateToolTip("Порядковий номер середовища в таблиці", tb);
-						};
-					}
+                            CreateToolTip("Унікальний числовий ідентифікатор речовини (обмеження до 45 символів)", tb);
+                        };
+                    }
+                    else if (tb.Name == "id")
+                    {
+                        tb.Click += delegate
+                        {
+                            CreateToolTip("Порядковий номер середовища в таблиці", tb);
+                        };
+                    }
                 }
                 else if (control is CheckBox checkBox)
-				{
-					if (checkBox.Name == "rigid")
-					{
-						checkBox.MouseHover += delegate
-						{
-							CreateToolTip("Розчинність (поставити відмітку, якщо речовина розчинна)", checkBox);
-						};
-					}
-					else if (checkBox.Name == "voc")
-					{
-						checkBox.MouseHover += delegate
+                {
+                    if (checkBox.Name == "rigid")
+                    {
+                        checkBox.MouseHover += delegate
                         {
-							CreateToolTip("Газоподібні органічні речовини (поставити відмітку, якщо речовина є газоподібною)", checkBox);
-						};
-					}
-					else if (checkBox.Name == "hydro")
-					{
-						checkBox.MouseHover += delegate
+                            CreateToolTip("Розчинність (поставити відмітку, якщо речовина розчинна)", checkBox);
+                        };
+                    }
+                    else if (checkBox.Name == "voc")
+                    {
+                        checkBox.MouseHover += delegate
                         {
-							CreateToolTip("Вуглеводнева сполука (поставити мітку, якщо речовина містить в складі та формулі лише «С» - вуглець та «Н» - водень)", checkBox);
-						};
-					}
+                            CreateToolTip("Газоподібні органічні речовини (поставити відмітку, якщо речовина є газоподібною)", checkBox);
+                        };
+                    }
+                    else if (checkBox.Name == "hydro")
+                    {
+                        checkBox.MouseHover += delegate
+                        {
+                            CreateToolTip("Вуглеводнева сполука (поставити мітку, якщо речовина містить в складі та формулі лише «С» - вуглець та «Н» - водень)", checkBox);
+                        };
+                    }
                 }
-			}
-		}
+            }
+        }
 
-		private void CreateToolTip(string text, Control control)
-		{
-			if (tableName == "elements")
-				text = string.Format(text, "речовини");
+        private void CreateToolTip(string text, Control control)
+        {
+            if (tableName == "elements")
+                text = string.Format(text, "речовини");
             else if (tableName == "gdk")
-				text = string.Format(text, "гдк");
-			else if (tableName == "environment")
-				text = string.Format(text, "середовища");
+                text = string.Format(text, "гдк");
+            else if (tableName == "environment")
+                text = string.Format(text, "середовища");
             new ToolTip().Show(text, control, 0, control.Height, 2000);
         }
+
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+		}
+
+		private void startTutorial_MouseLeave(object sender, EventArgs e)
+		{
+			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+		}
     }
 
 }

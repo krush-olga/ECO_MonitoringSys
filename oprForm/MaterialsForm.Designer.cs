@@ -31,8 +31,8 @@
 			this.components = new System.ComponentModel.Container();
 			this.resDGV = new System.Windows.Forms.DataGridView();
 			this.nameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.priceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.unitsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.priceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.descCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.saveBtn = new System.Windows.Forms.Button();
 			this.delBtn = new System.Windows.Forms.Button();
@@ -62,8 +62,8 @@
 			this.resDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.resDGV.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.nameCol,
-            this.priceCol,
             this.unitsCol,
+            this.priceCol,
             this.descCol});
 			this.resDGV.Location = new System.Drawing.Point(8, 222);
 			this.resDGV.Margin = new System.Windows.Forms.Padding(2);
@@ -81,19 +81,19 @@
 			this.nameCol.Name = "nameCol";
 			this.nameCol.ReadOnly = true;
 			// 
-			// priceCol
-			// 
-			this.priceCol.FillWeight = 15F;
-			this.priceCol.HeaderText = "Ціна";
-			this.priceCol.Name = "priceCol";
-			this.priceCol.ReadOnly = true;
-			// 
 			// unitsCol
 			// 
 			this.unitsCol.FillWeight = 15F;
 			this.unitsCol.HeaderText = "Одиниця виміру";
 			this.unitsCol.Name = "unitsCol";
 			this.unitsCol.ReadOnly = true;
+			// 
+			// priceCol
+			// 
+			this.priceCol.FillWeight = 15F;
+			this.priceCol.HeaderText = "Ціна за одиницю виміру";
+			this.priceCol.Name = "priceCol";
+			this.priceCol.ReadOnly = true;
 			// 
 			// descCol
 			// 
@@ -105,7 +105,7 @@
 			// saveBtn
 			// 
 			this.saveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.saveBtn.Location = new System.Drawing.Point(576, 94);
+			this.saveBtn.Location = new System.Drawing.Point(576, 57);
 			this.saveBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.saveBtn.Name = "saveBtn";
 			this.saveBtn.Size = new System.Drawing.Size(76, 24);
@@ -117,7 +117,7 @@
 			// delBtn
 			// 
 			this.delBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.delBtn.Location = new System.Drawing.Point(576, 124);
+			this.delBtn.Location = new System.Drawing.Point(576, 87);
 			this.delBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.delBtn.Name = "delBtn";
 			this.delBtn.Size = new System.Drawing.Size(76, 24);
@@ -131,7 +131,7 @@
 			// addBtn
 			// 
 			this.addBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.addBtn.Location = new System.Drawing.Point(576, 63);
+			this.addBtn.Location = new System.Drawing.Point(576, 26);
 			this.addBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.addBtn.Name = "addBtn";
 			this.addBtn.Size = new System.Drawing.Size(76, 24);
@@ -191,7 +191,7 @@
 			this.panel1.Controls.Add(this.priceTB);
 			this.panel1.Controls.Add(this.measureTB);
 			this.panel1.Controls.Add(this.descriptionTB);
-			this.panel1.Location = new System.Drawing.Point(9, 10);
+			this.panel1.Location = new System.Drawing.Point(9, 23);
 			this.panel1.Margin = new System.Windows.Forms.Padding(2);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(563, 185);
@@ -241,10 +241,10 @@
 			// 
 			this.startTutorial.AutoSize = true;
 			this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.startTutorial.Location = new System.Drawing.Point(641, 3);
+			this.startTutorial.Location = new System.Drawing.Point(642, 2);
 			this.startTutorial.Name = "startTutorial";
 			this.startTutorial.Size = new System.Drawing.Size(18, 20);
-			this.startTutorial.TabIndex = 31;
+			this.startTutorial.TabIndex = 70;
 			this.startTutorial.Text = "?";
 			this.startTutorial.Click += new System.EventHandler(this.startTutorial_Click);
 			this.startTutorial.MouseEnter += new System.EventHandler(this.startTutorial_MouseEnter);
@@ -287,11 +287,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn descCol;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn unitsCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn priceCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn descCol;
 		private System.Windows.Forms.Label startTutorial;
 	}
 }

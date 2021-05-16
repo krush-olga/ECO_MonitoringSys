@@ -732,5 +732,13 @@ namespace Experts_Economist
 
 			return result;
 		}
-    }
+
+		private void Golovna_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.F1)
+			{
+				Help.ShowHelp(this, Config.PathToHelp);
+			}
+        }
+	}
 }

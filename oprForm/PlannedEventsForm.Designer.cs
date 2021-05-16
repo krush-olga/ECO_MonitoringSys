@@ -57,10 +57,12 @@
 			// 
 			// eventsLB
 			// 
+			this.eventsLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.eventsLB.FormattingEnabled = true;
 			this.eventsLB.Location = new System.Drawing.Point(12, 59);
 			this.eventsLB.Name = "eventsLB";
-			this.eventsLB.Size = new System.Drawing.Size(160, 303);
+			this.eventsLB.Size = new System.Drawing.Size(160, 316);
 			this.eventsLB.TabIndex = 0;
 			this.eventsLB.SelectedIndexChanged += new System.EventHandler(this.eventsLB_SelectedIndexChanged);
 			// 
@@ -76,7 +78,7 @@
 			// addBtn
 			// 
 			this.addBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.addBtn.Location = new System.Drawing.Point(731, 17);
+			this.addBtn.Location = new System.Drawing.Point(745, 17);
 			this.addBtn.Name = "addBtn";
 			this.addBtn.Size = new System.Drawing.Size(74, 70);
 			this.addBtn.TabIndex = 3;
@@ -88,6 +90,9 @@
 			// 
 			this.eventListGrid.AllowUserToAddRows = false;
 			this.eventListGrid.AllowUserToDeleteRows = false;
+			this.eventListGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.eventListGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.eventListGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.eventListGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -96,7 +101,7 @@
             this.Value});
 			this.eventListGrid.Location = new System.Drawing.Point(346, 36);
 			this.eventListGrid.Name = "eventListGrid";
-			this.eventListGrid.Size = new System.Drawing.Size(471, 325);
+			this.eventListGrid.Size = new System.Drawing.Size(485, 341);
 			this.eventListGrid.TabIndex = 4;
 			this.eventListGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.commitValue);
 			// 
@@ -117,16 +122,20 @@
 			// 
 			// descTB
 			// 
+			this.descTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.descTB.Location = new System.Drawing.Point(81, 42);
 			this.descTB.Name = "descTB";
-			this.descTB.Size = new System.Drawing.Size(644, 20);
+			this.descTB.Size = new System.Drawing.Size(653, 20);
 			this.descTB.TabIndex = 5;
 			// 
 			// evNameTB
 			// 
+			this.evNameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.evNameTB.Location = new System.Drawing.Point(81, 17);
 			this.evNameTB.Name = "evNameTB";
-			this.evNameTB.Size = new System.Drawing.Size(644, 20);
+			this.evNameTB.Size = new System.Drawing.Size(653, 20);
 			this.evNameTB.TabIndex = 6;
 			// 
 			// label2
@@ -149,11 +158,11 @@
 			this.addGB.Controls.Add(this.evNameTB);
 			this.addGB.Controls.Add(this.issuesCB);
 			this.addGB.Controls.Add(this.addBtn);
-			this.addGB.Location = new System.Drawing.Point(12, 370);
+			this.addGB.Location = new System.Drawing.Point(12, 386);
 			this.addGB.Margin = new System.Windows.Forms.Padding(2);
 			this.addGB.Name = "addGB";
 			this.addGB.Padding = new System.Windows.Forms.Padding(2);
-			this.addGB.Size = new System.Drawing.Size(814, 91);
+			this.addGB.Size = new System.Drawing.Size(828, 91);
 			this.addGB.TabIndex = 8;
 			this.addGB.TabStop = false;
 			this.addGB.Text = "Додання нового заходу";
@@ -187,11 +196,13 @@
 			// 
 			// issuesCB
 			// 
+			this.issuesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.issuesCB.FormattingEnabled = true;
 			this.issuesCB.Location = new System.Drawing.Point(81, 66);
 			this.issuesCB.Margin = new System.Windows.Forms.Padding(2);
 			this.issuesCB.Name = "issuesCB";
-			this.issuesCB.Size = new System.Drawing.Size(644, 21);
+			this.issuesCB.Size = new System.Drawing.Size(653, 21);
 			this.issuesCB.TabIndex = 7;
 			// 
 			// onlyExpCB
@@ -208,11 +219,13 @@
 			// 
 			// resLB
 			// 
+			this.resLB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
 			this.resLB.FormattingEnabled = true;
 			this.resLB.Location = new System.Drawing.Point(179, 59);
 			this.resLB.Margin = new System.Windows.Forms.Padding(2);
 			this.resLB.Name = "resLB";
-			this.resLB.Size = new System.Drawing.Size(160, 303);
+			this.resLB.Size = new System.Drawing.Size(160, 316);
 			this.resLB.TabIndex = 10;
 			this.resLB.DoubleClick += new System.EventHandler(this.resLB_DoubleClick);
 			// 
@@ -235,6 +248,7 @@
 			// 
 			// btnSearchTemplate
 			// 
+			this.btnSearchTemplate.Image = global::oprForm.Properties.Resources.imgonline_com_ua_Resize_Ojr6EQ8xE2H;
 			this.btnSearchTemplate.Location = new System.Drawing.Point(149, 36);
 			this.btnSearchTemplate.Name = "btnSearchTemplate";
 			this.btnSearchTemplate.Size = new System.Drawing.Size(23, 22);
@@ -245,6 +259,7 @@
 			// 
 			// btnRes
 			// 
+			this.btnRes.Image = global::oprForm.Properties.Resources.imgonline_com_ua_Resize_Ojr6EQ8xE2H;
 			this.btnRes.Location = new System.Drawing.Point(317, 36);
 			this.btnRes.Name = "btnRes";
 			this.btnRes.Size = new System.Drawing.Size(23, 22);
@@ -265,10 +280,10 @@
 			// 
 			this.startTutorial.AutoSize = true;
 			this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.startTutorial.Location = new System.Drawing.Point(799, 5);
+			this.startTutorial.Location = new System.Drawing.Point(820, 1);
 			this.startTutorial.Name = "startTutorial";
 			this.startTutorial.Size = new System.Drawing.Size(18, 20);
-			this.startTutorial.TabIndex = 25;
+			this.startTutorial.TabIndex = 71;
 			this.startTutorial.Text = "?";
 			this.startTutorial.Click += new System.EventHandler(this.startTutorial_Click);
 			this.startTutorial.MouseEnter += new System.EventHandler(this.startTutorial_MouseEnter);
@@ -278,7 +293,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(827, 466);
+			this.ClientSize = new System.Drawing.Size(841, 482);
 			this.Controls.Add(this.startTutorial);
 			this.Controls.Add(this.btnRes);
 			this.Controls.Add(this.txtBxRes);

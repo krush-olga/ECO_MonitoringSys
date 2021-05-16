@@ -43,6 +43,7 @@ namespace oprForm
             {
                 txtBx.Text = "";
                 txtBx.ForeColor = SystemColors.WindowText;
+                txtBx.Tag = 1;
             }
         }
 
@@ -58,6 +59,7 @@ namespace oprForm
                 for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
                 txtBx.Text = placeholder;
                 txtBx.ForeColor = SystemColors.GrayText;
+                txtBx.Tag = null;
             }
 
         }
@@ -125,6 +127,8 @@ namespace oprForm
             {
                 if (eventsLB.SelectedItem is Event)
                 {
+                    eventsLB.Focus();
+
                     Event ev = eventsLB.SelectedItem as Event;
                     alterGB.Visible = true;
                     db.Connect();
@@ -241,15 +245,25 @@ namespace oprForm
                 getEvents();
                 db.Disconnect();
                 eventListGrid.Rows.Clear();
+
+                MessageBox.Show("Захід успішно видалений.","Інформація", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void addBtn_Click(object sender, EventArgs e)
         {
+            if (evNameTB.Text == string.Empty)
+            {
+                MessageBox.Show("Відсутня назва заходу. Введіть назву заходу!",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var ev = eventsLB.SelectedItem as Event;
+            var desc = descTB.Tag == null || !(descTB.Tag is int) ? "'Опис відсутній.'" : DBUtil.AddQuotes(descTB.Text);
             db.Connect();
             string[] cols = { "event_id", "name", "description", "issue_id" };
-            string[] values = { ev.Id.ToString(), DBUtil.AddQuotes(evNameTB.Text), DBUtil.AddQuotes(descTB.Text), (issuesCB.SelectedItem as Issue).Id.ToString() };
+            string[] values = { ev.Id.ToString(), DBUtil.AddQuotes(evNameTB.Text), desc, (issuesCB.SelectedItem as Issue).Id.ToString() };
 
             db.UpdateRecord("event", cols, values);
 
@@ -283,7 +297,11 @@ namespace oprForm
                 db.DeleteFromDB("event_resource", resCols, resValues);
             }
 
+            getEvents();
+
             db.Disconnect();
+
+            MessageBox.Show("Захід успішно змінений.", "Інформація", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void addMaterial(object sender, EventArgs e)
@@ -325,133 +343,133 @@ namespace oprForm
             SetEventLBFiltration();
         }
 
-		private void startTutorial_Click(object sender, EventArgs e)
-		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = label1,
-						Text = "Тут можете бачити блок \"Список заходів\""
-					},
-					new InteractiveToolTipModel
-					{
-						Control = txtBxTemplate,
-						Text = "Можете ввести запит на пошук захода"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = btnSearchTemplate,
-						Text = "Після вводу запиту натисніть кнопку"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = findIssueCB,
-						Text = "Цей випадаючий список відповідає за фільтрацію заходів по задачі"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = eventsLB,
-						Text = "Тут знаходиться всі знайдені заходи які відповідають фільтрам що розміщені вище"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = label2,
-						Text = "Тут можете бачити блок \"Ресурси\""
-					},
-					new InteractiveToolTipModel
-					{
-						Control = txtBxRes,
-						Text = "Можете ввести запит на пошук ресурсів"
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+            var frm = new HelpToolTipForm(delegate
+            {
+                new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+                {
+                    new InteractiveToolTipModel
+                    {
+                        Control = label1,
+                        Text = "Тут можете бачити блок \"Список заходів\""
                     },
-					new InteractiveToolTipModel
-					{
-						Control = btnRes,
-						Text = "Після вводу запиту натисніть кнопку"
+                    new InteractiveToolTipModel
+                    {
+                        Control = txtBxTemplate,
+                        Text = "Можете ввести запит на пошук захода"
                     },
-					new InteractiveToolTipModel
-					{
-						Control = resLB,
-						Text = "Тут знаходиться всі знайдені ресурси"
+                    new InteractiveToolTipModel
+                    {
+                        Control = btnSearchTemplate,
+                        Text = "Після вводу запиту натисніть кнопку"
                     },
-					new InteractiveToolTipModel
-					{
-						Control = eventListGrid,
-						Text = "Цей блок відповідає за відображення ресурси заходів"
+                    new InteractiveToolTipModel
+                    {
+                        Control = findIssueCB,
+                        Text = "Цей випадаючий список відповідає за фільтрацію заходів по задачі"
                     },
-					new InteractiveToolTipModel
-					{
-						Control = eventsLB,
-						Text = "Щоб продовжити далі оберіть захід",
-						IsNotFinal = true,
-						AfterHandler = AfterAlterGBShow
+                    new InteractiveToolTipModel
+                    {
+                        Control = eventsLB,
+                        Text = "Тут знаходиться всі знайдені заходи які відповідають фільтрам що розміщені вище"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = label2,
+                        Text = "Тут можете бачити блок \"Ресурси\""
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = txtBxRes,
+                        Text = "Можете ввести запит на пошук ресурсів"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = btnRes,
+                        Text = "Після вводу запиту натисніть кнопку"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = resLB,
+                        Text = "Тут знаходиться всі знайдені ресурси"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = eventListGrid,
+                        Text = "Цей блок відповідає за відображення ресурси заходів"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = eventsLB,
+                        Text = "Щоб продовжити далі оберіть захід",
+                        IsNotFinal = true,
+                        AfterHandler = AfterAlterGBShow
                     }
                 });
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p2.html");
-			});
-			frm.ShowDialog();
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p2.html");
+            });
+            frm.ShowDialog();
         }
 
-		private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
-
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
-
-		private void AfterAlterGBShow()
-		{
-			if (!alterGB.Visible)
-			{
-				eventsLB.SelectedIndexChanged += CheckEventsLBSelected;
-			}
-			else
-			{
-				ContinueTutorial();
-			}
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
         }
 
-		private void CheckEventsLBSelected(object sender, EventArgs e)
-		{
-			if (eventsLB.SelectedIndex != -1)
-			{
-				eventsLB.SelectedIndexChanged -= CheckEventsLBSelected;
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
+
+        private void AfterAlterGBShow()
+        {
+            if (!alterGB.Visible)
+            {
+                eventsLB.SelectedIndexChanged += CheckEventsLBSelected;
+            }
+            else
+            {
+                ContinueTutorial();
+            }
+        }
+
+        private void CheckEventsLBSelected(object sender, EventArgs e)
+        {
+            if (eventsLB.SelectedIndex != -1)
+            {
+                eventsLB.SelectedIndexChanged -= CheckEventsLBSelected;
                 ContinueTutorial();
             }
         }
 
         private void ContinueTutorial()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
-				new InteractiveToolTipModel
-				{
-					Control = alterGB,
-					Text = "Цей блок відповідає за зміни в заходах"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = evNameTB,
-					Text = "Змінити потрібні дані"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = addBtn,
-					Text = "Натиснути на кнопку \"Зберегти зміни\""
-				},
-				new InteractiveToolTipModel
-				{
-					Control = delBtn,
-					Text = "Або натиснути на кнопку \"Видалити захід\""
-				}
-			});
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+                new InteractiveToolTipModel
+                {
+                    Control = alterGB,
+                    Text = "Цей блок відповідає за зміни в заходах"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = evNameTB,
+                    Text = "Змінити потрібні дані"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = addBtn,
+                    Text = "Натиснути на кнопку \"Зберегти зміни\""
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = delBtn,
+                    Text = "Або натиснути на кнопку \"Видалити захід\""
+                }
+            });
         }
 
     }

@@ -38,6 +38,7 @@ namespace oprForm
             {
                 txtBx.Text = "";
                 txtBx.ForeColor = SystemColors.WindowText;
+                txtBx.Tag = null;
             }
         }
 
@@ -53,6 +54,7 @@ namespace oprForm
                 for (int i = 0; i < txtBxMas.Length; i++) if (txtBx.Name == txtBxMas[i].Name) placeholder = placeholderMas[i];
                 txtBx.Text = placeholder;
                 txtBx.ForeColor = SystemColors.GrayText;
+                txtBx.Tag = 1;
             }
 
         }
@@ -190,89 +192,89 @@ namespace oprForm
             }
         }
 
-		private void startTutorial_Click(object sender, EventArgs e)
-		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = templatesLB,
-						Text = "Оберіть шаблон",
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+            var frm = new HelpToolTipForm(delegate
+            {
+                new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+                {
+                    new InteractiveToolTipModel
+                    {
+                        Control = templatesLB,
+                        Text = "Оберіть шаблон",
                         IsNotFinal = true,
                         AfterHandler = AfterSelectTemplate
                     }
-				});
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p5.html");
-			});
-			frm.ShowDialog();
+                });
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p5.html");
+            });
+            frm.ShowDialog();
         }
 
-		private void AfterSelectTemplate()
-		{
-			if (templatesLB.SelectedIndex != -1)
-			{
-				ContinueTutorial();
-			}
-			else
-			{
-				templatesLB.SelectedIndexChanged += SelectTemplatesLB;
-			}
-		}
+        private void AfterSelectTemplate()
+        {
+            if (templatesLB.SelectedIndex != -1)
+            {
+                ContinueTutorial();
+            }
+            else
+            {
+                templatesLB.SelectedIndexChanged += SelectTemplatesLB;
+            }
+        }
 
-		private void SelectTemplatesLB(object sender, EventArgs e)
-		{
-			if (templatesLB.SelectedIndex != -1)
-			{
-				templatesLB.SelectedIndexChanged -= SelectTemplatesLB;
-				ContinueTutorial();
-			}
-		}
+        private void SelectTemplatesLB(object sender, EventArgs e)
+        {
+            if (templatesLB.SelectedIndex != -1)
+            {
+                templatesLB.SelectedIndexChanged -= SelectTemplatesLB;
+                ContinueTutorial();
+            }
+        }
 
 
         private void ContinueTutorial()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
-				new InteractiveToolTipModel
-				{
-					Control = nameTB,
-					Text = "Змініть назву шаблону якщо потрібно"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = descTB,
-					Text = "Змініть опис шаблону якщо потрібно"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = resourcesLB,
-					Text = "Змініть перелік ресурсів якщо потрібно"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = addBtn,
-					Text = "Натисніть на кнопку \"Зберегти зміни\""
-				},
-				new InteractiveToolTipModel
-				{
-					Control = button1,
-					Text = "Щоб видалити шаблон натисніть на кнопку \"Видалити шаблон\""
-				}
-			});
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+                new InteractiveToolTipModel
+                {
+                    Control = nameTB,
+                    Text = "Змініть назву шаблону якщо потрібно"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = descTB,
+                    Text = "Змініть опис шаблону якщо потрібно"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = resourcesLB,
+                    Text = "Змініть перелік ресурсів якщо потрібно"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = addBtn,
+                    Text = "Натисніть на кнопку \"Зберегти зміни\""
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = button1,
+                    Text = "Щоб видалити шаблон натисніть на кнопку \"Видалити шаблон\""
+                }
+            });
         }
 
-		private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
 
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
     }
 }

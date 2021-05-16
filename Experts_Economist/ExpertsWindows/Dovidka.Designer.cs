@@ -50,15 +50,16 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.gdkDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.gdkDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.gdkDataGrid.Location = new System.Drawing.Point(9, 181);
+			this.gdkDataGrid.Location = new System.Drawing.Point(9, 176);
 			this.gdkDataGrid.Margin = new System.Windows.Forms.Padding(2);
 			this.gdkDataGrid.Name = "gdkDataGrid";
 			this.gdkDataGrid.ReadOnly = true;
 			this.gdkDataGrid.RowTemplate.Height = 24;
-			this.gdkDataGrid.Size = new System.Drawing.Size(565, 269);
+			this.gdkDataGrid.Size = new System.Drawing.Size(565, 279);
 			this.gdkDataGrid.TabIndex = 3;
 			this.gdkDataGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gdkDataGrid_CellClick);
 			this.gdkDataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gdkDataGrid_CellContentClick);
+			this.gdkDataGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gdkDataGrid_CellFormatting);
 			// 
 			// workMode
 			// 
@@ -66,7 +67,7 @@
 			this.workMode.Controls.Add(this.editRadio);
 			this.workMode.Controls.Add(this.addRadio);
 			this.workMode.Controls.Add(this.searchRadio);
-			this.workMode.Location = new System.Drawing.Point(11, 32);
+			this.workMode.Location = new System.Drawing.Point(9, 19);
 			this.workMode.Margin = new System.Windows.Forms.Padding(2);
 			this.workMode.Name = "workMode";
 			this.workMode.Padding = new System.Windows.Forms.Padding(8);
@@ -79,7 +80,7 @@
 			// deleteRadio
 			// 
 			this.deleteRadio.AutoSize = true;
-			this.deleteRadio.Location = new System.Drawing.Point(10, 121);
+			this.deleteRadio.Location = new System.Drawing.Point(10, 130);
 			this.deleteRadio.Margin = new System.Windows.Forms.Padding(2);
 			this.deleteRadio.Name = "deleteRadio";
 			this.deleteRadio.Size = new System.Drawing.Size(80, 17);
@@ -133,7 +134,7 @@
 			this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.flowLayoutPanel1.Location = new System.Drawing.Point(137, 37);
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(137, 27);
 			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
 			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(8, 16, 8, 8);
@@ -144,7 +145,7 @@
 			// 
 			this.doneBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.doneBtn.Location = new System.Drawing.Point(137, 152);
+			this.doneBtn.Location = new System.Drawing.Point(137, 137);
 			this.doneBtn.Margin = new System.Windows.Forms.Padding(2);
 			this.doneBtn.Name = "doneBtn";
 			this.doneBtn.Size = new System.Drawing.Size(437, 25);
@@ -157,10 +158,10 @@
 			// 
 			this.startTutorial.AutoSize = true;
 			this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.startTutorial.Location = new System.Drawing.Point(554, 9);
+			this.startTutorial.Location = new System.Drawing.Point(563, 3);
 			this.startTutorial.Name = "startTutorial";
 			this.startTutorial.Size = new System.Drawing.Size(18, 20);
-			this.startTutorial.TabIndex = 12;
+			this.startTutorial.TabIndex = 67;
 			this.startTutorial.Text = "?";
 			this.startTutorial.Click += new System.EventHandler(this.startTutorial_Click);
 			this.startTutorial.MouseEnter += new System.EventHandler(this.startTutorial_MouseEnter);
@@ -170,7 +171,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(584, 467);
+			this.ClientSize = new System.Drawing.Size(584, 472);
 			this.Controls.Add(this.startTutorial);
 			this.Controls.Add(this.doneBtn);
 			this.Controls.Add(this.flowLayoutPanel1);
