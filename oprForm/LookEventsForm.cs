@@ -906,57 +906,72 @@ namespace oprForm
 					new InteractiveToolTipModel
 					{
 						Control = approveGB,
-						Text = "Це дані про поточну задачу"
+						Text = "В блоці \"Загальні відомості\" доступні дані про поточну задачу."
 					},
 					new InteractiveToolTipModel
 					{
 						Control = nextIssueBtn,
-						Text = "Цими кнопка можно переключатися між задачами"
+						Text = "Даними кнопками можно переключатися між задачами."
 					},
 					new InteractiveToolTipModel
 					{
 						Control = issueListBtn,
-						Text = "Для додання, редагування, видалення задачі потрібно натиснути на цю кнопку"
+						Text = "Для додання, редагування, видалення задачі необхідно натиснути на кнопку \"Редагування задач\"."
 					},
 					new InteractiveToolTipModel
 					{
 						Control = findIssueCondTB,
-						Text = "Це поле відповідає за пошук задачі"
-					},
-					new InteractiveToolTipModel
+						Text = "Поле \"Пошук по задачам\" відповідає за пошук задач в системі."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = issuesLB,
+                        Text = "Результати пошуку можна побачити в даному блоці."
+                    },
+                    new InteractiveToolTipModel
 					{
 						Control = groupBox2,
-						Text = "Цей блок відповідає за фільтрування заходів"
+						Text = "Цей блок відповідає за фільтрування заходів."
                     },
 					new InteractiveToolTipModel
 					{
 						Control = approveBtn,
-						Text = "Щоб підтвердити захід натисніть на кнопку \"Підтвердити захід\""
+						Text = "Щоб підтвердити захід необхідно натиснути на кнопку \"Підтвердити захід\"."
                     },
 					new InteractiveToolTipModel
 					{
 						Control = disaproveBtn,
-						Text = "Щоб відхилити захід натисніть на кнопку \"Відхилити захід\""
+						Text = "Щоб відхилити захід необхідно натиснути на кнопку \"Відхилити захід\"."
                     },
 					new InteractiveToolTipModel
 					{
 						Control = expertsLB,
-						Text = "Тут можна бачити блок \"Перелік експертів\""
+						Text = "Блок \"Перелік експертів\".  В даному блоці можна побачити перелік всіх доступних експертів."
                     },
 					new InteractiveToolTipModel
 					{
 						Control = eventsLB,
-						Text = "Тут можна бачити блок \"Перелік заходiв\""
+						Text = "Блок \"Перелік заходiв\".  В даному блоці можна побачити список доступних заходів, а також можна відфільтрувати заходи за користувачем, якщо у блоці \"Перелік експертів\" обрати одного з них."
                     },
 					new InteractiveToolTipModel
 					{
 						Control = button5,
-						Text = "Щоб додати новий захід натисніть на цю кнопку"
-					},
+						Text = "Щоб додати новий захід необхідно натиснути на кнопку \"+\""
+                    },
                     new InteractiveToolTipModel
 					{
 						Control = docsLB,
-						Text = "Тут можна бачити блок \"Перелік юр. документів\""
+						Text = "Блок \"Перелік юридичних документів\". В даному блоці можна побачити перелік всіх доступних юр. документів для обраного у попередньому блоці заходу."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = EventDocsFilterButton,
+                        Text = "Щоб відсортувати юр. документи по заходам, необхідно натиснути на дану кнопку."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = IssueDocsFilterButton,
+                        Text = "Щоб відсортувати юр. документи по задачам, необхідно натиснути на дану кнопку."
                     }
                 });
 			}, delegate

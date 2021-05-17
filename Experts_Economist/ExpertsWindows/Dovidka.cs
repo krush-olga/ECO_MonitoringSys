@@ -62,7 +62,7 @@ namespace Experts_Economist
                 },
             };
 
-        
+
         ~Dovidka()
         {
             db.Disconnect();
@@ -937,7 +937,7 @@ namespace Experts_Economist
                 new InteractiveToolTipModel
                 {
                     Control = workMode,
-                    Text = "Оберіть режим роботи",
+                    Text = "Необхідно обрати режим роботи",
                     IsNotFinal = true,
                     AfterHandler = AfterWorkModeChecked
                 }
@@ -1009,12 +1009,12 @@ namespace Experts_Economist
                 new InteractiveToolTipModel
                 {
                     Control = flowLayoutPanel1,
-                    Text = "Заповніть дані для пошуку"
+                    Text = "Для пошуку необхідно заповнити дані"
                 },
                 new InteractiveToolTipModel
                 {
                     Control = doneBtn,
-                    Text = "Натисніть на кнопку \"Виконати\""
+                    Text = "Щоб виконати пошук натисніть на кнопку \"Виконати\""
                 }
             });
         }
@@ -1026,12 +1026,12 @@ namespace Experts_Economist
                 new InteractiveToolTipModel
                 {
                     Control = flowLayoutPanel1,
-                    Text = "Заповніть дані"
+                    Text = "Для того щоб додати новий запис необхідно заповнити дані"
                 },
                 new InteractiveToolTipModel
                 {
                     Control = doneBtn,
-                    Text = "Натисніть на кнопку \"Додати\""
+                    Text = "Натисніть на кнопку \"Додати\" щоб зберегти дані"
                 }
             });
         }
@@ -1043,17 +1043,17 @@ namespace Experts_Economist
                 new InteractiveToolTipModel
                 {
                     Control = gdkDataGrid,
-                    Text = "Оберіть необхідний рядок"
+                    Text = "Для того щоб відредагувати запис необхідного обрати його з таблиці"
                 },
                 new InteractiveToolTipModel
                 {
                     Control = flowLayoutPanel1,
-                    Text = "Відредагуйте дані"
+                    Text = "Необхідно внести зміни в поля"
                 },
                 new InteractiveToolTipModel
                 {
                     Control = doneBtn,
-                    Text = "Натисніть на кнопку \"Редагувати\""
+                    Text = "Щоб зберегти зміни натисніть на кнопку \"Редагувати\""
                 }
             });
         }
@@ -1065,12 +1065,12 @@ namespace Experts_Economist
                 new InteractiveToolTipModel
                 {
                     Control = gdkDataGrid,
-                    Text = "Оберіть необхідний рядок"
+                    Text = "Для того щоб видалити запис, оберіть його з таблиці"
                 },
                 new InteractiveToolTipModel
                 {
                     Control = doneBtn,
-                    Text = "Натисніть на кнопку \"Видалити\""
+                    Text = "Щоб виконати видалення натисніть на кнопку \"Видалити\""
                 }
             });
         }
@@ -1170,14 +1170,14 @@ namespace Experts_Economist
         }
 
         private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
 
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
     }
 
 }

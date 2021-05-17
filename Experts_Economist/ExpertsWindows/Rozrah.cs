@@ -1105,41 +1105,61 @@ namespace Experts_Economist
 
 		private void startTutorial_Click(object sender, EventArgs e)
 		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = formulasLB,
-						Text = "Оберіть формулу зі списку формул"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = name_of_seriesCB,
-						Text = "Оберіть серії"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = issueTB,
-						Text = "Оберіть задачу"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = normDGV,
-						Text = "Заповніть стовпчик \"Значення\""
+            var frm = new HelpToolTipForm(delegate
+            {
+                new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+        {
+                    new InteractiveToolTipModel
+          {
+            Control = formulasLB,
+            Text = "В блоці \"Список формул\" оберіть формулу"
+          },
+          new InteractiveToolTipModel
+          {
+            Control = name_of_seriesCB,
+            Text = "Оберіть серію із випадаючого списку"
+          },
+          new InteractiveToolTipModel
+          {
+            Control = addNewSeriesButton,
+            Text = "Кнопка \"+\" призначена для додання нової серії розрахунків"
                     },
-					new InteractiveToolTipModel
-					{
-						Control = Save_values,
-						Text = "Натисніть на кнопку \"Порахувати та зберегти\""
+                    new InteractiveToolTipModel
+          {
+            Control = issueTB,
+            Text = "Необхідно обрати задачу, до якої буде прикріплена серія розрахунку"
+                    },
+          new InteractiveToolTipModel
+          {
+            Control = normDGV,
+            Text = "Необхідно заповнити стовпчик \"Значення\" в блоці \"Список параметрів даної формули\""
+                    },
+          new InteractiveToolTipModel
+          {
+            Control = AllowPatametrTextCB,
+            Text = "Для того, щоб дозволити введення строкових значень у таблицю, необхідно заповнити дане поле\""
+                    },
+          new InteractiveToolTipModel
+          {
+            Control = Save_values,
+            Text = "Після заповнення натисніть на кнопку \"Порахувати та зберегти\""
+                    },
+          new InteractiveToolTipModel
+          {
+            Control = normDGV,
+            Text = "Після цього у серію буде додано необхідні розрахунки та в таблиці з’явиться запис \"Результат\" - це значення, що було розраховано за формулою"
+                    },
+          new InteractiveToolTipModel
+          {
+            Control = showLog,
+            Text = "Щоб переглянути останні розрахунки необхідно натиснути на кнопку \">\""
                     }
                 });
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p7.html");
-			});
-			frm.ShowDialog();
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p7.html");
+            });
+            frm.ShowDialog();
         }
 
 		private void startTutorial_MouseEnter(object sender, EventArgs e)

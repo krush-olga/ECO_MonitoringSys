@@ -10,7 +10,7 @@ using HelpModule;
 namespace Experts_Economist
 {
     public partial class Result : Form
-    {  
+    {
         //используем библиотеки работы с БД и формулами
         private DBManager db = new DBManager();
 
@@ -1829,101 +1829,110 @@ namespace Experts_Economist
             }
         }
 
-		private void startTutorial_Click(object sender, EventArgs e)
-		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = DGV,
-						Text = "Оберіть формулу зі списку формул"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = Panel_redakt,
-						Text = "Натисніть на кнопку \"Редагування серії\""
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+            var frm = new HelpToolTipForm(delegate
+            {
+                var list = new List<InteractiveToolTipModel>
+                {
+                    new InteractiveToolTipModel
+                    {
+                        Control = DGV,
+                        Text = "Необхідно обрати формулу із таблиці формул"
                     },
-					new InteractiveToolTipModel
-					{
-						Control = issueTB,
-						Text = "Стає доступною зміна поля \"Задача, пов'язана з серією\""
-					},
-					new InteractiveToolTipModel
-					{
-						Control = DGV,
-						Text = "Стає доступною колонка \"Значення\""
-					},
-					new InteractiveToolTipModel
-					{
-						Control = desc_of_seriesTB,
-						Text = "Стає доступною зміна поля \"Опис\""
+                    new InteractiveToolTipModel
+                    {
+                        Control = Panel_redakt,
+                        Text = "Необхідно натиснути на кнопку \"Редагування серії\". Кнопка повинна змінити колір на зелений, що дає можливість редагувати."
                     },
-					new InteractiveToolTipModel
-					{
-						Control = change_desc,
-						Text = "Натисніть на кнопку \"Зберегти зміни\""
+                    new InteractiveToolTipModel
+                    {
+                        Control = issueTB,
+                        Text = "Відкривається можливість редагування поля \"Задача, пов'язана з серією\""
                     },
-					new InteractiveToolTipModel
-					{
-						Control = chartButt,
-						Text = "Щоб відобразити графіки натисніть на цю кнопку",
+                    new InteractiveToolTipModel
+                    {
+                        Control = DGV,
+                        Text = "Відкривається можливість редагування стовпчика \"Значення\" в таблиці формул"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = desc_of_seriesTB,
+                        Text = "Відкривається можливість редагування поля \"Опис\""
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = change_desc,
+                        Text = "Після внесення всіх змін натисніть на кнопку \"Зберегти зміни\""
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = chartButt,
+                        Text = "Щоб відобразити графіки натисніть на кнопку →",
                         IsNotFinal = true,
                         AfterHandler = AfterClickOnChart
                     }
-                });
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p8.html");
-			});
-			frm.ShowDialog();
-        }
-
-		private void AfterClickOnChart()
-		{
-			if (isOpenChart)
-			{
-				ContinueTutorial();
-			}
-			else
-			{
-				chartButt.Click += CheckOpenChart;
-			}
-        }
-
-		private void CheckOpenChart(object sender, EventArgs e)
-		{
-			chartButt.Click -= CheckOpenChart;
-			ContinueTutorial();
-		}
-
-
-		private void ContinueTutorial()
-		{
-			new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-			{
-				new InteractiveToolTipModel
-				{
-					Control = chartsList,
-					Text = "Оберіть графік"
-				},
-				new InteractiveToolTipModel
-				{
-					Control = newChartButt,
-					Text = "Натисніть на кнопку \"Відобразити графік\""
+                };
+                if (id_of_exp == 0)
+                {
+                    list.Insert(0, new InteractiveToolTipModel
+                    {
+                        Control = experts_CB,
+                        Text = "Необхідно обрати експерта з випадаючого списку"
+                    });
                 }
-			});
+                new InteractiveToolTipCreator().CreateTips(list);
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p8.html");
+            });
+            frm.ShowDialog();
         }
 
-		private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
+        private void AfterClickOnChart()
+        {
+            if (isOpenChart)
+            {
+                ContinueTutorial();
+            }
+            else
+            {
+                chartButt.Click += CheckOpenChart;
+            }
+        }
 
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
+        private void CheckOpenChart(object sender, EventArgs e)
+        {
+            chartButt.Click -= CheckOpenChart;
+            ContinueTutorial();
+        }
+
+
+        private void ContinueTutorial()
+        {
+            new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+                new InteractiveToolTipModel
+                {
+                    Control = chartsList,
+                    Text = "Оберіть графік з випадаючого списку"
+                },
+                new InteractiveToolTipModel
+                {
+                    Control = newChartButt,
+                    Text = "Щоб відобразити графік натисніть на кнопку \"Відобразити графік\""
+                }
+            });
+        }
+
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
+
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
     }
 }

@@ -158,51 +158,51 @@ namespace oprForm
 
         private void startTutorial_Click(object sender, EventArgs e)
         {
-	        var frm = new HelpToolTipForm(delegate
-	        {
-		        new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-		        {
-			        new InteractiveToolTipModel
-			        {
-				        Control = panel1,
-				        Text = "Щоб додати новий ресурс заповніть поля"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = addBtn,
-				        Text = "Натисніть на кнопку \"Додати\""
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = resDGV,
-				        Text = "Для редагування ресурса оберіть із списку ресурс"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = panel1,
-				        Text = "Змініть дані"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = saveBtn,
-				        Text = "Натисніть на кнопку \"Редагувати\""
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = resDGV,
-				        Text = "Щоб видалити ресурс оберіть ресурс \"Видалити\""
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = delBtn,
-				        Text = "Натисніть на кнопку \"Видалити шаблон\""
-			        }
-		        });
-	        }, delegate
-	        {
-		        Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p6.html");
-	        });
-	        frm.ShowDialog();
+            var frm = new HelpToolTipForm(delegate
+            {
+                new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+              new InteractiveToolTipModel
+              {
+                Control = panel1,
+                Text = "Для того щоб додати новий ресурс необхідно заповнити поля \"Назва ресурсу\", \"Одиниці виміру\", \"Ціна за 1 од.\" та \"Опис\""
+              },
+              new InteractiveToolTipModel
+              {
+                Control = addBtn,
+                Text = "Після заповнення полів необхідно натиснути на кнопку \"Додати\""
+              },
+              new InteractiveToolTipModel
+              {
+                Control = resDGV,
+                Text = "Для того щоб відредагувати існуючий ресурс необхідно обрати його із таблиці ресурсів"
+              },
+              new InteractiveToolTipModel
+              {
+                Control = panel1,
+                Text = "Після цього необхідно внести зміни в необхідні поля"
+              },
+              new InteractiveToolTipModel
+              {
+                Control = saveBtn,
+                Text = "Для завершення редагування необхідно натичнути натисніть на кнопку \"Редагувати\""
+                    },
+              new InteractiveToolTipModel
+              {
+                Control = resDGV,
+                Text = "Для того щоб видалити ресурс необхідно обрати його із таблиці ресурсів"
+                    },
+              new InteractiveToolTipModel
+              {
+                Control = delBtn,
+                Text = "Для видалення ресурсу необхідно натиснути на кнопку \"Видалити шаблон\""
+              }
+            });
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p6.html");
+            });
+            frm.ShowDialog();
         }
 
         private void startTutorial_MouseEnter(object sender, EventArgs e)

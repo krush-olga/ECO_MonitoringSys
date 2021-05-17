@@ -450,45 +450,55 @@ namespace Experts_Economist
 			{
 				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
 				{
-					new InteractiveToolTipModel
-					{
-						Control = formulasLB,
-						Text = "Оберіть формулу зі списку формул"
-					},
-					new InteractiveToolTipModel
+                    new InteractiveToolTipModel
+                    {
+                     Control = search_formula,
+                       Text = "Для пошуку формул необхідно вписати запит у дане поле"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                    Control = formulasLB,
+                    Text = "У даному блоці знаходиться всі доступні формули. Для редагування необхідно обрати одну з них."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                     Control = search_parametr,
+                       Text = "Для пошуку параметрів необхідно вписати запит у дане поле"
+                    },
+                    new InteractiveToolTipModel
 					{
 						Control = bind_compLB,
-						Text = "Оберіть параметри формули"
-					},
+						Text = "У даному блоці знаходиться всі доступні параметри, з яких можна брати необхідні"
+                    },
 					new InteractiveToolTipModel
 					{
 						Control = Bind,
-						Text = "Ця кнопка відповідає за додавання параметра до формули"
+						Text = "Ця кнопка відповідає за додавання параметрів до формули"
 					},
 					new InteractiveToolTipModel
 					{
 						Control = Unbind,
-						Text = "Ця кнопка відповідає за видалення параметра з формули"
+						Text = "Ця кнопка відповідає за видалення параметрів з формули"
                     },
 					new InteractiveToolTipModel
 					{
 						Control = formula_nameTB,
-						Text = "Це поле відповідає за назву формули"
+						Text = "В цьому полі користувач може змінити назву формули"
 					},
 					new InteractiveToolTipModel
 					{
 						Control = formula_measureTB,
-						Text = "Це поле відповідає за одиниці вимірювання"
+						Text = "Дане поле дозволяє змінити одиниці вимірювання для формули"
                     },
 					new InteractiveToolTipModel
 					{
 						Control = formula_explTB,
-						Text = "Це поле відповідає за опис формули"
+						Text = "Також, необхідно заповнити опис формули у полі \"Опис\""
 					},
 					new InteractiveToolTipModel
 					{
 						Control = add1,
-						Text = "Щоб добавити нову формулу натисніть на кнопку \"Додати\""
+						Text = "Щоб додати нову формулу натисніть на кнопку \"Додати\""
                     },
 					new InteractiveToolTipModel
 					{
@@ -499,7 +509,14 @@ namespace Experts_Economist
 					{
 						Control = update1,
 						Text = "Щоб змінити формулу натисніть на кнопку \"Змінити\""
-					}
+					},
+                    new InteractiveToolTipModel
+                    {
+                        Control = panel1,
+                        Text = "В цьому блоцы за аналогією можна змінити інформацію про параметр, видалити його або додати новий"
+                    }
+
+
                 });
 			}, delegate
 			{

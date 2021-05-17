@@ -198,12 +198,55 @@ namespace oprForm
             {
                 new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
                 {
+                     new InteractiveToolTipModel
+              {
+                Control = txtBxTemplate,
+                Text = "Для пошуку шаблонів необхідно вписати запит у дане поле та натиснути на кнопку \"🔍\""
+              },
+              new InteractiveToolTipModel
+              {
+                Control = templatesLB,
+                Text = "У даному блоці знаходиться всі шаблони заходів, які відповідають пошуковому запиту. Щоб обрати шаблон необхідно двічі клікнути на необхідний захід."
+              },
+                       new InteractiveToolTipModel
+                    {
+                        Control = nameTB,
+                        Text = "Змініть назву шаблону якщо потрібно"
+                    },
                     new InteractiveToolTipModel
                     {
-                        Control = templatesLB,
-                        Text = "Оберіть шаблон",
-                        IsNotFinal = true,
-                        AfterHandler = AfterSelectTemplate
+                        Control = descTB,
+                        Text = "Змініть опис шаблону якщо потрібно"
+                    },
+                    new InteractiveToolTipModel
+              {
+                Control = txtBxRes,
+                Text = "Для пошуку ресурсів необхідно вписати запит у дане поле та натиснути на кнопку \"🔍\""
+              },
+                    new InteractiveToolTipModel
+              {
+                Control = resourcesLB,
+                Text = "У даному блоці знаходиться всі ресурси, які відповідають пошуковому запиту. Щоб обрати ресурс необхідно двічі клікнути на необхідний на нього."
+                    },
+                     new InteractiveToolTipModel
+                    {
+                      Control = materialListGrid,
+                      Text = "У блоці \"Перелік ресурсів шаблону заходу\" можна перегланути усі додані ресурси."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = materialListGrid,
+                        Text = "Змініть перелік ресурсів якщо необхідно"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = addBtn,
+                        Text = "Натисніть на кнопку \"Зберегти зміни\", щоб зберегти створений шаблон"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = button1,
+                        Text = "Щоб видалити шаблон натисніть на кнопку \"Видалити шаблон\""
                     }
                 });
             }, delegate
@@ -239,31 +282,7 @@ namespace oprForm
         {
             new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
             {
-                new InteractiveToolTipModel
-                {
-                    Control = nameTB,
-                    Text = "Змініть назву шаблону якщо потрібно"
-                },
-                new InteractiveToolTipModel
-                {
-                    Control = descTB,
-                    Text = "Змініть опис шаблону якщо потрібно"
-                },
-                new InteractiveToolTipModel
-                {
-                    Control = resourcesLB,
-                    Text = "Змініть перелік ресурсів якщо потрібно"
-                },
-                new InteractiveToolTipModel
-                {
-                    Control = addBtn,
-                    Text = "Натисніть на кнопку \"Зберегти зміни\""
-                },
-                new InteractiveToolTipModel
-                {
-                    Control = button1,
-                    Text = "Щоб видалити шаблон натисніть на кнопку \"Видалити шаблон\""
-                }
+                
             });
         }
 

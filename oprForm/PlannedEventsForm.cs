@@ -343,36 +343,66 @@ namespace oprForm
 
         private void startTutorial_Click(object sender, EventArgs e)
         {
-	        var frm = new HelpToolTipForm(delegate
-	        {
-		        new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-		        {
-			        new InteractiveToolTipModel
-			        {
-				        Control = evNameTB,
-				        Text = "Для початку треба ввести назву нового заходу"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = descTB,
-				        Text = "Ввести опис заходу"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = issuesCB,
-				        Text = "Обрати задачу з випадаючого списку"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = addBtn,
-				        Text = "Натиснути на кнопку \"Додати захід\""
-			        }
-		        });
-	        }, delegate
-	        {
-		        Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p3.html");
-	        });
-	        frm.ShowDialog();
+            var frm = new HelpToolTipForm(delegate
+            {
+                new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+            {
+              new InteractiveToolTipModel
+              {
+                Control = txtBxTemplate,
+                Text = "Для пошуку шаблонів необхідно вписати запит у дане поле та натиснути на кнопку \"🔍\""
+              },
+              new InteractiveToolTipModel
+              {
+                Control = eventsLB,
+                Text = "У даному блоці знаходяться всі шаблони заходів, які відповідають пошуковому запиту. Щоб обрати шаблон необхідно двічі клікнути на необхідний захід."
+              },
+              new InteractiveToolTipModel
+              {
+                Control = txtBxRes,
+                Text = "Для пошуку ресурсів необхідно вписати запит у дане поле та натиснути на кнопку \"🔍\""
+              },
+                    new InteractiveToolTipModel
+              {
+                Control = resLB,
+                Text = "У даному блоці знаходяться всі ресурси, які відповідають пошуковому запиту. Щоб обрати ресурс необхідно двічі клікнути на нього."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                      Control = eventListGrid,
+                      Text = "У блоці \"Перелік ресурсів заходу\" можна перегланути усі додані ресурси."
+                    },
+                     new InteractiveToolTipModel
+                    {
+                      Control = addGB,
+                      Text = "Блок \"Додання нового заходу\""
+                    },
+                    new InteractiveToolTipModel
+              {
+                Control = evNameTB,
+                Text = "В даному полі необхідно ввести назву нового заходу"
+              },
+              new InteractiveToolTipModel
+              {
+                Control = descTB,
+                Text = "Поле \"Опис заходу\" заповнюється автоматично але його можно редагувати"
+              },
+              new InteractiveToolTipModel
+              {
+                Control = issuesCB,
+                Text = "Поле \"Задача\" необхідно заповнити обравши необхідну задачу з випадаючого списку"
+                    },
+              new InteractiveToolTipModel
+              {
+                Control = addBtn,
+                Text = "Для того щоб додати новий захід необхідно натиснути на кнопку \"Додати захід\""
+              }
+            });
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p3.html");
+            });
+            frm.ShowDialog();
         }
 
         private void startTutorial_MouseEnter(object sender, EventArgs e)
