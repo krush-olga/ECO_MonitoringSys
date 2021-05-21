@@ -149,21 +149,31 @@ namespace experts_jurist
 
             for (int i = 0; i < listOfFi.Length; i++)
             {
-                var a = listOfFi[i].ToString();
-                var temp1 = FBM.GetAttributes(a, 2).ToString();
-                var temp2 = FBM.GetAttributes(a, 3).ToString();
-
-                if (listOfTypes.Contains(temp1) == false)
+                try
                 {
-                    comboBox1.Items.Add(temp1.ToString());
-                    listOfTypes.Add(temp1.ToString());
+                    var a = listOfFi[i].ToString();
+                    var temp1 = FBM.GetAttributes(a, 2).ToString();
+                    var temp2 = FBM.GetAttributes(a, 3).ToString();
+
+                    if (listOfTypes.Contains(temp1) == false)
+                    {
+                        comboBox1.Items.Add(temp1.ToString());
+                        listOfTypes.Add(temp1.ToString());
+                    }
+
+                    if (listOfPublishing.Contains(temp2) == false)
+                    {
+                        comboBox2.Items.Add(temp2.ToString());
+                        listOfPublishing.Add(temp2.ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("\n=================================");
+                    System.Diagnostics.Debug.WriteLine(ex);
+                    System.Diagnostics.Debug.WriteLine("=================================\n");
                 }
 
-                if (listOfPublishing.Contains(temp2) == false)
-                {
-                    comboBox2.Items.Add(temp2.ToString());
-                    listOfPublishing.Add(temp2.ToString());
-                }
             }
 
             if (listOfFi.Count() < 0)

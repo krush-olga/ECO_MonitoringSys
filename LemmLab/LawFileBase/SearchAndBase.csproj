@@ -55,7 +55,9 @@
     <Compile Include="DeleteDoc.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DeleteDoc.Designer.cs" />
+    <Compile Include="DeleteDoc.Designer.cs">
+      <DependentUpon>DeleteDoc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -65,12 +67,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LemmLab\LemmLab.csproj">
-      <Project>{101a3e64-1bc3-4a6d-9e4d-b829f6b9842d}</Project>
-      <Name>LemmLab</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
   </ItemGroup>
@@ -78,7 +74,9 @@
     <EmbeddedResource Include="addFiles.resx">
       <DependentUpon>addFiles.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DeleteDoc.resx" />
+    <EmbeddedResource Include="DeleteDoc.resx">
+      <DependentUpon>DeleteDoc.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -86,6 +84,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LemmLab\LemmLab.csproj">
+      <Project>{101a3e64-1bc3-4a6d-9e4d-b829f6b9842d}</Project>
+      <Name>LemmLab</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,19 +16,67 @@ namespace LawFileBase
     {
         public FileBaseManager LawBaseManager = new FileBaseManager(".\\FB");
         SearchManager SM = new SearchManager();
-        string[] countOfDocs = { };
-
+        string[] listOfFi = { };
         public DeleteDoc()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void reload(string [] listOfFi)
         {
-            var deletingDoc = comboBox1.SelectedItem.ToString();
-            
+          
+            listBox1.Items.Clear();
+            foreach (var g in listOfFi)
+            {
+                listBox1.Items.Add(SM.GetPrewiew(g));
+            }
+        }
+
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SuppressScriptErrorsOnly(webBrowser1); // Mine
+            webBrowser1.DocumentText = SM.GetPage(listOfFi[listBox1.SelectedIndex]);
+        }
+
+        // для ігнорування помилок, які відкриваються у діалогових вікнах
+        private void SuppressScriptErrorsOnly(WebBrowser browser) //Mine 
+        {
+            browser.ScriptErrorsSuppressed = true;
+        }
+
+
+        private void AllDocs_Click(object sender, EventArgs e)
+        {
+            listOfFi = SM.SearchAll();
+            reload(listOfFi);
+        }
+
+        private void Search_Click(object sender, EventArgs e)
+        {
+            listOfFi = SM.SearchAll();
+            listOfFi = SM.SearchLine(textBox1.Text, listOfFi);
+
+            if (listOfFi.Count() == 0)
+            {
+                label2.Text = "Нічого не знайдено";
+            }
+            else
+            {
+                label2.Text = "Знайдені документи";
+            }
+
+            reload(listOfFi);
+        }
+
+        private void Del_Click(object sender, EventArgs e)
+        {
+            var deletingDoc = listOfFi[listBox1.SelectedIndex];
+
+            var docsWithWords = LawBaseManager.GetListOfFiles();
+
             // видалення з _listOfFiles
-            IEnumerable<string> newList = countOfDocs.Where(x => !(x.Split(' ')[0] +" "+ x.Split(' ')[1]).Equals(deletingDoc));
+            IEnumerable<string> newList = docsWithWords.Where(x => !(x.Split(' ')[0] + " " + x.Split(' ')[1]).Equals(deletingDoc));
             LawBaseManager.WriteToFile("_listOfFiles", newList.ToArray());
 
             //видалення файлу з атрибутами
@@ -57,53 +105,9 @@ namespace LawFileBase
                 }
             }
 
-            reload();
-
-        }
-        private void reload()
-        {
-            countOfDocs = LawBaseManager.GetListOfFiles();
-            comboBox1.Items.Clear();
-
-            var resList = new Dictionary<string, int>();
-            foreach (var doc in countOfDocs)
-            {
-                resList[doc.Split(' ')[0] + " " + doc.Split(' ')[1]] = SM.Numbers(doc.Split(' ')[1]);
-            }
-            var sortedOneList = from pair in resList
-                                orderby pair.Value ascending
-                                select pair.Key;
-
-            foreach (var line in sortedOneList)
-            {
-                comboBox1.Items.Add(line.Split(' ')[0] + " " + line.Split(' ')[1]);
-            }
+            listOfFi = SM.SearchAll();
             webBrowser1.DocumentText = "";
-        }
-
-        private void DeleteDoc_Load(object sender, EventArgs e)
-        {
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            reload();
-        }
-
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SuppressScriptErrorsOnly(webBrowser1); // Mine
-            webBrowser1.DocumentText = SM.GetPage(comboBox1.SelectedItem.ToString());
-        }
-
-        // для ігнорування помилок, які відкриваються у діалогових вікнах
-        private void SuppressScriptErrorsOnly(WebBrowser browser) //Mine 
-        {
-            browser.ScriptErrorsSuppressed = true;
+            reload(listOfFi);
         }
     }
-    
 }
