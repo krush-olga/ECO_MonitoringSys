@@ -17,6 +17,7 @@ namespace LawFileBase
 	{
 		LemmManager LM = new LemmManager();
 		FileBaseManager FBM = new FileBaseManager();
+		SearchManager SM = new SearchManager();
 
 		OpenFileDialog FileOpen = new OpenFileDialog();
 		HashSet<string> words = new HashSet<string>();
@@ -42,7 +43,7 @@ namespace LawFileBase
 
 			if (FileOpen.ShowDialog(this) == DialogResult.OK)
 			{
-				
+				webBrowser1.DocumentText = SM.GetPage(FileOpen.SafeFileName.Replace(".html", ""));
 
 				var reader = new StreamReader(FileOpen.OpenFile(), Encoding.UTF8); 
 				var pageText = reader.ReadToEnd();

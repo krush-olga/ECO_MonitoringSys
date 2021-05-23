@@ -53,8 +53,10 @@ namespace experts_jurist
 		/// Конструктор.
 		/// </summary>
         /// 
-      
-		public estimate()
+        private string currentProblem = "";
+
+
+        public estimate()
         {
             InitializeComponent();
             db = new DBManager();
@@ -93,6 +95,7 @@ namespace experts_jurist
                 {
                     listOnEvents = true;
                     currentIssue = listOfIssues[listBox1.SelectedIndex][0].ToString();
+                    currentProblem = listOfIssues[listBox1.SelectedIndex][1].ToString();
                     ReloadData2();
                 }
             }
@@ -102,7 +105,7 @@ namespace experts_jurist
 		{
 			listBox2.Items.Clear();
 			listOfIssues = db.GetRows("issues", "*", "");
-            label2.Text = "Список проблем";
+            label2.Text = "Список задач";
             textBox1.Text = "";
             label7.Text = "";
 			button1.Enabled = false;
@@ -114,19 +117,21 @@ namespace experts_jurist
         }
         private void ReloadData2()
         {
-
+          
             if (currentIssue != "")
             {
                 CheckBoxes();
+
             }
             else
             {
-                MessageBox.Show("Виберіть проблему");
+                MessageBox.Show("Виберіть задачу");
                 return;
             }
-            label2.Text = "Список заходів";
+            label2.Text = "Список заходів, задача :" + "\n" + currentProblem;
             listBox1.Items.Clear();
-            listBox1.Items.Add("← До проблем");
+            listBox1.Items.Add("← До задач");
+            
             foreach (var row in listOfEvents)
             {
                 listBox1.Items.Add(row[1]);
@@ -294,21 +299,6 @@ namespace experts_jurist
         }
 
 
-		private void splitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
-		{
-
-		}
-
-		private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
-		{
-
-		}
-
-        private void splitContainer4_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void checkBox1_Click(object sender, EventArgs e)
         {
             if (checkBox2.Checked == true)
@@ -398,6 +388,16 @@ namespace experts_jurist
                 checkBox4.Checked = false;
             }
             ReloadData2();
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
