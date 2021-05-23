@@ -7,9 +7,15 @@ namespace HelpModule
 {
 	public class InteractiveToolTipCreator
 	{
+		#region Fields : Private
+
 		private List<InteractiveToolTip> _interactiveToolTips;
 		private List<ToolTipContent> _toolTipContents;
 		private const int _offset = 8;
+
+		#endregion
+
+		#region Methods : Private
 
 		public void CreateTips(List<InteractiveToolTipModel> items)
 		{
@@ -70,5 +76,7 @@ namespace HelpModule
 
 			_interactiveToolTips[0].Show(_toolTipContents[0], items[0].Control, items[0].Control.Width - _offset, 0);
 		}
+
+		#endregion
 	}
 }

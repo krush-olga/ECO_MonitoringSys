@@ -2,34 +2,34 @@
 
 namespace HelpModule.Controls
 {
-    partial class ToolTipContent
-    {
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class ToolTipContent
+	{
+		/// <summary> 
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary> 
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Component Designer generated code
+		#region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+		/// <summary> 
+		/// Required method for Designer support - do not modify 
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			this.LinkLabel = new System.Windows.Forms.LinkLabel();
 			this.Message = new HelpModule.Controls.GrowLabel();
 			this.SuspendLayout();
@@ -37,7 +37,7 @@ namespace HelpModule.Controls
 			// LinkLabel
 			// 
 			this.LinkLabel.AutoSize = true;
-			this.LinkLabel.Location = new System.Drawing.Point(3, 31);
+			this.LinkLabel.Location = new System.Drawing.Point(3, 71);
 			this.LinkLabel.Name = "LinkLabel";
 			this.LinkLabel.Size = new System.Drawing.Size(30, 13);
 			this.LinkLabel.TabIndex = 1;
@@ -47,7 +47,7 @@ namespace HelpModule.Controls
 			// Message
 			// 
 			this.Message.AutoSize = true;
-			this.Message.Location = new System.Drawing.Point(8, 4);
+			this.Message.Location = new System.Drawing.Point(4, 3);
 			this.Message.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.Message.MaximumSize = new System.Drawing.Size(170, 0);
 			this.Message.Name = "Message";
@@ -68,10 +68,10 @@ namespace HelpModule.Controls
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-        }
+		}
 
-        #endregion
-        public System.Windows.Forms.LinkLabel LinkLabel;
-        public HelpModule.Controls.GrowLabel Message;
+		#endregion
+		public System.Windows.Forms.LinkLabel LinkLabel;
+		public HelpModule.Controls.GrowLabel Message;
 	}
 }
