@@ -149,6 +149,7 @@
 			this.nameTB.Name = "nameTB";
 			this.nameTB.Size = new System.Drawing.Size(454, 20);
 			this.nameTB.TabIndex = 4;
+			this.nameTB.Click += new System.EventHandler(this.nameTB_Click);
 			// 
 			// measureTB
 			// 
@@ -159,6 +160,7 @@
 			this.measureTB.Name = "measureTB";
 			this.measureTB.Size = new System.Drawing.Size(454, 20);
 			this.measureTB.TabIndex = 5;
+			this.measureTB.Click += new System.EventHandler(this.measureTB_Click);
 			// 
 			// descriptionTB
 			// 
@@ -170,6 +172,7 @@
 			this.descriptionTB.Name = "descriptionTB";
 			this.descriptionTB.Size = new System.Drawing.Size(455, 71);
 			this.descriptionTB.TabIndex = 6;
+			this.descriptionTB.Click += new System.EventHandler(this.descriptionTB_Click);
 			// 
 			// priceTB
 			// 
@@ -178,6 +181,7 @@
 			this.priceTB.Name = "priceTB";
 			this.priceTB.Size = new System.Drawing.Size(454, 20);
 			this.priceTB.TabIndex = 7;
+			this.priceTB.Click += new System.EventHandler(this.priceTB_Click);
 			// 
 			// panel1
 			// 

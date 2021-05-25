@@ -128,6 +128,7 @@
 			this.descTB.Name = "descTB";
 			this.descTB.Size = new System.Drawing.Size(653, 20);
 			this.descTB.TabIndex = 5;
+			this.descTB.Click += new System.EventHandler(this.descTB_Click);
 			// 
 			// evNameTB
 			// 
@@ -137,6 +138,7 @@
 			this.evNameTB.Name = "evNameTB";
 			this.evNameTB.Size = new System.Drawing.Size(653, 20);
 			this.evNameTB.TabIndex = 6;
+			this.evNameTB.Click += new System.EventHandler(this.evNameTB_Click);
 			// 
 			// label2
 			// 

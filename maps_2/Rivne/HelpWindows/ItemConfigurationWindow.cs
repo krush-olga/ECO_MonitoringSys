@@ -833,5 +833,15 @@ namespace UserMap.HelpWindows
 		{
 			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
 		}
-    }
+
+		private void ObjectNameTextBox_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть назву (до 200 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+
+		private void ObjectDescriptionTextBox_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть опис (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+	}
 }

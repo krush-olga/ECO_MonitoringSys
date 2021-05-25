@@ -417,6 +417,7 @@
 			this.findIssueCondTB.Name = "findIssueCondTB";
 			this.findIssueCondTB.Size = new System.Drawing.Size(542, 21);
 			this.findIssueCondTB.TabIndex = 33;
+			this.findIssueCondTB.Click += new System.EventHandler(this.findIssueCondTB_Click);
 			// 
 			// label10
 			// 

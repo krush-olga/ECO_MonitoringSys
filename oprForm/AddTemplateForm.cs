@@ -249,5 +249,20 @@ namespace oprForm
         {
 	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
         }
+
+		private void nameTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть назву шаблону (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+		}
+
+        private void descTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть опис шаблону (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+		}
+
+		private void txtBxRes_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть назву ресурса", (Control)sender, 0, ((Control)sender).Height, 2000);
+		}
     }
 }

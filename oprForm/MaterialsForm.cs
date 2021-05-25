@@ -214,5 +214,25 @@ namespace oprForm
         {
 	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
         }
-    }
+
+		private void nameTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть назву ресурса (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+
+		private void measureTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть одиницю виміру, цілі або дробові (через крапку) числові значення", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+
+		private void priceTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть ціну ресурса (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+
+		private void descriptionTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть опис ресурса (до 200 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+	}
 }

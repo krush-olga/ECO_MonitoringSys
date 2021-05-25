@@ -990,5 +990,10 @@ namespace oprForm
 		{
 			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
 		}
-    }
+
+		private void findIssueCondTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть назву задачі (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+	}
 }

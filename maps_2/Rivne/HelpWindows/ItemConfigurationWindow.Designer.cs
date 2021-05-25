@@ -187,6 +187,7 @@ namespace UserMap.HelpWindows
 			this.ObjectDescriptionTextBox.Name = "ObjectDescriptionTextBox";
 			this.ObjectDescriptionTextBox.Size = new System.Drawing.Size(388, 89);
 			this.ObjectDescriptionTextBox.TabIndex = 7;
+			this.ObjectDescriptionTextBox.Click += new System.EventHandler(this.ObjectDescriptionTextBox_Click);
 			// 
 			// label3
 			// 
@@ -206,6 +207,7 @@ namespace UserMap.HelpWindows
 			this.ObjectNameTextBox.Name = "ObjectNameTextBox";
 			this.ObjectNameTextBox.Size = new System.Drawing.Size(388, 20);
 			this.ObjectNameTextBox.TabIndex = 5;
+			this.ObjectNameTextBox.Click += new System.EventHandler(this.ObjectNameTextBox_Click);
 			// 
 			// IssueCheckBox
 			// 

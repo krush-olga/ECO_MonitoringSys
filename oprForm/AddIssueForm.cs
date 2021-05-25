@@ -108,5 +108,20 @@ namespace oprForm
                 MessageBox.Show("Оберіть задачу");
             }
         }
+
+        private void nameTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть назву задачі (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+		}
+
+        private void descrTB_Click(object sender, EventArgs e)
+        {
+	        new ToolTip().Show("Введіть опис задачі (до 500 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+
+        private void cmbBxTema_Click(object sender, EventArgs e)
+        {
+	        new ToolTip().Show("Введіть тему задачі (до 64 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
     }
 }

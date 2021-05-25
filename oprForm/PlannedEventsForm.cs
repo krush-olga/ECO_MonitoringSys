@@ -414,5 +414,15 @@ namespace oprForm
         {
 	        startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
         }
+
+		private void evNameTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть назву заходу (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+		}
+
+        private void descTB_Click(object sender, EventArgs e)
+		{
+			new ToolTip().Show("Введіть опис заходу (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+		}
     }
 }
