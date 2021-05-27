@@ -1230,7 +1230,7 @@ namespace UserMap
             string[] polygonValues = { "0", fill.R.ToString(), fill.G.ToString(), fill.B.ToString(), fill.A.ToString(),
                                             stroke.R.ToString(), stroke.G.ToString(), stroke.B.ToString(), stroke.A.ToString(),
                                             "2", DBUtil.AddQuotes(objName), userId.ToString(), DBUtil.AddQuotes(polylineType),
-                                            (string.IsNullOrEmpty(objDescription) ? "Опис відсутній." : DBUtil.AddQuotes(objDescription))};
+                                            (string.IsNullOrEmpty(objDescription) ? "'Опис відсутній.'" : DBUtil.AddQuotes(objDescription))};
 
             try
             {
