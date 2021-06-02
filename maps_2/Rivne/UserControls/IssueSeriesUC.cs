@@ -122,7 +122,7 @@ namespace UserMap.UserControls
                 try
                 {
                     string mapObjectDependenciesColumn = " (id_of_object, type_obj, id_of_ref, type_rel) VALUES ";
-                    string startValueInsert = "(" + strObjId + ", 0, ";
+                    string startValueInsert = "(" + strObjId + ", " + objType + ", ";
                     var insertQuery = new StringBuilder($"INSERT INTO map_object_dependencies" + mapObjectDependenciesColumn);
 
                     foreach (var addedElem in addedIssues)
@@ -224,7 +224,7 @@ namespace UserMap.UserControls
                         try
                         {
                             string mapObjectDependenciesColumn = " (id_of_object, type_obj, id_of_ref, type_rel) VALUES ";
-                            string startValueInsert = "(" + strObjId + ", 0, ";
+                            string startValueInsert = "(" + strObjId + ", " + objType + ", ";
                             var insertQuery = new StringBuilder($"INSERT INTO map_object_dependencies" + mapObjectDependenciesColumn);
 
                             foreach (var _addedCalcSeries in addedCalcSeries)

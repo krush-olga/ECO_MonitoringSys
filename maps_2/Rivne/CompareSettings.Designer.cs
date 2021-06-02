@@ -34,13 +34,13 @@
             this.CompareObjectsListBox = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.EmissionTabPage = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.StartDateDTPicker = new System.Windows.Forms.DateTimePicker();
-            this.label2 = new System.Windows.Forms.Label();
-            this.EndDateDTPicker = new System.Windows.Forms.DateTimePicker();
-            this.label3 = new System.Windows.Forms.Label();
-            this.ElementsСomboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.ElementsСomboBox = new System.Windows.Forms.ComboBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.EndDateDTPicker = new System.Windows.Forms.DateTimePicker();
+            this.label2 = new System.Windows.Forms.Label();
+            this.StartDateDTPicker = new System.Windows.Forms.DateTimePicker();
             this.ComprasionByTabControl = new System.Windows.Forms.TabControl();
             this.ComprasionObjectGroupBox.SuspendLayout();
             this.EmissionTabPage.SuspendLayout();
@@ -79,7 +79,7 @@
             this.DeleteObjectButton.Name = "DeleteObjectButton";
             this.DeleteObjectButton.Size = new System.Drawing.Size(166, 23);
             this.DeleteObjectButton.TabIndex = 6;
-            this.DeleteObjectButton.Text = "Вилити поточний";
+            this.DeleteObjectButton.Text = "Видалити поточний";
             this.DeleteObjectButton.UseVisualStyleBackColor = true;
             this.DeleteObjectButton.Click += new System.EventHandler(this.DeleteObjectButton_Click);
             // 
@@ -115,6 +115,24 @@
             this.EmissionTabPage.Text = "Викиди";
             this.EmissionTabPage.UseVisualStyleBackColor = true;
             // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(3, 119);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(170, 33);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Наявні елементи, за якими порівнювати";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ElementsСomboBox
+            // 
+            this.ElementsСomboBox.FormattingEnabled = true;
+            this.ElementsСomboBox.Location = new System.Drawing.Point(6, 154);
+            this.ElementsСomboBox.Name = "ElementsСomboBox";
+            this.ElementsСomboBox.Size = new System.Drawing.Size(167, 21);
+            this.ElementsСomboBox.TabIndex = 8;
+            this.ElementsСomboBox.Text = "Завантаження даних";
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label3);
@@ -128,24 +146,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Період порівняння";
             // 
-            // StartDateDTPicker
+            // label3
             // 
-            this.StartDateDTPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.StartDateDTPicker.Location = new System.Drawing.Point(6, 36);
-            this.StartDateDTPicker.Name = "StartDateDTPicker";
-            this.StartDateDTPicker.Size = new System.Drawing.Size(155, 20);
-            this.StartDateDTPicker.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Початок";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 68);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Кінець";
             // 
             // EndDateDTPicker
             // 
@@ -157,32 +165,24 @@
             this.EndDateDTPicker.Size = new System.Drawing.Size(155, 20);
             this.EndDateDTPicker.TabIndex = 2;
             // 
-            // label3
+            // label2
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 68);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Кінець";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(49, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Початок";
             // 
-            // ElementsСomboBox
+            // StartDateDTPicker
             // 
-            this.ElementsСomboBox.FormattingEnabled = true;
-            this.ElementsСomboBox.Location = new System.Drawing.Point(6, 154);
-            this.ElementsСomboBox.Name = "ElementsСomboBox";
-            this.ElementsСomboBox.Size = new System.Drawing.Size(167, 21);
-            this.ElementsСomboBox.TabIndex = 8;
-            this.ElementsСomboBox.Text = "Завантаження даних";
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(3, 119);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(170, 33);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Наявні елементи, за якими порівнювати";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.StartDateDTPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.StartDateDTPicker.Location = new System.Drawing.Point(6, 36);
+            this.StartDateDTPicker.Name = "StartDateDTPicker";
+            this.StartDateDTPicker.Size = new System.Drawing.Size(155, 20);
+            this.StartDateDTPicker.TabIndex = 0;
             // 
             // ComprasionByTabControl
             // 

@@ -117,9 +117,9 @@ namespace Data
 
                 return command.ExecuteScalar();
             }
-            catch (MySqlException ex)
+            catch (MySqlException)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 

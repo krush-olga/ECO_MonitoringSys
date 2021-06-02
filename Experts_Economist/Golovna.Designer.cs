@@ -104,8 +104,7 @@ namespace Experts_Economist
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.MdiWindowListItem = this.WindowsMenuItem;
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1827, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1370, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -132,7 +131,7 @@ namespace Experts_Economist
             // 
             this.переглядЗаходiвToolStripMenuItem.Enabled = false;
             this.переглядЗаходiвToolStripMenuItem.Name = "переглядЗаходiвToolStripMenuItem";
-            this.переглядЗаходiвToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.переглядЗаходiвToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.переглядЗаходiвToolStripMenuItem.Text = "Перегляд заходiв";
             this.переглядЗаходiвToolStripMenuItem.Visible = false;
             this.переглядЗаходiвToolStripMenuItem.Click += new System.EventHandler(this.переглядЗаходiвToolStripMenuItem_Click_1);
@@ -140,14 +139,14 @@ namespace Experts_Economist
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 22);
             this.toolStripMenuItem2.Text = "Змiнити Захiд";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.змiнитиЗахiдToolStripMenuItem_Click);
             // 
             // eventsToolStripMenuItem
             // 
             this.eventsToolStripMenuItem.Name = "eventsToolStripMenuItem";
-            this.eventsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eventsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.eventsToolStripMenuItem.Text = "Новий захiд";
             this.eventsToolStripMenuItem.Click += new System.EventHandler(this.eventToolStripMenuItem_Click);
             // 
@@ -157,27 +156,27 @@ namespace Experts_Economist
             this.toolStripMenuItem3,
             this.toolStripMenuItem6});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(168, 22);
             this.toolStripMenuItem1.Text = "Шаблон";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(167, 22);
             this.toolStripMenuItem3.Text = "Новий шаблон";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.шаблониToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(167, 22);
             this.toolStripMenuItem6.Text = "Змінити шаблон";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.змiнитиШаблонToolStripMenuItem_Click);
             // 
             // ресурсиToolStripMenuItem
             // 
             this.ресурсиToolStripMenuItem.Name = "ресурсиToolStripMenuItem";
-            this.ресурсиToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ресурсиToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.ресурсиToolStripMenuItem.Text = "Ресурси";
             this.ресурсиToolStripMenuItem.Click += new System.EventHandler(this.ресурсиToolStripMenuItem_Click);
             // 
@@ -503,29 +502,26 @@ namespace Experts_Economist
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1223, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(917, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 16);
+            this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 3;
             this.label1.Text = "Id експерта";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(925, 6);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(694, 5);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 16);
+            this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Експерт";
             // 
             // user_redakt_button
             // 
-            this.user_redakt_button.Location = new System.Drawing.Point(887, 2);
-            this.user_redakt_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.user_redakt_button.Location = new System.Drawing.Point(665, 2);
             this.user_redakt_button.Name = "user_redakt_button";
-            this.user_redakt_button.Size = new System.Drawing.Size(31, 27);
+            this.user_redakt_button.Size = new System.Drawing.Size(23, 22);
             this.user_redakt_button.TabIndex = 9;
             this.user_redakt_button.Text = "+";
             this.user_redakt_button.UseVisualStyleBackColor = true;
@@ -536,8 +532,7 @@ namespace Experts_Economist
             // 
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStrip2.Size = new System.Drawing.Size(1827, 30);
+            this.menuStrip2.Size = new System.Drawing.Size(1370, 24);
             this.menuStrip2.TabIndex = 11;
             this.menuStrip2.Text = "menuStrip2";
             this.menuStrip2.Visible = false;
@@ -546,8 +541,7 @@ namespace Experts_Economist
             // 
             this.startTutorial.AutoSize = true;
             this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.startTutorial.Location = new System.Drawing.Point(1799, 2);
-            this.startTutorial.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.startTutorial.Location = new System.Drawing.Point(1349, 2);
             this.startTutorial.Name = "startTutorial";
             this.startTutorial.Size = new System.Drawing.Size(18, 20);
             this.startTutorial.TabIndex = 71;
@@ -560,20 +554,18 @@ namespace Experts_Economist
             // 
             this.panel1.Controls.Add(this.linkLabel1);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Location = new System.Drawing.Point(1629, 30);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Location = new System.Drawing.Point(1222, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(195, 158);
+            this.panel1.Size = new System.Drawing.Size(146, 128);
             this.panel1.TabIndex = 72;
             this.panel1.Visible = false;
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(5, 137);
-            this.linkLabel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.linkLabel1.Location = new System.Drawing.Point(4, 111);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(36, 16);
+            this.linkLabel1.Size = new System.Drawing.Size(30, 13);
             this.linkLabel1.TabIndex = 1;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Далі";
@@ -581,19 +573,18 @@ namespace Experts_Economist
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 11);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.MaximumSize = new System.Drawing.Size(168, 0);
+            this.label3.Location = new System.Drawing.Point(12, 9);
+            this.label3.MaximumSize = new System.Drawing.Size(126, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(45, 16);
+            this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 0;
             this.label3.Text = "label3";
             // 
             // Golovna
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1827, 838);
+            this.ClientSize = new System.Drawing.Size(1370, 681);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.startTutorial);
             this.Controls.Add(this.user_redakt_button);
@@ -604,9 +595,9 @@ namespace Experts_Economist
             this.IsMdiContainer = true;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Golovna";
-            this.Text = "Головна";
+            this.Text = "Система для проведення комплексного еколого-економіко-енергетичного моніторингу д" +
+    "овкілля (КЕЕЕМ)";
             this.Load += new System.EventHandler(this.Golovna_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Golovna_KeyDown);
             this.menuStrip1.ResumeLayout(false);

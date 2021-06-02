@@ -119,21 +119,24 @@ namespace Experts_Economist
         private void MedicCalculation(int formulaId)
         {
             #region formulas_medic
-            calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value);
+            formulasDGV.Rows.Add("Result",
+                calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value));
             #endregion formulas_medic
         }
 
         private void EcologCalculation(int formulaId)
         {
             #region formulas_ecolog
-            calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value);
+            formulasDGV.Rows.Add("Result",
+             calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value));
             #endregion
         }
 
         private void EnergeticCalculation(int formulaId)
         {
             #region formulas_energo
-            calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value);
+            formulasDGV.Rows.Add("Result",
+                calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value));
             #endregion
         }
 
@@ -193,7 +196,7 @@ namespace Experts_Economist
                 Iterations.Visible = true;
                 //return;
             }
-            else if (((Convert.ToInt32(idf) == 181) || (Convert.ToInt32(idf) == 213)) && id_of_exp == 2)
+            else if (((Convert.ToInt32(idf) == 181) || (Convert.ToInt32(idf) == 261)) && id_of_exp == 2)
             {       //блок кода для выпадающего меню еклога
                 if (Convert.ToInt32(idf) == 181)
                     for_i.Text = "Кількість забруднюючих речовин";
