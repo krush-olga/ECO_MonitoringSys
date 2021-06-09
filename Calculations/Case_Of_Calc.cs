@@ -1293,7 +1293,7 @@ namespace Calculations
                             areaOfGround
                             ).ToString();
                     }
-                case 261:
+                case 261://213
                     {
                         // List<double> concentrations = new List<double>();
                         // List<double> maxPermisibbleValues = new List<double>();
@@ -1302,27 +1302,74 @@ namespace Calculations
                         double[] concentrations = new double[length];
                         double[] maxPermisibbleValue = new double[length];
 
-                        int i = 0;
-                        for (i = 0; i <= length - 1; i++)
+                        for (int i = 0; i <= length - 1; i++)
                         {
-                            maxPermisibbleValue[i] = Convert.ToDouble(formulasDGV.Rows[i].Cells[1].Value);
-                            concentrations[i] = Convert.ToDouble(formulasDGV.Rows[i + 1].Cells[1].Value);
+                            maxPermisibbleValue[i] = Convert.ToDouble(formulasDGV.Rows[i*2].Cells[1].Value);
+                            concentrations[i] = Convert.ToDouble(formulasDGV.Rows[2*i + 1].Cells[1].Value);
 
                             //maxPermisibbleValues.Add(Convert.ToDouble(this.formulasDGV.Rows[i].Cells[1].Value));
                             //concentrations.Add(Convert.ToDouble(this.formulasDGV.Rows[i+1].Cells[1].Value));
                         }
 
                         string waterQuality = "";
-                        return ecoCalc.ІЗВ(
+                       /*return ecoCalc.ІЗВ(
                            //concentrations.ToArray(),
                            // maxPermisibbleValues.ToArray(),
                            concentrations,
                            maxPermisibbleValue,
                             length,
                             ref waterQuality
-                            ).ToString();
+                            ).ToString();*/
+                        double result = ecoCalc.ІЗВ(
+                            //concentrations.ToArray(),
+                            // maxPermisibbleValues.ToArray(),
+                            concentrations,
+                            maxPermisibbleValue,
+                             length,
+                             ref waterQuality);
+                        switch (result)
+                        {
+                            case object res when (Convert.ToDouble(res) < 0.2):
+                                {
+                                    waterQuality = "I";
+                                    break;
+                                }
+                            case object res when ((Convert.ToDouble(res) >= 0.2) && (Convert.ToDouble(res) <= 1.0)):
+                                {
+                                    waterQuality = "II";
+                                    break;
+                                }
+                            case object res when ((Convert.ToDouble(res) > 1.0) && (Convert.ToDouble(res) <= 2.0)):
+                                {
+                                    waterQuality = "III";
+                                    break;
+                                }
+                            case object res when ((Convert.ToDouble(res) > 2.0) && (Convert.ToDouble(res) <= 4.0)):
+                                {
+                                    waterQuality = "IV";
+                                    break;
+                                }
+                            case object res when ((Convert.ToDouble(res) > 4.0) && (Convert.ToDouble(res) <= 6.0)):
+                                {
+                                    waterQuality = "V";
+                                    break;
+                                }
+                            case object res when ((Convert.ToDouble(res) > 6.0) && (Convert.ToDouble(res) <= 10.0)):
+                                {
+                                    waterQuality = "VI";
+                                    break;
+                                }
+                            case object res when ((Convert.ToDouble(res) > 10.0)):
+                                {
+                                    waterQuality = "VII";
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
 
-                        formulasDGV.Rows[i + 1].Cells[2].Value = waterQuality;
+                        formulasDGV.Rows.Add("waterQuality", waterQuality, "");
+                        return result.ToString();
 
                     }
                /* case 171:

@@ -339,7 +339,7 @@ public class EcologCalculator
     /// <returns></returns>
     public double ІЗВ(double[] concentrations, double[] maxPermisibbleValues, int amountOfComponents, ref string waterQuality)
     {
-        double result = -1.0;
+        double result = 0;
         try
         {
             for (int i = 0; i < amountOfComponents; i++)
@@ -350,54 +350,13 @@ public class EcologCalculator
                 }
                 result += (concentrations[i] / maxPermisibbleValues[i]);
             }
+            result /= amountOfComponents;
         }
         catch (DivideByZeroException e)
         {
             Console.WriteLine(e.Message);
         }
-        result /= amountOfComponents;
-
-        switch (result)
-        {
-            case object res when (Convert.ToDouble(res) <= 0.2):
-                {
-                    waterQuality = "I";
-                    break;
-                }
-            case object res when ((Convert.ToDouble(res) >= 0.2) && (Convert.ToDouble(res) <= 1.0)):
-                {
-                    waterQuality = "II";
-                    break;
-                }
-            case object res when ((Convert.ToDouble(res) >= 1.0) && (Convert.ToDouble(res) <= 2.0)):
-                {
-                    waterQuality = "III";
-                    break;
-                }
-            case object res when ((Convert.ToDouble(res) >= 2.0) && (Convert.ToDouble(res) <= 4.0)):
-                {
-                    waterQuality = "IV";
-                    break;
-                }
-            case object res when ((Convert.ToDouble(res) >= 4.0) && (Convert.ToDouble(res) <= 6.0)):
-                {
-                    waterQuality = "V";
-                    break;
-                }
-            case object res when ((Convert.ToDouble(res) >= 6.0) && (Convert.ToDouble(res) <= 10.0)):
-                {
-                    waterQuality = "VI";
-                    break;
-                }
-            case object res when ((Convert.ToDouble(res) > 10.0)):
-                {
-                    waterQuality = "VII";
-                    break;
-                }
-            default:
-                break;
-        }
-
+       
         return result;
     }
     /// <summary>

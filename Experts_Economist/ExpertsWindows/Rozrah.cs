@@ -120,7 +120,7 @@ namespace Experts_Economist
         {
             #region formulas_medic
             formulasDGV.Rows.Add("Result",
-                calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value));
+            calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value), "");
             #endregion formulas_medic
         }
 
@@ -128,7 +128,7 @@ namespace Experts_Economist
         {
             #region formulas_ecolog
             formulasDGV.Rows.Add("Result",
-             calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value));
+            calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value), "");
             #endregion
         }
 
@@ -136,7 +136,7 @@ namespace Experts_Economist
         {
             #region formulas_energo
             formulasDGV.Rows.Add("Result",
-                calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value));
+            calculation.case_of_formulas(id_of_exp, formulaId, formulasDGV, 0, (int)Iterations.Value),"");
             #endregion
         }
 
@@ -195,7 +195,7 @@ namespace Experts_Economist
                 for_i.Visible = true;
                 Iterations.Visible = true;
                 //return;
-            }
+            }                                                                   //213
             else if (((Convert.ToInt32(idf) == 181) || (Convert.ToInt32(idf) == 261)) && id_of_exp == 2)
             {       //блок кода для выпадающего меню еклога
                 if (Convert.ToInt32(idf) == 181)
@@ -706,18 +706,18 @@ namespace Experts_Economist
 
         private void formulasDGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            try
+            /*try
             {
-                //if ((e.RowIndex >= 0) && (e.RowIndex < formulasDGV.Rows.Count) )
-                //{
-                //    var cell = formulasDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                //    cell.ToolTipText = formulasDGV.Rows[e.RowIndex].Cells[3].Value.ToString();
-                //}
+                if ((e.RowIndex >= 0) && (e.RowIndex < formulasDGV.Rows.Count) )
+                {
+                    var cell = formulasDGV.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    cell.ToolTipText = formulasDGV.Rows[e.RowIndex].Cells[3].Value.ToString();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error" + ex.Message, "Error");
-            }
+            }*/
         }
 
         private void оновитиToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1106,65 +1106,46 @@ namespace Experts_Economist
 				[167] = "formulaspage6.html",
             };
 
-        private void startTutorial_Click(object sender, EventArgs e)
-        {
-	        var frm = new HelpToolTipForm(delegate
-	        {
-		        new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-		        {
-			        new InteractiveToolTipModel
-			        {
-				        Control = formulasLB,
-				        Text = "В блоці \"Список формул\" оберіть формулу"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = name_of_seriesCB,
-				        Text = "Оберіть серію із випадаючого списку"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = addNewSeriesButton,
-				        Text = "Кнопка \"+\" призначена для додання нової серії розрахунків"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = issueTB,
-				        Text = "Необхідно обрати задачу, до якої буде прикріплена серія розрахунку"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = normDGV,
-				        Text = "Необхідно заповнити стовпчик \"Значення\" в блоці \"Список параметрів даної формули\""
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = AllowPatametrTextCB,
-				        Text =
-					        "Для того, щоб дозволити введення строкових значень у таблицю, необхідно заповнити дане поле\""
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = Save_values,
-				        Text = "Після заповнення натисніть на кнопку \"Порахувати та зберегти\""
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = normDGV,
-				        Text =
-					        "Після цього у серію буде додано необхідні розрахунки та в таблиці з’явиться запис \"Результат\" - це значення, що було розраховано за формулою"
-			        },
-			        new InteractiveToolTipModel
-			        {
-				        Control = showLog,
-				        Text = "Щоб переглянути останні розрахунки необхідно натиснути на кнопку \">\""
-			        }
-		        });
-	        }, delegate { Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p7.html"); });
-	        frm.ShowDialog();
+		private void startTutorial_Click(object sender, EventArgs e)
+		{
+			var frm = new HelpToolTipForm(delegate
+			{
+				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+				{
+					new InteractiveToolTipModel
+					{
+						Control = formulasLB,
+						Text = "Оберіть формулу зі списку формул"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = name_of_seriesCB,
+						Text = "Оберіть серії"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = issueTB,
+						Text = "Оберіть задачу"
+					},
+					new InteractiveToolTipModel
+					{
+						Control = normDGV,
+						Text = "Заповніть стовпчик \"Значення\""
+                    },
+					new InteractiveToolTipModel
+					{
+						Control = Save_values,
+						Text = "Натисніть на кнопку \"Порахувати та зберегти\""
+                    }
+                });
+			}, delegate
+			{
+				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p7.html");
+			});
+			frm.ShowDialog();
         }
 
-        private void startTutorial_MouseEnter(object sender, EventArgs e)
+		private void startTutorial_MouseEnter(object sender, EventArgs e)
 		{
 			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
 		}
