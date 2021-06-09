@@ -27,12 +27,16 @@ namespace UserMap
         private readonly Role expert;
         private readonly int userId;
 
+        private long delayTicks;
+        private GMap.NET.RectLatLng selectedArea;
+
         private Services.ILogger logger;
 
         private bool moveMode;
         private bool markerAddingMode;
         private bool polygonAddingMode;
         private bool tubeAddingMode;
+        private bool polylineDrawFillingMode;
         private DBManager dBManager;
 
         private Keys pressedKey;
@@ -419,7 +423,7 @@ namespace UserMap
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!polygonAddingMode && !tubeAddingMode)
+            if (!polygonAddingMode && !tubeAddingMode && reworkedMap.SelectedMarker != null)
             {
                 if (expert == Role.Admin)
                 {
@@ -441,7 +445,11 @@ namespace UserMap
             }
             else if (drawContext != null)
             {
-                drawContext.RemoveCoord(reworkedMap.SelectedMarker.Position);
+                if (selectedArea.Size.HeightLat != 0 &&
+                    selectedArea.Size.WidthLng != 0)
+                    drawContext.RemoveCoordOnArea(selectedArea);
+                else
+                    drawContext.RemoveCoord(reworkedMap.SelectedMarker.Position);
             }
         }
         private async void AdditionalInfo(object sender, EventArgs e)
@@ -458,14 +466,14 @@ namespace UserMap
             var issuesSeriesUC = new UserControls.IssueSeriesUC(marker.Id, marker);
 
             multiBindingObjectEditor.AddNewPage("Задачі", issuesSeriesUC);
-            multiBindingObjectEditor.AddNewPage("Викиди",new UserControls.EmissionsUC(marker.Id, marker));
+            multiBindingObjectEditor.AddNewPage("Викиди", new UserControls.EmissionsUC(marker.Id, marker));
 
             if (describable.Type == "Область" || expert == Role.Medic)
             {
                 var medStatUC = await UserControls.MedStatUserControl.CreateInstanceAsync(marker.Id);
 
                 multiBindingObjectEditor.AddNewPage("Медична статистика", medStatUC);
-            } 
+            }
             else if (describable.Type == "Маркер" && !isReadOnly)
             {
                 mainMarkerInfoUC = new UserControls.MainMarkerInfoUC(marker.Id);
@@ -600,11 +608,33 @@ namespace UserMap
             }
             else if ((polygonAddingMode || tubeAddingMode) && drawContext != null)
             {
-                drawContext.AddCoord(gMapControl.FromLocalToLatLng(cursorLocation.X, cursorLocation.Y));
+                var point = gMapControl.FromLocalToLatLng(cursorLocation.X, cursorLocation.Y);
+
+                if (!drawContext.PolygonPoints.Contains(point))
+                    drawContext.AddCoord(point);
             }
         }
         private void gMapControl_MouseDown(object sender, MouseEventArgs e)
         {
+            if (selectedArea.Size.HeightLat != 0 &&
+                selectedArea.Size.WidthLng != 0 &&
+                e.Button == MouseButtons.Right)
+            {
+                //Если не админ и не включён режим рисовния фигуры, то убираем возможность удалять маркера
+                if (polygonAddingMode || tubeAddingMode || expert == Role.Admin)
+                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = true;
+                else
+                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = false;
+
+                MapObjectContextMenuStrip.Show(gMapControl, e.Location);
+
+                gMapControl.SelectedArea = selectedArea;
+            }
+            else
+            {
+                selectedArea = gMapControl.SelectedArea = new GMap.NET.RectLatLng();
+            }
+
             if (!moveMode && pressedKey == Keys.ControlKey)
             {
                 moveMode = true;
@@ -613,6 +643,10 @@ namespace UserMap
                 {
                     reworkedMap.SelectedMarker = reworkedMap.GetMarkerByCoordsInLayoutOrNull(e.Location, drawContext.Overlay.Id);
                 }
+            }
+            if (!moveMode && pressedKey == (Keys.F2))
+            {
+                polylineDrawFillingMode = true;
             }
         }
         private void gMapControl_MouseUp(object sender, MouseEventArgs e)
@@ -626,10 +660,13 @@ namespace UserMap
 
                 moveMode = false;
             }
+
+            polylineDrawFillingMode = false;
+
+            selectedArea = gMapControl.SelectedArea;
         }
         private void gMapControl_MouseMove(object sender, MouseEventArgs e)
         {
-
             if (moveMode && reworkedMap.SelectedMarker != null)
             {
                 if (markerAddingMode)
@@ -642,8 +679,24 @@ namespace UserMap
                     {
                         drawContext.MoveCoord(gMapControl.FromLocalToLatLng(e.Location.X, e.Location.Y), res);
                     }
+                    //System.Diagnostics.Debug.WriteLine(gMapControl.FromLocalToLatLng(e.Location.X, e.Location.Y));
                 }
             }
+            else if (polylineDrawFillingMode)
+            {
+                var date = DateTime.Now.Ticks;
+
+                if (delayTicks > date)
+                    return;
+                else
+                    delayTicks = date + 100000;
+
+                var point = gMapControl.FromLocalToLatLng(e.Location.X, e.Location.Y);
+
+                if (drawContext != null && !drawContext.PolygonPoints.Contains(point))
+                    drawContext.AddCoord(point);
+            }
+
         }
         private void gMapControl_KeyDown(object sender, KeyEventArgs e)
         {
@@ -2199,69 +2252,69 @@ namespace UserMap
             }
         }
 
-		private void startTutorial_Click(object sender, EventArgs e)
-		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = MarkerTabPage,
-						Text = "Розпочнемо з елементу Маркер"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = AddMarkerButton,
-						Text = "Натисніть на кнопку \"Додати\""
-					},
-					new InteractiveToolTipModel
-					{
-						Control = EconomicActivityComboBox,
-						Text = "Заповніть Вид економічної діяльності"
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+            var frm = new HelpToolTipForm(delegate
+            {
+                new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+                {
+                    new InteractiveToolTipModel
+                    {
+                        Control = MarkerTabPage,
+                        Text = "Розпочнемо з елементу Маркер"
                     },
-					new InteractiveToolTipModel
-					{
-						Control = OwnershipTypeComboBox,
-						Text = "Заповніть Форма власності"
+                    new InteractiveToolTipModel
+                    {
+                        Control = AddMarkerButton,
+                        Text = "Натисніть на кнопку \"Додати\""
                     },
-					new InteractiveToolTipModel
-					{
-						Control = gMapControl,
-						Text = "Двічі натисніть на карту щоб поставити маркер"
-					},
-					new InteractiveToolTipModel
-					{
-						Control = MarkerSettingsButton,
-						Text = "Натисніть на кнопку \"Налаштування маркеру\""
+                    new InteractiveToolTipModel
+                    {
+                        Control = EconomicActivityComboBox,
+                        Text = "Заповніть Вид економічної діяльності"
                     },
-					new InteractiveToolTipModel
-					{
-						Control = SaveMarkerButton,
-						Text = "Після цього натисніть на кнопку \"Зберегти\""
-					},
-					new InteractiveToolTipModel
-					{
-						Control = AddMarkerButton,
-						Text = "Якщо хочете відмінити додавання маркеру натисніть на кнопку \"Відміна\""
-					}
+                    new InteractiveToolTipModel
+                    {
+                        Control = OwnershipTypeComboBox,
+                        Text = "Заповніть Форма власності"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = gMapControl,
+                        Text = "Двічі натисніть на карту щоб поставити маркер"
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = MarkerSettingsButton,
+                        Text = "Натисніть на кнопку \"Налаштування маркеру\""
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = SaveMarkerButton,
+                        Text = "Після цього натисніть на кнопку \"Зберегти\""
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = AddMarkerButton,
+                        Text = "Якщо хочете відмінити додавання маркеру натисніть на кнопку \"Відміна\""
+                    }
                 });
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p11.html");
-			});
-			frm.ShowDialog();
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p11.html");
+            });
+            frm.ShowDialog();
         }
 
 
-		private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
+        }
 
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
     }
 }

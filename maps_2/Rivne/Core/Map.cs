@@ -945,6 +945,26 @@ namespace UserMap.Core
             return res;
         }
 
+        public void RemoveCoordsOnArea(RectLatLng area, string layoutId = "default")
+        {
+            var layout = GetOverlayByIdOrNull(layoutId);
+
+            if (layout == null)
+                return;
+
+            var topLeft = area.LocationTopLeft;
+            var bottomRight = area.LocationRightBottom;
+
+            var markersToDelete = layout.Markers.Where(marker => marker.Position.Lat > topLeft.Lat && marker.Position.Lat < bottomRight.Lat &&
+                                                                 marker.Position.Lng > topLeft.Lng && marker.Position.Lng < bottomRight.Lng)
+                                                .ToList();
+
+            foreach (var marker in markersToDelete)
+            {
+                layout.Markers.Remove(marker);
+            }
+        }
+
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkersByLayoutOrNull/*'/>
         public ICollection<GMapMarker> GetMarkersByLayoutOrNull(string layoutId = "default")
         {
@@ -985,8 +1005,8 @@ namespace UserMap.Core
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsInLayoutOrNullPointLatLng/*'/>
         public GMapMarker GetMarkerByCoordsInLayoutOrNull(PointLatLng coord, string layoutId)
         {
-            double offsetLat = 0.001;
-            double offsetLng = 0.0008;
+            double offsetLat = 0.0007;
+            double offsetLng = 0.0004;
 
             if (MapObject.Zoom >= 0 && MapObject.Zoom <= 3)
             {
@@ -1221,6 +1241,22 @@ namespace UserMap.Core
         /// <inheritdoc/>
         public void Dispose()
         {
+            if (polygonContext != null)
+            {
+                polygonContext.Dispose();
+                polygonContext = null;
+            }
+
+            if (routeContext != null)
+            {
+                routeContext.Dispose();
+                routeContext = null;
+            }
+
+            SelectedMarker = null;
+            SelectedPolygon = null;
+            SelectedRoute = null;
+
             MapObject.Dispose();
         }
 
