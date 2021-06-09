@@ -12,16 +12,23 @@ namespace UserMap.Core
     /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/DrawContext/*'/>
     public abstract class DrawContext : IDisposable
     {
+#pragma warning disable CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
+        protected internal enum DrawReason
+        {
+            PointAdded,
+            PointMoved,
+            PointDeleted
+        }
+
         private static uint noNameContextNumber;
 
         private bool disposed;
 
-#pragma warning disable CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
-        protected readonly List<PointLatLng> pointCoords;
-        protected readonly List<GMapMarker> polygonMarkers;
-
         protected readonly GMarkerGoogleType polygonPointsType;
 
+        private PointLatLng[] cache;
+
+        protected DrawReason drawReason;
         protected string figureName;
 #pragma warning restore CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
 
@@ -48,9 +55,6 @@ namespace UserMap.Core
 
             Overlay = overlay;
 
-            pointCoords = new List<PointLatLng>();
-            polygonMarkers = new List<GMapMarker>();
-
             polygonPointsType = markerType;
 
             this.figureName = figureName;
@@ -62,11 +66,12 @@ namespace UserMap.Core
         public GMapOverlay Overlay { get; protected set; }
 
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/PolygonPoints/*'/>
-        public System.Collections.ObjectModel.ReadOnlyCollection<PointLatLng> PolygonPoints
-        {
+        public PointLatLng[] PolygonPoints
+        {//TODO Оптимизировать алгоритм при добавлении новых точек.
+         //Был вариант сохранят дополнительный список с точками.
             get
             {
-                return pointCoords.AsReadOnly();
+                return cache ?? (cache = Overlay.Markers.Select(marker => marker.Position).ToArray());
             }
         }
 
@@ -75,6 +80,8 @@ namespace UserMap.Core
         {
             return figureName;
         }
+
+
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/SetFigureName/*'/>
         public virtual void SetFigureName(string name)
         {
@@ -87,45 +94,80 @@ namespace UserMap.Core
         }
 
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/AddCoord/*'/>
-        public virtual void AddCoord(PointLatLng coord)
+        public void AddCoord(PointLatLng coord)
         {
-            pointCoords.Add(coord);
-
             GMapMarker marker = MapHelper.CreateMarker(coord, polygonPointsType, string.Empty, null, null);
 
             Overlay.Markers.Add(marker);
-            polygonMarkers.Add(marker);
+
+            drawReason = DrawReason.PointAdded;
+
+            cache = null;
 
             DrawFigure();
         }
 
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/RemoveCoordInt/*'/>
-        public virtual void RemoveCoord(int coordIndex)
+        public void RemoveCoord(int coordIndex)
         {
-            if (coordIndex >= 0 && coordIndex < pointCoords.Count)
+            if (coordIndex >= 0 && coordIndex < Overlay.Markers.Count)
             {
-                RemoveCoord(pointCoords[coordIndex]);
+                //Overlay.Markers.Remove() по какой-то причине удаляет первый маркер из всей коллекции,
+                //даже если он не первый и был явно найден
+                Overlay.Markers.RemoveAt(coordIndex);
+
+                drawReason = DrawReason.PointDeleted;
+
+                cache = null;
+
+                DrawFigure();
             }
         }
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/RemoveCoordPointLatLng/*'/>
-        public virtual void RemoveCoord(PointLatLng coord)
+        public void RemoveCoord(PointLatLng coord)
         {
-            pointCoords.Remove(coord);
+            var _index = -1;
 
-            GMapMarker deleteMarker = polygonMarkers.Where(m => m.Position == coord).FirstOrDefault();
-            polygonMarkers.Remove(deleteMarker);
-            Overlay.Markers.Remove(deleteMarker);
+            var deleteMarker = Overlay.Markers.Where((m, index) => { _index = index; return m.Position == coord; }).FirstOrDefault();
+
+            RemoveCoord(_index);
+        }
+
+        public void RemoveCoordOnArea(RectLatLng area)
+        {
+            var topLeft = area.LocationTopLeft;
+            var bottomRight = area.LocationRightBottom;
+
+            for (int i = 0; i < Overlay.Markers.Count; i++)
+            {
+                var marker = Overlay.Markers[i];
+
+                if (marker.Position.Lat < topLeft.Lat && marker.Position.Lat > bottomRight.Lat &&
+                    marker.Position.Lng > topLeft.Lng && marker.Position.Lng < bottomRight.Lng)
+                {
+                    Overlay.Markers.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            drawReason = DrawReason.PointDeleted;
+
+            cache = null;
 
             DrawFigure();
         }
 
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/MoveCoord/*'/>
-        public virtual void MoveCoord(PointLatLng newCoord, int coordIndex)
+        public void MoveCoord(PointLatLng newCoord, int coordIndex)
         {
-            if (coordIndex >= 0 && coordIndex < pointCoords.Count)
+            if (coordIndex >= 0 && coordIndex < Overlay.Markers.Count)
             {
-                pointCoords[coordIndex] = newCoord;
-                polygonMarkers[coordIndex].Position = newCoord;
+                Overlay.Markers[coordIndex].Position = newCoord;
+
+                if (cache != null)
+                    cache[coordIndex] = newCoord;
+
+                drawReason = DrawReason.PointMoved;
 
                 DrawFigure();
             }
@@ -134,12 +176,9 @@ namespace UserMap.Core
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="draw_context"]/ClearFigure/*'/>
         public void ClearFigure()
         {
-            MapHelper.DisposeElements(polygonMarkers);
             MapHelper.DisposeElements(Overlay.Polygons);
             MapHelper.DisposeElements(Overlay.Routes);
 
-            pointCoords.Clear();
-            polygonMarkers.Clear();
             Overlay.Clear();
         }
 
@@ -148,10 +187,6 @@ namespace UserMap.Core
         {
             if (!disposed)
             {
-                MapHelper.DisposeElements(polygonMarkers);
-
-                pointCoords.Clear();
-                polygonMarkers.Clear();
                 Overlay.Markers.Clear();
 
                 disposed = true;
@@ -256,10 +291,12 @@ namespace UserMap.Core
         /// <inheritdoc/>
         protected override void DrawFigure()
         {
-            for (int i = 0; i < pointCoords.Count; i++)
+            if (drawReason != DrawReason.PointMoved)
             {
-                polygonMarkers[i].Position = pointCoords[i];
-                polygonMarkers[i].ToolTipText = i.ToString();
+                for (int i = 0; i < Overlay.Markers.Count; i++)
+                {
+                    Overlay.Markers[i].ToolTipText = i.ToString();
+                }
             }
 
             if (currentPolygon != null)
@@ -268,12 +305,12 @@ namespace UserMap.Core
                 Overlay.Polygons.Remove(currentPolygon);
             }
 
-            if (pointCoords.Count == 0)
+            if (Overlay.Markers.Count == 0)
             {
                 return;
             }
 
-            currentPolygon = new GMapPolygon(pointCoords, GetFigureName());
+            currentPolygon = new GMapPolygon(Overlay.Markers.Select(marker => marker.Position).ToList(), GetFigureName());
             currentPolygon.Fill = brush;
             currentPolygon.Stroke = stroke;
 
@@ -341,10 +378,9 @@ namespace UserMap.Core
         /// <inheritdoc/>
         protected override void DrawFigure()
         {
-            for (int i = 0; i < pointCoords.Count; i++)
+            for (int i = 0; i < Overlay.Markers.Count; i++)
             {
-                polygonMarkers[i].Position = pointCoords[i];
-                polygonMarkers[i].ToolTipText = i.ToString();
+                Overlay.Markers[i].ToolTipText = i.ToString();
             }
 
             if (currentRoute != null)
@@ -353,12 +389,12 @@ namespace UserMap.Core
                 Overlay.Routes.Remove(currentRoute);
             }
 
-            if (pointCoords.Count == 0)
+            if (Overlay.Markers.Count == 0)
             {
                 return;
             }
 
-            currentRoute = new GMapRoute(pointCoords, GetFigureName());
+            currentRoute = new GMapRoute(Overlay.Markers.Select(marker => marker.Position).ToList(), GetFigureName());
             currentRoute.Stroke = stroke;
 
             Overlay.Routes.Insert(0, currentRoute);
