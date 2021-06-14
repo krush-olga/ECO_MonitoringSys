@@ -740,5 +740,23 @@ namespace Experts_Economist
 				Help.ShowHelp(this, Config.PathToHelp);
 			}
         }
+
+		private void завантажитиКерівництвоКористувачаToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var saveFileDialog1 = new SaveFileDialog
+			{
+				Filter = "pdf files (*.pdf)|*.pdf|All files (*.*)|*.*",
+				FilterIndex = 1,
+				RestoreDirectory = true,
+				FileName = "Інструкція_КЕЕМ.pdf",
+				AddExtension = false
+			};
+			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+			{
+                if (File.Exists(saveFileDialog1.FileName))
+					File.Delete(saveFileDialog1.FileName);
+                File.Copy(Config.PathToHelpFile, saveFileDialog1.FileName);
+			}
+        }
 	}
 }
