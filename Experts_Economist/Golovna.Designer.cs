@@ -76,6 +76,7 @@ namespace Experts_Economist
 			this.довідкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.сценаріїToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.selectMenuItemToolStrip = new System.Windows.Forms.ToolStripComboBox();
+			this.завантажитиКерівництвоКористувачаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.user_redakt_button = new System.Windows.Forms.Button();
@@ -84,7 +85,6 @@ namespace Experts_Economist
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.linkLabel1 = new System.Windows.Forms.LinkLabel();
 			this.label3 = new HelpModule.Controls.GrowLabel();
-			this.завантажитиКерівництвоКористувачаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
@@ -446,8 +446,8 @@ namespace Experts_Economist
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.довідкаToolStripMenuItem,
             this.сценаріїToolStripMenuItem,
-            this.selectMenuItemToolStrip,
-            this.завантажитиКерівництвоКористувачаToolStripMenuItem});
+            this.завантажитиКерівництвоКористувачаToolStripMenuItem,
+            this.selectMenuItemToolStrip});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
 			this.helpToolStripMenuItem.Text = "Help";
@@ -500,6 +500,13 @@ namespace Experts_Economist
 			this.selectMenuItemToolStrip.Size = new System.Drawing.Size(121, 23);
 			this.selectMenuItemToolStrip.SelectedIndexChanged += new System.EventHandler(this.selectMenuItemToolStrip_SelectedIndexChanged);
 			this.selectMenuItemToolStrip.KeyDown += new System.Windows.Forms.KeyEventHandler(this.selectMenuItemToolStrip_KeyDown);
+			// 
+			// завантажитиКерівництвоКористувачаToolStripMenuItem
+			// 
+			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Name = "завантажитиКерівництвоКористувачаToolStripMenuItem";
+			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
+			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Text = "Завантажити керівництво користувача";
+			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Click += new System.EventHandler(this.завантажитиКерівництвоКористувачаToolStripMenuItem_Click);
 			// 
 			// label1
 			// 
@@ -581,13 +588,6 @@ namespace Experts_Economist
 			this.label3.Size = new System.Drawing.Size(35, 13);
 			this.label3.TabIndex = 0;
 			this.label3.Text = "label3";
-			// 
-			// завантажитиКерівництвоКористувачаToolStripMenuItem
-			// 
-			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Name = "завантажитиКерівництвоКористувачаToolStripMenuItem";
-			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Size = new System.Drawing.Size(287, 22);
-			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Text = "Завантажити керівництво користувача";
-			this.завантажитиКерівництвоКористувачаToolStripMenuItem.Click += new System.EventHandler(this.завантажитиКерівництвоКористувачаToolStripMenuItem_Click);
 			// 
 			// Golovna
 			// 
