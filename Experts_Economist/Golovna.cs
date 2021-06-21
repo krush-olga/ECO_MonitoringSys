@@ -748,7 +748,7 @@ namespace Experts_Economist
 				Filter = "pdf files (*.pdf)|*.pdf|All files (*.*)|*.*",
 				FilterIndex = 1,
 				RestoreDirectory = true,
-				FileName = "Інструкція_КЕЕМ.pdf",
+				FileName = "Керівництво Користувача КЕЕЕМ.pdf",
 				AddExtension = false
 			};
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK)
