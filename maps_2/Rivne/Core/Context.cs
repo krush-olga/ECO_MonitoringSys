@@ -205,6 +205,23 @@ namespace UserMap.Core
 
         private GMapPolygon currentPolygon;
 
+        public PolygonContext(GMapOverlay overlay, GMapPolygon gMapPolygon) 
+            : base(overlay, gMapPolygon.Name)
+        {
+            currentPolygon = new GMapPolygon(gMapPolygon.Points, gMapPolygon.Name);
+            brush = (SolidBrush)gMapPolygon.Fill.Clone();
+            stroke = (Pen)gMapPolygon.Stroke.Clone();
+
+            currentPolygon.Fill = brush;
+            currentPolygon.Stroke = stroke;
+
+            foreach (var point in currentPolygon.Points)
+            {
+                overlay.Markers.Add(MapHelper.CreateMarker(point, polygonPointsType, string.Empty, null, null));
+            }
+
+            DrawFigure();
+        }
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="polygon_context"]/PolygonContextCtor1/*'/>
         public PolygonContext(GMapOverlay overlay, Color fill,
                               int opacity)
@@ -324,6 +341,22 @@ namespace UserMap.Core
         private readonly Pen stroke;
 
         private GMapRoute currentRoute;
+
+        public RouteContext(GMapOverlay overlay, GMapRoute gMapRoute)
+            : base(overlay, gMapRoute.Name)
+        {
+            currentRoute = new GMapRoute(gMapRoute.Points, gMapRoute.Name);
+            stroke = (Pen)gMapRoute.Stroke.Clone();
+
+            currentRoute.Stroke = stroke;
+
+            foreach (var point in currentRoute.Points)
+            {
+                overlay.Markers.Add(MapHelper.CreateMarker(point, polygonPointsType, string.Empty, null, null));
+            }
+
+            DrawFigure();
+        }
 
         /// <include file='Docs/Core/ContextDoc.xml' path='docs/members[@name="route_context"]/RouteContextCtor1/*'/>
         public RouteContext(GMapOverlay overlay, Color routeStroke)

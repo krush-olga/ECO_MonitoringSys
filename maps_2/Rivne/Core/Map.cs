@@ -21,6 +21,19 @@ namespace UserMap.Core
 
         private readonly GMapOverlay defaultOverlay;
 
+        #region Редактирование существующей фигуры
+        //Нужны для редактирования фигур
+        //Это костыль. Подлежит изменению
+        //TODO поправить на нормальное редактирование
+
+        private readonly List<string> editPolygonLayouts;
+        private readonly List<string> editRouteLayouts;
+
+        private GMapPolygon oldPolygon;
+        private GMapRoute oldRoute;
+        #endregion
+
+
         private PolygonContext polygonContext;
         private RouteContext routeContext;
 
@@ -55,6 +68,9 @@ namespace UserMap.Core
             defaultOverlay = new GMapOverlay(defaultOverlayName);
 
             MapObject.Overlays.Add(defaultOverlay);
+
+            editPolygonLayouts = new List<string>();
+            editRouteLayouts = new List<string>();
         }
 
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/MapObject/*'/>
@@ -491,7 +507,7 @@ namespace UserMap.Core
         {
             GMapPolygon polygon = GetPolygonByNameOrNull(polygonName);
 
-            if (polygon != null)
+            if (polygon != null && polygon != oldPolygon)
             {
                 polygon.IsVisible = true;
             }
@@ -512,7 +528,7 @@ namespace UserMap.Core
         {
             GMapRoute route = GetRouteByNameOrNull(routeName);
 
-            if (route != null)
+            if (route != null && route != oldRoute)
             {
                 route.IsVisible = true;
             }
@@ -558,6 +574,43 @@ namespace UserMap.Core
 
             return polygonContext;
         }
+
+        public DrawContext ChangePolygon(string polygonName)
+        {
+            if (string.IsNullOrEmpty(polygonName))
+            {
+                throw new ArgumentException("Название полигона не может отсутствовать.");
+            }
+
+            if (polygonContext == null)
+            {
+                editPolygonLayouts.Clear();
+
+                GMapOverlay overlay = new GMapOverlay($"__{polygonName}__");
+                GMapPolygon existingPolygon = GetPolygonByNameOrNull(polygonName);
+
+                if (existingPolygon != null)
+                {
+                    oldPolygon = existingPolygon;
+
+                    editPolygonLayouts.AddRange(MapObject.Overlays.Where(_overlay => _overlay.Polygons.Contains(existingPolygon))
+                                                                  .Select(_overlay => _overlay.Id));
+
+                    existingPolygon.IsVisible = false;
+                    RemovePolygon(existingPolygon);
+
+                    overlay.Polygons.Add(existingPolygon);
+
+                    MapObject.Overlays.Add(overlay);
+
+                    polygonContext = new PolygonContext(overlay, existingPolygon);
+                }
+                else throw new InvalidOperationException("Полигон с таким названием не существует.");
+            }
+
+            return polygonContext;
+        }
+
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/CancelPolygonDraw/*'/>
         public void CancelPolygonDraw()
         {
@@ -568,6 +621,15 @@ namespace UserMap.Core
 
             GMapOverlay overlay = polygonContext.Overlay;
             MapObject.Overlays.Remove(overlay);
+
+            if (oldPolygon != null)
+            {
+                oldPolygon.IsVisible = true;
+                foreach (var layout in editPolygonLayouts)
+                {
+                    AddPolygon(oldPolygon, layout);
+                }
+            }
 
             polygonContext.Dispose();
             polygonContext = null;
@@ -588,18 +650,30 @@ namespace UserMap.Core
             overlay.Id = overlay.Id.Remove(overlay.Id.Length - 2);
 
             GMapOverlay existingOverlay = GetOverlayByIdOrNull(overlay.Id);
+            GMapPolygon drawedPolygon = overlay.Polygons.FirstOrDefault();
 
-            if (existingOverlay == null)
+            if (oldPolygon != null)
             {
-                MapObject.Overlays.Add(overlay);
+                oldPolygon.Dispose();
+                oldPolygon = null;
+
+                foreach (var layout in editPolygonLayouts)
+                {
+                    AddPolygon(drawedPolygon, layout);
+                }
             }
             else
             {
-                GMapPolygon drawedPolygon = overlay.Polygons.FirstOrDefault();
-
-                if (drawedPolygon != null)
+                if (existingOverlay == null)
                 {
-                    existingOverlay.Polygons.Add(drawedPolygon);
+                    MapObject.Overlays.Add(overlay);
+                }
+                else
+                {
+                    if (drawedPolygon != null)
+                    {
+                        existingOverlay.Polygons.Add(drawedPolygon);
+                    }
                 }
             }
 
@@ -646,6 +720,43 @@ namespace UserMap.Core
 
             return routeContext;
         }
+
+        public DrawContext ChangeRoute(string routeName)
+        {
+            if (string.IsNullOrEmpty(routeName))
+            {
+                throw new ArgumentException("Название маршрута не может отсутствовать.");
+            }
+
+            if (routeContext == null)
+            {
+                editRouteLayouts.Clear();
+
+                var overlay = new GMapOverlay($"__{routeName}__");
+                var existingRoute = GetRouteByNameOrNull(routeName);
+
+                if (existingRoute != null)
+                {
+                    oldRoute = existingRoute;
+
+                    editRouteLayouts.AddRange(MapObject.Overlays.Where(_overlay => _overlay.Routes.Contains(existingRoute))
+                                                                .Select(_overlay => _overlay.Id));
+
+                    existingRoute.IsVisible = false;
+                    RemoveRoute(existingRoute);
+
+                    overlay.Routes.Add(existingRoute);
+
+                    MapObject.Overlays.Add(overlay);
+
+                    routeContext = new RouteContext(overlay, existingRoute);
+                }
+                else throw new InvalidOperationException("Маршрут с таким названием не существует.");
+            }
+
+            return routeContext;
+        }
+
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/CancelRouteDraw/*'/>
         public void CancelRouteDraw()
         {
@@ -656,6 +767,15 @@ namespace UserMap.Core
 
             GMapOverlay overlay = routeContext.Overlay;
             MapObject.Overlays.Remove(overlay);
+
+            if (oldRoute != null)
+            {
+                oldRoute.IsVisible = true;
+                foreach (var layout in editRouteLayouts)
+                {
+                    AddRoute(oldRoute, layout);
+                }
+            }
 
             routeContext.Dispose();
             routeContext = null;
@@ -676,20 +796,34 @@ namespace UserMap.Core
             overlay.Id = overlay.Id.Remove(overlay.Id.Length - 2);
 
             GMapOverlay existingOverlay = GetOverlayByIdOrNull(overlay.Id);
+            GMapRoute drawedRoute = overlay.Routes.FirstOrDefault();
 
-            if (existingOverlay == null)
+            if (oldRoute != null)
             {
-                MapObject.Overlays.Add(overlay);
+                oldRoute.Dispose();
+                oldRoute = null;
+
+                foreach (var layout in editRouteLayouts)
+                {
+                    AddRoute(drawedRoute, layout);
+                }
             }
             else
             {
-                GMapRoute drawedRoute = overlay.Routes.FirstOrDefault();
-
-                if (drawedRoute != null)
+                if (existingOverlay == null)
                 {
-                    existingOverlay.Routes.Add(drawedRoute);
+                    MapObject.Overlays.Add(overlay);
+                }
+                else
+                {
+                    if (drawedRoute != null)
+                    {
+                        existingOverlay.Routes.Add(drawedRoute);
+                    }
                 }
             }
+
+
 
             routeContext.Dispose();
             routeContext = null;
@@ -1257,7 +1391,7 @@ namespace UserMap.Core
             SelectedPolygon = null;
             SelectedRoute = null;
 
-            MapObject.Dispose();
+            MapObject?.Dispose();
         }
 
         private GMapOverlay GetOverlayByIdOrNull(string overlayId)

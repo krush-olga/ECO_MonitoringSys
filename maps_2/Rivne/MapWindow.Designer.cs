@@ -53,6 +53,7 @@
             this.components = new System.ComponentModel.Container();
             this.MapObjectContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ComparsionSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ChangePolylineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PanelSideMenu = new System.Windows.Forms.Panel();
             this.ElementsSideMenuPanel = new System.Windows.Forms.Panel();
@@ -174,9 +175,10 @@
             // 
             this.MapObjectContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ComparsionSelectToolStripMenuItem,
+            this.ChangePolylineToolStripMenuItem,
             this.DeleteToolStripMenuItem});
             this.MapObjectContextMenuStrip.Name = "contextMenuStrip1";
-            this.MapObjectContextMenuStrip.Size = new System.Drawing.Size(209, 48);
+            this.MapObjectContextMenuStrip.Size = new System.Drawing.Size(209, 70);
             // 
             // ComparsionSelectToolStripMenuItem
             // 
@@ -184,6 +186,14 @@
             this.ComparsionSelectToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.ComparsionSelectToolStripMenuItem.Text = "Вибрати для порівняння";
             this.ComparsionSelectToolStripMenuItem.Click += new System.EventHandler(this.ComparsionSelectToolStripMenuItem_Click);
+            // 
+            // ChangePolylineToolStripMenuItem
+            // 
+            this.ChangePolylineToolStripMenuItem.Name = "ChangePolylineToolStripMenuItem";
+            this.ChangePolylineToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.ChangePolylineToolStripMenuItem.Text = "Змінити";
+            this.ChangePolylineToolStripMenuItem.Visible = false;
+            this.ChangePolylineToolStripMenuItem.Click += new System.EventHandler(this.ChangePolylineToolStripMenuItem_Click);
             // 
             // DeleteToolStripMenuItem
             // 
@@ -1310,6 +1320,8 @@
             this.gMapControl.TabIndex = 1;
             this.gMapControl.Zoom = 0D;
             this.gMapControl.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gMapControl_OnMarkerClick);
+            this.gMapControl.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gMapControl_OnMarkerEnter);
+            this.gMapControl.OnMarkerLeave += new GMap.NET.WindowsForms.MarkerLeave(this.gMapControl_OnMarkerLeave);
             this.gMapControl.DoubleClick += new System.EventHandler(this.gMapControl_DoubleClick);
             this.gMapControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gMapControl_KeyDown);
             this.gMapControl.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gMapControl_KeyUp);
@@ -1483,5 +1495,6 @@
         private System.Windows.Forms.Button AddressFindButton;
         private System.Windows.Forms.TextBox AddressTextBox;
 		private System.Windows.Forms.Label startTutorial;
-	}
+        private System.Windows.Forms.ToolStripMenuItem ChangePolylineToolStripMenuItem;
+    }
 }

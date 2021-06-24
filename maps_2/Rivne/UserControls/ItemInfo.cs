@@ -42,13 +42,13 @@ namespace UserMap.UserControls
         }
         public void HideAdditionInfoButton()
         {
-            HideButton.Visible = false;
+            AdditionInfoButton.Visible = false;
 
             DeleteButton.Location = new System.Drawing.Point(this.Width / 2 - 10, DeleteButton.Location.Y);
         }
         public void ShowAdditionInfoButton()
         {
-            HideButton.Visible = true;
+            AdditionInfoButton.Visible = true;
 
             DeleteButton.Location = new System.Drawing.Point(this.Width / 2 + 10, DeleteButton.Location.Y);
         }

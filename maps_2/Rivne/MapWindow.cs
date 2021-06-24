@@ -36,6 +36,7 @@ namespace UserMap
         private bool markerAddingMode;
         private bool polygonAddingMode;
         private bool tubeAddingMode;
+        private bool polylineEditingMode;
         private bool polylineDrawFillingMode;
         private DBManager dBManager;
 
@@ -43,6 +44,7 @@ namespace UserMap
 
         private Map reworkedMap;
         private DrawContext drawContext;
+        private NamedGoogleMarker tempMarker;
 
         private HelpWindows.ItemConfigurationWindow itemConfigurationWindow;
         private UserControls.ItemInfo itemInfo;
@@ -423,12 +425,13 @@ namespace UserMap
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!polygonAddingMode && !tubeAddingMode && reworkedMap.SelectedMarker != null)
+            if (!polygonAddingMode && !tubeAddingMode && !polylineEditingMode &&
+                reworkedMap.SelectedMarker != null)
             {
-                if (expert == Role.Admin)
-                {
-                    IDescribable describableItem = reworkedMap.SelectedMarker as IDescribable;
+                IDescribable describableItem = reworkedMap.SelectedMarker as IDescribable;
 
+                if (expert == Role.Admin || userId == describableItem.Creator.Id)
+                {
                     if (describableItem.Type == "Маркер")
                     {
                         DeleteMarker(null, null);
@@ -451,6 +454,45 @@ namespace UserMap
                 else
                     drawContext.RemoveCoord(reworkedMap.SelectedMarker.Position);
             }
+        }
+        private void ChangePolylineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HideContextMenuStripItems(MapObjectContextMenuStrip);
+            itemInfo.ClearData();
+            itemInfo.Visible = false;
+
+            var namedMarker = reworkedMap.SelectedMarker as NamedGoogleMarker;
+
+            if (((IDescribable)namedMarker).Type == "Полігон")
+            {
+                AddItemTabControl.SelectedIndex = 2;
+
+                PolygonSettingsButton.Enabled = false;
+                PolygonColorPictureBox.Enabled = true;
+                PolygonSaveButton.Enabled = true;
+
+                PolygonDrawButton.Text = "Відміна";
+
+                drawContext = reworkedMap.ChangePolygon(reworkedMap.SelectedPolygon.Name);
+                ChangePictureBoxColor();
+                TransparentNumericUpDown.Value = 100;
+            }
+            else
+            {
+                AddItemTabControl.SelectedIndex = 3;
+
+                TubeSaveButton.Enabled = true;
+
+                TubeDrawButton.Text = "Відміна";
+
+                drawContext = reworkedMap.ChangeRoute(namedMarker.Name);
+            }
+
+            tempMarker = namedMarker;
+
+            polylineEditingMode = true;
+
+            reworkedMap.RemoveMarker(reworkedMap.SelectedMarker);
         }
         private async void AdditionalInfo(object sender, EventArgs e)
         {
@@ -533,19 +575,64 @@ namespace UserMap
                 return;
             }
 
+            if (item.ToolTipMode == GMap.NET.WindowsForms.MarkerTooltipMode.Never)
+                item.ToolTipMode = GMap.NET.WindowsForms.MarkerTooltipMode.OnMouseOver;
+
             reworkedMap.SelectedMarker = item;
+
+            var describable = item as IDescribable;
 
             if (e.Button == MouseButtons.Right && !markerAddingMode)
             {
-                //Если не админ и не включён режим рисовния фигуры, то убираем возможность удалять маркера
-                if (polygonAddingMode || tubeAddingMode || expert == Role.Admin)
+                if ((polylineEditingMode || polygonAddingMode || tubeAddingMode)
+                    && describable.Creator != null &&
+                    !int.TryParse(item.ToolTipText, out int r))
+                    return;
+
+                switch (describable.Type)
+                {
+                    case "Полігон":
+                        var polygon = reworkedMap.GetPolygonByNameOrNull(describable.Name);
+
+                        reworkedMap.SelectedPolygon = polygon;
+                        break;
+                    case "Трубопровід":
+                        var route = reworkedMap.GetRouteByNameOrNull(describable.Name);
+
+                        reworkedMap.SelectedRoute = route;
+                        break;
+                    default:
+                        break;
+                }
+
+                //Если не админ, не создатель маркера и не включён
+                //режим рисовния фигуры, то убираем возможность удалять маркера
+                if (polygonAddingMode || tubeAddingMode || expert == Role.Admin ||
+                    describable != null && describable.Creator.Id == userId)
+                {
+                    var menuItem = MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 2];
+
                     MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = true;
+
+                    if (!polylineEditingMode && !polygonAddingMode && !tubeAddingMode &&
+                        describable.Type != "Маркер")
+                    {
+                        menuItem.Visible = true;
+                        menuItem.Text = "Змінити " + describable.Type.ToLower();
+                    }
+                    else
+                        menuItem.Visible = false;
+                }
                 else
+                {
                     MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = false;
+                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 2].Visible = false;
+                }
 
                 MapObjectContextMenuStrip.Show(gMapControl, e.Location);
             }
-            else if (!markerAddingMode && !polygonAddingMode && !tubeAddingMode)
+            else if (!markerAddingMode && !polygonAddingMode && 
+                     !tubeAddingMode && !polylineEditingMode)
             {
                 IDescribable describableItem = item as IDescribable;
 
@@ -572,6 +659,11 @@ namespace UserMap
                     {
                         itemInfo.SubscribeDeleteItemClickEvent(DeletePolyline);
                         itemInfo.HideAdditionInfoButton();
+                    }
+
+                    if (expert != Role.Admin && (describable == null || describable.Creator.Id != userId))
+                    {
+                        itemInfo.HideDeleteButton();
                     }
                 }
 
@@ -673,7 +765,7 @@ namespace UserMap
                 {
                     reworkedMap.SelectedMarker.Position = gMapControl.FromLocalToLatLng(e.Location.X, e.Location.Y);
                 }
-                else if ((polygonAddingMode || tubeAddingMode) && drawContext != null)
+                else if ((polygonAddingMode || tubeAddingMode || polylineEditingMode) && drawContext != null)
                 {
                     if (int.TryParse(reworkedMap.SelectedMarker.ToolTipText, out int res))
                     {
@@ -689,7 +781,7 @@ namespace UserMap
                 if (delayTicks > date)
                     return;
                 else
-                    delayTicks = date + 100000;
+                    delayTicks = date + 3000000;
 
                 var point = gMapControl.FromLocalToLatLng(e.Location.X, e.Location.Y);
 
@@ -705,6 +797,16 @@ namespace UserMap
         private void gMapControl_KeyUp(object sender, KeyEventArgs e)
         {
             pressedKey = Keys.None;
+        }
+        private void gMapControl_OnMarkerEnter(GMap.NET.WindowsForms.GMapMarker item)
+        {
+            if (polylineEditingMode || polygonAddingMode || tubeAddingMode)
+                item.ToolTipMode = GMap.NET.WindowsForms.MarkerTooltipMode.Never;
+        }
+        private void gMapControl_OnMarkerLeave(GMap.NET.WindowsForms.GMapMarker item)
+        {
+            if (polylineEditingMode || polygonAddingMode || tubeAddingMode)
+                item.ToolTipMode = GMap.NET.WindowsForms.MarkerTooltipMode.OnMouseOver;
         }
         #endregion
 
@@ -876,8 +978,41 @@ namespace UserMap
                 reworkedMap.CancelPolygonDraw();
                 reworkedMap.CancelRouteDraw();
 
+                if (polylineEditingMode)
+                {
+                    var describable = (IDescribable)tempMarker;
+
+                    if (describable.Type == "Трубопровід")
+                    {
+                        foreach (var overlay in gMapControl.Overlays)
+                        {
+                            var tempRoute = overlay.Routes.Where(p => p.Name == tempMarker.Name)
+                                                              .FirstOrDefault();
+
+                            if (tempRoute != null)
+                                reworkedMap.AddMarker(tempMarker, overlay.Id);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var overlay in gMapControl.Overlays)
+                        {
+                            var tempPolygon = overlay.Polygons.Where(p => p.Name == tempMarker.Name)
+                                                          .FirstOrDefault();
+                            
+                            if (tempPolygon != null)
+                                reworkedMap.AddMarker(tempMarker, overlay.Id);
+                        }
+                    }
+                }
+
+                polylineEditingMode = false;
+
+                tempMarker = null;
                 drawContext = null;
             }
+
+            polylineEditingMode = false;
 
             if (itemConfigurationWindow != null)
             {
@@ -1434,6 +1569,45 @@ namespace UserMap
 #endif
             }
         }
+        private async Task SaveChangedPolyline(int polylineId, IList<GMap.NET.PointLatLng> newPoints)
+        {
+            var sId = polylineId.ToString();
+            var _points = newPoints;
+            var pointQuery = new StringBuilder("INSERT INTO point_poligon (longitude, latitude, Id_of_poligon, order123) VALUES ");
+
+            try
+            {
+                dBManager.StartTransaction();
+                await dBManager.DeleteFromDBAsync("point_poligon", "Id_of_poligon", sId);
+
+                for (int i = 0; i < _points.Count; i++)
+                {
+                    string tempLng = _points[i].Lng.ToString().Replace(',', '.');
+                    string tempLat = _points[i].Lat.ToString().Replace(',', '.');
+                    string tempOrderNumber = (i + 1).ToString();
+
+                    pointQuery.AppendFormat(" ({0}, {1}, {2}, {3}), ", tempLat, tempLng, sId, tempOrderNumber);
+                }
+
+                pointQuery.Remove(pointQuery.Length - 2, 1);
+
+                await dBManager.InsertToBDAsync(pointQuery.ToString());
+                dBManager.CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                dBManager.RollbackTransaction();
+
+#if DEBUG
+                DebugLog(ex);
+#else
+                MessageBox.Show("Сталась помилка при видаленні об'єкта.", "Увага", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                logger.Log(ex);
+#endif
+
+            }
+
+        }
         private async Task LoadPolylines(string additionalTables = null, string additionalJoinCond = null,
                                          string additionalCondition = null, string polylineType = "polygon")
         {
@@ -1493,7 +1667,7 @@ namespace UserMap
             }
             else if (polylineType == "tube")
             {
-                reworkedMap.ClearAllRoutes();
+                ClearAllTubesButton_Click(null, EventArgs.Empty);
                 TubeCheckBox.Enabled = true;
             }
 
@@ -1816,11 +1990,11 @@ namespace UserMap
         private void PolygonDrawButton_Click(object sender, EventArgs e)
         {
             HideContextMenuStripItems(MapObjectContextMenuStrip);
-            polygonAddingMode = !polygonAddingMode;
             itemInfo.ClearData();
             itemInfo.Visible = false;
+            polygonAddingMode = !polygonAddingMode;
 
-            if (polygonAddingMode)
+            if (polygonAddingMode && !polylineEditingMode)
             {
                 HelpStatusLabel.Text = "Натискайте два рази на карту для встановлення точки полігону.";
 
@@ -1873,6 +2047,46 @@ namespace UserMap
 
         private async void PolygonSaveButton_Click(object sender, EventArgs e)
         {
+            if (polylineEditingMode)
+            {
+                if (tempMarker == null)
+                {
+                    MessageBox.Show("Не вдалось зберегти зміни полігону до бд.",
+                                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Log("Ошибка сохранения полигона. Отсутствует Id полигона (tempMarker = null).");
+                    ResetAddItemButtons();
+                    return;
+                }
+
+                var changedPolygon = reworkedMap.GetPolygonByNameOrNull(tempMarker.Name);
+
+                tempMarker.Position = changedPolygon.Points.FirstOrDefault();
+
+                await SaveChangedPolyline(tempMarker.Id, changedPolygon.Points);
+
+                reworkedMap.EndPolygonDraw();
+
+                foreach (var overlay in gMapControl.Overlays)
+                {
+                    var tempPolygon = overlay.Polygons.Where(p => p.Name == tempMarker.Name)
+                                                      .FirstOrDefault();
+
+                    if (tempPolygon != null)
+                        reworkedMap.AddMarker(tempMarker, overlay.Id);
+                }
+
+                tempMarker = null;
+                drawContext = null;
+
+                PolygonDrawButton.Text = "Почати";
+
+                PolygonSettingsButton.Enabled = false;
+                PolygonSaveButton.Enabled = false;
+                PolygonColorPictureBox.Enabled = false;
+                polylineEditingMode = false;
+                return;
+            }
+
             if (itemConfigurationWindow == null)
             {
                 MessageBox.Show("Не можливо зберегти об'єкт без його налаштування.",
@@ -1985,7 +2199,7 @@ namespace UserMap
             itemInfo.ClearData();
             itemInfo.Visible = false;
 
-            if (tubeAddingMode)
+            if (tubeAddingMode && !polylineEditingMode)
             {
                 HelpStatusLabel.Text = "Натискайте два рази на карту для встановлення точки трубопроводу.";
 
@@ -2006,6 +2220,57 @@ namespace UserMap
 
         private async void TubeSaveButton_Click(object sender, EventArgs e)
         {
+            if (TubeNameTextBox.Text == string.Empty && 
+                !polylineEditingMode)
+            {
+                MessageBox.Show("Не можливо зберегти об'єкт без його назви.",
+                                "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (polylineEditingMode)
+            {
+                if (tempMarker == null)
+                {
+                    MessageBox.Show("Не вдалось зберегти зміни трубопроводу до бд.",
+                                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    logger.Log("Ошибка сохранения полигона. Отсутствует Id полигона (tempMarker = null).");
+                    ResetAddItemButtons();
+                    return;
+                }
+
+                var changedRoute = reworkedMap.GetRouteByNameOrNull(tempMarker.Name);
+
+                tempMarker.Position = changedRoute.Points.FirstOrDefault();
+
+                await SaveChangedPolyline(tempMarker.Id, changedRoute.Points);
+
+                reworkedMap.EndRouteDraw();
+
+                foreach (var overlay in gMapControl.Overlays)
+                {
+                    var tempRoute = overlay.Routes.Where(r => r.Name == tempMarker.Name)
+                                                  .FirstOrDefault();
+
+                    if (tempRoute != null)
+                        reworkedMap.AddMarker(tempMarker, overlay.Id);
+                }
+
+                tempMarker = null;
+                drawContext = null;
+
+                TubeDrawButton.Text = "Почати";
+                TubeSaveButton.Enabled = false;
+                TubeNameTextBox.Enabled = false;
+                TubeDescriptionTextBox.Enabled = false;
+                polylineEditingMode = false;
+
+                TubeNameTextBox.Text = string.Empty;
+                TubeDescriptionTextBox.Text = string.Empty;
+
+                return;
+            }
+
             if (itemConfigurationWindow == null)
             {
                 MessageBox.Show("Не можливо зберегти об'єкт без його налаштування.",
@@ -2022,6 +2287,8 @@ namespace UserMap
                 MessageBox.Show("Не можливо зберегти трубопровід без назви.", "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            drawContext.SetFigureName(TubeNameTextBox.Text);
 
             var route = reworkedMap.GetRouteByNameOrNull(objName);
 
@@ -2154,9 +2421,8 @@ namespace UserMap
             var comboBox = sender as ComboBox;
 
             if (e.Index < 0 || comboBox == null)
-            {
                 return;
-            }
+
             string text = comboBox.GetItemText(comboBox.Items[e.Index]);
 
             e.DrawBackground();
@@ -2166,14 +2432,9 @@ namespace UserMap
             }
 
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected && text.Length * e.Font.SizeInPoints > e.Bounds.Width)
-            {
-
                 ComboBoxTextToolTip.Show(text, comboBox, e.Bounds.Left + comboBox.Width - 10, e.Bounds.Top + 4);
-            }
             else
-            {
                 ComboBoxTextToolTip.Hide(comboBox);
-            }
 
             e.DrawFocusRectangle();
         }
@@ -2252,6 +2513,8 @@ namespace UserMap
             }
         }
 
+        #region Tutorial
+
         private void startTutorial_Click(object sender, EventArgs e)
         {
             var frm = new HelpToolTipForm(delegate
@@ -2306,7 +2569,6 @@ namespace UserMap
             frm.ShowDialog();
         }
 
-
         private void startTutorial_MouseEnter(object sender, EventArgs e)
         {
             startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
@@ -2316,5 +2578,7 @@ namespace UserMap
         {
             startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
         }
+
+        #endregion
     }
 }

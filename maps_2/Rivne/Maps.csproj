@@ -102,6 +102,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChartForm.Designer.cs">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CompareForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +186,9 @@
     </Compile>
     <Compile Include="ViewModel\ChangeType.cs" />
     <Compile Include="ViewModel\ControllerVM.cs" />
+    <EmbeddedResource Include="ChartForm.resx">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CompareForm.resx">
       <DependentUpon>CompareForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -257,6 +266,10 @@
     <ProjectReference Include="..\..\DBManager\Data.csproj">
       <Project>{257cd47a-3e26-4817-b689-a01842c2174a}</Project>
       <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DrawChartModule\DrawChartModule.csproj">
+      <Project>{A92DA1E0-E0B3-4612-BF9C-EE08CBE14438}</Project>
+      <Name>DrawChartModule</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\HelpModule\HelpModule.csproj">
       <Project>{232db101-3258-4e3a-aa4d-d9b25fe35602}</Project>
