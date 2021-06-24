@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.CompareDataGridView = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -39,13 +38,12 @@
             this.ColorBorder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Color = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.CompareChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label3 = new System.Windows.Forms.Label();
             this.LegendLabel = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CompareDataGridView)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CompareColorDataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CompareChart)).BeginInit();
             this.SuspendLayout();
             // 
             // CompareDataGridView
@@ -148,23 +146,6 @@
             this.Color.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Color.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // CompareChart
-            // 
-            this.CompareChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.AxisX.IsLabelAutoFit = false;
-            chartArea2.AxisX.LabelStyle.Angle = -45;
-            chartArea2.AxisX.Title = "Дати, за які викиди були взяті";
-            chartArea2.AxisY.Title = "Значення викидів";
-            chartArea2.Name = "MainArea";
-            this.CompareChart.ChartAreas.Add(chartArea2);
-            this.CompareChart.Location = new System.Drawing.Point(12, 278);
-            this.CompareChart.MinimumSize = new System.Drawing.Size(650, 205);
-            this.CompareChart.Name = "CompareChart";
-            this.CompareChart.Size = new System.Drawing.Size(650, 205);
-            this.CompareChart.TabIndex = 4;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -184,14 +165,24 @@
             this.LegendLabel.TabIndex = 6;
             this.LegendLabel.Text = "Legend";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(15, 291);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(383, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "Графік порівнянь";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // CompareForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(674, 493);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.LegendLabel);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.CompareChart);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.CompareDataGridView);
@@ -202,7 +193,6 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CompareColorDataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CompareChart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -220,8 +210,8 @@
         private System.Windows.Forms.Button ColorUpdateButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox RowColorComboBox;
-        private System.Windows.Forms.DataVisualization.Charting.Chart CompareChart;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label LegendLabel;
+        private System.Windows.Forms.Button button1;
     }
 }

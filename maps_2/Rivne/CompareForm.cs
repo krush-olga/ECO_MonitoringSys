@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DrawChartModule.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DrawChartModule;
 
 namespace UserMap
 {
@@ -85,7 +87,7 @@ namespace UserMap
 
             if (rowX == null || rowsToUseInChart == null)
             {
-                CompareChart.Visible = false;
+                
                 this.Height = 315;
                 this.MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, 315);
             }
@@ -98,11 +100,13 @@ namespace UserMap
 
             SetMultipliers();
             FillGrid();
-            FillChart();
+          
         }
 
         private void FillChart()
         {
+            ChartForm chartForm = new ChartForm();
+            Form1 form = new Form1();
             if (rowNameX == null || rowsToUseInChart == null || !rowNameAndvalues.ContainsKey(rowNameX))
             {
                 return;
@@ -110,17 +114,14 @@ namespace UserMap
 
             System.Windows.Forms.DataVisualization.Charting.Series series = null;
             int index = 0;
-
+            List<SeriesDataInPoints<DateTime>> seriesData = new List<SeriesDataInPoints<DateTime>>();
             foreach (var rowName in rowsToUseInChart)
             {
                 if (rowNameAndvalues.ContainsKey(rowName))
-                {
-                    var legend = CompareChart.Legends.Add(rowName);
-                    legend.Title = rowName;
-
+                {                   
                     var distinctColumnNames = columnNames.Distinct().Where(col => !string.IsNullOrEmpty(col));
                     List<object> tempList = new List<object>();
-
+                   
                     foreach (var distinctName in distinctColumnNames)
                     {
                         var xValues = GerRowDataFromColumn(rowNameX, distinctName);
@@ -132,25 +133,22 @@ namespace UserMap
                             continue;
                         }
 
-                        series = new System.Windows.Forms.DataVisualization.Charting.Series(distinctName.Insert(0, index + ". "))
-                        {
-                            ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line,
-                            ChartArea = "MainArea",
-                            XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date,
-                            YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double,
-                            Legend = rowName
-                        };
-
+                        List<CustomPoint<DateTime>> points = new List<CustomPoint<DateTime>>();
                         for (int i = 0; i < xValues.Count; i++)
                         {
-                            series.Points.AddXY(xValues[i], yValues[i]);
+                            points.Add(new CustomPoint<DateTime>(DateTime.Parse(xValues[i].ToString().Replace('.', ',')),Double.Parse(yValues[i].ToString().Replace('.', ','))));
+                           
                         }
 
-                        CompareChart.Series.Add(series);
+                        seriesData.Add(new SeriesDataInPoints<DateTime>() { Points = points, SeriesName = distinctName.Insert(0, index + ". ") + "\n ("+rowName+")" });               
                     }
+                    
                 }
                 index++;
+                
             }
+            chartForm.DrawChartUI(DrawChartModule.Models.TypeOfCharts.Line, "Графік порівнянь", null, seriesData.ToArray());
+            chartForm.ShowDialog();
         }
 
         private void FillGrid()
@@ -451,6 +449,16 @@ namespace UserMap
             {
                 FillCompareColorGrid(RowColorComboBox.Text);
             }
+        }
+
+        private void CompareChart_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FillChart();
         }
     }
 }
