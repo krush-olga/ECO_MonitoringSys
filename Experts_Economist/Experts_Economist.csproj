@@ -60,11 +60,9 @@
     <ManifestCertificateThumbprint>093EADA56708E1A3B2F77215CA19244927CF0A0C</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Experts_Economist_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.3.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.3.1\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -108,6 +106,7 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.6.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -269,7 +268,6 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="ClassDiagram1.cd" />
-    <None Include="Experts_Economist_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -3910,7 +3908,8 @@
     <PostBuildEvent>XCOPY "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y</PostBuildEvent>
     <PostBuildEvent>C:\Windows\System32\xcopy.exe "$(SolutionDir)Experts_Economist\Resources\Images" "$(TargetDir)\Resources\Images" /S /Y
 C:\Windows\System32\xcopy.exe "$(SolutionDir)HelpModule\CHM\ECO_MonitoringSys2020.chm" "$(TargetDir)*" /S /Y
-C:\Windows\System32\xcopy.exe "$(SolutionDir)HelpModule\Scenarios" "$(TargetDir)\Scenarios\*" /S /Y</PostBuildEvent>
+C:\Windows\System32\xcopy.exe "$(SolutionDir)HelpModule\Scenarios" "$(TargetDir)\Scenarios\*" /S /Y
+C:\Windows\System32\xcopy.exe "$(SolutionDir)HelpModule\Керівництво Користувача КЕЕЕМ.pdf" "$(TargetDir)*" /S /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
