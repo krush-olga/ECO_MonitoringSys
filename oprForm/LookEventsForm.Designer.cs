@@ -709,7 +709,7 @@
             this.DocContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OpenInBrowserToolStripMenuItem});
             this.DocContextMenuStrip.Name = "DocContextMenuStrip";
-            this.DocContextMenuStrip.Size = new System.Drawing.Size(182, 26);
+            this.DocContextMenuStrip.Size = new System.Drawing.Size(182, 48);
             // 
             // OpenInBrowserToolStripMenuItem
             // 

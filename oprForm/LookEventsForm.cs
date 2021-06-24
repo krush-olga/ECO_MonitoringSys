@@ -33,7 +33,7 @@ namespace oprForm
 
         /* Begin - Серая подсказка для TextBox, когда пустое TextBox.Text*/
 
-        TextBox txtBxSearch; 
+        TextBox txtBxSearch;
         string placeholder = "Введіть параметри для пошуку";
 
         private void PlaceholderTxtBx(TextBox txtBxName, string placeholder)
@@ -49,7 +49,7 @@ namespace oprForm
             // throw new NotImplementedException();
 
             TextBox txtBx = sender as TextBox;
-            if (txtBx.Text == placeholder) 
+            if (txtBx.Text == placeholder)
             {
                 txtBx.Text = "";
                 txtBx.ForeColor = SystemColors.WindowText;
@@ -306,10 +306,16 @@ namespace oprForm
                                       .ContinueWith(result =>
                                       {
                                           var sm = new SearchManager();
+                                          var documentsNames = new List<KeyValuePair<string, string>>();
 
-                                          var documentsNames = result.Result.Select(row => new KeyValuePair<string, string>(row[0].ToString(),
-                                                                                                                        sm.GetPrewiew(row[0].ToString())))
+                                          try
+                                          {
+                                              documentsNames = result.Result.Select(row => new KeyValuePair<string, string>(row[0].ToString(),
+                                                                                  sm.GetPrewiew(row[0].ToString())))
                                                                             .ToList();
+                                          }
+                                          catch (Exception)
+                                          { }
 
                                           issuesDocs[issue] = documentsNames;
 
@@ -356,9 +362,16 @@ namespace oprForm
                         {
                             var sm = new SearchManager();
 
-                            var documentsNames = result.Result.Select(row => new KeyValuePair<string, string>(row[0].ToString(),
-                                                                              sm.GetPrewiew(row[0].ToString())))
+                            var documentsNames = new List<KeyValuePair<string, string>>();
+
+                            try
+                            {
+                                documentsNames = result.Result.Select(row => new KeyValuePair<string, string>(row[0].ToString(),
+                                                                                                              sm.GetPrewiew(row[0].ToString())))
                                                               .ToList();
+                            }
+                            catch (Exception)
+                            { }
 
                             eventsDocs[@event] = documentsNames;
 
@@ -546,7 +559,7 @@ namespace oprForm
                     var approvedStr = approved ? "підтвердити" : "відхилити";
                     var currentApprovedStr = ev.DmVer == "1" ? "підверджений" : "відхилений";
 
-                    MessageBox.Show($"Не можливо {approvedStr} захід так як він вже {currentApprovedStr}.", 
+                    MessageBox.Show($"Не можливо {approvedStr} захід так як він вже {currentApprovedStr}.",
                                     "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -621,7 +634,7 @@ namespace oprForm
                     var __event = obj as Event;
 
                     //begin add for UI
-                    txtBxTask.Text = issueTB.Text; 
+                    txtBxTask.Text = issueTB.Text;
                     cmbBxEventName.DataSource = eventsLB.Items;
                     //end add for UI
 
@@ -889,6 +902,7 @@ namespace oprForm
             var browserPath = GetPathToDefaultBrowser();
 
             Process.Start(browserPath, "\"" + filePath + fileExtension + "\"");
+
         }
 
         private void docsLB_MouseDown(object sender, MouseEventArgs e)
@@ -897,31 +911,31 @@ namespace oprForm
                 DocContextMenuStrip.Show(docsLB, e.Location);
         }
 
-		private void startTutorial_Click(object sender, EventArgs e)
-		{
-			var frm = new HelpToolTipForm(delegate
-			{
-				new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
-				{
-					new InteractiveToolTipModel
-					{
-						Control = approveGB,
-						Text = "В блоці \"Загальні відомості\" доступні дані про поточну задачу."
-					},
-					new InteractiveToolTipModel
-					{
-						Control = nextIssueBtn,
-						Text = "Даними кнопками можно переключатися між задачами."
-					},
-					new InteractiveToolTipModel
-					{
-						Control = issueListBtn,
-						Text = "Для додання, редагування, видалення задачі необхідно натиснути на кнопку \"Редагування задач\"."
-					},
-					new InteractiveToolTipModel
-					{
-						Control = findIssueCondTB,
-						Text = "Поле \"Пошук по задачам\" відповідає за пошук задач в системі."
+        private void startTutorial_Click(object sender, EventArgs e)
+        {
+            var frm = new HelpToolTipForm(delegate
+            {
+                new InteractiveToolTipCreator().CreateTips(new List<InteractiveToolTipModel>
+                {
+                    new InteractiveToolTipModel
+                    {
+                        Control = approveGB,
+                        Text = "В блоці \"Загальні відомості\" доступні дані про поточну задачу."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = nextIssueBtn,
+                        Text = "Даними кнопками можно переключатися між задачами."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = issueListBtn,
+                        Text = "Для додання, редагування, видалення задачі необхідно натиснути на кнопку \"Редагування задач\"."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = findIssueCondTB,
+                        Text = "Поле \"Пошук по задачам\" відповідає за пошук задач в системі."
                     },
                     new InteractiveToolTipModel
                     {
@@ -929,39 +943,39 @@ namespace oprForm
                         Text = "Результати пошуку можна побачити в даному блоці."
                     },
                     new InteractiveToolTipModel
-					{
-						Control = groupBox2,
-						Text = "Цей блок відповідає за фільтрування заходів."
-                    },
-					new InteractiveToolTipModel
-					{
-						Control = approveBtn,
-						Text = "Щоб підтвердити захід необхідно натиснути на кнопку \"Підтвердити захід\"."
-                    },
-					new InteractiveToolTipModel
-					{
-						Control = disaproveBtn,
-						Text = "Щоб відхилити захід необхідно натиснути на кнопку \"Відхилити захід\"."
-                    },
-					new InteractiveToolTipModel
-					{
-						Control = expertsLB,
-						Text = "Блок \"Перелік експертів\".  В даному блоці можна побачити перелік всіх доступних експертів."
-                    },
-					new InteractiveToolTipModel
-					{
-						Control = eventsLB,
-						Text = "Блок \"Перелік заходiв\".  В даному блоці можна побачити список доступних заходів, а також можна відфільтрувати заходи за користувачем, якщо у блоці \"Перелік експертів\" обрати одного з них."
-                    },
-					new InteractiveToolTipModel
-					{
-						Control = button5,
-						Text = "Щоб додати новий захід необхідно натиснути на кнопку \"+\""
+                    {
+                        Control = groupBox2,
+                        Text = "Цей блок відповідає за фільтрування заходів."
                     },
                     new InteractiveToolTipModel
-					{
-						Control = docsLB,
-						Text = "Блок \"Перелік юридичних документів\". В даному блоці можна побачити перелік всіх доступних юр. документів для обраного у попередньому блоці заходу."
+                    {
+                        Control = approveBtn,
+                        Text = "Щоб підтвердити захід необхідно натиснути на кнопку \"Підтвердити захід\"."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = disaproveBtn,
+                        Text = "Щоб відхилити захід необхідно натиснути на кнопку \"Відхилити захід\"."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = expertsLB,
+                        Text = "Блок \"Перелік експертів\".  В даному блоці можна побачити перелік всіх доступних експертів."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = eventsLB,
+                        Text = "Блок \"Перелік заходiв\".  В даному блоці можна побачити список доступних заходів, а також можна відфільтрувати заходи за користувачем, якщо у блоці \"Перелік експертів\" обрати одного з них."
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = button5,
+                        Text = "Щоб додати новий захід необхідно натиснути на кнопку \"+\""
+                    },
+                    new InteractiveToolTipModel
+                    {
+                        Control = docsLB,
+                        Text = "Блок \"Перелік юридичних документів\". В даному блоці можна побачити перелік всіх доступних юр. документів для обраного у попередньому блоці заходу."
                     },
                     new InteractiveToolTipModel
                     {
@@ -974,26 +988,26 @@ namespace oprForm
                         Text = "Щоб відсортувати юр. документи по задачам, необхідно натиснути на дану кнопку."
                     }
                 });
-			}, delegate
-			{
-				Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p0.html");
-			});
-			frm.ShowDialog();
+            }, delegate
+            {
+                Help.ShowHelp(this, Config.PathToHelp, HelpNavigator.Topic, "p0.html");
+            });
+            frm.ShowDialog();
         }
 
-		private void startTutorial_MouseEnter(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
-		}
-
-		private void startTutorial_MouseLeave(object sender, EventArgs e)
-		{
-			startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
-		}
-
-		private void findIssueCondTB_Click(object sender, EventArgs e)
-		{
-			new ToolTip().Show("Введіть назву задачі (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        private void startTutorial_MouseEnter(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Bold);
         }
-	}
+
+        private void startTutorial_MouseLeave(object sender, EventArgs e)
+        {
+            startTutorial.Font = new Font(startTutorial.Font, FontStyle.Regular);
+        }
+
+        private void findIssueCondTB_Click(object sender, EventArgs e)
+        {
+            new ToolTip().Show("Введіть назву задачі (до 100 символів)", (Control)sender, 0, ((Control)sender).Height, 2000);
+        }
+    }
 }
