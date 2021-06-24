@@ -43,6 +43,7 @@
             // 
             this.ClientSize = new System.Drawing.Size(527, 301);
             this.Name = "ChartM";
+            this.Load += new System.EventHandler(this.ChartM_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
 

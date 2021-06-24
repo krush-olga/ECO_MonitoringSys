@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.chartIssueGroup = new System.Windows.Forms.GroupBox();
+            this.removeAll = new System.Windows.Forms.Button();
+            this.addAll = new System.Windows.Forms.Button();
+            this.formulasList = new System.Windows.Forms.CheckedListBox();
             this.diagIssueButt = new System.Windows.Forms.Button();
             this.chartIssueButt = new System.Windows.Forms.Button();
             this.removeIssueSeria = new System.Windows.Forms.Button();
@@ -41,9 +44,6 @@
             this.seriaInfo = new System.Windows.Forms.GroupBox();
             this.seriaDescription = new System.Windows.Forms.Label();
             this.seriaName = new System.Windows.Forms.Label();
-            this.formulasList = new System.Windows.Forms.CheckedListBox();
-            this.addAll = new System.Windows.Forms.Button();
-            this.removeAll = new System.Windows.Forms.Button();
             this.chartIssueGroup.SuspendLayout();
             this.seriaInfo.SuspendLayout();
             this.SuspendLayout();
@@ -69,6 +69,36 @@
             this.chartIssueGroup.TabIndex = 38;
             this.chartIssueGroup.TabStop = false;
             this.chartIssueGroup.Text = "Графік проблеми";
+            this.chartIssueGroup.Enter += new System.EventHandler(this.chartIssueGroup_Enter);
+            // 
+            // removeAll
+            // 
+            this.removeAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.removeAll.Location = new System.Drawing.Point(195, 221);
+            this.removeAll.Name = "removeAll";
+            this.removeAll.Size = new System.Drawing.Size(67, 23);
+            this.removeAll.TabIndex = 49;
+            this.removeAll.Text = "Очистити";
+            this.removeAll.UseVisualStyleBackColor = true;
+            this.removeAll.Click += new System.EventHandler(this.removeAll_Click);
+            // 
+            // addAll
+            // 
+            this.addAll.Location = new System.Drawing.Point(73, 221);
+            this.addAll.Name = "addAll";
+            this.addAll.Size = new System.Drawing.Size(55, 23);
+            this.addAll.TabIndex = 48;
+            this.addAll.Text = "→→";
+            this.addAll.UseVisualStyleBackColor = true;
+            this.addAll.Click += new System.EventHandler(this.addAll_Click);
+            // 
+            // formulasList
+            // 
+            this.formulasList.FormattingEnabled = true;
+            this.formulasList.Location = new System.Drawing.Point(10, 250);
+            this.formulasList.Name = "formulasList";
+            this.formulasList.Size = new System.Drawing.Size(120, 106);
+            this.formulasList.TabIndex = 41;
             // 
             // diagIssueButt
             // 
@@ -190,35 +220,6 @@
             this.seriaName.Name = "seriaName";
             this.seriaName.Size = new System.Drawing.Size(0, 16);
             this.seriaName.TabIndex = 0;
-            // 
-            // formulasList
-            // 
-            this.formulasList.FormattingEnabled = true;
-            this.formulasList.Location = new System.Drawing.Point(10, 250);
-            this.formulasList.Name = "formulasList";
-            this.formulasList.Size = new System.Drawing.Size(120, 106);
-            this.formulasList.TabIndex = 41;
-            // 
-            // addAll
-            // 
-            this.addAll.Location = new System.Drawing.Point(73, 221);
-            this.addAll.Name = "addAll";
-            this.addAll.Size = new System.Drawing.Size(55, 23);
-            this.addAll.TabIndex = 48;
-            this.addAll.Text = "→→";
-            this.addAll.UseVisualStyleBackColor = true;
-            this.addAll.Click += new System.EventHandler(this.addAll_Click);
-            // 
-            // removeAll
-            // 
-            this.removeAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.removeAll.Location = new System.Drawing.Point(195, 221);
-            this.removeAll.Name = "removeAll";
-            this.removeAll.Size = new System.Drawing.Size(67, 23);
-            this.removeAll.TabIndex = 49;
-            this.removeAll.Text = "Очистити";
-            this.removeAll.UseVisualStyleBackColor = true;
-            this.removeAll.Click += new System.EventHandler(this.removeAll_Click);
             // 
             // IssueChart
             // 

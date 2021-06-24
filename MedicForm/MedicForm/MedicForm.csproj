@@ -108,9 +108,17 @@
       <Project>{b61e5197-c31f-46ef-9ad5-8b416e96b909}</Project>
       <Name>Calculations</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ChartUI\ChartUI.csproj">
+      <Project>{ca6d84b7-0ba2-4d13-b33e-c430b9a7d27c}</Project>
+      <Name>ChartUI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DBManager\Data.csproj">
       <Project>{257cd47a-3e26-4817-b689-a01842c2174a}</Project>
       <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DrawChartModule\DrawChartModule.csproj">
+      <Project>{a92da1e0-e0b3-4612-bf9c-ee08cbe14438}</Project>
+      <Name>DrawChartModule</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,10 @@
 ﻿using ChartModule;
+using ChartUI;
 using Data;
+using DrawChartModule.Models;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -11,6 +15,7 @@ namespace MedicForm
         private ChartM chart;
         private DBManager dbManager = new DBManager();
         private int id_of_expert;
+       
 
         public FormulaChart(int id_of_expert)
         {
@@ -110,6 +115,7 @@ namespace MedicForm
 
         private void graphButt_Click(object sender, EventArgs e)
         {
+             Form1 form = new Form1();
             if (funcComboBox.SelectedItem != null)
             {
                 Object[] arrayOfY = new Object[addSeriaList.Items.Count];
@@ -124,15 +130,24 @@ namespace MedicForm
                         funcComboBox.Text + "'") + " AND id_of_expert =" + id_of_expert);
                 }
 
-                chart = new ChartM(dbManager.GetValue("formulas", "name_of_formula",
+                string seriesName = dbManager.GetValue("formulas", "name_of_formula",
                     "description_of_formula = '" + funcComboBox.Text + "'" + " AND id_of_expert =" + id_of_expert).ToString()
                     + " ("
                     + dbManager.GetValue("formulas", "measurement_of_formula",
                     "description_of_formula = '" + funcComboBox.Text + "'" + " AND id_of_expert =" + id_of_expert).ToString()
-                    + ")"
-                    , "line");
-                chart.draw(arrayOfX, arrayOfY);
-                chart.ShowDialog();
+                    + ")";
+               
+
+                List<CustomPoint<double>> points = new List<CustomPoint<double>>();
+                Dictionary<string, CustomPoint<double>> infoForTable = new Dictionary<string, CustomPoint<double>>();
+                for (int i = 0; i < arrayOfY.Length; i++)
+                {                   
+                    points.Add(new CustomPoint<double>(Double.Parse(arrayOfY[i].ToString().Replace('.',',')), Double.Parse(arrayOfX[i].ToString().Replace('.', ','))));
+                    infoForTable.Add(arrayOfY[i] + " - " + dbManager.GetValue("calculations_description", "calculation_name", "calculation_number = " + arrayOfY[i]).ToString()
+                        , new CustomPoint<double>(Double.Parse(arrayOfY[i].ToString().Replace('.', ',')), Double.Parse(arrayOfX[i].ToString().Replace('.', ','))));
+                }
+                form.DrawChartUI(DrawChartModule.Models.TypeOfCharts.Line, funcComboBox.SelectedItem.ToString(), infoForTable, new DrawChartModule.Models.SeriesDataInPoints<double>() { SeriesName = seriesName, Points = points });
+                form.ShowDialog();
             }
             else
             {
@@ -193,6 +208,11 @@ namespace MedicForm
         }
 
         private void FormulaChart_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void seriaInfo_Enter(object sender, EventArgs e)
         {
 
         }

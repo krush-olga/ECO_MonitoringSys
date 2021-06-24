@@ -1,4 +1,6 @@
 ﻿using Data;
+using DrawChartModule.Models;
+using DrawChartModule.QueryHandlers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -264,6 +266,11 @@ namespace ChartModule
             // Создает структуру прямоугольника для хранения изображения графика
             Rectangle rectangle = new System.Drawing.Rectangle(10, 30, this.Width, this.Height);
             chart1.Printing.PrintPaint(ev.Graphics, rectangle);
+        }
+
+        private void ChartM_Load(object sender, EventArgs e)
+        {
+            //DrawChart drawChart = new DrawChart();
         }
     }
 }

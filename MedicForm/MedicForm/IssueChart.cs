@@ -238,5 +238,10 @@ namespace MedicForm
                 formulasList.Items.Clear();
             }
         }
+
+        private void chartIssueGroup_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }
