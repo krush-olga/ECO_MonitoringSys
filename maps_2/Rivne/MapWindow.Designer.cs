@@ -53,6 +53,7 @@
             this.components = new System.ComponentModel.Container();
             this.MapObjectContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ComparsionSelectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeNameAndDescToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangePolylineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PanelSideMenu = new System.Windows.Forms.Panel();
@@ -175,10 +176,11 @@
             // 
             this.MapObjectContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ComparsionSelectToolStripMenuItem,
+            this.changeNameAndDescToolStripMenuItem,
             this.ChangePolylineToolStripMenuItem,
             this.DeleteToolStripMenuItem});
             this.MapObjectContextMenuStrip.Name = "contextMenuStrip1";
-            this.MapObjectContextMenuStrip.Size = new System.Drawing.Size(209, 70);
+            this.MapObjectContextMenuStrip.Size = new System.Drawing.Size(209, 92);
             // 
             // ComparsionSelectToolStripMenuItem
             // 
@@ -186,6 +188,13 @@
             this.ComparsionSelectToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.ComparsionSelectToolStripMenuItem.Text = "Вибрати для порівняння";
             this.ComparsionSelectToolStripMenuItem.Click += new System.EventHandler(this.ComparsionSelectToolStripMenuItem_Click);
+            // 
+            // changeNameAndDescToolStripMenuItem
+            // 
+            this.changeNameAndDescToolStripMenuItem.Name = "changeNameAndDescToolStripMenuItem";
+            this.changeNameAndDescToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.changeNameAndDescToolStripMenuItem.Text = "Змінити назву та опис";
+            this.changeNameAndDescToolStripMenuItem.Click += new System.EventHandler(this.ChangeNameAndDescToolStripMenuItem_Click);
             // 
             // ChangePolylineToolStripMenuItem
             // 
@@ -1337,6 +1346,7 @@
             // 
             // startTutorial
             // 
+            this.startTutorial.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.startTutorial.AutoSize = true;
             this.startTutorial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.startTutorial.Location = new System.Drawing.Point(963, 3);
@@ -1496,5 +1506,6 @@
         private System.Windows.Forms.TextBox AddressTextBox;
 		private System.Windows.Forms.Label startTutorial;
         private System.Windows.Forms.ToolStripMenuItem ChangePolylineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeNameAndDescToolStripMenuItem;
     }
 }

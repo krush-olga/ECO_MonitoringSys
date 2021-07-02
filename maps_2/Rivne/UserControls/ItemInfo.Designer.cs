@@ -119,6 +119,7 @@ namespace UserMap.UserControls
             this.DescriptionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DescriptionTextBox.Location = new System.Drawing.Point(6, 91);
+            this.DescriptionTextBox.MaxLength = 200;
             this.DescriptionTextBox.Multiline = true;
             this.DescriptionTextBox.Name = "DescriptionTextBox";
             this.DescriptionTextBox.ReadOnly = true;
@@ -157,6 +158,7 @@ namespace UserMap.UserControls
             this.NameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.NameTextBox.Location = new System.Drawing.Point(6, 50);
+            this.NameTextBox.MaxLength = 45;
             this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.ReadOnly = true;
             this.NameTextBox.Size = new System.Drawing.Size(250, 20);
@@ -197,7 +199,7 @@ namespace UserMap.UserControls
             // AdditionInfoButton
             // 
             this.AdditionInfoButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.AdditionInfoButton.Location = new System.Drawing.Point(44, 237);
+            this.AdditionInfoButton.Location = new System.Drawing.Point(49, 237);
             this.AdditionInfoButton.Name = "AdditionInfoButton";
             this.AdditionInfoButton.Size = new System.Drawing.Size(75, 23);
             this.AdditionInfoButton.TabIndex = 6;

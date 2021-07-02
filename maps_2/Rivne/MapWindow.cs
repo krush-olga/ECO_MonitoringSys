@@ -18,6 +18,11 @@ using UserMap.Helpers;
 
 namespace UserMap
 {
+    //Самое главное уточнение - все попытки понять, является ли это полигон или нет
+    //основываются на свойстве Type у интерфейса IDescribable.
+    //Оно текстового типа и на данный момент существует 4 типа объектов:
+    //Маркер, Полігон, Трубопровід, Область
+    //Если есть желание перевести на enum, то не забудь поменять все вхождения!!!!!
     public partial class MapWindow : Form
     {
         private static readonly string defaultImageName;
@@ -44,6 +49,8 @@ namespace UserMap
 
         private Map reworkedMap;
         private DrawContext drawContext;
+        //Временный макрер нужен помимо изменения фигур ещё и для 
+        //фикса бага с двойным вызовом маркер клика
         private NamedGoogleMarker tempMarker;
 
         private HelpWindows.ItemConfigurationWindow itemConfigurationWindow;
@@ -423,10 +430,52 @@ namespace UserMap
         }
         #endregion
 
+        private async Task SaveNameAndDescriptionAsync(NamedGoogleMarker marker)
+        {
+            var describable = (IDescribable)marker;
+            string table = null;
+            string condition = null;
+            string[] columns = null;
+            string[] values = new string[] { DBUtil.AddQuotes(marker.Name), DBUtil.AddQuotes(marker.Description) };
+
+            if (describable.Type == "Маркер")
+            {
+                table = "poi";
+                columns = new string[] { "Name_Object", "Description" };
+                condition = " Id = " + marker.Id.ToString();
+            }
+            else
+            {
+                table = "poligon";
+                columns = new string[] { "name", "description" };
+                condition = " Id_of_poligon = " + marker.Id.ToString();
+            }
+
+            dBManager.StartTransaction();
+
+            var rowsAffected = await dBManager.UpdateRecordAsync(table, columns, values, condition);
+
+            System.Diagnostics.Debug.WriteLine($"Update name and description in object {describable.Type}. Rows affected: {rowsAffected}");
+
+            dBManager.CommitTransaction();
+        }
+
+        private void CancelEditNameAndDescripion_Click(object sender, EventArgs e)
+        {
+            if (!polygonAddingMode && !tubeAddingMode && !polylineEditingMode &&
+                !polylineEditingMode && reworkedMap.SelectedMarker != null)
+            {
+                itemInfo.CancelEditNameAndDescribe();
+                itemInfo.DescribeSaveChangesClickEvent(SaveNameAndDescripion_Click);
+                itemInfo.DescribeCancleChangesClickEvent(CancelEditNameAndDescripion_Click);
+
+                tempMarker = null;
+            }
+        }
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!polygonAddingMode && !tubeAddingMode && !polylineEditingMode &&
-                reworkedMap.SelectedMarker != null)
+                !polylineEditingMode && reworkedMap.SelectedMarker != null)
             {
                 IDescribable describableItem = reworkedMap.SelectedMarker as IDescribable;
 
@@ -446,7 +495,7 @@ namespace UserMap
                     }
                 }
             }
-            else if (drawContext != null)
+            else if (drawContext != null && reworkedMap.SelectedMarker != null)
             {
                 if (selectedArea.Size.HeightLat != 0 &&
                     selectedArea.Size.WidthLng != 0)
@@ -465,7 +514,7 @@ namespace UserMap
 
             if (((IDescribable)namedMarker).Type == "Полігон")
             {
-                AddItemTabControl.SelectedIndex = 2;
+                AddItemTabControl.SelectedIndex = 1;
 
                 PolygonSettingsButton.Enabled = false;
                 PolygonColorPictureBox.Enabled = true;
@@ -479,7 +528,7 @@ namespace UserMap
             }
             else
             {
-                AddItemTabControl.SelectedIndex = 3;
+                AddItemTabControl.SelectedIndex = 2;
 
                 TubeSaveButton.Enabled = true;
 
@@ -494,6 +543,45 @@ namespace UserMap
 
             reworkedMap.RemoveMarker(reworkedMap.SelectedMarker);
         }
+        private void ChangeNameAndDescToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!polygonAddingMode && !tubeAddingMode && !polylineEditingMode &&
+                !polylineEditingMode && reworkedMap.SelectedMarker != null)
+            {
+                itemInfo.StartEditNameAndDescribe();
+                itemInfo.SubscribeSaveChangesClickEvent(SaveNameAndDescripion_Click);
+                itemInfo.SubscribeCancleChangesClickEvent(CancelEditNameAndDescripion_Click);
+            }
+        }
+
+        private async void SaveNameAndDescripion_Click(object sender, EventArgs e)
+        {
+            if (!polygonAddingMode && !tubeAddingMode && !polylineEditingMode &&
+                !polylineEditingMode && reworkedMap.SelectedMarker != null)
+            {
+                if (itemInfo.EntityName == string.Empty)
+                {
+                    MessageBox.Show("Назва об'єкту не може бути відсутня.",
+                                    "Помилка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                itemInfo.EndEditNameAndDescribe();
+                itemInfo.DescribeSaveChangesClickEvent(SaveNameAndDescripion_Click);
+                itemInfo.DescribeCancleChangesClickEvent(CancelEditNameAndDescripion_Click);
+
+                reworkedMap.SelectedMarker.Name = itemInfo.EntityName;
+                reworkedMap.SelectedMarker.Description = itemInfo.EntityDescription;
+
+                await SaveNameAndDescriptionAsync(reworkedMap.SelectedMarker);
+
+                MessageBox.Show("Зміни успішно збережені.",
+                                "Інформація", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                tempMarker = null;
+            }
+        }
+
         private async void AdditionalInfo(object sender, EventArgs e)
         {
             var marker = (NamedGoogleMarker)reworkedMap.SelectedMarker;
@@ -570,7 +658,7 @@ namespace UserMap
 
         private void gMapControl_OnMarkerClick(GMap.NET.WindowsForms.GMapMarker item, MouseEventArgs e)
         {
-            if (markerAddingMode)
+            if (markerAddingMode || (itemInfo.IsEditMode && e.Button == MouseButtons.Right))
             {
                 return;
             }
@@ -578,7 +666,17 @@ namespace UserMap
             if (item.ToolTipMode == GMap.NET.WindowsForms.MarkerTooltipMode.Never)
                 item.ToolTipMode = GMap.NET.WindowsForms.MarkerTooltipMode.OnMouseOver;
 
-            reworkedMap.SelectedMarker = item;
+            reworkedMap.SelectedMarker = item as NamedGoogleMarker;
+
+            //Нажатие на меркер багованное, по этому приходится делать присваивание временного маркера
+            if (tempMarker == reworkedMap.SelectedMarker && itemInfo.IsEditMode)
+            {
+                tempMarker = null;
+                return;
+            }
+
+            if (itemInfo.IsEditMode)
+                tempMarker = reworkedMap.SelectedMarker;
 
             var describable = item as IDescribable;
 
@@ -610,36 +708,53 @@ namespace UserMap
                 if (polygonAddingMode || tubeAddingMode || expert == Role.Admin ||
                     describable != null && describable.Creator.Id == userId)
                 {
-                    var menuItem = MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 2];
+                    for (int i = 1; i < MapObjectContextMenuStrip.Items.Count; i++)
+                    {
+                        MapObjectContextMenuStrip.Items[i].Visible = true;
+                    }
 
-                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = true;
+                    var menuItem = MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 2];
 
                     if (!polylineEditingMode && !polygonAddingMode && !tubeAddingMode &&
                         describable.Type != "Маркер")
-                    {
-                        menuItem.Visible = true;
                         menuItem.Text = "Змінити " + describable.Type.ToLower();
-                    }
                     else
                         menuItem.Visible = false;
                 }
                 else
                 {
-                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 1].Visible = false;
-                    MapObjectContextMenuStrip.Items[MapObjectContextMenuStrip.Items.Count - 2].Visible = false;
+                    for (int i = 1; i < MapObjectContextMenuStrip.Items.Count; i++)
+                    {
+                        MapObjectContextMenuStrip.Items[i].Visible = false;
+                    }
                 }
 
                 MapObjectContextMenuStrip.Show(gMapControl, e.Location);
             }
-            else if (!markerAddingMode && !polygonAddingMode && 
-                     !tubeAddingMode && !polylineEditingMode)
-            {
-                IDescribable describableItem = item as IDescribable;
 
-                if (item != null)
+            if (describable != null &&
+                !markerAddingMode && !polygonAddingMode &&
+                !tubeAddingMode && !polylineEditingMode)
+            {
+                if (!itemInfo.Visible)
                 {
-                    itemInfo.SetData(describableItem);
+                    itemInfo.Visible = true;
                 }
+
+                if (itemInfo.IsEditMode && describable != itemInfo.CurrentItem)
+                {
+                    var answer = MessageBox.Show("Залишилсь не збережені зміни у поточному об'єкті. Усі зміни будуть відмінені. Бажаєте продовжити?",
+                                                 "Увага!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (answer == DialogResult.Yes)
+                        CancelEditNameAndDescripion_Click(null, EventArgs.Empty);
+                    else
+                        return;
+
+                    tempMarker = null;
+                }
+
+                itemInfo.SetData(describable);
 
                 if (expert == Role.Admin)
                 {
@@ -647,15 +762,15 @@ namespace UserMap
                     itemInfo.DescribeDeleteItemClickEvent(DeleteMarker);
                     itemInfo.DescribeDeleteItemClickEvent(DeletePolyline);
 
-                    if (describableItem.Type == "Маркер")
+                    if (describable.Type == "Маркер")
                     {
                         itemInfo.SubscribeDeleteItemClickEvent(DeleteMarker);
                     }
-                    else if (describableItem.Type == "Полігон")
+                    else if (describable.Type == "Полігон")
                     {
                         itemInfo.SubscribeDeleteItemClickEvent(DeletePolyline);
                     }
-                    else if (describableItem.Type == "Трубопровід")
+                    else if (describable.Type == "Трубопровід")
                     {
                         itemInfo.SubscribeDeleteItemClickEvent(DeletePolyline);
                         itemInfo.HideAdditionInfoButton();
@@ -665,11 +780,6 @@ namespace UserMap
                     {
                         itemInfo.HideDeleteButton();
                     }
-                }
-
-                if (!itemInfo.Visible)
-                {
-                    itemInfo.Visible = true;
                 }
             }
         }
@@ -698,7 +808,7 @@ namespace UserMap
                     SetMarkerPosNearExistMarker(cursorLocation);
                 }
             }
-            else if ((polygonAddingMode || tubeAddingMode) && drawContext != null)
+            else if ((polygonAddingMode || tubeAddingMode || polylineEditingMode) && drawContext != null)
             {
                 var point = gMapControl.FromLocalToLatLng(cursorLocation.X, cursorLocation.Y);
 
@@ -999,7 +1109,7 @@ namespace UserMap
                         {
                             var tempPolygon = overlay.Polygons.Where(p => p.Name == tempMarker.Name)
                                                           .FirstOrDefault();
-                            
+
                             if (tempPolygon != null)
                                 reworkedMap.AddMarker(tempMarker, overlay.Id);
                         }
@@ -1038,7 +1148,7 @@ namespace UserMap
 
                     if (markers != null && markers.Count() != 0)
                     {
-                        NamedGoogleMarker marker = (NamedGoogleMarker)markers.First();
+                        NamedGoogleMarker marker = markers.First();
                         reworkedMap.RemoveMarker(marker);
                         reworkedMap.AddMarker(marker.Position, (Bitmap)MarkerPictureBox.Image,
                                               addTempLayoutName, marker.Format, marker.Name, marker.Description);
@@ -1107,7 +1217,7 @@ namespace UserMap
             {
                 NamedGoogleMarker marker = (NamedGoogleMarker)markers.First();
 
-                Data.Entity.TypeOfObject typeOfObject = EconomicActivityComboBox.SelectedItem as TypeOfObject;
+                TypeOfObject typeOfObject = EconomicActivityComboBox.SelectedItem as TypeOfObject;
 
                 string[] columns = { "id_of_user", "Type", "owner_type", "Coord_Lat", "Coord_Lng",
                                      "Description", "Name_Object"};
@@ -1260,6 +1370,14 @@ namespace UserMap
 
             reworkedMap.ClearAllMarkers();
 
+            System.Threading.SynchronizationContext.Current.Post(state =>
+                                                                 {
+                                                                     var _item = state as UserControls.ItemInfo;
+
+                                                                     if (_item.CurrentItem?.Type == "Маркер")
+                                                                         _item.ClearData();
+                                                                 }, itemInfo);
+
             if (!string.IsNullOrEmpty(additionalTables))
             {
                 _tables += ", " + additionalTables;
@@ -1347,6 +1465,9 @@ namespace UserMap
         private void ClearAllMarkersButton_Click(object sender, EventArgs e)
         {
             reworkedMap.ClearAllMarkers();
+
+            if (itemInfo.CurrentItem.Type == "Маркер")
+                itemInfo.ClearData();
         }
         private void DeleteMarker(object sender, EventArgs e)
         {
@@ -1648,6 +1769,8 @@ namespace UserMap
 
             GMap.NET.MapRoute figure = null;
 
+            var currentSyncContext = System.Threading.SynchronizationContext.Current;
+
             if (!string.IsNullOrEmpty(additionalCondition))
             {
                 _condition += " AND " + additionalCondition;
@@ -1664,11 +1787,27 @@ namespace UserMap
             if (polylineType == "polygon")
             {
                 ClearPolygonByFunc(overlay => overlay.Id != "region");
+
+                currentSyncContext.Post(state =>
+                                        {
+                                            var _item = state as UserControls.ItemInfo;
+
+                                            if (_item.CurrentItem?.Type == "Полігон")
+                                                _item.ClearData();
+                                        }, itemInfo);
             }
             else if (polylineType == "tube")
             {
                 ClearAllTubesButton_Click(null, EventArgs.Empty);
                 TubeCheckBox.Enabled = true;
+
+                currentSyncContext.Post(state =>
+                                        {
+                                            var _item = state as UserControls.ItemInfo;
+
+                                            if (_item.CurrentItem?.Type == "Трубопровід")
+                                                _item.ClearData();
+                                        }, itemInfo);
             }
 
             string format = null;
@@ -2172,6 +2311,9 @@ namespace UserMap
         private void ClearAllPolygons_Click(object sender, EventArgs e)
         {
             ClearPolygonByFunc(overlay => overlay.Id != "region");
+
+            if (itemInfo.CurrentItem.Type == "Полігон")
+                itemInfo.ClearData();
         }
 
         private void ClearPolygonByFunc(Func<GMap.NET.WindowsForms.GMapOverlay, bool> func)
@@ -2220,7 +2362,7 @@ namespace UserMap
 
         private async void TubeSaveButton_Click(object sender, EventArgs e)
         {
-            if (TubeNameTextBox.Text == string.Empty && 
+            if (TubeNameTextBox.Text == string.Empty &&
                 !polylineEditingMode)
             {
                 MessageBox.Show("Не можливо зберегти об'єкт без його назви.",
@@ -2357,6 +2499,9 @@ namespace UserMap
             }
 
             reworkedMap.ClearAllRoutes();
+
+            if (itemInfo.CurrentItem.Type == "Трубопровід")
+                itemInfo.ClearData();
         }
         #endregion
 

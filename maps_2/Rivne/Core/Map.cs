@@ -77,29 +77,29 @@ namespace UserMap.Core
         public GMapControl MapObject { get; private set; }
 
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/SelectedMarker/*'/>
-        public GMapMarker SelectedMarker { get; set; }
+        public NamedGoogleMarker SelectedMarker { get; set; }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/SelectedPolygon/*'/>
         public GMapPolygon SelectedPolygon { get; set; }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/SelectedRoute/*'/>
         public GMapRoute SelectedRoute { get; set; }
 
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointBitmap2arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, Bitmap img)
+        public NamedGoogleMarker AddMarker(Point screenPoint, Bitmap img)
         {
             return AddMarker(screenPoint,  img, defaultOverlayName, string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointBitmap3arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string layoutId)
+        public NamedGoogleMarker AddMarker(Point screenPoint, Bitmap img, string layoutId)
         {
             return AddMarker(screenPoint, img, layoutId, string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointBitmap5arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(Point screenPoint, Bitmap img, string format, string name, string description)
         {
             return AddMarker(screenPoint, img, defaultOverlayName, format, name, description);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointBitmap6arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, Bitmap img, string layoutId, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(Point screenPoint, Bitmap img, string layoutId, string format, string name, string description)
         {
             if (img == null)
             {
@@ -111,22 +111,22 @@ namespace UserMap.Core
             return AddMarker(marker, layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngBitmap2arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, Bitmap img)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, Bitmap img)
         {
             return AddMarker(coords, img, defaultOverlayName, string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngBitmap3arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string layoutId)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, Bitmap img, string layoutId)
         {
             return AddMarker(coords, img, layoutId, string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngBitmap5arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, Bitmap img, string format, string name, string description)
         {
             return AddMarker(coords, img, defaultOverlayName, format, name, description);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngBitmap6arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, Bitmap img, string layoutId, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, Bitmap img, string layoutId, string format, string name, string description)
         {
             if (img == null)
             {
@@ -136,54 +136,54 @@ namespace UserMap.Core
             return AddMarker(new NamedGoogleMarker(coords, img, format, name, description), layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointGMarkerGoogleType2arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType)
+        public NamedGoogleMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType)
         {
             return AddMarker(screenPoint, markerType, defaultOverlayName, string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointGMarkerGoogleType3arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string layoutId)
+        public NamedGoogleMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string layoutId)
         {
             return AddMarker(screenPoint, markerType, layoutId, string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointGMarkerGoogleType5arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string format, string name, string description)
         {
             return AddMarker(screenPoint, markerType, defaultOverlayName, format, name, description);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointGMarkerGoogleType6arg/*'/>
-        public GMapMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string layoutId, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(Point screenPoint, GMarkerGoogleType markerType, string layoutId, string format, string name, string description)
         {
             NamedGoogleMarker marker = new NamedGoogleMarker(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), 
                                                              markerType, format, name, description);
             return AddMarker(marker, layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngGMarkerGoogleType2arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType)
         {
             return AddMarker(coords, markerType, defaultOverlayName,string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngGMarkerGoogleType3arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string layoutId)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string layoutId)
         {
             return AddMarker(coords, markerType, layoutId, string.Empty, null, null);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngGMarkerGoogleType5arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string format, string name, string description)
         {
             return AddMarker(coords, markerType, defaultOverlayName, format, name, description);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerPointLatLngGMarkerGoogleType6arg/*'/>
-        public GMapMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string layoutId, string format, string name, string description)
+        public NamedGoogleMarker AddMarker(PointLatLng coords, GMarkerGoogleType markerType, string layoutId, string format, string name, string description)
         {
             return AddMarker(new NamedGoogleMarker(coords, markerType, format, name, description), layoutId);
         }
-        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerGMapMarker1arg/*'/>
-        public GMapMarker AddMarker(GMapMarker marker)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerNamedGoogleMarker1arg/*'/>
+        public NamedGoogleMarker AddMarker(NamedGoogleMarker marker)
         {
             return AddMarker(marker, defaultOverlayName);
         }
-        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerGMapMarker2arg/*'/>
-        public GMapMarker AddMarker(GMapMarker marker, string layoutId)
+        /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddMarkerNamedGoogleMarker2arg/*'/>
+        public NamedGoogleMarker AddMarker(NamedGoogleMarker marker, string layoutId)
         {
             if (marker == null)
             {
@@ -287,22 +287,22 @@ namespace UserMap.Core
             return AddPolygon(MapHelper.CreatePolygon(coords.ToList(), fill, opacity, stroke, polygonName), layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddPolygonMarker3arg/*'/>
-        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, string polygonName)
+        public GMapPolygon AddPolygon(IEnumerable<NamedGoogleMarker> markers, Color fill, string polygonName)
         {
             return AddPolygon(markers, fill, defaultOpacity, Color.Black, defaultOverlayName, polygonName);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddPolygonMarker4arg/*'/>
-        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, int opacity, string polygonName)
+        public GMapPolygon AddPolygon(IEnumerable<NamedGoogleMarker> markers, Color fill, int opacity, string polygonName)
         {
             return AddPolygon(markers, fill, opacity, Color.Black, defaultOverlayName, polygonName);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddPolygonMarker5arg/*'/>
-        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, int opacity, string polygonName, string layoutId)
+        public GMapPolygon AddPolygon(IEnumerable<NamedGoogleMarker> markers, Color fill, int opacity, string polygonName, string layoutId)
         {
             return AddPolygon(markers, fill, opacity, Color.Black, polygonName, layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddPolygonMarker6arg/*'/>
-        public GMapPolygon AddPolygon(IEnumerable<GMapMarker> markers, Color fill, int opacity, Color stroke, string polygonName, string layoutId)
+        public GMapPolygon AddPolygon(IEnumerable<NamedGoogleMarker> markers, Color fill, int opacity, Color stroke, string polygonName, string layoutId)
         {
             if (markers == null)
             {
@@ -391,12 +391,12 @@ namespace UserMap.Core
             return AddRoute(MapHelper.CreateRoute(coords.ToList(), stroke, routeName), layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRouteMarkers3arg/*'/>
-        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string routeName)
+        public GMapRoute AddRoute(IEnumerable<NamedGoogleMarker> markers, Color stroke, string routeName)
         {
             return AddRoute(markers, stroke, defaultOverlayName, routeName);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/AddRouteMarkers4arg/*'/>
-        public GMapRoute AddRoute(IEnumerable<GMapMarker> markers, Color stroke, string routeName, string layoutId)
+        public GMapRoute AddRoute(IEnumerable<NamedGoogleMarker> markers, Color stroke, string routeName, string layoutId)
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
@@ -842,7 +842,7 @@ namespace UserMap.Core
             return RemoveMarker(GetMarkerByCoordsOrNull(coords));
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerMarker/*'/>
-        public bool RemoveMarker(GMapMarker marker)
+        public bool RemoveMarker(NamedGoogleMarker marker)
         {
             bool res = false;
 
@@ -971,7 +971,7 @@ namespace UserMap.Core
             return RemoveMarkerFromLayout(GetMarkerByCoordsOrNull(coords), layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/RemoveMarkerFromLayoutMarker/*'/>
-        public bool RemoveMarkerFromLayout(GMapMarker marker, string layoutId = "default")
+        public bool RemoveMarkerFromLayout(NamedGoogleMarker marker, string layoutId = "default")
         {
             bool res = false;
 
@@ -1100,11 +1100,11 @@ namespace UserMap.Core
         }
 
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkersByLayoutOrNull/*'/>
-        public ICollection<GMapMarker> GetMarkersByLayoutOrNull(string layoutId = "default")
+        public ICollection<NamedGoogleMarker> GetMarkersByLayoutOrNull(string layoutId = "default")
         {
             GMapOverlay overlay = GetOverlayByIdOrNull(layoutId);
 
-            return overlay != null ? overlay.Markers : null;
+            return overlay != null ? overlay.Markers.OfType<NamedGoogleMarker>().ToList() : null;
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetPolygonsByLayoutOrNull/*'/>
         public ICollection<GMapPolygon> GetPolygonsByLayoutOrNull(string layoutId = "default")
@@ -1122,22 +1122,22 @@ namespace UserMap.Core
         }
 
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsOrNullPoint/*'/>
-        public GMapMarker GetMarkerByCoordsOrNull(Point screenPoint)
+        public NamedGoogleMarker GetMarkerByCoordsOrNull(Point screenPoint)
         {
             return GetMarkerByCoordsOrNull(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y));
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsOrNullPointLatLng/*'/>
-        public GMapMarker GetMarkerByCoordsOrNull(PointLatLng coord)
+        public NamedGoogleMarker GetMarkerByCoordsOrNull(PointLatLng coord)
         {
             return GetMarkerByCoordsInLayoutOrNull(coord, "_all");
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsInLayoutOrNullPoint/*'/>
-        public GMapMarker GetMarkerByCoordsInLayoutOrNull(Point screenPoint, string layoutId)
+        public NamedGoogleMarker GetMarkerByCoordsInLayoutOrNull(Point screenPoint, string layoutId)
         {
             return GetMarkerByCoordsInLayoutOrNull(MapObject.FromLocalToLatLng(screenPoint.X, screenPoint.Y), layoutId);
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/GetMarkerByCoordsInLayoutOrNullPointLatLng/*'/>
-        public GMapMarker GetMarkerByCoordsInLayoutOrNull(PointLatLng coord, string layoutId)
+        public NamedGoogleMarker GetMarkerByCoordsInLayoutOrNull(PointLatLng coord, string layoutId)
         {
             double offsetLat = 0.0007;
             double offsetLng = 0.0004;
@@ -1180,7 +1180,7 @@ namespace UserMap.Core
                     if (coord.Lat > marker.Position.Lat - offsetLat && coord.Lat < marker.Position.Lat + offsetLat &&
                         coord.Lng > marker.Position.Lng - offsetLng && coord.Lng < marker.Position.Lng + offsetLng)
                     {
-                        return marker;
+                        return marker as NamedGoogleMarker;
                     }
                 }
             }
@@ -1298,7 +1298,7 @@ namespace UserMap.Core
 
             foreach (var dependetMarker in demendentMarkers)
             {
-                AddMarker(dependetMarker.Marker, dependetMarker.OverlayId);
+                AddMarker(dependetMarker.Marker as NamedGoogleMarker, dependetMarker.OverlayId);
             }
         }
         /// <include file='Docs/Core/MapDoc.xml' path='docs/members[@name="map"]/ClearAllPolygons/*'/>
