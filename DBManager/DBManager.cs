@@ -750,7 +750,7 @@ namespace Data
             {
                 StringBuilder sqlCommand = new StringBuilder("UPDATE " + tableName + " SET ");
 
-                for (int i = 1; i < colValues.Count - 1; i++)
+                for (int i = 0; i < colValues.Count - 1; i++)
                 {
                     sqlCommand.AppendFormat("{0} = {1}, ", colNames[i], colValues[i]);
                 }
