@@ -1,0 +1,15 @@
+const mysql = require('mysql');
+const pool = mysql.createPool({
+  multipleStatements: true,
+  connectTimeout  : 60 * 60 * 1000,
+  acquireTimeout  : 60 * 60 * 1000,
+  timeout         : 60 * 60 * 1000,
+  host: '195.54.163.42',
+  user: 'h34471c_All',
+  password: 'Keem_Kpi',
+  database: 'h34471c_Work',
+  port: '3306',
+});
+
+//database: 'h34471c_Work' главная  "h34471c_KPI_KEEM" второстепенная
+module.exports = pool;
