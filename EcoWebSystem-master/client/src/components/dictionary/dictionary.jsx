@@ -14,7 +14,7 @@ import { DictionaryModes } from './dictionaryModes';
 import { DICTIONARY_MODES } from '../../utils/constants';
 import { RemoveDictionaryRecord } from './removeDictionaryRecord';
 import { EditDictionaryRecord } from './editDictionaryRecord';
-import dicLegend from "../../utils/dictionaryLegend.json";
+import dicLegend from '../../utils/dictionaryLegend.json';
 
 import './dictionary.css';
 
@@ -169,30 +169,47 @@ export const Dictionary = ({ user, tableName }) => {
         className='ag-theme-alpine'
       >
         <Table className='ColumnLegend' responsive size='lg'>
-              <tbody>
-                <tr>
-                  <th title='Абревіатура'> Абревіатура </th>
-                  {columns.map((el,i)=>{
-                    return(
-                      <td key={el+i} title={el.headerName}> {el.headerName} </td>
+          <tbody>
+            <tr>
+              <th title='Абревіатура'> Абревіатура </th>
+              {columns.map((el, i) => {
+                return (
+                  <td key={el + i} title={el.headerName}>
+                    {' '}
+                    {el.headerName}{' '}
+                  </td>
+                );
+              })}
+            </tr>
+            <tr>
+              <th title='Визначення'> Визначення </th>
+              {columns.map((el, i) => {
+                let foundTable = dicLegend.find(
+                  (el2) => el2.table == tableName.toLowerCase()
+                );
+                let found = foundTable
+                  ? foundTable.names.find(
+                      (el2) => el2.initName == el.headerName
                     )
-                  })}
-                </tr>
-                <tr>
-                  <th title='Визначення'> Визначення </th>
-                  {columns.map((el,i)=>{
-                    let foundTable = dicLegend.find(el2=>el2.table==tableName.toLowerCase())
-                    let found = foundTable?foundTable.names.find(el2=> el2.initName == el.headerName):undefined;
-                    if (found===undefined) {
-                      return (<td key={el+i} title="Не знайдено опис"> Не знайдено опис </td>)
-                    }
-                    
-                    return(
-                      <td key={el+i} title={found.newName}> {found.newName} </td>
-                    )
-                  })}
-                </tr>
-              </tbody>
+                  : undefined;
+                if (found === undefined) {
+                  return (
+                    <td key={el + i} title='Не знайдено опис'>
+                      {' '}
+                      Не знайдено опис{' '}
+                    </td>
+                  );
+                }
+
+                return (
+                  <td key={el + i} title={found.newName}>
+                    {' '}
+                    {found.newName}{' '}
+                  </td>
+                );
+              })}
+            </tr>
+          </tbody>
         </Table>
 
         <AgGridReact

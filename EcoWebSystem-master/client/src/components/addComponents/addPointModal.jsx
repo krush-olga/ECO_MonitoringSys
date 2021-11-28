@@ -5,7 +5,10 @@ import readXlsxFile from 'read-excel-file';
 import { TYPE_OF_OBJECT_URL, OWNER_TYPES_URL } from '../../utils/constants';
 import { post, get, put } from '../../utils/httpService';
 import { POINT_URL } from '../../utils/constants';
-import { getUploadedFileType, uploadedFileTypes } from '../../utils/getFileType';
+import {
+  getUploadedFileType,
+  uploadedFileTypes,
+} from '../../utils/getFileType';
 import { preparedDataPromise } from '../../utils/txtFilesService';
 
 import { VerticallyCenteredModal } from '../modals/modal';

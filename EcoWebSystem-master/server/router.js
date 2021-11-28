@@ -19,6 +19,9 @@ const compareController = require('./controllers/compare');
 const citiesControler = require('./controllers/cities');
 const taskContoler = require('./controllers/tasks');
 const medStatControler = require('./controllers/medStat');
+const radiationPointController = require('./controllers/radiationPoint');
+const radiationPointsController = require('./controllers/radiationPoints');
+const radiationObjectStateController = require('./controllers/radiationObjectState');
 
 const tubeControler = require('./controllers/tubes');
 
@@ -93,6 +96,19 @@ router.get('/issuegetter', taskContoler.getPossibleTasks);
 router.post('/tube', tubeControler.addTube);
 router.get('/tube/:id', tubeControler.getTube);
 router.put('/tube/:id', tubeControler.updateTube);
+
+// radiationpoint
+router.post('/radiationpoint', radiationPointController.addPoint);
+router.get(
+  '/radiationpointinfo/:id',
+  radiationPointController.getRadiationPointInfo
+);
+
+//radiationpoints
+router.get('/radiationpoints', radiationPointsController.getPoints);
+
+//radiationobjectstate
+router.get('/radiationobjectstates', radiationObjectStateController.getAll);
 
 if (process.env.NODE_ENV === 'production') {
   router.get('*', (req, res) => {
