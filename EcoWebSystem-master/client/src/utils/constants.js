@@ -25,6 +25,12 @@ export const GET_PARAMS_URL = '/getParams';
 export const GET_MED_STAT_BY_PARAMS = '/getMedStatByParams';
 export const GET_MED_STAT_VALUES = '/getMedStatValues';
 
+export const RADIATION_POINTS_URL = '/radiationpoints';
+export const RADIATION_POINT_URL = '/radiationpoint';
+export const RADIATION_POINT_INFO_URL = '/radiationpointinfo';
+
+export const RADIATION_OBJECT_STATES_URL = '/radiationobjectstates';
+
 // export const AGES_URL = '/ages';
 
 export const MAP_CENTER_COORDS = [49.0139, 31.2858];

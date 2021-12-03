@@ -1,11 +1,18 @@
 import React, { createRef, useEffect, useState } from 'react';
 import { Button, Navbar } from 'react-bootstrap';
-import { Map as LeafletMap, TileLayer} from 'react-leaflet';
+import { Map as LeafletMap, TileLayer } from 'react-leaflet';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAlignJustify, faAngleDoubleDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAlignJustify,
+  faAngleDoubleDown,
+} from '@fortawesome/free-solid-svg-icons';
 
-import { getDataForLegendRegion,getDataForLegendPoint } from "../../utils/constants";
+import {
+  getDataForLegendRegion,
+  getDataForLegendPoint,
+  RADIATION_POINTS_URL,
+} from '../../utils/constants';
 
 import { get } from '../../utils/httpService';
 import {
@@ -14,40 +21,53 @@ import {
   MAP_CENTER_COORDS,
   OPEN_STREET_MAP_URL,
   RECOUNT_POINTS_COIF_URL,
-  getLegendDescription
+  getLegendDescription,
 } from '../../utils/constants';
 import { removeObjectDuplicates, removeDuplicates } from '../../utils/helpers';
 
 import { Polygons, AddingPolygon } from '../mapObjects/polygons/polygons';
-import { Regions } from "../mapObjects/regions/regions";
+import { Regions } from '../mapObjects/regions/regions';
 import { Points } from '../mapObjects/points/points';
 import { AddPointModal } from '../addComponents/addPointModal';
 import { AddPolygonModal } from '../addComponents/addPolygonModal';
+import { AddRadiationPointModal } from '../addComponents/addRadiationPointModal';
 import { AddTubeModal } from '../addComponents/addTubeModal';
 import { Filtration } from '../filtrations/filtration';
 import { CompareModal } from '../modals/modalCompare';
 import { FinderOnMap } from '../onMapFinder/onMapFinder';
 import { Tubes, AddingTube } from '../mapObjects/tubes/tubes';
 import { VerticallyCenteredModal } from '../modals/modal';
-import { ActualEmmisionDate } from "../rangePicker/dateRangePicker";
+import { ActualEmmisionDate } from '../rangePicker/dateRangePicker';
+import { RadiationPoints } from '../mapObjects/radiationPoints/radiationPoints';
 
-import  { Legend } from "../helperComponents/mapLegend/mapLegend";
+import { Legend } from '../helperComponents/mapLegend/mapLegend';
 
 import './map.css';
 import { EnvironmentsInfoContext } from '../context/environmentsInfoContext';
 import { useContext } from 'react';
 import { useRef } from 'react';
 
-const initilDate=[
+const RADIATION_ENV_ID = 7;
+
+const initilDate = [
   {
-    startDate: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),
-    endDate:  new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),
+    startDate: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    ),
+    endDate: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      new Date().getDate()
+    ),
     key: 'selection',
   },
-]
+];
 
 const initialState = {
   points: [],
+  radiationPoints: [],
   polygons: [
     {
       name: '',
@@ -70,17 +90,19 @@ const initialState = {
     },
   ],
   filteredPolygons: [],
-  filteredRegions:[],
+  filteredRegions: [],
   filteredItems: {
     isMyObjectsSelectionChecked: false,
     items: [],
   },
-  uniqueObjectTypes:[],
+  uniqueObjectTypes: [],
   filteredPoints: [],
   isAddPointModeEnabled: false,
   isAddPolygonModeEnabled: false,
+  isAddRadiationPointModeEnabled: false,
   isAddTubeMode: false,
   showPointModal: false,
+  showRadiationPointModal: false,
   showPolygonModal: false,
   showTubeModal: false,
   newPointCoordinates: [],
@@ -119,8 +141,8 @@ const comparebuttonText = (geographicalObj, isModeEnabled) =>
   isModeEnabled ? `Виключити обрання маркерів` : `Обрати ${geographicalObj} `;
 
 export const MapView = ({ user }) => {
-  const [ SettingsShow, SetSettingsShow ] = useState(false);
-  
+  const [SettingsShow, SetSettingsShow] = useState(false);
+
   const [filteredItems, setFilteredItems] = useState(
     initialState.filteredItems
   );
@@ -132,11 +154,21 @@ export const MapView = ({ user }) => {
   const [filteredPoints, setFilteredPoints] = useState(
     initialState.filteredPoints
   );
+
   const [isAddPointModeEnabled, setAddPointMode] = useState(
     initialState.isAddPointModeEnabled
   );
   const [showPointModal, setShowPointModal] = useState(
     initialState.showPointModal
+  );
+
+  // radiation points
+  const [radiationPoints, setRadiationPoints] = useState(
+    initialState.radiationPoints
+  );
+
+  const [showRadiationPointModal, setShowRadiationPointModal] = useState(
+    initialState.showRadiationPointModal
   );
   const [newPointCoordinates, setNewPointCoordinates] = useState(
     initialState.newPointCoordinates
@@ -149,9 +181,9 @@ export const MapView = ({ user }) => {
     initialState.comaprePointId
   );
 
-  const [ActualPointsDate, SetActualPointsDate ] = useState(initilDate);
+  const [ActualPointsDate, SetActualPointsDate] = useState(initilDate);
 
-  const [LastDateMode, setLastDateMode ] = useState(false);
+  const [LastDateMode, setLastDateMode] = useState(false);
 
   // polygons
   const [filteredPolygons, setFilteredPolygons] = useState(
@@ -160,6 +192,11 @@ export const MapView = ({ user }) => {
   const [isAddPolygonModeEnabled, setAddPolygonMode] = useState(
     initialState.isAddPolygonModeEnabled
   );
+
+  const [isAddRadiationPointModeEnabled, setAddRadiationPointMode] = useState(
+    initialState.isAddRadiationPointModeEnabled
+  );
+
   const [showPolygonModal, setShowPolygonModal] = useState(
     initialState.showPolygonModal
   );
@@ -174,8 +211,8 @@ export const MapView = ({ user }) => {
   );
   const [filteredRegions, setFilteredRegions] = useState(
     initialState.filteredRegions
-  )
-  const [ActualRegionDate, SetActualRegionDate ] = useState(initilDate);
+  );
+  const [ActualRegionDate, SetActualRegionDate] = useState(initilDate);
 
   const [mapMode, setmapMode] = useState(initialState.mapMode);
 
@@ -195,7 +232,9 @@ export const MapView = ({ user }) => {
 
   // type of ownership
 
-  const [uniqueObjectTypes, setuniqueObjectTypes] = useState(initialState.uniqueObjectTypes);
+  const [uniqueObjectTypes, setuniqueObjectTypes] = useState(
+    initialState.uniqueObjectTypes
+  );
 
   // edit point
   const [isEditPointMode, setIsEditPointMode] = useState(
@@ -222,35 +261,46 @@ export const MapView = ({ user }) => {
 
   //side filtrations
 
-  const [ sideLeftFilterOpened, setLeftFilterOpened ] = useState(
+  const [sideLeftFilterOpened, setLeftFilterOpened] = useState(
     initialState.sideLeftFilterOpened
-  )
+  );
 
-  const [ sideRightFilterOpened, setRightFilterOpened ] = useState(
+  const [sideRightFilterOpened, setRightFilterOpened] = useState(
     initialState.sideLeftFilterOpened
-  )
+  );
 
   const fetchPoints = () => {
-    get(`${POINTS_URL}?idEnvironment=${environmentsInfo.selected.id}`).then(({ data }) => {
+    get(`${POINTS_URL}?idEnvironment=${environmentsInfo.selected.id}`).then(
+      ({ data }) => {
         setFilteredPoints(data);
         setuniqueObjectTypes([]);
         setuniqueObjectTypes(
-          removeDuplicates(data.map(el=>{
-            return {
-              Object_Type_Id: el.Object_Type_Id,
-              Object_Type_Name: el.Object_Type_Name
-            }
-          }))
-        )
+          removeDuplicates(
+            data.map((el) => {
+              return {
+                Object_Type_Id: el.Object_Type_Id,
+                Object_Type_Name: el.Object_Type_Name,
+              };
+            })
+          )
+        );
         initialState.points = data;
-      });
-  }
+      }
+    );
+  };
 
-  const fetchPolygons = ()=>{
+  const fetchRadiationPoints = () => {
+    get(`${RADIATION_POINTS_URL}`).then(({ data }) => {
+      setRadiationPoints(data);
+    });
+  };
+
+  const fetchPolygons = () => {
     const idEnvironment = environmentsInfo.selected.id;
 
     get(`${POLYGONS_URL}?idEnvironment=${idEnvironment}`).then(({ data }) => {
-      let polygons = [], tubes = []
+      let polygons = [],
+        tubes = [];
       data.forEach((el, index) => {
         if (el.type === 'tube') {
           tubes.push(el);
@@ -263,11 +313,12 @@ export const MapView = ({ user }) => {
       setFilteredPolygons(polygons);
       setFilteredTubes(tubes);
     });
-  }
+  };
 
   const fetchData = () => {
     fetchPolygons();
     fetchPoints();
+    fetchRadiationPoints();
   };
 
   const filterByExpert = ({ id_of_expert: idOfExpert }) =>
@@ -275,7 +326,6 @@ export const MapView = ({ user }) => {
 
   const filterByUser = ({ id_of_user: idOfUser }) =>
     filteredItems.items.some(({ id_of_user }) => idOfUser === id_of_user);
-
 
   //environmnt changes effect
   useEffect(() => {
@@ -289,36 +339,56 @@ export const MapView = ({ user }) => {
 
   //data fatch effect
   useEffect(() => {
-    if (shouldFetchData && environmentsInfo.selected && LastDateMode) {
+    if (
+      shouldFetchData &&
+      environmentsInfo.selected &&
+      environmentsInfo.selected.id === RADIATION_ENV_ID
+    ) {
+      fetchRadiationPoints();
+      setShouldFetchData(false);
+    } else if (shouldFetchData && environmentsInfo.selected && LastDateMode) {
       fetchData();
       setShouldFetchData(false);
-    }
-    else if (shouldFetchData && environmentsInfo.selected && !LastDateMode){
+    } else if (shouldFetchData && environmentsInfo.selected && !LastDateMode) {
       fetchPolygons();
       setShouldFetchData(false);
     }
   }, [shouldFetchData, environmentsInfo.selected]);
 
-  useEffect(()=>{
-    if(!LastDateMode && environmentsInfo.selected){
-      get(`${POINTS_URL}?idEnvironment=${environmentsInfo.selected.id}&startDate=${ActualPointsDate[0].startDate.toISOString()}&endDate=${ActualPointsDate[0].endDate.toISOString()}`).then(({ data }) => {
+  useEffect(() => {
+    if (
+      !LastDateMode &&
+      environmentsInfo.selected &&
+      environmentsInfo.selected.id !== RADIATION_ENV_ID
+    ) {
+      get(
+        `${POINTS_URL}?idEnvironment=${
+          environmentsInfo.selected.id
+        }&startDate=${ActualPointsDate[0].startDate.toISOString()}&endDate=${ActualPointsDate[0].endDate.toISOString()}`
+      ).then(({ data }) => {
         setFilteredPoints(data);
         setuniqueObjectTypes([]);
         setuniqueObjectTypes(
-          removeDuplicates(data.map(el=>{
-            return {
-              Object_Type_Id: el.Object_Type_Id,
-              Object_Type_Name: el.Object_Type_Name
-            }
-          }))
-        )
+          removeDuplicates(
+            data.map((el) => {
+              return {
+                Object_Type_Id: el.Object_Type_Id,
+                Object_Type_Name: el.Object_Type_Name,
+              };
+            })
+          )
+        );
         initialState.points = data;
       });
+    } else if (LastDateMode && environmentsInfo.selected) {
+      fetchPoints();
+    } else if (
+      environmentsInfo.selected &&
+      environmentsInfo.selected.id === RADIATION_ENV_ID
+    ) {
+      fetchRadiationPoints();
     }
-    else if(LastDateMode && environmentsInfo.selected){
-      fetchPoints()
-    }
-  },[ActualPointsDate,LastDateMode,environmentsInfo.selected])
+  }, [ActualPointsDate, LastDateMode, environmentsInfo.selected]);
 
   //filter effect
   useEffect(() => {
@@ -349,18 +419,18 @@ export const MapView = ({ user }) => {
   }, [filteredItems]);
 
   //side bars effect
-  useEffect(()=>{
-    if (sideLeftFilterOpened ) {
+  useEffect(() => {
+    if (sideLeftFilterOpened) {
       setRightFilterOpened(false);
     }
-  }, [sideLeftFilterOpened])
+  }, [sideLeftFilterOpened]);
 
-  useEffect(()=>{
-    if(sideRightFilterOpened){
+  useEffect(() => {
+    if (sideRightFilterOpened) {
       setLeftFilterOpened(false);
     }
-  },[sideRightFilterOpened])
-  
+  }, [sideRightFilterOpened]);
+
   //compare points
   useEffect(() => {
     if (comaprePointId.id) {
@@ -394,7 +464,6 @@ export const MapView = ({ user }) => {
   }, [comparePolygonId]);
 
   const addGeographicalObjectToMap = ({ latlng: { lat, lng } }) => {
-
     if (isAddPointModeEnabled) {
       setNewPointCoordinates([lat, lng]);
       setShowPointModal(true);
@@ -407,6 +476,12 @@ export const MapView = ({ user }) => {
 
     if (isAddTubeMode) {
       setnewTubeCordinates([...newTubeCordinates, { lat, lng }]);
+    }
+
+    if (isAddRadiationPointModeEnabled) {
+      setNewPointCoordinates([lat, lng]);
+      setShowRadiationPointModal(true);
+      return;
     }
   };
 
@@ -425,7 +500,7 @@ export const MapView = ({ user }) => {
 
   const MapRef = useRef(null);
 
-  const ViewReposition = (lat, lon,scale = 11) => {
+  const ViewReposition = (lat, lon, scale = 11) => {
     MapRef.current.leafletElement.setView({ lat, lon }, scale);
   };
 
@@ -447,15 +522,15 @@ export const MapView = ({ user }) => {
         onClick={addGeographicalObjectToMap}
       >
         <TileLayer url={OPEN_STREET_MAP_URL} />
-        
-        <UpButton
-            show={SetSettingsShow}
-        />
+
+        <UpButton show={SetSettingsShow} />
         <VerticallyCenteredModal
-            size="xl"
-            show={SettingsShow}
-            onHide={()=>{SetSettingsShow(false)}}
-            header="Оберіть проміжок актуальності даних для полігонів"
+          size='xl'
+          show={SettingsShow}
+          onHide={() => {
+            SetSettingsShow(false);
+          }}
+          header='Оберіть проміжок актуальності даних для полігонів'
         >
           <ActualEmmisionDate
             dateState={ActualRegionDate}
@@ -463,31 +538,37 @@ export const MapView = ({ user }) => {
             initilDate={initilDate}
             enabled={true}
           />
-      
+
           <hr></hr>
           <h4>Оберіть проміжок актуальності даних для точок</h4>
           <hr></hr>
-          <div style={{display:"flex"}}>
+          <div style={{ display: 'flex' }}>
             <Button
-              style={{marginLeft:'auto',marginRight:'auto',marginBottom:5}}
-              onClick={()=>{
+              style={{
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginBottom: 5,
+              }}
+              onClick={() => {
                 setLastDateMode(!LastDateMode);
               }}
             >
-              {LastDateMode?"Режим останніх даних":"Режим для обрання періоду забрудення"}
+              {LastDateMode
+                ? 'Режим останніх даних'
+                : 'Режим для обрання періоду забрудення'}
             </Button>
           </div>
-          {!LastDateMode && 
-          <ActualEmmisionDate
-            enabled={!LastDateMode}
-            dateState={ActualPointsDate}
-            SetDateState={SetActualPointsDate}
-            initilDate={initilDate}
-          />}
-            
+          {!LastDateMode && (
+            <ActualEmmisionDate
+              enabled={!LastDateMode}
+              dateState={ActualPointsDate}
+              SetDateState={SetActualPointsDate}
+              initilDate={initilDate}
+            />
+          )}
         </VerticallyCenteredModal>
 
-        {mapMode==null &&
+        {mapMode == null && (
           <Polygons
             polygons={filteredPolygons}
             mapMode={mapMode}
@@ -496,25 +577,25 @@ export const MapView = ({ user }) => {
             setShowPolygonModal={setShowPolygonModal}
             setcomparePolygonId={setcomparePolygonId}
           />
-        }
+        )}
 
-        {mapMode==="region" && 
+        {mapMode === 'region' && (
           <Regions
             regions={filteredRegions}
             setFilteredRegions={setFilteredRegions}
             ActualRegionDate={ActualRegionDate}
             SetActualRegionDate={SetActualRegionDate}
           />
-        }
+        )}
 
-        {mapMode==="tubes" && 
+        {mapMode === 'tubes' && (
           <Tubes
             tubeArr={filteredTubes}
             settubeId={settubeId}
             setisEditTubeMode={setisEditTubeMode}
             setshowTubeModal={setshowTubeModal}
           />
-        }
+        )}
 
         <Points
           points={filteredPoints}
@@ -525,14 +606,28 @@ export const MapView = ({ user }) => {
           uniqueObjectTypes={uniqueObjectTypes}
         />
 
-        {getDataForLegendPoint(environmentsInfo.selected?environmentsInfo.selected.id:null) && 
+        <RadiationPoints radiationPoints={radiationPoints} />
+
+        {getDataForLegendPoint(
+          environmentsInfo.selected ? environmentsInfo.selected.id : null
+        ) && (
           <Legend
-            regionData = {getDataForLegendRegion(environmentsInfo.selected?environmentsInfo.selected.id:null)}
-            regionDesc = {getLegendDescription('region',environmentsInfo.selected?environmentsInfo.selected.id:null)}
-            pointData  = {getDataForLegendPoint(environmentsInfo.selected?environmentsInfo.selected.id:null)}
-            pointDesc  = {getLegendDescription('points',environmentsInfo.selected?environmentsInfo.selected.id:null)}
+            regionData={getDataForLegendRegion(
+              environmentsInfo.selected ? environmentsInfo.selected.id : null
+            )}
+            regionDesc={getLegendDescription(
+              'region',
+              environmentsInfo.selected ? environmentsInfo.selected.id : null
+            )}
+            pointData={getDataForLegendPoint(
+              environmentsInfo.selected ? environmentsInfo.selected.id : null
+            )}
+            pointDesc={getLegendDescription(
+              'points',
+              environmentsInfo.selected ? environmentsInfo.selected.id : null
+            )}
           />
-        }
+        )}
 
         {newPolygonCoordinates.length > 0 && (
           <AddingPolygon
@@ -547,27 +642,28 @@ export const MapView = ({ user }) => {
             setnewTubeCordinates={setnewTubeCordinates}
           />
         )}
-
       </LeafletMap>
 
       <FooterMap>
         <FooterComponents
-            user={user}
-            setShowPolygonModal={setShowPolygonModal}
-            setAddPointMode={setAddPointMode}
-            setNewPolygonCoordinates={setNewPolygonCoordinates}
-            setAddPolygonMode={setAddPolygonMode}
-            setisAddTubeMode={setisAddTubeMode}
-            setshowTubeModal={setshowTubeModal}
-            setnewTubeCordinates={setnewTubeCordinates}
-            newPolygonCoordinates={newPolygonCoordinates}
-            newTubeCordinates={newTubeCordinates}
-            isAddPointModeEnabled={isAddPointModeEnabled}
-            isAddTubeMode={isAddTubeMode}
-            isAddPolygonModeEnabled={isAddPolygonModeEnabled}
-            comparePointsId={comparePointsId}
-            comparePolygonsId={comparePolygonsId}
-          />
+          user={user}
+          setShowPolygonModal={setShowPolygonModal}
+          setAddPointMode={setAddPointMode}
+          setNewPolygonCoordinates={setNewPolygonCoordinates}
+          setAddPolygonMode={setAddPolygonMode}
+          setisAddTubeMode={setisAddTubeMode}
+          setAddRadiationPointMode={setAddRadiationPointMode}
+          setshowTubeModal={setshowTubeModal}
+          setnewTubeCordinates={setnewTubeCordinates}
+          newPolygonCoordinates={newPolygonCoordinates}
+          newTubeCordinates={newTubeCordinates}
+          isAddPointModeEnabled={isAddPointModeEnabled}
+          isAddTubeMode={isAddTubeMode}
+          isAddPolygonModeEnabled={isAddPolygonModeEnabled}
+          isAddRadiationPointModeEnabled={isAddRadiationPointModeEnabled}
+          comparePointsId={comparePointsId}
+          comparePolygonsId={comparePolygonsId}
+        />
       </FooterMap>
 
       <Filtration
@@ -580,9 +676,9 @@ export const MapView = ({ user }) => {
         setLeftFilterOpened={setLeftFilterOpened}
       />
 
-      <FinderOnMap 
-        ViewReposition={ViewReposition} 
-        setmapMode={setmapMode}  
+      <FinderOnMap
+        ViewReposition={ViewReposition}
+        setmapMode={setmapMode}
         sideRightFilterOpened={sideRightFilterOpened}
         setRightFilterOpened={setRightFilterOpened}
       />
@@ -622,55 +718,66 @@ export const MapView = ({ user }) => {
         settubeId={settubeId}
         setShouldFetchData={setShouldFetchData}
       />
+      <AddRadiationPointModal
+        show={showRadiationPointModal}
+        onHide={() => setShowRadiationPointModal(false)}
+        setShouldFetchData={setShouldFetchData}
+        coordinates={newPointCoordinates}
+        pointId={pointId}
+        setPointId={setPointId}
+        user={user}
+      />
     </>
   );
 };
 
 const AdpFooterRef = createRef();
 
-const AdaptiveFooterComponents = ({children,elmargin, show,setShow})=>{
-
-  return(
-    <div 
-    ref={AdpFooterRef}
-    style={
-        {position:'absolute',
-        display:'flex',
-        flexDirection:"column",
+const AdaptiveFooterComponents = ({ children, elmargin, show, setShow }) => {
+  return (
+    <div
+      ref={AdpFooterRef}
+      style={{
+        position: 'absolute',
+        display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
         zIndex: 1002,
         left: 0,
-        width:"100%",
+        width: '100%',
         bottom: elmargin.height,
-        backgroundColor:'#b0e8ef',
-        visibility:(show?"visible":"hidden")
-        }}>
+        backgroundColor: '#b0e8ef',
+        visibility: show ? 'visible' : 'hidden',
+      }}
+    >
       {children}
     </div>
-  )
-}
+  );
+};
 
 const myRef = createRef();
 
-export const FooterMap = (props)=>{
+export const FooterMap = (props) => {
   //footer Adap
-  const [ changeFooter, setChangeFooter ] = useState(window.innerWidth<=991);
+  const [changeFooter, setChangeFooter] = useState(window.innerWidth <= 991);
 
-  window.addEventListener('resize', ()=>{
-    setChangeFooter(window.innerWidth<=991);
-  })
+  window.addEventListener('resize', () => {
+    setChangeFooter(window.innerWidth <= 991);
+  });
 
-  const [ height, setHeight ] = useState(myRef.current?(myRef.current).getBoundingClientRect() : 0);
+  const [height, setHeight] = useState(
+    myRef.current ? myRef.current.getBoundingClientRect() : 0
+  );
 
-  const [ showFooterMenu , setFooterMenu] = useState(false);
-  
-  const handlerFooter = ()=>{
-    setHeight(myRef.current?(myRef.current).getBoundingClientRect() : 0);
-    setFooterMenu(prev=>!prev);
-  }
+  const [showFooterMenu, setFooterMenu] = useState(false);
 
-  return(
+  const handlerFooter = () => {
+    setHeight(myRef.current ? myRef.current.getBoundingClientRect() : 0);
+    setFooterMenu((prev) => !prev);
+  };
+
+  return (
     <div ref={myRef}>
       {!changeFooter && (
         <Navbar expand='lg' className='map-options d-flex'>
@@ -678,29 +785,56 @@ export const FooterMap = (props)=>{
         </Navbar>
       )}
       {changeFooter && (
-        <Navbar expand='lg' className='map-options d-flex justify-content-center'>
-            <FontAwesomeIcon
-              icon={showFooterMenu ? faAngleDoubleDown : faAlignJustify}
-              style={{width: 40,height: 30, color: "grey"}}
-              onClick={()=>{handlerFooter()}}
-            />
-            <AdaptiveFooterComponents 
-              elmargin={height}
-              show={showFooterMenu}
-              setShow={setFooterMenu}
-            >
-              {props.children}
-            </AdaptiveFooterComponents>
+        <Navbar
+          expand='lg'
+          className='map-options d-flex justify-content-center'
+        >
+          <FontAwesomeIcon
+            icon={showFooterMenu ? faAngleDoubleDown : faAlignJustify}
+            style={{ width: 40, height: 30, color: 'grey' }}
+            onClick={() => {
+              handlerFooter();
+            }}
+          />
+          <AdaptiveFooterComponents
+            elmargin={height}
+            show={showFooterMenu}
+            setShow={setFooterMenu}
+          >
+            {props.children}
+          </AdaptiveFooterComponents>
         </Navbar>
       )}
     </div>
-  )
-}
+  );
+};
 
-const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointModeEnabled,isAddPolygonModeEnabled,isAddTubeMode,setShowPolygonModal,setAddPointMode,setNewPolygonCoordinates,setAddPolygonMode,setisAddTubeMode,setshowTubeModal,setnewTubeCordinates,newTubeCordinates,newPolygonCoordinates })=>{
-  const isAdaptive = () =>{
-    return (window.innerWidth<=991)
-  }
+const FooterComponents = ({
+  user,
+  comparePolygonsId,
+  comparePointsId,
+  isAddPointModeEnabled,
+  isAddPolygonModeEnabled,
+  isAddRadiationPointModeEnabled,
+  isAddTubeMode,
+  setShowPolygonModal,
+  setAddPointMode,
+  setAddRadiationPointMode,
+  setNewPolygonCoordinates,
+  setAddPolygonMode,
+  setisAddTubeMode,
+  setshowTubeModal,
+  setnewTubeCordinates,
+  newTubeCordinates,
+  newPolygonCoordinates,
+}) => {
+  const isAdaptive = () => {
+    return window.innerWidth <= 991;
+  };
+
+  const { environmentsInfo, setEnvironmentsInfo } = useContext(
+    EnvironmentsInfoContext
+  );
 
   //compare
   const [isCompareMode, setCompareMode] = useState(initialState.compareMode);
@@ -733,19 +867,17 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
     }
   };
 
-  return(
+  return (
     <>
       {/*  Add point button  */}
       {user && (
         <Button
           size='sm'
-          variant={
-            isAddPointModeEnabled ? 'outline-danger' : 'outline-primary'
-          }
+          variant={isAddPointModeEnabled ? 'outline-danger' : 'outline-primary'}
           style={{
-            marginBottom:'2px',
+            marginBottom: '2px',
             marginTop: '2px',
-            width:isAdaptive()?"70%":'',
+            width: isAdaptive() ? '70%' : '',
             cursor:
               isAddPolygonModeEnabled || isCompareMode || isAddTubeMode
                 ? 'not-allowed'
@@ -772,8 +904,8 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
             isAddPolygonModeEnabled ? 'outline-danger' : 'outline-primary'
           }
           style={{
-            width:isAdaptive()?"70%":'',
-            marginBottom:'2px',
+            width: isAdaptive() ? '70%' : '',
+            marginBottom: '2px',
             marginTop: '2px',
             cursor:
               isAddPointModeEnabled || isCompareMode || isAddTubeMode
@@ -794,8 +926,8 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
       {isAddPolygonModeEnabled && (
         <Button
           style={{
-            width:isAdaptive()?"70%":'',
-            marginBottom:'2px',
+            width: isAdaptive() ? '70%' : '',
+            marginBottom: '2px',
             marginTop: '2px',
           }}
           className='ml-3'
@@ -814,19 +946,15 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
           size='sm'
           variant={isAddTubeMode ? 'outline-danger' : 'outline-primary'}
           style={{
-            width:isAdaptive()?"70%":'',
-            marginBottom:'2px',
+            width: isAdaptive() ? '70%' : '',
+            marginBottom: '2px',
             marginTop: '2px',
             cursor:
-              isAddPointModeEnabled ||
-              isCompareMode ||
-              isAddPolygonModeEnabled
+              isAddPointModeEnabled || isCompareMode || isAddPolygonModeEnabled
                 ? 'not-allowed'
                 : 'pointer',
             pointerEvents:
-              isAddPointModeEnabled ||
-              isCompareMode ||
-              isAddPolygonModeEnabled
+              isAddPointModeEnabled || isCompareMode || isAddPolygonModeEnabled
                 ? 'all'
                 : 'auto',
           }}
@@ -842,8 +970,8 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
       {isAddTubeMode && (
         <Button
           style={{
-            width:isAdaptive()?"70%":'',
-            marginBottom:'2px',
+            width: isAdaptive() ? '70%' : '',
+            marginBottom: '2px',
             marginTop: '2px',
           }}
           className='ml-3'
@@ -855,11 +983,11 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
         </Button>
       )}
 
-     {isCompareMode && (
+      {isCompareMode && (
         <Button
           style={{
-            width:isAdaptive()?"70%":'',
-            marginBottom:'2px',
+            width: isAdaptive() ? '70%' : '',
+            marginBottom: '2px',
             marginTop: '2px',
           }}
           className='ml-3'
@@ -877,8 +1005,8 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
         size='sm'
         variant={'outline-primary'}
         style={{
-          width:isAdaptive()?"70%":'',
-          marginBottom:'2px',
+          width: isAdaptive() ? '70%' : '',
+          marginBottom: '2px',
           marginTop: '2px',
           cursor:
             isAddPolygonModeEnabled ||
@@ -908,8 +1036,8 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
 
       <CompareModal
         style={{
-          width:isAdaptive()?"70%":'',
-          marginBottom:'2px',
+          width: isAdaptive() ? '70%' : '',
+          marginBottom: '2px',
           marginTop: '2px',
         }}
         points={comparePointsId}
@@ -917,17 +1045,63 @@ const FooterComponents = ({user,comparePolygonsId,comparePointsId,isAddPointMode
         show={compareModalForm}
         onHide={() => setcompareModalForm(false)}
       />
-    </>
-  )
-}
 
-const UpButton = ({show})=>{
-  return(
-      <div 
-          className="upsideButton"
-          onClick={()=>{
-              show(true);
-          }}
-      />
-  )
-}
+      {/*  Add radiation point button  */}
+      {user &&
+        user.id_of_expert === 2 &&
+        environmentsInfo.selected &&
+        environmentsInfo.selected.id === RADIATION_ENV_ID && (
+          <Button
+            size='sm'
+            variant={
+              isAddRadiationPointModeEnabled
+                ? 'outline-danger'
+                : 'outline-primary'
+            }
+            style={{
+              marginBottom: '2px',
+              marginTop: '2px',
+              width: isAdaptive() ? '70%' : '',
+              cursor:
+                isAddPolygonModeEnabled ||
+                isCompareMode ||
+                isAddTubeMode ||
+                isAddPointModeEnabled
+                  ? 'not-allowed'
+                  : 'pointer',
+              pointerEvents:
+                isAddPolygonModeEnabled ||
+                isCompareMode ||
+                isAddTubeMode ||
+                isAddPointModeEnabled
+                  ? 'all'
+                  : 'auto',
+            }}
+            disabled={
+              isAddPolygonModeEnabled ||
+              isCompareMode ||
+              isAddTubeMode ||
+              isAddPointModeEnabled
+            }
+            onClick={() =>
+              setAddRadiationPointMode(!isAddRadiationPointModeEnabled)
+            }
+            className='ml-3'
+          >
+            {buttonText('радіаційний об`єкт', isAddRadiationPointModeEnabled)}
+          </Button>
+        )}
+    </>
+  );
+};
+
+const UpButton = ({ show }) => {
+  return (
+    <div
+      className='upsideButton'
+      onClick={() => {
+        show(true);
+      }}
+    />
+  );
+};

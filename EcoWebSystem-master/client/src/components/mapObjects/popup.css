@@ -1,4 +1,5 @@
-.edit-pencil-icon {
+.edit-pencil-icon,
+.poll-icon {
   width: 15px;
   height: 15px;
   cursor: pointer;
@@ -28,11 +29,12 @@
   color: rgb(51, 202, 63);
 }
 
-.edit-pencil-icon:hover {
+.edit-pencil-icon:hover,
+.poll-icon:hover {
   color: #999999;
 }
 
-.emissions-container{
+.emissions-container {
   width: 100%;
 }
 
@@ -53,45 +55,44 @@ th {
   text-align: center;
 }
 
-.leaflet-control-layers-overlays{
+.leaflet-control-layers-overlays {
   max-width: 200px;
   max-height: 200px;
   overflow-y: scroll;
   display: block;
 }
 
-.icon-wraper-grayscale{
+.icon-wraper-grayscale {
   filter: grayscale(1);
 }
 
-.wraper_icon{
+.wraper_icon {
   height: 100%;
-  width: 100%; 
-} 
+  width: 100%;
+}
 
-.svg_filler{
-  width:30px;
-  height:45px;
+.svg_filler {
+  width: 30px;
+  height: 45px;
   position: absolute;
   top: 0;
   left: 0;
 }
 
-.leaflet-div-icon{
+.leaflet-div-icon {
   border: none;
   background: none;
   transform: translateY(-20px);
 }
 
-.leaflet-div-icon-wraper{
-  width:30px;
-  height:45px;
+.leaflet-div-icon-wraper {
+  width: 30px;
+  height: 45px;
   transform: translateX(-30%) translateY(-70%);
 }
 
-
-@media (max-width:888px){
-  .emissions-container{
+@media (max-width: 888px) {
+  .emissions-container {
     width: 100%;
     overflow: scroll;
   }

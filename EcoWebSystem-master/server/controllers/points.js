@@ -8,13 +8,8 @@ const { CountEmmisionCoif } = require('../utils/pointCoifCounter');
 
 const { getActualDateTyped } = require('../utils/formatDateForDatabase');
 
-
 const getPoints = (req, res) => {
-  const { 
-    idEnvironment,
-    startDate,
-    endDate
-  } = req.query;
+  const { idEnvironment, startDate, endDate } = req.query;
 
   const query = `
   SELECT DISTINCT
@@ -56,7 +51,7 @@ const getPoints = (req, res) => {
     environment.id = ${idEnvironment} or environment.AttachEnv =${idEnvironment}
   ;`;
 
-//	  emissions_on_map.idEnvironment = ${idEnvironment}
+  //	  emissions_on_map.idEnvironment = ${idEnvironment}
 
   const pointsPromise = new Promise((resolve, reject) => {
     pool.query(query, (error, rows) => {
@@ -90,7 +85,7 @@ const getPoints = (req, res) => {
             SOURCE_POI,
             Id,
             idEnvironment,
-            startDate==undefined&&endDate==undefined?30:undefined
+            startDate == undefined && endDate == undefined ? 30 : undefined
           );
           return Promise.all([emissionsOnMapPromise, iconsMapPromise]).then(
             ([emissions, iconsMap]) => ({
@@ -107,14 +102,25 @@ const getPoints = (req, res) => {
               Image: iconsMap.get(+Type),
               Object_Type_Id,
               Object_Type_Name,
-              Environments: req.query.env?req.query.env:[],
-              emissions: startDate==undefined&&endDate==undefined && emissions.length>0
-              ?
-              emissions.filter(el=>el.Year===emissions[0].Year && el.Month===emissions[0].Month && el.day===emissions[0].day)
-              :
-              emissions.filter(el=>new Date(`${el.Year}-${el.Month}-${el.day}`) >= new Date(startDate) &&
-                                    new Date(`${el.Year}-${el.Month}-${el.day}`) <= new Date(endDate)),
-              emmissionsStats: CountEmmisionCoif(emissions,startDate,endDate)
+              Environments: req.query.env ? req.query.env : [],
+              emissions:
+                startDate == undefined &&
+                endDate == undefined &&
+                emissions.length > 0
+                  ? emissions.filter(
+                      (el) =>
+                        el.Year === emissions[0].Year &&
+                        el.Month === emissions[0].Month &&
+                        el.day === emissions[0].day
+                    )
+                  : emissions.filter(
+                      (el) =>
+                        new Date(`${el.Year}-${el.Month}-${el.day}`) >=
+                          new Date(startDate) &&
+                        new Date(`${el.Year}-${el.Month}-${el.day}`) <=
+                          new Date(endDate)
+                    ),
+              emmissionsStats: CountEmmisionCoif(emissions, startDate, endDate),
             })
           );
         }
@@ -129,33 +135,38 @@ const getPoints = (req, res) => {
     });
 };
 
-
-const getAdvancedPoints = (req,res)=>{
+const getAdvancedPoints = (req, res) => {
   let whereClause = {
     experts: '',
     env: '',
-    issue: ''
-  }
+    issue: '',
+  };
   if (req.query.env) {
     whereClause.env = 'and (';
-    req.query.env.forEach((el,i) => {
+    req.query.env.forEach((el, i) => {
       //whereClause.env+= (i==req.query.env.length-1)?`emissions_on_map.idEnvironment = ${el})`:`emissions_on_map.idEnvironment = ${el} or `
-      whereClause.env+= (i==req.query.env.length-1)?
-      `environment.id = ${el} or  environment.AttachEnv = ${el})`
-      :
-      `environment.id = ${el} or  environment.AttachEnv = ${el} or `
+      whereClause.env +=
+        i == req.query.env.length - 1
+          ? `environment.id = ${el} or  environment.AttachEnv = ${el})`
+          : `environment.id = ${el} or  environment.AttachEnv = ${el} or `;
     });
   }
   if (req.query.experts) {
     whereClause.experts = 'and (';
-    req.query.experts.forEach((el,i) => {
-      whereClause.experts+= (i==req.query.experts.length-1)?`user.id_of_expert = ${el})`:`user.id_of_expert = ${el} or `
+    req.query.experts.forEach((el, i) => {
+      whereClause.experts +=
+        i == req.query.experts.length - 1
+          ? `user.id_of_expert = ${el})`
+          : `user.id_of_expert = ${el} or `;
     });
   }
   if (req.query.issue) {
     whereClause.issue = 'and (';
-    req.query.issue.forEach((el,i) => {
-      whereClause.issue+= (i==req.query.issue.length-1)?`map_object_dependencies.id_of_ref = ${el});`:`map_object_dependencies.id_of_ref = ${el} or `
+    req.query.issue.forEach((el, i) => {
+      whereClause.issue +=
+        i == req.query.issue.length - 1
+          ? `map_object_dependencies.id_of_ref = ${el});`
+          : `map_object_dependencies.id_of_ref = ${el} or `;
     });
   }
 
@@ -177,12 +188,19 @@ const getAdvancedPoints = (req,res)=>{
   INNER JOIN type_of_object  ON  poi.Type = type_of_object.id
   INNER JOIN owner_types  ON poi.owner_type = owner_types.id
   INNER JOIN user ON poi.id_of_user = user.id_of_user
-  ${req.query.env?
-    `INNER JOIN emissions_on_map ON  poi.Id = emissions_on_map.idPoi
+  ${
+    req.query.env
+      ? `INNER JOIN emissions_on_map ON  poi.Id = emissions_on_map.idPoi
      INNER JOIN environment
       ON
-     environment.id = emissions_on_map.idEnvironment or  environment.AttachEnv = emissions_on_map.idEnvironment`:''}
-  ${req.query.issue?'LEFT JOIN map_object_dependencies on poi.Id = map_object_dependencies.id_of_object':''}
+     environment.id = emissions_on_map.idEnvironment or  environment.AttachEnv = emissions_on_map.idEnvironment`
+      : ''
+  }
+  ${
+    req.query.issue
+      ? 'LEFT JOIN map_object_dependencies on poi.Id = map_object_dependencies.id_of_object'
+      : ''
+  }
   WHERE  poi.Id is not null
   ${whereClause.env}
   ${whereClause.experts}
@@ -219,7 +237,7 @@ const getAdvancedPoints = (req,res)=>{
           const emissionsOnMapPromise = getEmissionsOnMap(
             SOURCE_POI,
             Id,
-            req.query.env?req.query.env:null
+            req.query.env ? req.query.env : null
           );
           return Promise.all([emissionsOnMapPromise, iconsMapPromise]).then(
             ([emissions, iconsMap]) => ({
@@ -236,15 +254,21 @@ const getAdvancedPoints = (req,res)=>{
               Image: iconsMap.get(+Type),
               Object_Type_Id,
               Object_Type_Name,
-              Environments: req.query.env?req.query.env:[],
+              Environments: req.query.env ? req.query.env : [],
               emissions,
-              emmissionsStats: CountEmmisionCoif(emissions,getActualDateTyped(),getActualDateTyped())
+              emmissionsStats: CountEmmisionCoif(
+                emissions,
+                getActualDateTyped(),
+                getActualDateTyped()
+              ),
             })
           );
         }
       );
 
-      return Promise.all(pointsPromises).then((points) => {res.send(points);});
+      return Promise.all(pointsPromises).then((points) => {
+        res.send(points);
+      });
     })
     .catch((error) => {
       console.log(error);
@@ -252,7 +276,7 @@ const getAdvancedPoints = (req,res)=>{
         message: error,
       });
     });
-}
+};
 
 module.exports = {
   getPoints,
