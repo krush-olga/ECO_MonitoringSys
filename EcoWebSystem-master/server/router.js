@@ -9,6 +9,7 @@ const pointsController = require('./controllers/points');
 const pointController = require('./controllers/point');
 const typeOfObjectController = require('./controllers/typeofobject');
 const expertsController = require('./controllers/experts');
+const resourcesController = require('./controllers/resources');
 const environmentsController = require('./controllers/environments');
 const elementsController = require('./controllers/elements');
 const gdkController = require('./controllers/gdk');
@@ -94,6 +95,11 @@ router.get('/issuegetter', taskContoler.getPossibleTasks);
 router.post('/tube', tubeControler.addTube);
 router.get('/tube/:id', tubeControler.getTube);
 router.put('/tube/:id', tubeControler.updateTube);
+
+router.get('/resources', resourcesController.getResources);
+router.post('/resources', resourcesController.addResource);
+router.put('/resources/:id', resourcesController.editResource);
+router.delete('/resources/:id', resourcesController.removeResource);
 
 if (process.env.NODE_ENV === 'production') {
   router.get('*', (req, res) => {

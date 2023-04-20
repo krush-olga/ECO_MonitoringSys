@@ -4,6 +4,7 @@ import {
   ENVIRONMENTS_URL,
   TYPE_OF_OBJECT_URL,
   TAX_VALUES_URL,
+  RESOURCES_URL,
   TABLE_NAMES,
 } from './constants';
 
@@ -13,4 +14,5 @@ export const URL_FROM_TABLE_NAME_MAP = new Map([
   [TABLE_NAMES.environment, ENVIRONMENTS_URL],
   [TABLE_NAMES.type_of_object, TYPE_OF_OBJECT_URL],
   [TABLE_NAMES.tax_values, TAX_VALUES_URL],
+  [TABLE_NAMES.resources, RESOURCES_URL],
 ]);

@@ -7,6 +7,7 @@ export const POINT_URL = '/point';
 export const TYPE_OF_OBJECT_URL = '/typeofobjects';
 export const EXPERTS_URL = '/experts';
 export const ENVIRONMENTS_URL = '/environments';
+export const RESOURCES_URL = '/resources';
 export const ELEMENTS_URL = '/elements';
 export const GDK_URL = '/gdk';
 export const GDK_FIND_URL = '/gdk/find';
@@ -37,6 +38,7 @@ export const TABLE_NAMES = {
   environment: 'environment',
   type_of_object: 'type_of_object',
   tax_values: 'tax_values',
+  resources: 'resource',
 };
 
 export const DICTIONARY_MODES = {

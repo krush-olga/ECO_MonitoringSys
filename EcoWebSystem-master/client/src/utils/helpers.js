@@ -1,5 +1,5 @@
-import { resolve } from "path";
-import pointInPolygon from "point-in-polygon";
+import { resolve } from 'path';
+import pointInPolygon from 'point-in-polygon';
 
 export const transformEmissions = (emissions) => {
   const elementIds = [...new Set(emissions.map(({ idElement }) => idElement))];
@@ -184,32 +184,43 @@ export const randGraphColor = () => {
 };
 
 export const getIdColumnNameForDictionaryObject = (item) => {
-  const possibleNamesForIdColumn = ['code', 'id', 'Id', 'id_of_element'];
+  const possibleNamesForIdColumn = [
+    'code',
+    'id',
+    'Id',
+    'id_of_element',
+    'resource_id',
+  ];
 
   return possibleNamesForIdColumn.find((possibleName) =>
     Object.keys(item).some((key) => key === possibleName)
   );
 };
 
-export const transformCalculationDate= (date)=>{
-  return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
-}
+export const transformCalculationDate = (date) => {
+  return `${date.getDate()}/${
+    date.getMonth() + 1
+  }/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+};
 
-export  const formParamsForGetCheckbox = (arr,label)=>{
+export const formParamsForGetCheckbox = (arr, label) => {
   let query = '';
-  arr.forEach((el,i)=>{
-      query+= (i==arr.length-1)?`${label}[]=${el.value}`:`${label}[]=${el.value}&`
-  })
+  arr.forEach((el, i) => {
+    query +=
+      i == arr.length - 1
+        ? `${label}[]=${el.value}`
+        : `${label}[]=${el.value}&`;
+  });
   return query;
-}
+};
 
-export  const formParamsForGetArr = (arr,label)=>{
+export const formParamsForGetArr = (arr, label) => {
   let query = '';
-  arr.forEach((el,i)=>{
-      query+= (i==arr.length-1)?`${label}[]=${el}`:`${label}[]=${el}&`
-  })
+  arr.forEach((el, i) => {
+    query += i == arr.length - 1 ? `${label}[]=${el}` : `${label}[]=${el}&`;
+  });
   return query;
-}
+};
 
 export const removeDuplicates = (arr) => {
   const result = [];
@@ -252,4 +263,4 @@ export const removeDuplicates = (arr) => {
     } // Конец цикла
   });
   return result;
-}
+};
