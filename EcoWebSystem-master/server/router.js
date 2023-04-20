@@ -80,6 +80,7 @@ router.put('/taxvalues/:id', taxValuesController.editTaxValue);
 router.delete('/taxvalues/:id', taxValuesController.removeTaxValue);
 
 router.get('/tasks', taskContoler.getTasks);
+router.post('/task', taskContoler.addTask);
 router.get('/medStat', medStatControler.getMedStat);
 router.get('/getParams', medStatControler.getParams);
 router.post('/getMedStatByParams', medStatControler.getMedStatByParams);
