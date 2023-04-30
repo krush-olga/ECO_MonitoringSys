@@ -6,11 +6,11 @@ const addDocument = async (req, res) => {
   try {
     let document = await scrapDocument(id);
     const save = new Promise((resolve, reject) => {
-      const query = `INSERT INTO ?? VALUES(?);`;
+      const query = `INSERT INTO documents
+                           VALUES (?, ?, ?, ?);`;
       return pool.query(
         query,
         [
-          'documents',
           id,
           document.get('name'),
           document.get('body'),
@@ -34,8 +34,8 @@ const addDocument = async (req, res) => {
 const getDocumentList = async (req, res) => {
   const findAllDocuments = new Promise((resolve, reject) => {
     const query = `SELECT *
-                       FROM ? ?`;
-    return pool.query(query, ['documents'], (error, rows) => {
+                       FROM documents;`;
+    return pool.query(query, [], (error, rows) => {
       if (error) {
         return reject(error);
       }
@@ -55,10 +55,10 @@ const removeDocument = async (req, res) => {
   let id = req.params.id;
   const deleteDocumentById = new Promise((resolve, reject) => {
     const query = `DELETE
-                       FROM ? ?
+                       FROM documents
                        WHERE id = ?`;
 
-    return pool.query(query, ['documents', id], (error, rows) => {
+    return pool.query(query, [id], (error, rows) => {
       if (error) {
         return reject(error);
       }
