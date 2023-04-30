@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
 import { MenuView } from './components/menu/menu.jsx';
-import { AdvancedMap } from "./components/advancedmap/advancedmap.jsx";
+import { AdvancedMap } from './components/advancedmap/advancedmap.jsx';
 import { Home } from './components/home/home.jsx';
 import { MapView } from './components/map/map.jsx';
 import { Dictionary } from './components/dictionary/dictionary.jsx';
@@ -17,6 +17,7 @@ import {
   EnvironmentsInfoContext,
   environmentsInfoInitialState,
 } from './components/context/environmentsInfoContext';
+import Document from './components/document/document';
 
 export const App = () => {
   const [user, setUser] = useState({});
@@ -61,10 +62,9 @@ export const App = () => {
             />
             <Route
               path='/advancedmap'
-              component={()=>(
-                <AdvancedMap user={user}/>
-              )}
+              component={() => <AdvancedMap user={user} />}
             />
+            <Route exact path='/document/list' component={Document} />
           </Switch>
         </EnvironmentsInfoContext.Provider>
       </div>
