@@ -2,8 +2,9 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 async function scrapDocument(id) {
+  let url = 'https://data.rada.gov.ua/laws/show/' + id;
   const scraper = axios
-    .get('https://data.rada.gov.ua/laws/show/' + id + '#Text')
+    .get(url)
     .then((response) => {
       let map = new Map();
       const $ = cheerio.load(response.data);
@@ -14,16 +15,21 @@ async function scrapDocument(id) {
       $('.doc > div > .dat0').each((index, element) => {
         map.set('date', $(element).text());
       });
+
+      if (map.size < 3) {
+        throw new Error('Some fields are not parsed');
+      }
       return map;
     })
     .catch((error) => {
       console.log(error);
     });
-
   try {
     return await scraper;
   } catch (e) {
-    throw e;
+    throw new Error(
+      `Cannot retrieve date from the page: ${url}; try again later. ${e}`
+    );
   }
 }
 

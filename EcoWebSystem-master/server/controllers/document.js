@@ -1,5 +1,5 @@
-const pool = require('../../../db-config/mysql-config');
-const { scrapDocument } = require('../../utils/scraper');
+const pool = require('../../db-config/mysql-config');
+const { scrapDocument } = require('../utils/scraper');
 
 const addDocument = async (req, res) => {
   let id = req.params.id;
@@ -26,7 +26,7 @@ const addDocument = async (req, res) => {
     });
     await save;
     return res.sendStatus(200);
-  } catch (e) {
+  } catch (error) {
     return res.status(500).send({ message: error });
   }
 };
