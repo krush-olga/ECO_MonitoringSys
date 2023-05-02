@@ -18,6 +18,7 @@ export const COMPARE_EMISSIONS = '/compareEmissions';
 export const TASKS_URL = '/tasks';
 export const TASK_URL = '/task';
 export const TUBE_URl = '/tube';
+export const EVENTS_URl = '/events';
 export const FORMULA_CALCULATIONS_URL = '/getcalculationsinfo';
 export const GET_POSSIBLE_ISSUES = '/issuegetter';
 export const ADVANCED_POINTS_URL = '/advancedpoints';
@@ -243,4 +244,14 @@ export const getDataForLegendRegion = (idEnvironment) => {
     6: DENGEROUS_LVL_WATER,
     8: DENGEROUS_LVL_DEFAULT,
   }[idEnvironment];
+};
+
+export const roles = {
+  admin: 0,
+  economist: 1,
+  ecologist: 2,
+  doctor: 3,
+  lawyer: 4,
+  analyst: 5,
+  electrician: 6,
 };

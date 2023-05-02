@@ -5,7 +5,12 @@ const { removeDuplicates } = require('../utils/duplicateRemover');
 
 const getTasks = (req, res) => {
   pool.query(
-    `select id_of_object,  (select issues.name from issues where issue_id = map_object_dependencies.id_of_ref) as name from map_object_dependencies where type_obj=0 and type_rel=0;`,
+    `select id_of_object,  
+    (select issues.issue_id from issues where issue_id = map_object_dependencies.id_of_ref) as issue_id,
+    (select issues.name from issues where issue_id = map_object_dependencies.id_of_ref) as name,
+    (select issues.description from issues where issue_id = map_object_dependencies.id_of_ref) as description,
+    (select issues.Tema from issues where issue_id = map_object_dependencies.id_of_ref) as thema
+    from map_object_dependencies where type_obj=0 and type_rel=0;`,
     (err, rows) => {
       if (err) {
         console.log(err);

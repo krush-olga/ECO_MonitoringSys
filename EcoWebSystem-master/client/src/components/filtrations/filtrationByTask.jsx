@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
+
 import { get } from '../../utils/httpService.js';
 import { TASKS_URL } from '../../utils/constants.js';
+import { TaskInfoModal } from '../modals/taskInfoModal';
 
 import './filtrationByTask.css';
 
@@ -20,12 +22,20 @@ export const FiltarionByTasks = ({
   filteredPoints,
   setFilteredPoints,
   setFilteredItems,
+  user,
 }) => {
   const [Title, setTitle] = useState(initTitle);
 
   const [Chosen, setChosen] = useState(null);
 
   const [Tasks, setAllTasks] = useState([]);
+
+  const [isEventModalShow, setIsEventModalShown] = useState(false);
+  const [
+    shouldFetchAddTaskModalData,
+    setShouldFetchAddTaskModalData,
+  ] = useState(false);
+  const [isEditTaskMode, setIsEditTaskMode] = useState(false);
 
   const setTasks = () => {
     get(TASKS_URL).then(({ data }) => {
@@ -34,6 +44,9 @@ export const FiltarionByTasks = ({
         if (!tempTasks.some((elem) => elem.name === el.name)) {
           tempTasks.push({
             name: el.name,
+            description: el.description,
+            thema: el.thema,
+            issue_id: el.issue_id,
             object_arr: [],
           });
         }
@@ -135,6 +148,24 @@ export const FiltarionByTasks = ({
           ''
         )}
       </DropdownButton>
+      {Chosen && (
+        <Button
+          variant='primary'
+          className='text-center mt-2'
+          onClick={() => setIsEventModalShown(true)}
+        >
+          Переглянути деталі
+        </Button>
+      )}
+      <TaskInfoModal
+        user={user}
+        show={isEventModalShow}
+        onHide={() => setIsEventModalShown(false)}
+        isEditTaskMode={isEditTaskMode}
+        setIsEditTaskMode={setIsEditTaskMode}
+        setShouldFetchData={setShouldFetchAddTaskModalData}
+        task={Tasks.find((task) => task.name === Chosen)}
+      />
     </div>
   );
 };

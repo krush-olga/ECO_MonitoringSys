@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import { get } from '../../utils/httpService';
-import { EXPERTS_URL } from '../../utils/constants';
+import { EXPERTS_URL, roles } from '../../utils/constants';
 import { FiltarionByTasks } from '../filtrations/filtrationByTask';
 import { useOnClickOutside } from '../helperComponents/outsideClick';
 import { AddTaskModal } from '../addComponents/addTaskModal';
@@ -117,17 +117,23 @@ export const Filtration = ({
             filteredPoints={filteredPoints}
             setFilteredPoints={setFilteredPoints}
             setFilteredItems={setFilteredItems}
+            user={user}
           />
         )}
 
-        <hr />
-        <Button
-          variant='primary'
-          className='text-center'
-          onClick={() => setIsTaskModalShown(true)}
-        >
-          Створити задачу
-        </Button>
+        {(user?.id_of_expert === roles.admin ||
+          user?.id_of_expert === roles.analyst) && (
+          <>
+            <hr />
+            <Button
+              variant='primary'
+              className='text-center'
+              onClick={() => setIsTaskModalShown(true)}
+            >
+              Створити задачу
+            </Button>
+          </>
+        )}
       </div>
       <AddTaskModal
         user={user}
