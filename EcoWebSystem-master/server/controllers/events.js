@@ -129,7 +129,119 @@ const addEvent = (req, res) => {
     });
 };
 
+const removeEvent = (req, res) => {
+  const event_id = req.params.id;
+
+  const eventPromise = new Promise((resolve, reject) => {
+    const query = `DELETE FROM event WHERE event_id=${event_id}`;
+    pool.query(query, (error, rows) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+
+  const documentsPromise = new Promise((resolve, reject) => {
+    const query = `DELETE FROM event_documents WHERE event_id=${event_id}`;
+    pool.query(query, (error, rows) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+
+  const resourcesPromise = new Promise((resolve, reject) => {
+    const query = `DELETE FROM event_resource WHERE event_id=${event_id}`;
+    pool.query(query, (error, rows) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+
+  Promise.all([eventPromise, documentsPromise, resourcesPromise])
+    .then(() => res.sendStatus(200))
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send({
+        message: error,
+      });
+    });
+};
+
+const updateEvent = (req, res) => {
+  const event_id = req.params.id;
+  const { name, description, resources } = req.body;
+
+  const eventQuery = `
+    UPDATE event
+    SET name = '${name}', description = '${description}'
+    WHERE event_id = '${event_id}'
+  `;
+
+  pool.query(eventQuery, (eventError) => {
+    if (eventError) {
+      console.log(eventError);
+      res.status(500).send({
+        message: eventError,
+      });
+      return;
+    }
+
+    const deleteResourcesQuery = `
+      DELETE FROM event_resource
+      WHERE event_id = '${event_id}'
+    `;
+
+    pool.query(deleteResourcesQuery, (deleteError) => {
+      if (deleteError) {
+        console.log(deleteError);
+        res.status(500).send({
+          message: deleteError,
+        });
+        return;
+      }
+
+      const addResourcesPromises = resources.map((resource) => {
+        const { description, resource_id, value } = resource;
+        const addResourceQuery = `
+          INSERT INTO event_resource
+          (event_id, resource_id, description, value)
+          VALUES ('${event_id}', '${resource_id}', '${description}', '${value}')
+        `;
+
+        return new Promise((resolve, reject) => {
+          pool.query(addResourceQuery, (addError, addRows) => {
+            if (addError) {
+              reject(addError);
+            } else {
+              resolve(addRows);
+            }
+          });
+        });
+      });
+
+      Promise.all(addResourcesPromises)
+        .then(() => res.sendStatus(200))
+        .catch((addError) => {
+          console.log(addError);
+          res.status(500).send({
+            message: addError,
+          });
+        });
+    });
+  });
+};
+
 module.exports = {
   getEvents,
   addEvent,
+  updateEvent,
+  removeEvent,
 };

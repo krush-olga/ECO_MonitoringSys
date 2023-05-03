@@ -103,6 +103,8 @@ router.delete('/resources/:id', resourcesController.removeResource);
 
 router.get('/events', eventsController.getEvents);
 router.post('/events', eventsController.addEvent);
+router.put('/events/:id', eventsController.updateEvent);
+router.delete('/events/:id', eventsController.removeEvent);
 
 if (process.env.NODE_ENV === 'production') {
   router.get('*', (req, res) => {

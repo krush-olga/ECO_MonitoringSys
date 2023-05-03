@@ -13,7 +13,7 @@ async function put(url, body) {
 }
 
 async function deleteRequest(url, body) {
-  return axios.delete(url);
+  return axios.delete(url, body);
 }
 
 export { post, get, put, deleteRequest };

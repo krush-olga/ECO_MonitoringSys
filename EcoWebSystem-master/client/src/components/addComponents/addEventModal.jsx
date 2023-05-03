@@ -5,7 +5,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { EVENTS_URl, RESOURCES_URL } from '../../utils/constants';
 
-import { get, post } from '../../utils/httpService';
+import { get, post, put } from '../../utils/httpService';
 
 import { VerticallyCenteredModal } from '../modals/modal';
 
@@ -22,14 +22,17 @@ export const AddEventModal = ({
   onHide,
   user,
   setShouldFetchData,
-  isEditEventMode,
-  setIsEditEventMode,
   issue_id,
+  event,
 }) => {
+  console.log(event);
   const [name, setName] = useState(initialState.form.name);
   const [description, setDescription] = useState(initialState.form.description);
-  const [selectedResources, setSelectedResources] = useState([]);
+  const [selectedResources, setSelectedResources] = useState(
+    initialState.form.resources
+  );
   const [allResources, setAllResources] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const hide = () => {
     onHide();
@@ -40,7 +43,6 @@ export const AddEventModal = ({
     setName(initialState.form.name);
     setDescription(initialState.form.description);
     setSelectedResources(initialState.form.resources);
-    setIsEditEventMode(false);
   };
 
   // useEffect(() => {
@@ -54,14 +56,6 @@ export const AddEventModal = ({
 
   const addEvent = () => {
     if (name && description && selectedResources.length && user?.id_of_user) {
-      console.log(
-        name,
-        description,
-        selectedResources,
-        issue_id,
-        user.id_of_user
-      );
-
       post(EVENTS_URl, {
         name,
         description,
@@ -86,36 +80,32 @@ export const AddEventModal = ({
   };
 
   const editTask = () => {
-    /*
-      put(`${TUBE_URl}/${tubeId}`, {
-        brush_color_r: color.r,
-        bruch_color_g: color.g,
-        brush_color_b: color.b,
-        brush_alfa: color.a,
-        line_collor_r: color.r,
-        line_color_g: color.g,
-        line_color_b: color.b,
-        line_alfa: color.a,
-        line_thickness: Number(lineThickness),
+    if (
+      name &&
+      description &&
+      selectedResources.length &&
+      user?.id_of_user &&
+      event?.event_id
+    ) {
+      put(`${EVENTS_URl}/${event?.event_id}`, {
         name,
         description,
+        resources: selectedResources,
       })
         .then(() => {
-          clearForm();
-          onHide();
-          setnewTubeCordinates([]);
+          hide();
           setShouldFetchData(true);
-          setIsEditEventMode(false);
-          settubeId(null);
         })
         .catch((error) => {
           alert('Помилка при редагуванні даних.');
           console.log(error);
-          setIsEditEventMode(false);
-          settubeId(null);
-          setnewTubeCordinates([]);
           setShouldFetchData(false);
-        });*/
+        });
+    } else {
+      alert(
+        'Заповніть такі поля:\n-назва\n-опис\n-ресурси\nТа увійдіть в систему'
+      );
+    }
   };
 
   useEffect(() => {
@@ -126,12 +116,23 @@ export const AddEventModal = ({
     }
   }, [show]);
 
+  useEffect(() => {
+    if (event) {
+      setIsEditMode(true);
+      setName(event.name);
+      setDescription(event.description);
+      setSelectedResources(event.resources);
+    } else {
+      setIsEditMode(false);
+    }
+  }, [event]);
+
   return (
     <VerticallyCenteredModal
       size='lg'
       show={show}
       onHide={() => hide()}
-      header={!isEditEventMode ? 'Додати захід' : 'Редагувати захід'}
+      header={isEditMode ? 'Редагувати захід' : 'Додати захід'}
     >
       <Form>
         <Form.Group>
@@ -232,15 +233,9 @@ export const AddEventModal = ({
             ))
           : null}
 
-        {isEditEventMode ? (
-          <Button size={'sm'} onClick={() => editTask()}>
-            Редагувати захід
-          </Button>
-        ) : (
-          <Button size={'sm'} onClick={() => addEvent()}>
-            Додати захід
-          </Button>
-        )}
+        <Button size={'sm'} onClick={isEditMode ? editTask : addEvent}>
+          {isEditMode ? 'Редагувати захід' : 'Додати захід'}
+        </Button>
       </Form>
     </VerticallyCenteredModal>
   );

@@ -31,11 +31,6 @@ export const FiltarionByTasks = ({
   const [Tasks, setAllTasks] = useState([]);
 
   const [isEventModalShow, setIsEventModalShown] = useState(false);
-  const [
-    shouldFetchAddTaskModalData,
-    setShouldFetchAddTaskModalData,
-  ] = useState(false);
-  const [isEditTaskMode, setIsEditTaskMode] = useState(false);
 
   const setTasks = () => {
     get(TASKS_URL).then(({ data }) => {
@@ -161,9 +156,6 @@ export const FiltarionByTasks = ({
         user={user}
         show={isEventModalShow}
         onHide={() => setIsEventModalShown(false)}
-        isEditTaskMode={isEditTaskMode}
-        setIsEditTaskMode={setIsEditTaskMode}
-        setShouldFetchData={setShouldFetchAddTaskModalData}
         task={Tasks.find((task) => task.name === Chosen)}
       />
     </div>
