@@ -127,7 +127,7 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
         {task?.description && <p>Опис: {task?.description}</p>}
         {events.length ? (
           <>
-            <p className='text-center mb-1 bold'>Заходи:</p>
+            <p className='text-center mb-1 fw-bold'>Заходи:</p>
             <Card>
               <ListGroup variant='flush'>
                 {events.map((event) => (
@@ -165,19 +165,22 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
             </Card>
           </>
         ) : (
-          <p className='text-center bold'>Заходів поки що немає</p>
+          <p className='text-center fw-bold'>Заходів поки що немає</p>
         )}
         <Button
           variant='primary'
           className='text-center mt-2'
-          onClick={() => setIsAddEventModalShown(true)}
+          onClick={() => {
+            setIsAddEventModalShown(true);
+            setSelectedEvent(null);
+          }}
         >
           Додати захід
         </Button>
 
         {documents.length ? (
           <>
-            <p className='text-center mb-1 bold'>Документи:</p>
+            <p className='text-center mb-1 fw-bold'>Документи:</p>
             <Card>
               <ListGroup variant='flush'>
                 {documents.map((doc, index) => (
@@ -202,7 +205,7 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
           </>
         ) : null}
 
-        <p className='my-3 text-center bold'>Додати документ</p>
+        <p className='my-3 text-center fw-bold'>Додати документ</p>
         <Form>
           <Form.Group>
             <Form.Label>Введіть код документу</Form.Label>

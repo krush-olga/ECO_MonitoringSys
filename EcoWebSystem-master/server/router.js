@@ -108,6 +108,12 @@ router.post('/events', eventsController.addEvent);
 router.put('/events/:id', eventsController.updateEvent);
 router.delete('/events/:id', eventsController.removeEvent);
 
+router.put(
+  '/lawyerVerification/:id',
+  eventsController.updateLawyerVerification
+);
+router.put('/dmVerification/:id', eventsController.updateDmVerification);
+
 router.post('/eventDocument', eventDocumentsController.addEventDocument);
 router.delete('/eventDocument', eventDocumentsController.removeEventDocument);
 

@@ -30,11 +30,9 @@ const getEvents = (req, res) => {
     )
   ) AS resources,
   JSON_ARRAYAGG(
-    JSON_OBJECT(
-      'document_code', 
-      CASE WHEN event_documents.document_code IS NOT NULL THEN event_documents.document_code ELSE NULL END,
-      'description', 
-      CASE WHEN event_documents.description IS NOT NULL THEN event_documents.description ELSE NULL END
+    DISTINCT JSON_OBJECT(
+      'document_code',event_documents.document_code,
+      'description', event_documents.description
     )
   ) AS documents
 FROM 
@@ -239,9 +237,57 @@ const updateEvent = (req, res) => {
   });
 };
 
+const updateLawyerVerification = (req, res) => {
+  const event_id = req.params.id;
+  const { lawyer_vefirication } = req.body;
+
+  const eventQuery = `
+    UPDATE event
+    SET lawyer_vefirication = '${lawyer_vefirication}'
+    WHERE event_id = '${event_id}'
+  `;
+
+  pool.query(eventQuery, (eventError) => {
+    if (eventError) {
+      console.log(eventError);
+      res.status(500).send({
+        message: eventError,
+      });
+      return;
+    }
+
+    res.sendStatus(200);
+  });
+};
+
+const updateDmVerification = (req, res) => {
+  const event_id = req.params.id;
+  const { dm_verification } = req.body;
+
+  const eventQuery = `
+    UPDATE event
+    SET dm_verification = '${dm_verification}'
+    WHERE event_id = '${event_id}'
+  `;
+
+  pool.query(eventQuery, (eventError) => {
+    if (eventError) {
+      console.log(eventError);
+      res.status(500).send({
+        message: eventError,
+      });
+      return;
+    }
+
+    res.sendStatus(200);
+  });
+};
+
 module.exports = {
   getEvents,
   addEvent,
   updateEvent,
+  updateLawyerVerification,
+  updateDmVerification,
   removeEvent,
 };

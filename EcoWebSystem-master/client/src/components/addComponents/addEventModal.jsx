@@ -25,7 +25,6 @@ export const AddEventModal = ({
   issue_id,
   event,
 }) => {
-  console.log(event);
   const [name, setName] = useState(initialState.form.name);
   const [description, setDescription] = useState(initialState.form.description);
   const [selectedResources, setSelectedResources] = useState(
@@ -194,7 +193,9 @@ export const AddEventModal = ({
                 key={resource.resource_id}
                 className='d-flex justify-content-between align-items-center'
               >
-                <p className='mb-0'>{resource.name}</p>
+                <p className='mb-0'>
+                  {resource.name}, {resource?.units}. Ціна: {resource.price}
+                </p>
                 <Form.Group>
                   <Form.Label>Задайте кількість</Form.Label>
                   <Form.Control
