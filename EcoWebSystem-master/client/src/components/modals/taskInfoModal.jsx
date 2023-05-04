@@ -12,6 +12,7 @@ import { EVENTS_URl } from '../../utils/constants';
 
 import { VerticallyCenteredModal } from './modal';
 import { AddEventModal } from '../addComponents/addEventModal';
+import { EventInfoModal } from './eventInfoModal';
 
 export const TaskInfoModal = ({ show, onHide, user, task }) => {
   const [events, setEvents] = useState([]);
@@ -19,6 +20,7 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
   const [isAddEventModalShown, setIsAddEventModalShown] = useState(false);
   const [shouldFetchData, setShouldFetchData] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isEventInfoModalShown, setIsEventInfoModalShown] = useState(false);
 
   const hide = () => {
     onHide();
@@ -80,6 +82,10 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
                       <FontAwesomeIcon
                         icon={faEye}
                         className='cursor-pointer'
+                        onClick={() => {
+                          setSelectedEvent(event);
+                          setIsEventInfoModalShown(true);
+                        }}
                       />
                       <FontAwesomeIcon
                         icon={faPencilAlt}
@@ -120,6 +126,16 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
         user={user}
         setShouldFetchData={setShouldFetchData}
         issue_id={task?.issue_id}
+        event={selectedEvent}
+      />
+      <EventInfoModal
+        show={isEventInfoModalShown}
+        onHide={() => {
+          setIsEventInfoModalShown(false);
+          setSelectedEvent(null);
+        }}
+        user={user}
+        setShouldFetchData={setShouldFetchData}
         event={selectedEvent}
       />
     </>
