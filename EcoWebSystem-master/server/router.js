@@ -22,6 +22,7 @@ const taskContoler = require('./controllers/tasks');
 const medStatController = require('./controllers/medStat');
 const eventsController = require('./controllers/events');
 const eventDocumentsController = require('./controllers/eventDocuments');
+const taskDocumentsController = require('./controllers/taskDocuments');
 const tubeController = require('./controllers/tubes');
 
 router.post('/login', authController.login);
@@ -109,6 +110,10 @@ router.delete('/events/:id', eventsController.removeEvent);
 
 router.post('/eventDocument', eventDocumentsController.addEventDocument);
 router.delete('/eventDocument', eventDocumentsController.removeEventDocument);
+
+router.get('/taskDocument', taskDocumentsController.getTaskDocuments);
+router.post('/taskDocument', taskDocumentsController.addTaskDocument);
+router.delete('/taskDocument', taskDocumentsController.removeTaskDocument);
 
 if (process.env.NODE_ENV === 'production') {
   router.get('*', (req, res) => {

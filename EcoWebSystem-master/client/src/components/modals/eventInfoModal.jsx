@@ -10,16 +10,17 @@ import { EVENT_DOCUMENT_URl } from '../../utils/constants';
 export const EventInfoModal = ({
   show,
   onHide,
-  user,
   setShouldFetchData,
   event,
+  setEvent,
 }) => {
   const [documentCode, setDocumentCode] = useState('');
   const [documentDescription, setDocumentDescription] = useState('');
-  console.log(event);
 
   const hide = () => {
     onHide();
+    setDocumentDescription('');
+    setDocumentCode('');
   };
 
   const handleAddDocument = () => {
@@ -27,9 +28,21 @@ export const EventInfoModal = ({
       post(EVENT_DOCUMENT_URl, {
         document_code: documentCode,
         description: documentDescription,
+        event_id: event?.event_id,
       })
         .then(() => {
           setShouldFetchData(true);
+          setEvent((prev) => ({
+            ...prev,
+            documents: [
+              ...prev.documents,
+              {
+                document_code: documentCode,
+                description: documentDescription,
+                event_id: event?.event_id,
+              },
+            ],
+          }));
           setDocumentDescription('');
           setDocumentCode('');
         })
@@ -43,13 +56,19 @@ export const EventInfoModal = ({
     }
   };
 
-  const handleRemoveDocument = (document_code, event_id) => {
+  const handleRemoveDocument = (document_code) => {
     deleteRequest(EVENT_DOCUMENT_URl, {
-      document_code: documentCode,
-      description: documentDescription,
+      document_code: document_code,
+      event_id: event?.event_id,
     })
       .then(() => {
         setShouldFetchData(true);
+        setEvent((prev) => ({
+          ...prev,
+          documents: prev.documents.filter(
+            (doc) => doc.document_code !== document_code
+          ),
+        }));
         setDocumentDescription('');
         setDocumentCode('');
       })
@@ -104,17 +123,14 @@ export const EventInfoModal = ({
                         Код документа: {doc?.document_code}
                       </p>
                       <FontAwesomeIcon
-                        onClick={() =>
-                          handleRemoveDocument(
-                            doc?.document_code,
-                            doc?.description
-                          )
-                        }
+                        onClick={() => handleRemoveDocument(doc?.document_code)}
                         icon={faTrashAlt}
                         className='cursor-pointer'
                       />
                     </div>
-                    <p className='mb-0'>Опис: {doc?.description}</p>
+                    {doc.description && (
+                      <p className='mb-0'>Опис: {doc?.description}</p>
+                    )}
                   </ListGroup.Item>
                 ))}
               </ListGroup>
@@ -122,7 +138,8 @@ export const EventInfoModal = ({
           </>
         ) : null}
 
-        <Form className='mt-3'>
+        <p className='my-3 text-center bold'>Додати документ</p>
+        <Form>
           <Form.Group>
             <Form.Label>Введіть код документу</Form.Label>
             <Form.Control
