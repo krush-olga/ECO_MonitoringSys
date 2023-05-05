@@ -87,7 +87,7 @@ export const FiltarionByTasks = ({
       setChosen(element.name);
       setTitle(
         element.name.length > 12
-          ? element.name.substring(0, 10) + '...'
+          ? element.name.substring(0,6 10) + '...'
           : element.name
       );
       setUpdate(!shouldUpdate);

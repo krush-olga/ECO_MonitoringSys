@@ -18,6 +18,7 @@ export const EventInfoModal = ({
   event,
   setEvent,
 }) => {
+  console.log(event);
   const [documentCode, setDocumentCode] = useState('');
   const [documentDescription, setDocumentDescription] = useState('');
 
@@ -134,6 +135,8 @@ export const EventInfoModal = ({
         header={event?.name || 'Деталі по задачі'}
       >
         {event?.description && <p>Опис: {event?.description}</p>}
+
+        <p>Експерт: {event?.expert_name}</p>
 
         <p className='mb-0'>Рішення юриста</p>
         <Form className='mb-1'>

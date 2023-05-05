@@ -14,6 +14,9 @@ const getEvents = (req, res) => {
   event.lawyer_vefirication, 
   event.dm_verification, 
   event.id_of_user, 
+  event.id_of_expert, 
+  expert.expert_name, 
+  event.weight, 
   event.issue_id, 
   JSON_ARRAYAGG(
     JSON_MERGE_PATCH(
@@ -37,7 +40,8 @@ const getEvents = (req, res) => {
   ) AS documents
 FROM 
   event 
-LEFT JOIN 
+  LEFT JOIN expert ON event.id_of_expert = expert.id_of_expert
+  LEFT JOIN 
   event_resource 
 ON 
   event.event_id = event_resource.event_id 
@@ -75,12 +79,20 @@ GROUP BY
 };
 
 const addEvent = (req, res) => {
-  const { name, description, id_of_user, resources, issue_id } = req.body;
+  const {
+    name,
+    description,
+    id_of_user,
+    resources,
+    issue_id,
+    id_of_expert,
+    weight = 5,
+  } = req.body;
 
   const query = `
     INSERT INTO event 
-    (name, description, id_of_user, issue_id)
-    VALUES ('${name}', '${description}', '${id_of_user}', '${issue_id}');
+    (name, description, id_of_user, issue_id, id_of_expert, weight)
+    VALUES ('${name}', '${description}', '${id_of_user}', '${issue_id}', '${id_of_expert}', ${weight});
   `;
 
   const eventPromise = new Promise((resolve, reject) => {

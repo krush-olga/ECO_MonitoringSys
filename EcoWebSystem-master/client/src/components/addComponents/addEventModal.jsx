@@ -60,6 +60,7 @@ export const AddEventModal = ({
         description,
         issue_id,
         id_of_user: user.id_of_user,
+        id_of_expert: user.id_of_expert,
         resources: selectedResources,
       })
         .then(() => {
