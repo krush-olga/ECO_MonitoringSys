@@ -49,7 +49,6 @@ export const AddTaskModal = ({
 
   const addTask = () => {
     if (name && description && Tema && user?.id_of_user) {
-      console.log(user, name, description, Tema);
       post(TASK_URL, {
         name,
         description,

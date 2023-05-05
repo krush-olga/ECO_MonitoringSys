@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import { get } from '../../utils/httpService';
-import { EXPERTS_URL, roles } from '../../utils/constants';
+import { EXPERTS_URL } from '../../utils/constants';
 import { FiltarionByTasks } from '../filtrations/filtrationByTask';
 import { useOnClickOutside } from '../helperComponents/outsideClick';
-import { AddTaskModal } from '../addComponents/addTaskModal';
 import { Pseudo } from '../helperComponents/pseudo/pseudo';
 
 import './filtration.css';
@@ -21,12 +20,6 @@ export const Filtration = ({
 }) => {
   let filtrationForm;
   const [existingExperts, setExistingExperts] = useState([]);
-  const [isTaskModalShow, setIsTaskModalShown] = useState(false);
-  const [
-    shouldFetchAddTaskModalData,
-    setShouldFetchAddTaskModalData,
-  ] = useState(false);
-  const [isEditTaskMode, setIsEditTaskMode] = useState(false);
 
   const [environmentState, setenvironmentState] = useState('');
 
@@ -120,29 +113,7 @@ export const Filtration = ({
             user={user}
           />
         )}
-
-        {(user?.id_of_expert === roles.admin ||
-          user?.id_of_expert === roles.analyst) && (
-          <>
-            <hr />
-            <Button
-              variant='primary'
-              className='text-center'
-              onClick={() => setIsTaskModalShown(true)}
-            >
-              Створити задачу
-            </Button>
-          </>
-        )}
       </div>
-      <AddTaskModal
-        user={user}
-        show={isTaskModalShow}
-        onHide={() => setIsTaskModalShown(false)}
-        isEditTaskMode={isEditTaskMode}
-        setIsEditTaskMode={setIsEditTaskMode}
-        setShouldFetchData={setShouldFetchAddTaskModalData}
-      />
       <Pseudo setOpened={setLeftFilterOpened} />
     </div>
   );

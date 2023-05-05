@@ -2,19 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import { get } from '../../utils/httpService.js';
-import { TASKS_URL } from '../../utils/constants.js';
+import { roles, TASKS_URL } from '../../utils/constants.js';
 import { TaskInfoModal } from '../modals/taskInfoModal';
 
 import './filtrationByTask.css';
-
-/*
-  initTasks = [
-    {
-      name:"",
-      object_arr:[],
-    }
-  ];
-*/
+import { AddTaskModal } from '../addComponents/addTaskModal';
 
 const initTitle = 'Список задач';
 
@@ -32,6 +24,10 @@ export const FiltarionByTasks = ({
 
   const [isEventModalShow, setIsEventModalShown] = useState(false);
 
+  const [isTaskModalShow, setIsTaskModalShown] = useState(false);
+  const [shouldFetchData, setShouldFetchData] = useState(false);
+  const [isEditTaskMode, setIsEditTaskMode] = useState(false);
+
   const setTasks = () => {
     get(TASKS_URL).then(({ data }) => {
       let tempTasks = [];
@@ -40,18 +36,19 @@ export const FiltarionByTasks = ({
           tempTasks.push({
             name: el.name,
             description: el.description,
-            thema: el.thema,
+            thema: el.Tema,
             issue_id: el.issue_id,
             object_arr: [],
           });
         }
       });
-      data.forEach((el) => {
-        let obj = tempTasks.find((elem) => elem.name === el.name);
-        if (obj) {
-          obj.object_arr.push(el.id_of_object);
-        }
-      });
+      // data.forEach((el) => {
+      //   let obj = tempTasks.find((elem) => elem.name === el.name);
+      //   if (obj) {
+      //     obj.object_arr.push(el.id_of_object);
+      //   }
+      // });
+      console.log(tempTasks);
       setAllTasks(tempTasks);
     });
   };
@@ -64,8 +61,23 @@ export const FiltarionByTasks = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (shouldFetchData) {
+      setTasks();
+      setShouldFetchData(false);
+    }
+  }, [shouldFetchData]);
+
   const DropHandlerClick = (element) => {
-    let tempPoints = filteredPoints.filter((el) => {
+    setChosen(element.name);
+    setTitle(
+      element.name.length > 12
+        ? element.name.substring(0, 10) + '...'
+        : element.name
+    );
+    setUpdate(!shouldUpdate);
+
+    /*let tempPoints = filteredPoints.filter((el) => {
       if (element.object_arr.some((id) => id === el.Id)) {
         return el;
       }
@@ -81,7 +93,7 @@ export const FiltarionByTasks = ({
       setUpdate(!shouldUpdate);
     } else {
       alert('По даній задачі нема маркерів');
-    }
+    }*/
   };
 
   const ClearChosenList = () => {
@@ -106,7 +118,7 @@ export const FiltarionByTasks = ({
         className='drop-tasks'
         title={Title}
       >
-        {Tasks.length > 0 && filteredPoints.length > 0 && (
+        {Tasks.length > 0 && (
           <>
             {Chosen && (
               <Dropdown.Item
@@ -137,11 +149,7 @@ export const FiltarionByTasks = ({
             })}
           </>
         )}
-        {Tasks.length === 0 || filteredPoints.length === 0 ? (
-          <Dropdown.Item>Немає задач</Dropdown.Item>
-        ) : (
-          ''
-        )}
+        {Tasks.length === 0 ? <Dropdown.Item>Немає задач</Dropdown.Item> : ''}
       </DropdownButton>
       {Chosen && (
         <Button
@@ -152,11 +160,32 @@ export const FiltarionByTasks = ({
           Переглянути деталі
         </Button>
       )}
+      {(user?.id_of_expert === roles.admin ||
+        user?.id_of_expert === roles.analyst) && (
+        <>
+          <hr />
+          <Button
+            variant='primary'
+            className='text-center'
+            onClick={() => setIsTaskModalShown(true)}
+          >
+            Створити задачу
+          </Button>
+        </>
+      )}
       <TaskInfoModal
         user={user}
         show={isEventModalShow}
         onHide={() => setIsEventModalShown(false)}
         task={Tasks.find((task) => task.name === Chosen)}
+      />
+      <AddTaskModal
+        user={user}
+        show={isTaskModalShow}
+        onHide={() => setIsTaskModalShown(false)}
+        isEditTaskMode={isEditTaskMode}
+        setIsEditTaskMode={setIsEditTaskMode}
+        setShouldFetchData={setShouldFetchData}
       />
     </div>
   );
