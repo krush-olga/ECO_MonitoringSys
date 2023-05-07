@@ -96,6 +96,7 @@ router.get('/tube/:id', tubeControler.getTube);
 router.put('/tube/:id', tubeControler.updateTube);
 
 router.post('/document/:id', documentController.addDocument);
+router.put('/document/:id', documentController.updateDocument);
 router.get('/document/list', documentController.getDocumentList);
 router.delete('/document/:id', documentController.removeDocument);
 

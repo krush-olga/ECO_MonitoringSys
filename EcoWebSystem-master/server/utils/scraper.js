@@ -13,7 +13,11 @@ async function scrapDocument(id) {
         map.set('body', $(element).html());
       });
       $('.doc > div > .dat0').each((index, element) => {
-        map.set('date', $(element).text());
+        let splitDate = $(element).text().split('.');
+        map.set(
+          'date',
+          new Date(splitDate[1] + '/' + splitDate[0] + '/' + splitDate[2])
+        );
       });
 
       if (map.size < 3) {
