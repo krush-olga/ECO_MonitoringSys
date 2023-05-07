@@ -5,11 +5,14 @@ function Document() {
   const [documents, setDocuments] = useState([]);
   const [newDocument, setNewDocument] = useState({ id: '' });
   const [errorMessage, setErrorMessage] = useState('');
+  const [nameFilter, setNameFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
+  const [idFilter, setIdFilter] = useState('');
 
   const fetchDocuments = async () => {
     try {
       const response = await axios.get('/document/list');
-      setDocuments(response.data);
+      setDocuments(response.data.sort());
     } catch (error) {
       setErrorMessage('Error fetching documents');
     }
@@ -29,6 +32,16 @@ function Document() {
     }
   };
 
+  async function handleUpdateDocument(id) {
+    fetchDocuments();
+    try {
+      await axios.put(`/document/${id}`);
+      fetchDocuments();
+    } catch (error) {
+      setErrorMessage('Error updating document');
+    }
+  }
+
   const handleRemoveDocument = async (id) => {
     try {
       await axios.delete(`/document/${id}`);
@@ -38,22 +51,144 @@ function Document() {
     }
   };
 
+  const handleNameFilterChange = (event) => {
+    setNameFilter(event.target.value);
+  };
+
+  const handleDateFilterChange = (event) => {
+    setDateFilter(event.target.value);
+  };
+
+  const handleIdFilterChange = (event) => {
+    setIdFilter(event.target.value);
+  };
+
+  const filteredDocuments = documents.filter((document) => {
+    const nameMatchesFilter = document.name
+      .toLowerCase()
+      .includes(nameFilter.toLowerCase());
+    const dateMatchesFilter = dateFilter
+      ? new Date(document.created_on)
+          .toLocaleDateString()
+          .includes(new Date(dateFilter).toLocaleDateString())
+      : true;
+    const idMatchesFilter = idFilter
+      ? document.id.toString().includes(idFilter)
+      : true;
+    return nameMatchesFilter && dateMatchesFilter && idMatchesFilter;
+  });
+
+  const [showFullBody, setShowFullBody] = useState(false);
+  const toggleShowFullBody = () => setShowFullBody(!showFullBody);
+
   return (
     <div>
       <h1>Document List</h1>
       {errorMessage && <p>{errorMessage}</p>}
-      <ul>
-        {documents.map((document) => (
-          <li key={document.id}>
-            <p>{document.name}</p>
-            <div dangerouslySetInnerHTML={{ __html: document.body }} />
-            <p>{document.created_on}</p>
-            <button onClick={() => handleRemoveDocument(document.id)}>
-              Remove
-            </button>
-          </li>
-        ))}
-      </ul>
+      <label htmlFor='idFilter'>Filter by ID:</label>
+      <input
+        type='text'
+        value={idFilter}
+        onChange={handleIdFilterChange}
+        id='idFilter'
+      />
+      <label htmlFor='nameFilter'>Filter by name:</label>
+      <input
+        type='text'
+        value={nameFilter}
+        onChange={handleNameFilterChange}
+        id='nameFilter'
+      />
+      <label htmlFor='dateFilter'>Filter by created on:</label>
+      <input
+        type='date'
+        value={dateFilter ? dateFilter : ''}
+        onChange={handleDateFilterChange}
+        id='dateFilter'
+      />
+      <table
+        style={{
+          borderCollapse: 'collapse',
+          border: '1px solid black',
+          margin: '0 20px 0 20px',
+        }}
+      >
+        <thead>
+          <tr>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Id</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Name</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>
+              Created On
+            </th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>
+              Updated On
+            </th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>
+              Action
+            </th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Body</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredDocuments.map((document) => (
+            <tr key={document.id}>
+              <td
+                style={{
+                  border: '1px solid black',
+                  padding: '8px',
+                  width: '80px',
+                }}
+              >
+                {document.id}
+              </td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>
+                {document.name}
+              </td>
+              <td
+                style={{
+                  border: '1px solid black',
+                  padding: '8px',
+                  width: '105px',
+                }}
+              >
+                {new Date(document.created_on).toLocaleDateString()}
+              </td>
+              <td
+                style={{
+                  border: '1px solid black',
+                  padding: '8px',
+                  width: '110px',
+                }}
+              >
+                {new Date(document.updated_on).toLocaleString()}
+              </td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>
+                <button onClick={() => handleUpdateDocument(document.id)}>
+                  Update
+                </button>
+                <button onClick={() => handleRemoveDocument(document.id)}>
+                  Remove
+                </button>
+              </td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>
+                <div
+                  style={{
+                    maxHeight: showFullBody ? 'none' : '100px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{ __html: document.body }}
+                  ></div>
+                </div>
+                {!showFullBody && (
+                  <button onClick={toggleShowFullBody}>Show More</button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <h2>Add New Document</h2>
       <div>
         <label htmlFor='id'>Id:</label>
