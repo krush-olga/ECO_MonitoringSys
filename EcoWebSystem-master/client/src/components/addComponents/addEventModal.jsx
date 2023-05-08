@@ -14,6 +14,7 @@ const initialState = {
     name: '',
     description: '',
     resources: [],
+    weight: 0,
   },
 };
 
@@ -30,6 +31,7 @@ export const AddEventModal = ({
   const [selectedResources, setSelectedResources] = useState(
     initialState.form.resources
   );
+  const [weight, setWeight] = useState(initialState.form.weight);
   const [allResources, setAllResources] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -42,6 +44,7 @@ export const AddEventModal = ({
     setName(initialState.form.name);
     setDescription(initialState.form.description);
     setSelectedResources(initialState.form.resources);
+    setWeight(initialState.form.weight);
   };
 
   // useEffect(() => {
@@ -54,7 +57,14 @@ export const AddEventModal = ({
   // }, [tubeId, isEditEventMode]);
 
   const addEvent = () => {
-    if (name && description && selectedResources.length && user?.id_of_user) {
+    if (
+      name &&
+      description &&
+      selectedResources.length &&
+      weight >= 0 &&
+      weight <= 1 &&
+      user?.id_of_user
+    ) {
       post(EVENTS_URl, {
         name,
         description,
@@ -62,6 +72,7 @@ export const AddEventModal = ({
         id_of_user: user.id_of_user,
         id_of_expert: user.id_of_expert,
         resources: selectedResources,
+        weight,
       })
         .then(() => {
           hide();
@@ -74,7 +85,7 @@ export const AddEventModal = ({
         });
     } else {
       alert(
-        'Заповніть такі поля:\n-назва\n-опис\n-ресурси\nТа увійдіть в систему'
+        'Заповніть такі поля:\n-назва\n-опис\n-ресурси\n-вага\nТа увійдіть в систему'
       );
     }
   };
@@ -84,6 +95,8 @@ export const AddEventModal = ({
       name &&
       description &&
       selectedResources.length &&
+      weight >= 0 &&
+      weight <= 1 &&
       user?.id_of_user &&
       event?.event_id
     ) {
@@ -91,6 +104,7 @@ export const AddEventModal = ({
         name,
         description,
         resources: selectedResources,
+        weight,
       })
         .then(() => {
           hide();
@@ -122,7 +136,9 @@ export const AddEventModal = ({
       setName(event.name);
       setDescription(event.description);
       setSelectedResources(event.resources);
+      setWeight(event.weight);
     } else {
+      clearForm();
       setIsEditMode(false);
     }
   }, [event]);
@@ -151,6 +167,14 @@ export const AddEventModal = ({
             rows='3'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Встановіть вагу заходу від 0 до 1</Form.Label>
+          <Form.Control
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
           />
         </Form.Group>
 
@@ -234,7 +258,6 @@ export const AddEventModal = ({
               </div>
             ))
           : null}
-
         <Button size={'sm'} onClick={isEditMode ? editTask : addEvent}>
           {isEditMode ? 'Редагувати захід' : 'Додати захід'}
         </Button>

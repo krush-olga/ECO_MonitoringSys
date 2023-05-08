@@ -11,6 +11,7 @@ const initialState = {
     name: '',
     description: '',
     Tema: '',
+    budget: '',
   },
 };
 
@@ -25,6 +26,7 @@ export const AddTaskModal = ({
   const [name, setName] = useState(initialState.form.name);
   const [Tema, setTema] = useState(initialState.form.Tema);
   const [description, setDescription] = useState(initialState.form.description);
+  const [budget, setBudget] = useState(initialState.form.budget);
 
   const hide = () => {
     onHide();
@@ -35,6 +37,7 @@ export const AddTaskModal = ({
     setName(initialState.form.name);
     setDescription(initialState.form.description);
     setTema(initialState.form.Tema);
+    setBudget(initialState.form.budget);
     setIsEditTaskMode(false);
   };
 
@@ -48,11 +51,12 @@ export const AddTaskModal = ({
   // }, [tubeId, isEditTaskMode]);
 
   const addTask = () => {
-    if (name && description && Tema && user?.id_of_user) {
+    if (name && description && Tema && budget && user?.id_of_user) {
       post(TASK_URL, {
         name,
         description,
         Tema,
+        budget,
       })
         .then(() => {
           hide();
@@ -65,7 +69,7 @@ export const AddTaskModal = ({
         });
     } else {
       alert(
-        'Заповніть такі поля:\n-назва\n-опис\n-тема\nТа увійдіть в систему'
+        'Заповніть такі поля:\n-назва\n-опис\n-тема\n-бюджет\nТа увійдіть в систему'
       );
     }
   };
@@ -136,6 +140,15 @@ export const AddTaskModal = ({
             as='input'
             value={Tema}
             onChange={(e) => setTema(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Встановіть бюджет</Form.Label>
+          <Form.Control
+            as='input'
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
           />
         </Form.Group>
         {isEditTaskMode ? (

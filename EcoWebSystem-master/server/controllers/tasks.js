@@ -129,12 +129,12 @@ const getPossibleTasks = (req, res) => {
 };
 
 const addTask = (req, res) => {
-  const { name, description, Tema } = req.body;
+  const { name, description, Tema, budget } = req.body;
 
   const query = `
   INSERT INTO issues 
-  (name, description, Tema)
-  VALUES ('${name}', '${description}', '${Tema}');
+  (name, description, Tema, budget)
+  VALUES ('${name}', '${description}', '${Tema}', '${budget}');
   `;
 
   const taskPromise = new Promise((resolve, reject) => {

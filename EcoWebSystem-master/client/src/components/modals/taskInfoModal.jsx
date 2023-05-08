@@ -125,6 +125,7 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
       >
         {task?.thema && <p>Тема: {task?.thema}</p>}
         {task?.description && <p>Опис: {task?.description}</p>}
+        {task?.budget && <p>Бюджет: {task?.budget}</p>}
         {events.length ? (
           <>
             <p className='text-center mb-1 fw-bold'>Заходи:</p>
@@ -171,8 +172,8 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
           variant='primary'
           className='text-center mt-2'
           onClick={() => {
-            setIsAddEventModalShown(true);
             setSelectedEvent(null);
+            setIsAddEventModalShown(true);
           }}
         >
           Додати захід

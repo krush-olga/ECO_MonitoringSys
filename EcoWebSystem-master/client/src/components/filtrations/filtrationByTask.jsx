@@ -38,6 +38,7 @@ export const FiltarionByTasks = ({
             description: el.description,
             thema: el.Tema,
             issue_id: el.issue_id,
+            budget: el.budget,
             object_arr: [],
           });
         }
@@ -48,7 +49,6 @@ export const FiltarionByTasks = ({
       //     obj.object_arr.push(el.id_of_object);
       //   }
       // });
-      console.log(tempTasks);
       setAllTasks(tempTasks);
     });
   };

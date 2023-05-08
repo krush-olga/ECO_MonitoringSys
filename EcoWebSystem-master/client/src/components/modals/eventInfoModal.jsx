@@ -138,6 +138,8 @@ export const EventInfoModal = ({
 
         <p>Експерт: {event?.expert_name}</p>
 
+        <p>Вага, встановлена експертом: {event?.weight}</p>
+
         <p className='mb-0'>Рішення юриста</p>
         <Form className='mb-1'>
           <Form.Check

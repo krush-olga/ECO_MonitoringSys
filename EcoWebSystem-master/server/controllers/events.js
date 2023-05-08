@@ -86,7 +86,7 @@ const addEvent = (req, res) => {
     resources,
     issue_id,
     id_of_expert,
-    weight = 5,
+    weight,
   } = req.body;
 
   const query = `
@@ -187,11 +187,11 @@ const removeEvent = (req, res) => {
 
 const updateEvent = (req, res) => {
   const event_id = req.params.id;
-  const { name, description, resources } = req.body;
+  const { name, description, resources, weight } = req.body;
 
   const eventQuery = `
     UPDATE event
-    SET name = '${name}', description = '${description}'
+    SET name = '${name}', description = '${description}', weight = '${weight}'
     WHERE event_id = '${event_id}'
   `;
 
