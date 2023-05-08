@@ -18,7 +18,6 @@ export const EventInfoModal = ({
   event,
   setEvent,
 }) => {
-  console.log(event);
   const [documentCode, setDocumentCode] = useState('');
   const [documentDescription, setDocumentDescription] = useState('');
 

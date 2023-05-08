@@ -7,23 +7,32 @@ import {
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { get, deleteRequest, post } from '../../utils/httpService';
+import { deleteRequest, get, post } from '../../utils/httpService';
 import { EVENTS_URl, TASK_DOCUMENT_URl } from '../../utils/constants';
 
 import { VerticallyCenteredModal } from './modal';
 import { AddEventModal } from '../addComponents/addEventModal';
 import { EventInfoModal } from './eventInfoModal';
 
+const filtrationOptions = [
+  { value: 'all', label: 'Показати усі' },
+  { value: 'lawyer', label: 'Схваленні юристом' },
+  { value: 'dm', label: 'Схваленні аналітиком' },
+  { value: 'budget', label: 'Не перевищують бюджет' },
+];
+
 export const TaskInfoModal = ({ show, onHide, user, task }) => {
   const [documentCode, setDocumentCode] = useState('');
   const [documentDescription, setDocumentDescription] = useState('');
   const [documents, setDocuments] = useState([]);
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [isAddEventModalShown, setIsAddEventModalShown] = useState(false);
   const [shouldFetchDocuments, setShouldFetchDocuments] = useState(false);
   const [shouldFetchEvents, setShouldFetchEvents] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isEventInfoModalShown, setIsEventInfoModalShown] = useState(false);
+  const [filters, setFilters] = useState(['all']);
 
   const hide = () => {
     onHide();
@@ -94,6 +103,31 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
     });
   };
 
+  const handleCheckboxChange = (event) => {
+    const isChecked = event.target.checked;
+    const filterValue = event.target.value;
+
+    if (filterValue === 'all') {
+      setFilters(['all']);
+    } else {
+      let newFilters;
+
+      if (isChecked) {
+        newFilters = [...filters, filterValue].filter(
+          (value) => value !== 'all'
+        );
+      } else {
+        newFilters = filters.filter((value) => value !== filterValue);
+
+        if (newFilters.length === 0) {
+          newFilters = ['all'];
+        }
+      }
+
+      setFilters(newFilters);
+    }
+  };
+
   useEffect(() => {
     if (show) {
       getEvents();
@@ -115,6 +149,37 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
     }
   }, [shouldFetchDocuments]);
 
+  useEffect(() => {
+    let filtered = [];
+    if (filters.includes('all')) {
+      filtered = events;
+    } else {
+      filtered = events.filter((event) => {
+        if (filters.includes('lawyer') && event.lawyer_vefirication !== 1) {
+          return false;
+        }
+
+        if (filters.includes('dm') && event.dm_verification !== 1) {
+          return false;
+        }
+
+        if (
+          filters.includes('budget') &&
+          event.resources.reduce(
+            (acc, cur) => (acc += cur.price * cur.value),
+            0
+          ) > task?.budget
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+    }
+    setFilteredEvents(filtered);
+  }, [events, filters]);
+
+  console.log(filters);
   return (
     <>
       <VerticallyCenteredModal
@@ -126,12 +191,28 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
         {task?.thema && <p>Тема: {task?.thema}</p>}
         {task?.description && <p>Опис: {task?.description}</p>}
         {task?.budget && <p>Бюджет: {task?.budget}</p>}
-        {events.length ? (
+
+        <p className='mb-0'>Застосувати фільтри</p>
+        <Form className='mb-2'>
+          {filtrationOptions.map((option) => (
+            <Form.Check
+              key={option.value}
+              inline
+              label={option.label}
+              value={option.value}
+              type='checkbox'
+              checked={filters.includes(option.value)}
+              onChange={handleCheckboxChange}
+            />
+          ))}
+        </Form>
+
+        {filteredEvents.length ? (
           <>
             <p className='text-center mb-1 fw-bold'>Заходи:</p>
             <Card>
               <ListGroup variant='flush'>
-                {events.map((event) => (
+                {filteredEvents.map((event) => (
                   <ListGroup.Item
                     key={event?.event_id}
                     className='d-flex align-items-center justify-content-between'
