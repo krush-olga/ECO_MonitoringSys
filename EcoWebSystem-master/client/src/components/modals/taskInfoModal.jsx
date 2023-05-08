@@ -6,6 +6,8 @@ import {
   faPencilAlt,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 import { deleteRequest, get, post } from '../../utils/httpService';
 import { EVENTS_URl, TASK_DOCUMENT_URl } from '../../utils/constants';
@@ -13,6 +15,8 @@ import { EVENTS_URl, TASK_DOCUMENT_URl } from '../../utils/constants';
 import { VerticallyCenteredModal } from './modal';
 import { AddEventModal } from '../addComponents/addEventModal';
 import { EventInfoModal } from './eventInfoModal';
+
+import '../../fonts/Roboto-Regular-normal';
 
 const filtrationOptions = [
   { value: 'all', label: 'Показати усі' },
@@ -128,6 +132,174 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
     }
   };
 
+  const handleGeneratePdf = async () => {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      format: 'a4',
+      compress: true,
+      margin: {
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20,
+      },
+    });
+
+    doc.addFont('Roboto-Regular-normal.ttf', 'Roboto-Regular', 'normal');
+    doc.setFont('Roboto-Regular', 'normal');
+
+    doc.setFontSize(18);
+    doc.text(
+      task?.name || 'Детали по задаче',
+      doc.internal.pageSize.width / 2,
+      10,
+      { align: 'center' }
+    );
+    doc.setFontSize(16);
+
+    if (task?.thema) {
+      doc.text(`Тема: ${task.thema}`, 10, 30);
+    }
+
+    if (task?.description) {
+      doc.text(`Опис: ${task.description}`, 10, 40);
+    }
+
+    if (task?.budget) {
+      doc.text(`Бюджет: ${task.budget} грн`, 10, 50);
+    }
+
+    const eventsStartY = 60;
+    const eventsLineHeight = 10;
+    const eventsMaxWidth = doc.internal.pageSize.width - 40;
+    let count = 0;
+
+    doc.setFontSize(17);
+    doc.text('Заходи', doc.internal.pageSize.width / 2, eventsStartY, {
+      align: 'center',
+    });
+    doc.setFontSize(16);
+
+    let eventsY = eventsStartY + 5;
+
+    filteredEvents.forEach((event) => {
+      if (count > 1) {
+        doc.addPage();
+        eventsY = 10;
+        count = 0;
+      } else {
+        count++;
+      }
+
+      const {
+        name,
+        description,
+        expert_name,
+        weight,
+        lawyer_vefirication,
+        dm_verification,
+        resources,
+      } = event;
+
+      doc.setFontSize(15);
+      const nameLines = doc.splitTextToSize(name, eventsMaxWidth);
+      const nameHeight = nameLines.length * eventsLineHeight;
+      const nameStartY = eventsY + nameHeight / 2;
+      doc.text(nameLines, doc.internal.pageSize.width / 2, nameStartY, {
+        align: 'center',
+      });
+
+      let y = eventsY + nameHeight + 5;
+
+      doc.setFontSize(12);
+      const descriptionLines = doc.splitTextToSize(description, eventsMaxWidth);
+      doc.text(`Опис: ${descriptionLines}`, 10, y);
+
+      y += eventsLineHeight;
+
+      // Выводим информацию об эксперте
+      if (expert_name) {
+        doc.setFontSize(12);
+        doc.text(`Експерт: ${expert_name}`, 10, y);
+        y += eventsLineHeight;
+      }
+
+      // Выводим информацию о решении юриста
+      if (lawyer_vefirication !== null) {
+        doc.setFontSize(12);
+        doc.text('Рішення юриста:', 10, y);
+        doc.setFontSize(11);
+        doc.text(lawyer_vefirication ? 'Схвалено' : 'Не схвалено', 45, y);
+        y += eventsLineHeight;
+      }
+
+      // Выводим информацию о решении аналитика
+      if (dm_verification !== null) {
+        doc.setFontSize(12);
+        doc.text('Рішення аналітика:', 10, y);
+        doc.setFontSize(11);
+        doc.text(dm_verification ? 'Схвалено' : 'Не схвалено', 50, y);
+        y += eventsLineHeight;
+      }
+
+      if (resources.length) {
+        const columns = ['Назва', 'Одиниця', 'Кількість', 'Ціна', 'Вартість'];
+        const rows = resources.map((resource) => [
+          resource.name,
+          resource?.units,
+          resource.value,
+          resource.price,
+          resource.price * resource.value,
+        ]);
+
+        doc.autoTable(columns, rows, {
+          startY: y,
+          margin: { top: 20 },
+          styles: { font: 'Roboto-Regular', fontSize: 10 },
+          headStyles: {
+            font: 'Roboto-Regular',
+            fontSize: 12,
+            fillColor: [191, 191, 191],
+          },
+          columnStyles: { 0: { cellWidth: 70 } },
+          bodyStyles: {
+            font: 'Roboto-Regular',
+            fontSize: 10,
+            textColor: [0, 0, 0],
+          },
+          drawCell: function (cell, opts) {
+            if (opts.row.index === rows.length - 1) {
+              if (opts.column.index === 0) {
+                cell.styles.fontStyle = 'bold';
+              } else if (opts.column.index === 4) {
+                cell.styles.fontStyle = 'bold';
+              }
+            }
+          },
+        });
+
+        y = doc.lastAutoTable.finalY + 10;
+
+        // Total cost
+        const totalCost = event.resources.reduce(
+          (acc, cur) => (acc += cur.price * cur.value),
+          0
+        );
+        doc.setFontSize(12);
+        doc.text(`Загальна сума: ${totalCost} грн`, 30, y, { align: 'center' });
+      }
+
+      eventsY = y + 10;
+    });
+
+    const pdfDataUri = doc.output('bloburl', {
+      filename: 'звіт.pdf',
+      charset: 'utf-8',
+    });
+
+    window.open(pdfDataUri, '_blank');
+  };
+
   useEffect(() => {
     if (show) {
       getEvents();
@@ -179,7 +351,6 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
     setFilteredEvents(filtered);
   }, [events, filters]);
 
-  console.log(filters);
   return (
     <>
       <VerticallyCenteredModal
@@ -245,6 +416,13 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
                 ))}
               </ListGroup>
             </Card>
+            <Button
+              variant='success'
+              className='text-center mt-2 d-block'
+              onClick={handleGeneratePdf}
+            >
+              Сгенерувати PDF
+            </Button>
           </>
         ) : (
           <p className='text-center fw-bold'>Заходів поки що немає</p>
