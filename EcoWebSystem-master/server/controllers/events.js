@@ -5,6 +5,20 @@ const pool = require('../../db-config/mysql-config');
 const getEvents = (req, res) => {
   const { taskId } = req.query;
 
+  const budgetQuery = `
+  SELECT budget FROM issues WHERE issue_id = ${taskId};
+`;
+
+  let budget;
+
+  pool.query(budgetQuery, (err, rows) => {
+    if (err) {
+      console.log(err);
+    } else {
+      budget = rows[0].budget;
+    }
+  });
+
   pool.query(
     `
    SELECT 
@@ -72,7 +86,48 @@ GROUP BY
           ),
         }));
 
-        res.send(parsedRows);
+        const sortedEvents = parsedRows.sort((event1, event2) => {
+          if (
+            event1.dm_verification === 0 ||
+            event1.lawyer_vefirication === 0
+          ) {
+            return 1;
+          } else if (
+            event2.dm_verification === 0 ||
+            event2.lawyer_vefirication === 0
+          ) {
+            return -1;
+          }
+
+          const expertApproval1 = event1.dm_verification || 0;
+          const expertApproval2 = event2.dm_verification || 0;
+          const lawyerApproval1 = event1.lawyer_vefirication || 0;
+          const lawyerApproval2 = event2.lawyer_vefirication || 0;
+
+          const totalCost1 = event1.resources.reduce(
+            (sum, resource) => sum + resource.value * resource.price,
+            0
+          );
+          const totalCost2 = event2.resources.reduce(
+            (sum, resource) => sum + resource.value * resource.price,
+            0
+          );
+
+          const priority1 =
+            event1.weight * (expertApproval1 + lawyerApproval1) - totalCost1;
+          const priority2 =
+            event2.weight * (expertApproval2 + lawyerApproval2) - totalCost2;
+
+          if (totalCost1 > budget) {
+            return 1;
+          } else if (totalCost2 > budget) {
+            return -1;
+          }
+
+          return priority2 - priority1;
+        });
+
+        res.send(sortedEvents);
       }
     }
   );
