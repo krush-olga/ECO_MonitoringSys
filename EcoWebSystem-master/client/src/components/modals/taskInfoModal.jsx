@@ -10,7 +10,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 import { deleteRequest, get, post } from '../../utils/httpService';
-import { EVENTS_URl, TASK_DOCUMENT_URl } from '../../utils/constants';
+import { EVENTS_URl, roles, TASK_DOCUMENT_URl } from '../../utils/constants';
 
 import { VerticallyCenteredModal } from './modal';
 import { AddEventModal } from '../addComponents/addEventModal';
@@ -195,7 +195,6 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
         name,
         description,
         expert_name,
-        weight,
         lawyer_vefirication,
         dm_verification,
         resources,
@@ -361,7 +360,7 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
       >
         {task?.thema && <p>Тема: {task?.thema}</p>}
         {task?.description && <p>Опис: {task?.description}</p>}
-        {task?.budget && <p>Бюджет: {task?.budget}</p>}
+        {task?.budget && <p>Бюджет: {task?.budget} грн</p>}
 
         <p className='mb-0'>Застосувати фільтри</p>
         <Form className='mb-2'>
@@ -389,6 +388,7 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
                     className='d-flex align-items-center justify-content-between'
                   >
                     <p className='mb-0'>{event.name}</p>
+                    <p className='mb-0'>{`Експерт: ${event.expert_name}`}</p>
                     <div className='d-flex'>
                       <FontAwesomeIcon
                         icon={faEye}
@@ -398,45 +398,58 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
                           setIsEventInfoModalShown(true);
                         }}
                       />
-                      <FontAwesomeIcon
-                        icon={faPencilAlt}
-                        className='mx-2 d-inline-block cursor-pointer'
-                        onClick={() => {
-                          setSelectedEvent(event);
-                          setIsAddEventModalShown(true);
-                        }}
-                      />
-                      <FontAwesomeIcon
-                        onClick={() => handleRemoveEvent(event?.event_id)}
-                        icon={faTrashAlt}
-                        className='cursor-pointer'
-                      />
+                      {user.id_of_expert === roles.admin ||
+                      user.id_of_user === event.id_of_user ? (
+                        <FontAwesomeIcon
+                          icon={faPencilAlt}
+                          className='mx-2 d-inline-block cursor-pointer'
+                          onClick={() => {
+                            setSelectedEvent(event);
+                            setIsAddEventModalShown(true);
+                          }}
+                        />
+                      ) : null}
+                      {user.id_of_expert === roles.admin ||
+                      user.id_of_user === event.id_of_user ? (
+                        <FontAwesomeIcon
+                          onClick={() => handleRemoveEvent(event?.event_id)}
+                          icon={faTrashAlt}
+                          className='cursor-pointer'
+                        />
+                      ) : null}
                     </div>
                   </ListGroup.Item>
                 ))}
               </ListGroup>
             </Card>
-            <Button
-              variant='success'
-              className='text-center mt-2 d-block'
-              onClick={handleGeneratePdf}
-            >
-              Сгенерувати PDF
-            </Button>
+            {user.id_of_expert === roles.admin ||
+            user.id_of_expert === roles.analyst ? (
+              <Button
+                variant='success'
+                className='text-center mt-2 d-block'
+                onClick={handleGeneratePdf}
+              >
+                Сгенерувати PDF
+              </Button>
+            ) : null}
           </>
         ) : (
           <p className='text-center fw-bold'>Заходів поки що немає</p>
         )}
-        <Button
-          variant='primary'
-          className='text-center mt-2'
-          onClick={() => {
-            setSelectedEvent(null);
-            setIsAddEventModalShown(true);
-          }}
-        >
-          Додати захід
-        </Button>
+
+        {user.id_of_expert !== roles.lawyer &&
+        user.id_of_expert !== roles.analyst ? (
+          <Button
+            variant='primary'
+            className='text-center mt-2'
+            onClick={() => {
+              setSelectedEvent(null);
+              setIsAddEventModalShown(true);
+            }}
+          >
+            Додати захід
+          </Button>
+        ) : null}
 
         {documents.length ? (
           <>
@@ -449,11 +462,16 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
                       <p className='mb-1'>
                         Код документа: {doc?.document_code}
                       </p>
-                      <FontAwesomeIcon
-                        onClick={() => handleRemoveDocument(doc?.document_code)}
-                        icon={faTrashAlt}
-                        className='cursor-pointer'
-                      />
+                      {user.id_of_expert === roles.admin ||
+                      user.id_of_expert === roles.lawyer ? (
+                        <FontAwesomeIcon
+                          onClick={() =>
+                            handleRemoveDocument(doc?.document_code)
+                          }
+                          icon={faTrashAlt}
+                          className='cursor-pointer'
+                        />
+                      ) : null}
                     </div>
                     {doc.description && (
                       <p className='mb-0'>Опис: {doc?.description}</p>
@@ -465,32 +483,37 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
           </>
         ) : null}
 
-        <p className='my-3 text-center fw-bold'>Додати документ</p>
-        <Form>
-          <Form.Group>
-            <Form.Label>Введіть код документу</Form.Label>
-            <Form.Control
-              type='input'
-              value={documentCode}
-              onChange={(e) => setDocumentCode(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Додайте опис документу</Form.Label>
-            <Form.Control
-              type='input'
-              value={documentDescription}
-              onChange={(e) => setDocumentDescription(e.target.value)}
-            />
-          </Form.Group>
-          <Button
-            variant='primary'
-            className='text-center mt-2'
-            onClick={handleAddDocument}
-          >
-            Додати документ
-          </Button>
-        </Form>
+        {user.id_of_expert === roles.admin ||
+        user.id_of_expert === roles.lawyer ? (
+          <>
+            <p className='my-3 text-center fw-bold'>Додати документ</p>
+            <Form>
+              <Form.Group>
+                <Form.Label>Введіть код документу</Form.Label>
+                <Form.Control
+                  type='input'
+                  value={documentCode}
+                  onChange={(e) => setDocumentCode(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Додайте опис документу</Form.Label>
+                <Form.Control
+                  type='input'
+                  value={documentDescription}
+                  onChange={(e) => setDocumentDescription(e.target.value)}
+                />
+              </Form.Group>
+              <Button
+                variant='primary'
+                className='text-center mt-2'
+                onClick={handleAddDocument}
+              >
+                Додати документ
+              </Button>
+            </Form>
+          </>
+        ) : null}
       </VerticallyCenteredModal>
       <AddEventModal
         show={isAddEventModalShown}
@@ -509,6 +532,7 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
           setIsEventInfoModalShown(false);
           setSelectedEvent(null);
         }}
+        user={user}
         setShouldFetchData={setShouldFetchEvents}
         event={selectedEvent}
         setEvent={setSelectedEvent}

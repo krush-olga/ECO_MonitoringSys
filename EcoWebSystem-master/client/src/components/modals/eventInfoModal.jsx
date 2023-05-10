@@ -9,12 +9,14 @@ import {
   DM_VERIFICATION_URl,
   EVENT_DOCUMENT_URl,
   LAWYER_VERIFICATION_URl,
+  roles,
 } from '../../utils/constants';
 
 export const EventInfoModal = ({
   show,
   onHide,
   setShouldFetchData,
+  user,
   event,
   setEvent,
 }) => {
@@ -253,11 +255,16 @@ export const EventInfoModal = ({
                       <p className='mb-1'>
                         Код документа: {doc?.document_code}
                       </p>
-                      <FontAwesomeIcon
-                        onClick={() => handleRemoveDocument(doc?.document_code)}
-                        icon={faTrashAlt}
-                        className='cursor-pointer'
-                      />
+                      {user.id_of_expert === roles.admin ||
+                      user.id_of_expert === roles.lawyer ? (
+                        <FontAwesomeIcon
+                          onClick={() =>
+                            handleRemoveDocument(doc?.document_code)
+                          }
+                          icon={faTrashAlt}
+                          className='cursor-pointer'
+                        />
+                      ) : null}
                     </div>
                     {doc.description && (
                       <p className='mb-0'>Опис: {doc?.description}</p>
@@ -269,32 +276,37 @@ export const EventInfoModal = ({
           </>
         ) : null}
 
-        <p className='my-3 text-center bold'>Додати документ</p>
-        <Form>
-          <Form.Group>
-            <Form.Label>Введіть код документу</Form.Label>
-            <Form.Control
-              type='input'
-              value={documentCode}
-              onChange={(e) => setDocumentCode(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Додайте опис документу</Form.Label>
-            <Form.Control
-              type='input'
-              value={documentDescription}
-              onChange={(e) => setDocumentDescription(e.target.value)}
-            />
-          </Form.Group>
-          <Button
-            variant='primary'
-            className='text-center mt-2'
-            onClick={handleAddDocument}
-          >
-            Додати документ
-          </Button>
-        </Form>
+        {user.id_of_expert === roles.admin ||
+        user.id_of_expert === roles.lawyer ? (
+          <>
+            <p className='my-3 text-center bold'>Додати документ</p>
+            <Form>
+              <Form.Group>
+                <Form.Label>Введіть код документу</Form.Label>
+                <Form.Control
+                  type='input'
+                  value={documentCode}
+                  onChange={(e) => setDocumentCode(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Додайте опис документу</Form.Label>
+                <Form.Control
+                  type='input'
+                  value={documentDescription}
+                  onChange={(e) => setDocumentDescription(e.target.value)}
+                />
+              </Form.Group>
+              <Button
+                variant='primary'
+                className='text-center mt-2'
+                onClick={handleAddDocument}
+              >
+                Додати документ
+              </Button>
+            </Form>
+          </>
+        ) : null}
       </VerticallyCenteredModal>
     </>
   );
