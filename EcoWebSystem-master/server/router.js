@@ -97,7 +97,8 @@ router.put('/tube/:id', tubeControler.updateTube);
 
 router.post('/document/:id', documentController.addDocument);
 router.put('/document/:id', documentController.updateDocument);
-router.get('/document/list', documentController.getDocumentList);
+router.get('/document/info/list', documentController.getDocumentInfoList);
+router.get('/document/body/:id', documentController.getDocumentBody);
 router.delete('/document/:id', documentController.removeDocument);
 
 if (process.env.NODE_ENV === 'production') {

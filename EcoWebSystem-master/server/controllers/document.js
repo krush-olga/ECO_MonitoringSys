@@ -55,10 +55,10 @@ const updateDocument = async (req, res) => {
   }
 };
 
-const getDocumentList = async (req, res) => {
+const getDocumentInfoList = async (req, res) => {
   const findAllDocuments = new Promise((resolve, reject) => {
-    const query = `SELECT *
-                       FROM documents;`;
+    const query = `SELECT d.id, d.name, d.created_on, d.updated_on
+                       FROM documents d;`;
     return pool.query(query, [], (error, rows) => {
       if (error) {
         return reject(error);
@@ -70,6 +70,29 @@ const getDocumentList = async (req, res) => {
   try {
     const documents = await findAllDocuments;
     return res.send(JSON.stringify(documents));
+  } catch (error) {
+    return res.status(500).send({ message: error });
+  }
+};
+
+const getDocumentBody = async (req, res) => {
+  let id = req.params.id;
+  try {
+    let document = await scrapDocument(id);
+    const getDocumentBody = new Promise((resolve, reject) => {
+      const query = `SELECT d.body
+                     FROM documents d 
+                     WHERE d.id = ?;`;
+      return pool.query(query, [id], (error, rows) => {
+        if (error) {
+          return reject(error);
+        }
+        return resolve(rows);
+      });
+    });
+
+    const documentBody = await getDocumentBody;
+    return res.send(JSON.stringify(documentBody));
   } catch (error) {
     return res.status(500).send({ message: error });
   }
@@ -102,6 +125,7 @@ const removeDocument = async (req, res) => {
 module.exports = {
   addDocument,
   updateDocument,
-  getDocumentList,
+  getDocumentInfoList,
+  getDocumentBody,
   removeDocument,
 };

@@ -11,7 +11,7 @@ function Document() {
 
   const fetchDocuments = async () => {
     try {
-      const response = await axios.get('/document/list');
+      const response = await axios.get('/document/info/list');
       setDocuments(response.data.sort());
     } catch (error) {
       setErrorMessage('Error fetching documents');
