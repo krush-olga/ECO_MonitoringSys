@@ -99,6 +99,10 @@ router.post('/document/:id', documentController.addDocument);
 router.put('/document/:id', documentController.updateDocument);
 router.get('/document/info/list', documentController.getDocumentInfoList);
 router.get('/document/body/:id', documentController.getDocumentBody);
+router.get(
+  '/document/search/:searchTerm',
+  documentController.searchDocumentList
+);
 router.delete('/document/:id', documentController.removeDocument);
 
 if (process.env.NODE_ENV === 'production') {

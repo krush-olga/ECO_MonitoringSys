@@ -97,6 +97,35 @@ const getDocumentBody = async (req, res) => {
   }
 };
 
+const searchDocumentList = async (req, res) => {
+  let searchTerm = req.params.searchTerm;
+  const searchDocuments = new Promise((resolve, reject) => {
+    const query = `SELECT *
+                   FROM documents
+                   WHERE MATCH(body) AGAINST(? IN NATURAL LANGUAGE MODE)
+                   ORDER BY MATCH(body) AGAINST(? IN NATURAL LANGUAGE MODE) DESC
+                   LIMIT 10`;
+    return pool.query(
+      query,
+      [`"${searchTerm}"`, `"${searchTerm}"`],
+      (error, rows) => {
+        if (error) {
+          return reject(error);
+        }
+        return resolve(rows);
+      }
+    );
+  });
+
+  try {
+    const documents = await searchDocuments;
+    console.log(documents.length);
+    return res.send(JSON.stringify(documents));
+  } catch (error) {
+    return res.status(500).send({ message: error });
+  }
+};
+
 const removeDocument = async (req, res) => {
   let id = req.params.id;
   const deleteDocumentById = new Promise((resolve, reject) => {
@@ -126,5 +155,6 @@ module.exports = {
   updateDocument,
   getDocumentInfoList,
   getDocumentBody,
+  searchDocumentList,
   removeDocument,
 };
