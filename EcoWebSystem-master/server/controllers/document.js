@@ -78,7 +78,6 @@ const getDocumentInfoList = async (req, res) => {
 const getDocumentBody = async (req, res) => {
   let id = req.params.id;
   try {
-    let document = await scrapDocument(id);
     const getDocumentBody = new Promise((resolve, reject) => {
       const query = `SELECT d.body
                      FROM documents d 
