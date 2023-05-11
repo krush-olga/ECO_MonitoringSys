@@ -78,8 +78,16 @@ function Document() {
     return nameMatchesFilter && dateMatchesFilter && idMatchesFilter;
   });
 
-  const [showFullBody, setShowFullBody] = useState(false);
-  const toggleShowFullBody = () => setShowFullBody(!showFullBody);
+  const [htmlContent, setHtmlContent] = useState({});
+  const [showHtml, setShowHtml] = useState(false);
+  const handleInsertHtml = async (id) => {
+    try {
+      const response = await axios.get(`/document/body/${id}`);
+      setHtmlContent({ ...htmlContent, [id]: response.data[0].body });
+    } catch (error) {
+      setErrorMessage('Error fetching document body');
+    }
+  };
 
   return (
     <div>
@@ -171,18 +179,15 @@ function Document() {
                 </button>
               </td>
               <td style={{ border: '1px solid black', padding: '8px' }}>
-                <div
-                  style={{
-                    maxHeight: showFullBody ? 'none' : '100px',
-                    overflow: 'hidden',
-                  }}
-                >
+                <button onClick={() => handleInsertHtml(document.id)}>
+                  Insert HTML
+                </button>
+                {htmlContent[document.id] && (
                   <div
-                    dangerouslySetInnerHTML={{ __html: document.body }}
-                  ></div>
-                </div>
-                {!showFullBody && (
-                  <button onClick={toggleShowFullBody}>Show More</button>
+                    dangerouslySetInnerHTML={{
+                      __html: htmlContent[document.id],
+                    }}
+                  />
                 )}
               </td>
             </tr>
