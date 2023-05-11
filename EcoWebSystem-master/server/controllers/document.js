@@ -119,7 +119,6 @@ const searchDocumentList = async (req, res) => {
 
   try {
     const documents = await searchDocuments;
-    console.log(documents.length);
     return res.send(JSON.stringify(documents));
   } catch (error) {
     return res.status(500).send({ message: error });
