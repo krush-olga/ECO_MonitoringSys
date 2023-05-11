@@ -89,6 +89,20 @@ function Document() {
     }
   };
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = async () => {
+    try {
+      if (searchTerm) {
+        const response = await axios.get(`/document/search/${searchTerm}`);
+        setDocuments(response.data);
+      } else {
+        fetchDocuments();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div>
       <h1>Document List</h1>
@@ -114,6 +128,14 @@ function Document() {
         onChange={handleDateFilterChange}
         id='dateFilter'
       />
+      <br />
+      <input
+        type='text'
+        placeholder='Search documents...'
+        value={searchTerm}
+        onChange={(event) => setSearchTerm(event.target.value)}
+      />
+      <button onClick={handleSearch}>Search</button>
       <table
         style={{
           borderCollapse: 'collapse',
