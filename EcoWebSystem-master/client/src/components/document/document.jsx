@@ -55,15 +55,12 @@ function Document() {
   const handleNameFilterChange = (event) => {
     setNameFilter(event.target.value);
   };
-
   const handleDateFilterChange = (event) => {
     setDateFilter(event.target.value);
   };
-
   const handleIdFilterChange = (event) => {
     setIdFilter(event.target.value);
   };
-
   const filteredDocuments = documents.filter((document) => {
     const nameMatchesFilter = document.name
       .toLowerCase()
@@ -80,7 +77,6 @@ function Document() {
   });
 
   const [htmlContent, setHtmlContent] = useState({});
-  const [showHtml, setShowHtml] = useState(false);
   const handleInsertHtml = async (id) => {
     try {
       const response = await axios.get(`/document/body/${id}`);
@@ -91,6 +87,12 @@ function Document() {
   };
 
   const [searchTerm, setSearchTerm] = useState('');
+  function handleSearchTerm(searchTerm) {
+    setSearchTerm(searchTerm);
+    if (searchTerm === '') {
+      fetchDocuments();
+    }
+  }
   const handleSearch = async () => {
     try {
       if (searchTerm) {
@@ -106,130 +108,165 @@ function Document() {
 
   return (
     <div>
-      <h1>Document List</h1>
-      {errorMessage && <p>{errorMessage}</p>}
-      <label htmlFor='idFilter'>Filter by ID:</label>
-      <input
-        type='text'
-        value={idFilter}
-        onChange={handleIdFilterChange}
-        id='idFilter'
-      />
-      <label htmlFor='nameFilter'>Filter by name:</label>
-      <input
-        type='text'
-        value={nameFilter}
-        onChange={handleNameFilterChange}
-        id='nameFilter'
-      />
-      <label htmlFor='dateFilter'>Filter by created on:</label>
-      <input
-        type='date'
-        value={dateFilter ? dateFilter : ''}
-        onChange={handleDateFilterChange}
-        id='dateFilter'
-      />
-      <br />
-      <input
-        type='text'
-        placeholder='Search documents...'
-        value={searchTerm}
-        onChange={(event) => setSearchTerm(event.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
-      <table
-        style={{
-          borderCollapse: 'collapse',
-          border: '1px solid black',
-          margin: '0 20px 0 20px',
-        }}
-      >
-        <thead>
-          <tr>
-            <th style={{ border: '1px solid black', padding: '8px' }}>Id</th>
-            <th style={{ border: '1px solid black', padding: '8px' }}>Name</th>
-            <th style={{ border: '1px solid black', padding: '8px' }}>
-              Created On
-            </th>
-            <th style={{ border: '1px solid black', padding: '8px' }}>
-              Updated On
-            </th>
-            <th style={{ border: '1px solid black', padding: '8px' }}>
-              Action
-            </th>
-            <th style={{ border: '1px solid black', padding: '8px' }}>Body</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredDocuments.map((document) => (
-            <tr key={document.id}>
-              <td
-                style={{
-                  border: '1px solid black',
-                  padding: '8px',
-                  width: '80px',
-                }}
-              >
-                {document.id}
-              </td>
-              <td style={{ border: '1px solid black', padding: '8px' }}>
-                {document.name}
-              </td>
-              <td
-                style={{
-                  border: '1px solid black',
-                  padding: '8px',
-                  width: '105px',
-                }}
-              >
-                {new Date(document.created_on).toLocaleDateString()}
-              </td>
-              <td
-                style={{
-                  border: '1px solid black',
-                  padding: '8px',
-                  width: '110px',
-                }}
-              >
-                {new Date(document.updated_on).toLocaleString()}
-              </td>
-              <td style={{ border: '1px solid black', padding: '8px' }}>
-                <button onClick={() => handleUpdateDocument(document.id)}>
-                  Update
-                </button>
-                <button onClick={() => handleRemoveDocument(document.id)}>
-                  Remove
-                </button>
-              </td>
-              <td style={{ border: '1px solid black', padding: '8px' }}>
-                <button onClick={() => handleInsertHtml(document.id)}>
-                  Insert HTML
-                </button>
-                {htmlContent[document.id] && (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: htmlContent[document.id],
-                    }}
-                  />
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <h2>Add New Document</h2>
       <div>
-        <label htmlFor='id'>Id:</label>
+        <h2>Додати новий документ</h2>
+        <div>
+          <input
+            type='text'
+            placeholder='Ідентифікаційний номер...'
+            id='id'
+            value={newDocument.id}
+            onChange={(event) =>
+              setNewDocument({ ...newDocument, id: event.target.value })
+            }
+          />
+          <button onClick={handleAddDocument}>Додати</button>
+        </div>
+        <br />
+      </div>
+      <div>
+        <h2>Фільтрація</h2>
+        <label htmlFor='idFilter'>За ідентифікаційним номером:</label>
         <input
           type='text'
-          id='id'
-          value={newDocument.id}
-          onChange={(event) =>
-            setNewDocument({ ...newDocument, id: event.target.value })
-          }
+          value={idFilter}
+          onChange={handleIdFilterChange}
+          id='idFilter'
+        />
+        <label htmlFor='nameFilter'>За назвою:</label>
+        <input
+          type='text'
+          value={nameFilter}
+          onChange={handleNameFilterChange}
+          id='nameFilter'
+        />
+        <label htmlFor='dateFilter'>За датою створення:</label>
+        <input
+          type='date'
+          value={dateFilter ? dateFilter : ''}
+          onChange={handleDateFilterChange}
+          id='dateFilter'
         />
       </div>
-      <button onClick={handleAddDocument}>Add</button>
+      <br />
+      <div>
+        <h2>Список документів</h2>
+        <input
+          type='text'
+          placeholder='Фраза для пошуку...'
+          value={searchTerm}
+          onChange={(event) => handleSearchTerm(event.target.value)}
+        />
+        <button onClick={handleSearch}>Знайти</button>
+      </div>
+      {filteredDocuments.length > 0 ? (
+        <div>
+          <table
+            style={{
+              borderCollapse: 'collapse',
+              border: '1px solid black',
+              margin: '0 20px 0 20px',
+            }}
+          >
+            <thead>
+              <tr>
+                <th style={{ border: '1px solid black', padding: '8px' }}>#</th>
+                <th style={{ border: '1px solid black', padding: '8px' }}>
+                  Назва
+                </th>
+                <th style={{ border: '1px solid black', padding: '8px' }}>
+                  Дата створення
+                </th>
+                <th style={{ border: '1px solid black', padding: '8px' }}>
+                  Оновлено
+                </th>
+                <th style={{ border: '1px solid black', padding: '8px' }}>
+                  Дія
+                </th>
+                <th style={{ border: '1px solid black', padding: '8px' }}>
+                  Документ
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredDocuments.map((document) => (
+                <tr key={document.id}>
+                  <td
+                    style={{
+                      border: '1px solid black',
+                      padding: '8px',
+                      width: '75px',
+                    }}
+                  >
+                    {document.id}
+                  </td>
+                  <td
+                    style={{
+                      border: '1px solid black',
+                      padding: '8px',
+                      width: '225px',
+                    }}
+                  >
+                    {document.name}
+                  </td>
+                  <td
+                    style={{
+                      border: '1px solid black',
+                      padding: '8px',
+                      width: '30px',
+                    }}
+                  >
+                    {new Date(document.created_on).toLocaleDateString()}
+                  </td>
+                  <td
+                    style={{
+                      border: '1px solid black',
+                      padding: '8px',
+                      width: '95px',
+                    }}
+                  >
+                    {new Date(document.updated_on).toLocaleString()}
+                  </td>
+                  <td style={{ border: '1px solid black', padding: '8px' }}>
+                    <button onClick={() => handleUpdateDocument(document.id)}>
+                      Оновити
+                    </button>
+                    <button onClick={() => handleRemoveDocument(document.id)}>
+                      Видалити
+                    </button>
+                  </td>
+                  <td
+                    style={{
+                      border: '1px solid black',
+                      padding: '8px',
+                      width: '676.8px',
+                    }}
+                  >
+                    <button onClick={() => handleInsertHtml(document.id)}>
+                      Insert HTML
+                    </button>
+                    {htmlContent[document.id] && (
+                      <div
+                        className='inner-html-content'
+                        dangerouslySetInnerHTML={{
+                          __html: htmlContent[document.id],
+                        }}
+                      />
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <br />
+        </div>
+      ) : (
+        <div>
+          <br />
+          <br />
+          <h3 style={{ color: 'red' }}>Документи не знайдено</h3>
+        </div>
+      )}
     </div>
   );
 }

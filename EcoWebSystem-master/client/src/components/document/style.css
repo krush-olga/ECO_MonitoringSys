@@ -1,5 +1,5 @@
 header {
-  background-color: #007bff; /* Dark blue */
+  background-color: #007bff;
   color: white;
   padding: 20px;
 }
@@ -24,20 +24,20 @@ nav a:hover {
 }
 table {
   border-collapse: collapse;
-  border: 1px solid #007bff; /* Dark blue */
+  border: 1px solid #007bff;
   margin: 0 20px 0 20px;
 }
 th,
 td {
-  border: 1px solid #007bff; /* Dark blue */
+  border: 1px solid #007bff;
   padding: 8px;
 }
 th {
-  background-color: #007bff; /* Dark blue */
+  background-color: #007bff;
   color: white;
 }
 button {
-  background-color: #007bff; /* Dark blue */
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
@@ -46,11 +46,11 @@ button {
   cursor: pointer;
 }
 button:hover {
-  background-color: #007bff; /* Darker blue */
+  background-color: #007bff;
 }
 input[type='text'],
 input[type='date'] {
-  border: 1px solid #007bff; /* Dark blue */
+  border: 1px solid #007bff;
   padding: 8px;
   border-radius: 4px;
   margin-right: 8px;
@@ -58,5 +58,13 @@ input[type='date'] {
 input[type='text']:focus,
 input[type='date']:focus {
   outline: none;
-  border: 2px solid #007bff; /* Light blue */
+  border: 2px solid #007bff;
+}
+
+.inner-html-content img {
+  height: 100px;
+}
+
+.inner-html-content td {
+  border: 1px solid white;
 }
