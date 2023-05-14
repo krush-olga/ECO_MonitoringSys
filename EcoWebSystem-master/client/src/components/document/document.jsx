@@ -92,7 +92,8 @@ function Document() {
   const [hiddenRows, setHiddenRows] = useState({});
   const handleInsertHtml = async (id) => {
     try {
-      const response = await axios.get(`/document/body/${id}`);
+      let encodedId = encodeURIComponent(id);
+      const response = await axios.get(`/document/body/${encodedId}`);
       setHtmlContent({ ...htmlContent, [id]: response.data[0].body });
       setHiddenRows((prevHiddenRows) => ({
         ...prevHiddenRows,
