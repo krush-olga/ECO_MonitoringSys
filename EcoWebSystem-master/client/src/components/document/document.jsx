@@ -34,7 +34,9 @@ function Document() {
 
   const handleAddDocument = async () => {
     try {
-      await axios.post(`/document/${newDocument.id}`);
+      const doc = encodeURIComponent(newDocument.id);
+      console.log(doc);
+      await axios.post(`/document/${doc}`);
       setNewDocument({ name: '', body: '' });
       fetchDocuments();
     } catch (error) {
@@ -131,10 +133,7 @@ function Document() {
             id='id'
             value={newDocument.id}
             onChange={(event) =>
-              setNewDocument(
-                { ...newDocument, id: event.target.value },
-                setHiddenRows(event.target.value)
-              )
+              setNewDocument({ ...newDocument, id: event.target.value })
             }
           />
           <button onClick={handleAddDocument} style={{ outline: 'none' }}>
