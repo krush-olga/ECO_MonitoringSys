@@ -14,6 +14,14 @@ function Document() {
     try {
       const response = await axios.get('/document/info/list');
       setDocuments(response.data.sort());
+      for (let i = 0; i < response.data.length; i++) {
+        const id = response.data[i].id;
+        console.log(id);
+        setHiddenRows((prevHiddenRows) => ({
+          ...prevHiddenRows,
+          [id]: !prevHiddenRows[id],
+        }));
+      }
     } catch (error) {
       setErrorMessage('Error fetching documents');
     }
@@ -77,10 +85,15 @@ function Document() {
   });
 
   const [htmlContent, setHtmlContent] = useState({});
+  const [hiddenRows, setHiddenRows] = useState({});
   const handleInsertHtml = async (id) => {
     try {
       const response = await axios.get(`/document/body/${id}`);
       setHtmlContent({ ...htmlContent, [id]: response.data[0].body });
+      setHiddenRows((prevHiddenRows) => ({
+        ...prevHiddenRows,
+        [id]: !prevHiddenRows[id],
+      }));
     } catch (error) {
       setErrorMessage('Error fetching document body');
     }
@@ -242,10 +255,7 @@ function Document() {
                       width: '676.8px',
                     }}
                   >
-                    <button onClick={() => handleInsertHtml(document.id)}>
-                      Insert HTML
-                    </button>
-                    {htmlContent[document.id] && (
+                    {htmlContent[document.id] && !hiddenRows[document.id] && (
                       <div
                         className='inner-html-content'
                         dangerouslySetInnerHTML={{
@@ -253,6 +263,11 @@ function Document() {
                         }}
                       />
                     )}
+                    <button onClick={() => handleInsertHtml(document.id)}>
+                      {hiddenRows[document.id]
+                        ? 'Завантажити документ'
+                        : 'Приховати документ'}
+                    </button>
                   </td>
                 </tr>
               ))}
