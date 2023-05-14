@@ -39,9 +39,8 @@ export const App = () => {
     });
   }, []);
 
-  function redirectToExternalSite({ match }) {
-    const { id } = match.params;
-    window.location.href = `https://data.rada.gov.ua/laws/show/${id}`;
+  function redirectToExternalSite() {
+    window.location.href = `https://data.rada.gov.ua${window.location.pathname}`;
     return null;
   }
   return (
@@ -70,11 +69,7 @@ export const App = () => {
               component={() => <AdvancedMap user={user} />}
             />
             <Route exact path='/document/list' component={Document} />
-            <Route
-              exact
-              path='/laws/show/:id'
-              render={redirectToExternalSite}
-            />
+            <Route path='/laws/show' render={redirectToExternalSite} />
           </Switch>
         </EnvironmentsInfoContext.Provider>
       </div>
