@@ -2,7 +2,8 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 async function scrapDocument(id) {
-  let url = 'https://data.rada.gov.ua/laws/show/' + id;
+  let url = encodeURI('https://data.rada.gov.ua/laws/show/' + id);
+  console.log(`Requested url: ${url}`);
   const scraper = axios
     .get(url)
     .then((response) => {
