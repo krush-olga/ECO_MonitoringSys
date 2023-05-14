@@ -37,7 +37,7 @@ function Document() {
       const doc = encodeURIComponent(newDocument.id);
       console.log(doc);
       await axios.post(`/document/${doc}`);
-      setNewDocument({ name: '', body: '' });
+      setNewDocument({ id: '', name: '', body: '' });
       fetchDocuments();
       setIdFilter(newDocument.id);
     } catch (error) {
