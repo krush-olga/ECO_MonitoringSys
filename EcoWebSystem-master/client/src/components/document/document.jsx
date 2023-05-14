@@ -16,11 +16,12 @@ function Document() {
       setDocuments(response.data.sort());
       for (let i = 0; i < response.data.length; i++) {
         const id = response.data[i].id;
-        console.log(id);
-        setHiddenRows((prevHiddenRows) => ({
-          ...prevHiddenRows,
-          [id]: !prevHiddenRows[id],
-        }));
+        if (!hiddenRows[id]) {
+          setHiddenRows((prevHiddenRows) => ({
+            ...prevHiddenRows,
+            [id]: !prevHiddenRows[id],
+          }));
+        }
       }
     } catch (error) {
       setErrorMessage('Error fetching documents');
@@ -130,10 +131,15 @@ function Document() {
             id='id'
             value={newDocument.id}
             onChange={(event) =>
-              setNewDocument({ ...newDocument, id: event.target.value })
+              setNewDocument(
+                { ...newDocument, id: event.target.value },
+                setHiddenRows(event.target.value)
+              )
             }
           />
-          <button onClick={handleAddDocument}>Додати</button>
+          <button onClick={handleAddDocument} style={{ outline: 'none' }}>
+            Додати
+          </button>
         </div>
         <br />
       </div>
@@ -170,7 +176,9 @@ function Document() {
           value={searchTerm}
           onChange={(event) => handleSearchTerm(event.target.value)}
         />
-        <button onClick={handleSearch}>Знайти</button>
+        <button onClick={handleSearch} style={{ outline: 'none' }}>
+          Знайти
+        </button>
       </div>
       {filteredDocuments.length > 0 ? (
         <div>
@@ -241,10 +249,16 @@ function Document() {
                     {new Date(document.updated_on).toLocaleString()}
                   </td>
                   <td style={{ border: '1px solid black', padding: '8px' }}>
-                    <button onClick={() => handleUpdateDocument(document.id)}>
+                    <button
+                      onClick={() => handleUpdateDocument(document.id)}
+                      style={{ outline: 'none' }}
+                    >
                       Оновити
                     </button>
-                    <button onClick={() => handleRemoveDocument(document.id)}>
+                    <button
+                      onClick={() => handleRemoveDocument(document.id)}
+                      style={{ outline: 'none' }}
+                    >
                       Видалити
                     </button>
                   </td>
@@ -263,7 +277,10 @@ function Document() {
                         }}
                       />
                     )}
-                    <button onClick={() => handleInsertHtml(document.id)}>
+                    <button
+                      onClick={() => handleInsertHtml(document.id)}
+                      style={{ outline: 'none' }}
+                    >
                       {hiddenRows[document.id]
                         ? 'Завантажити документ'
                         : 'Приховати документ'}
