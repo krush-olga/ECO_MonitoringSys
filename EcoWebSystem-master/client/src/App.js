@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -39,6 +39,11 @@ export const App = () => {
     });
   }, []);
 
+  function redirectToExternalSite({ match }) {
+    const { id } = match.params;
+    window.location.href = `https://data.rada.gov.ua/laws/show/${id}`;
+    return null;
+  }
   return (
     <Router>
       <div className='App'>
@@ -65,6 +70,11 @@ export const App = () => {
               component={() => <AdvancedMap user={user} />}
             />
             <Route exact path='/document/list' component={Document} />
+            <Route
+              exact
+              path='/laws/show/:id'
+              render={redirectToExternalSite}
+            />
           </Switch>
         </EnvironmentsInfoContext.Provider>
       </div>
