@@ -39,6 +39,7 @@ function Document() {
       await axios.post(`/document/${doc}`);
       setNewDocument({ name: '', body: '' });
       fetchDocuments();
+      setIdFilter(newDocument.id);
     } catch (error) {
       setErrorMessage('Error adding document');
     }
