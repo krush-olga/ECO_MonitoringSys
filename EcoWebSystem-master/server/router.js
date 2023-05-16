@@ -105,6 +105,8 @@ router.get(
 );
 router.delete('/document/:id', documentController.removeDocument);
 
+router.post('/medic');
+
 if (process.env.NODE_ENV === 'production') {
   router.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
