@@ -198,6 +198,8 @@ export const AddEventModal = ({
                         resource_id: resource.resource_id,
                         name: resource.name,
                         description: resource.description,
+                        price: resource.price,
+                        units: resource.units,
                         value: '',
                       },
                     ];

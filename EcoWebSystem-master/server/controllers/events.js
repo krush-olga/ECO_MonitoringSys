@@ -86,46 +86,54 @@ GROUP BY
           ),
         }));
 
-        const sortedEvents = parsedRows.sort((event1, event2) => {
-          if (
-            event1.dm_verification === 0 ||
-            event1.lawyer_vefirication === 0
-          ) {
-            return 1;
-          } else if (
-            event2.dm_verification === 0 ||
-            event2.lawyer_vefirication === 0
-          ) {
-            return -1;
-          }
+        const minCost = Math.min(
+          ...parsedRows.map((row) =>
+            row.resources.reduce(
+              (sum, resource) => sum + resource.value * resource.price,
+              0
+            )
+          )
+        );
 
-          const expertApproval1 = event1.dm_verification || 0;
-          const expertApproval2 = event2.dm_verification || 0;
-          const lawyerApproval1 = event1.lawyer_vefirication || 0;
-          const lawyerApproval2 = event2.lawyer_vefirication || 0;
+        const maxCost = Math.max(
+          ...parsedRows.map((row) =>
+            row.resources.reduce(
+              (sum, resource) => sum + resource.value * resource.price,
+              0
+            )
+          )
+        );
 
-          const totalCost1 = event1.resources.reduce(
-            (sum, resource) => sum + resource.value * resource.price,
-            0
-          );
-          const totalCost2 = event2.resources.reduce(
-            (sum, resource) => sum + resource.value * resource.price,
-            0
-          );
+        const sortedEvents = parsedRows
+          .map((event) => {
+            if (
+              event.dm_verification === 0 ||
+              event.lawyer_vefirication === 0
+            ) {
+              return { ...event, priority: 0 };
+            }
 
-          const priority1 =
-            event1.weight * (expertApproval1 + lawyerApproval1) - totalCost1;
-          const priority2 =
-            event2.weight * (expertApproval2 + lawyerApproval2) - totalCost2;
+            const totalCost = event.resources.reduce(
+              (sum, resource) => sum + resource.value * resource.price,
+              0
+            );
+            if (totalCost > budget) {
+              return { ...event, priority: 0 };
+            }
 
-          if (totalCost1 > budget) {
-            return 1;
-          } else if (totalCost2 > budget) {
-            return -1;
-          }
+            const expertApproval = event.dm_verification || 0.5;
+            const lawyerApproval = event.lawyer_vefirication || 0.5;
 
-          return priority2 - priority1;
-        });
+            const costRange = maxCost - minCost;
+            const costNormalized =
+              costRange > 0 ? (totalCost - minCost) / costRange : 0;
+
+            const priority =
+              event.weight * (expertApproval + lawyerApproval) - costNormalized;
+
+            return { ...event, priority };
+          })
+          .sort((event1, event2) => event2.priority - event1.priority);
 
         res.send(sortedEvents);
       }

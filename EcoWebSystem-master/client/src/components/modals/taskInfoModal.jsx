@@ -362,20 +362,24 @@ export const TaskInfoModal = ({ show, onHide, user, task }) => {
         {task?.description && <p>Опис: {task?.description}</p>}
         {task?.budget && <p>Бюджет: {task?.budget} грн</p>}
 
-        <p className='mb-0'>Застосувати фільтри</p>
-        <Form className='mb-2'>
-          {filtrationOptions.map((option) => (
-            <Form.Check
-              key={option.value}
-              inline
-              label={option.label}
-              value={option.value}
-              type='checkbox'
-              checked={filters.includes(option.value)}
-              onChange={handleCheckboxChange}
-            />
-          ))}
-        </Form>
+        {events.length ? (
+          <>
+            <p className='mb-0'>Застосувати фільтри</p>
+            <Form className='mb-2'>
+              {filtrationOptions.map((option) => (
+                <Form.Check
+                  key={option.value}
+                  inline
+                  label={option.label}
+                  value={option.value}
+                  type='checkbox'
+                  checked={filters.includes(option.value)}
+                  onChange={handleCheckboxChange}
+                />
+              ))}
+            </Form>
+          </>
+        ) : null}
 
         {filteredEvents.length ? (
           <>
