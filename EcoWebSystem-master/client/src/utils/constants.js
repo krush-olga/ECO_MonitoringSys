@@ -7,6 +7,7 @@ export const POINT_URL = '/point';
 export const TYPE_OF_OBJECT_URL = '/typeofobjects';
 export const EXPERTS_URL = '/experts';
 export const ENVIRONMENTS_URL = '/environments';
+export const RESOURCES_URL = '/resources';
 export const ELEMENTS_URL = '/elements';
 export const GDK_URL = '/gdk';
 export const GDK_FIND_URL = '/gdk/find';
@@ -14,8 +15,14 @@ export const EMISSIONS_CALCULATIONS_URL = '/emissionscalculations';
 export const OWNER_TYPES_URL = '/ownertypes';
 export const TAX_VALUES_URL = '/taxvalues';
 export const COMPARE_EMISSIONS = '/compareEmissions';
-export const TASK_URL = '/tasks';
+export const TASKS_URL = '/tasks';
+export const TASK_URL = '/task';
 export const TUBE_URl = '/tube';
+export const EVENTS_URl = '/events';
+export const EVENT_DOCUMENT_URl = '/eventDocument';
+export const TASK_DOCUMENT_URl = '/taskDocument';
+export const LAWYER_VERIFICATION_URl = '/lawyerVerification';
+export const DM_VERIFICATION_URl = '/dmVerification';
 export const FORMULA_CALCULATIONS_URL = '/getcalculationsinfo';
 export const GET_POSSIBLE_ISSUES = '/issuegetter';
 export const ADVANCED_POINTS_URL = '/advancedpoints';
@@ -36,6 +43,7 @@ export const TABLE_NAMES = {
   environment: 'environment',
   type_of_object: 'type_of_object',
   tax_values: 'tax_values',
+  resources: 'resource',
 };
 
 export const DICTIONARY_MODES = {
@@ -240,4 +248,14 @@ export const getDataForLegendRegion = (idEnvironment) => {
     6: DENGEROUS_LVL_WATER,
     8: DENGEROUS_LVL_DEFAULT,
   }[idEnvironment];
+};
+
+export const roles = {
+  admin: 0,
+  economist: 1,
+  ecologist: 2,
+  doctor: 3,
+  lawyer: 4,
+  analyst: 5,
+  electrician: 6,
 };

@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+
 import { get } from '../../utils/httpService';
 import { EXPERTS_URL } from '../../utils/constants';
 import { FiltarionByTasks } from '../filtrations/filtrationByTask';
-import { useOnClickOutside } from '../helperComponents/outsideClick'
+import { useOnClickOutside } from '../helperComponents/outsideClick';
+import { Pseudo } from '../helperComponents/pseudo/pseudo';
 
 import './filtration.css';
-
-import { Pseudo } from "../helperComponents/pseudo/pseudo";
 
 export const Filtration = ({
   user,
@@ -16,7 +16,7 @@ export const Filtration = ({
   setFilteredItems,
   environmentsInfo,
   sideLeftFilterOpened,
-  setLeftFilterOpened
+  setLeftFilterOpened,
 }) => {
   let filtrationForm;
   const [existingExperts, setExistingExperts] = useState([]);
@@ -24,8 +24,9 @@ export const Filtration = ({
   const [environmentState, setenvironmentState] = useState('');
 
   const ref = useRef();
-  useOnClickOutside(ref,()=>{setLeftFilterOpened(false)});
-
+  useOnClickOutside(ref, () => {
+    setLeftFilterOpened(false);
+  });
 
   useEffect(() => {
     get(EXPERTS_URL).then(({ data }) => {
@@ -35,6 +36,7 @@ export const Filtration = ({
       setenvironmentState(environmentsInfo.selected.name);
     }
   }, []);
+
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -59,12 +61,15 @@ export const Filtration = ({
   };
 
   return (
-    <div ref={ref} className={`filtration-form ${sideLeftFilterOpened?'':'transLeft'}`}>
+    <div
+      ref={ref}
+      className={`filtration-form ${sideLeftFilterOpened ? '' : 'transLeft'}`}
+    >
       <div>
         <div>
           <b>Обрана карта:</b>
           <p>{environmentState}</p>
-          <hr></hr>
+          <hr />
         </div>
         <Form
           onSubmit={submitHandler}
@@ -105,12 +110,11 @@ export const Filtration = ({
             filteredPoints={filteredPoints}
             setFilteredPoints={setFilteredPoints}
             setFilteredItems={setFilteredItems}
+            user={user}
           />
         )}
       </div>
-      <Pseudo
-        setOpened={setLeftFilterOpened}
-      />
+      <Pseudo setOpened={setLeftFilterOpened} />
     </div>
   );
 };

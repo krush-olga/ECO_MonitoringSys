@@ -1,50 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
+
 import { get } from '../../utils/httpService.js';
-import { TASK_URL } from '../../utils/constants.js';
+import { roles, TASKS_URL } from '../../utils/constants.js';
+import { TaskInfoModal } from '../modals/taskInfoModal';
 
 import './filtrationByTask.css';
+import { AddTaskModal } from '../addComponents/addTaskModal';
 
-/*
-  initTasks = [
-    {
-      name:"",
-      object_arr:[],
-    }
-  ];
-*/
-
-const initTitle = "Список задач";
+const initTitle = 'Список задач';
 
 export const FiltarionByTasks = ({
   filteredPoints,
   setFilteredPoints,
   setFilteredItems,
+  user,
 }) => {
-
-  const [Title, setTitle] = useState(initTitle)
+  const [Title, setTitle] = useState(initTitle);
 
   const [Chosen, setChosen] = useState(null);
 
   const [Tasks, setAllTasks] = useState([]);
-  
+
+  const [isEventModalShow, setIsEventModalShown] = useState(false);
+
+  const [isTaskModalShow, setIsTaskModalShown] = useState(false);
+  const [shouldFetchData, setShouldFetchData] = useState(false);
+  const [isEditTaskMode, setIsEditTaskMode] = useState(false);
+
   const setTasks = () => {
-    get(TASK_URL).then(({data}) => {
+    get(TASKS_URL).then(({ data }) => {
       let tempTasks = [];
-      data.forEach((el)=>{
-        if(!tempTasks.some((elem)=>elem.name === el.name)){
+      data.forEach((el) => {
+        if (!tempTasks.some((elem) => elem.name === el.name)) {
           tempTasks.push({
-            name:el.name,
+            name: el.name,
+            description: el.description,
+            thema: el.Tema,
+            issue_id: el.issue_id,
+            budget: el.budget,
             object_arr: [],
-          })
+          });
         }
-      })
-      data.forEach((el)=>{
-        let obj = tempTasks.find((elem)=>elem.name === el.name);
-        if (obj) {
-          obj.object_arr.push(el.id_of_object);
-        }
-      })
+      });
+      // data.forEach((el) => {
+      //   let obj = tempTasks.find((elem) => elem.name === el.name);
+      //   if (obj) {
+      //     obj.object_arr.push(el.id_of_object);
+      //   }
+      // });
       setAllTasks(tempTasks);
     });
   };
@@ -52,27 +56,44 @@ export const FiltarionByTasks = ({
   const [shouldUpdate, setUpdate] = useState(false);
 
   useEffect(() => {
-    if (Tasks.length===0) {
-      setTasks()
+    if (Tasks.length === 0) {
+      setTasks();
     }
   }, []);
 
+  useEffect(() => {
+    if (shouldFetchData) {
+      setTasks();
+      setShouldFetchData(false);
+    }
+  }, [shouldFetchData]);
+
   const DropHandlerClick = (element) => {
-    let tempPoints = filteredPoints.filter(el=>{
-      if(element.object_arr.some(id=>id === el.Id)){
+    setChosen(element.name);
+    setTitle(
+      element.name.length > 12
+        ? element.name.substring(0, 10) + '...'
+        : element.name
+    );
+    setUpdate(!shouldUpdate);
+
+    /*let tempPoints = filteredPoints.filter((el) => {
+      if (element.object_arr.some((id) => id === el.Id)) {
         return el;
-      };
-    })
-    if (tempPoints.length>0) {
+      }
+    });
+    if (tempPoints.length > 0) {
       setFilteredPoints(tempPoints);
       setChosen(element.name);
-      setTitle(element.name.length>12? element.name.substring(0, 10)+"...":element.name)
+      setTitle(
+        element.name.length > 12
+          ? element.name.substring(0,6 10) + '...'
+          : element.name
+      );
       setUpdate(!shouldUpdate);
-    }
-    else{
-      alert("По даній задачі нема маркерів")
-    }
-
+    } else {
+      alert('По даній задачі нема маркерів');
+    }*/
   };
 
   const ClearChosenList = () => {
@@ -97,7 +118,7 @@ export const FiltarionByTasks = ({
         className='drop-tasks'
         title={Title}
       >
-        {Tasks.length > 0 && filteredPoints.length > 0 && (
+        {Tasks.length > 0 && (
           <>
             {Chosen && (
               <Dropdown.Item
@@ -110,7 +131,7 @@ export const FiltarionByTasks = ({
             )}
 
             {Tasks.map((el, index) => {
-              if(!Chosen){
+              if (!Chosen) {
                 return (
                   <Dropdown.Item
                     key={index}
@@ -122,19 +143,50 @@ export const FiltarionByTasks = ({
                     {el.name}
                   </Dropdown.Item>
                 );
-              }
-              else{
-                return (<></>)
+              } else {
+                return <></>;
               }
             })}
           </>
         )}
-        {Tasks.length === 0 || filteredPoints.length === 0 ? (
-          <Dropdown.Item>Немає задач</Dropdown.Item>
-        ) : (
-          ''
-        )}
+        {Tasks.length === 0 ? <Dropdown.Item>Немає задач</Dropdown.Item> : ''}
       </DropdownButton>
+      {Chosen && (
+        <Button
+          variant='primary'
+          className='text-center mt-2'
+          onClick={() => setIsEventModalShown(true)}
+        >
+          Переглянути деталі
+        </Button>
+      )}
+      {(user?.id_of_expert === roles.admin ||
+        user?.id_of_expert === roles.analyst) && (
+        <>
+          <hr />
+          <Button
+            variant='primary'
+            className='text-center'
+            onClick={() => setIsTaskModalShown(true)}
+          >
+            Створити задачу
+          </Button>
+        </>
+      )}
+      <TaskInfoModal
+        user={user}
+        show={isEventModalShow}
+        onHide={() => setIsEventModalShown(false)}
+        task={Tasks.find((task) => task.name === Chosen)}
+      />
+      <AddTaskModal
+        user={user}
+        show={isTaskModalShow}
+        onHide={() => setIsTaskModalShown(false)}
+        isEditTaskMode={isEditTaskMode}
+        setIsEditTaskMode={setIsEditTaskMode}
+        setShouldFetchData={setShouldFetchData}
+      />
     </div>
   );
 };
