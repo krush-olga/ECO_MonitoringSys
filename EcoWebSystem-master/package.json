@@ -44,6 +44,7 @@
   "homepage": "https://github.com/Quken/eco-keemE#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.12",
     "config": "^3.3.1",
     "cross-env": "^7.0.2",
     "crypto-js": "^4.0.0",

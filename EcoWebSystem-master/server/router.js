@@ -21,6 +21,7 @@ const taskContoler = require('./controllers/tasks');
 const medStatControler = require('./controllers/medStat');
 
 const tubeControler = require('./controllers/tubes');
+const documentController = require('./controllers/document');
 
 router.post('/login', authController.login);
 
@@ -93,6 +94,18 @@ router.get('/issuegetter', taskContoler.getPossibleTasks);
 router.post('/tube', tubeControler.addTube);
 router.get('/tube/:id', tubeControler.getTube);
 router.put('/tube/:id', tubeControler.updateTube);
+
+router.post('/document/:id', documentController.addDocument);
+router.put('/document/:id', documentController.updateDocument);
+router.get('/document/info/list', documentController.getDocumentInfoList);
+router.get('/document/body/:id', documentController.getDocumentBody);
+router.get(
+  '/document/search/:searchTerm',
+  documentController.searchDocumentList
+);
+router.delete('/document/:id', documentController.removeDocument);
+
+router.post('/medic');
 
 if (process.env.NODE_ENV === 'production') {
   router.get('*', (req, res) => {
