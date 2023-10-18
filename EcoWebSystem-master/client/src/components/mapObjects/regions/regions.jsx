@@ -89,7 +89,7 @@ const Region = ({
           )}
           {user_name && (
             <div>
-              <strong>Експерт який поставив:</strong> {user_name}
+              <strong>!!! Експерт який поставив:</strong> {user_name}
             </div>
           )}
         </div>
