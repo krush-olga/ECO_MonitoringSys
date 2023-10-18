@@ -18,7 +18,7 @@ export const CarouselView = () => {
         <img className='w-100' src={img2} alt='Second slide' />
 
         <Carousel.Caption>
-          <h3>Комплексний еколого-економічний моніторинг</h3>
+          <h3>Комплексний еко-енерго-економічний моніторинг</h3>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
